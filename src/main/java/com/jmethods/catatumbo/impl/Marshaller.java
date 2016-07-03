@@ -1,0 +1,283 @@
+/*
+ * Copyright 2016 Sai Pullabhotla.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.jmethods.catatumbo.impl;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.UUID;
+
+import com.google.cloud.datastore.BaseEntity;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.NullValue;
+import com.google.cloud.datastore.Value;
+import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.DatastoreKey;
+import com.jmethods.catatumbo.EntityManagerException;
+
+/**
+ * Converts application's entities (POJOs) to the format needed for the
+ * underlying Cloud Datastore API.
+ *
+ * @author Sai Pullabhotla
+ */
+public class Marshaller {
+
+	/**
+	 * Reference to the Datastore object
+	 */
+	private final Datastore datastore;
+
+	/**
+	 * Entity being marshaled
+	 */
+	private final Object entity;
+
+	/**
+	 * Metadata of the entity being marshaled
+	 */
+	private final EntityMetadata entityMetadata;
+
+	/**
+	 * Builder for building the Entity needed for Cloud Datastore
+	 */
+	private BaseEntity.Builder entityBuilder;
+
+	/**
+	 * Key
+	 */
+	private IncompleteKey key;
+
+	/**
+	 * Creates a new instance of <code>Marshaller</code>.
+	 *
+	 * @param datastore
+	 *            reference to the Datastore object
+	 * @param entity
+	 *            the Entity to marshal
+	 */
+	private Marshaller(Datastore datastore, Object entity) {
+		this.datastore = datastore;
+		this.entity = entity;
+		entityMetadata = EntityIntrospector.introspect(entity.getClass());
+
+	}
+
+	/**
+	 * Marshals the given entity (POJO) into the format needed for the low level
+	 * Cloud Datastore API.
+	 *
+	 * @param datastore
+	 *            the Datastore
+	 * @param entity
+	 *            the entity to marshal
+	 * @return the marshaled object.
+	 */
+	public static BaseEntity marshal(Datastore datastore, Object entity) {
+		Marshaller marshaller = new Marshaller(datastore, entity);
+		return marshaller.marshal();
+	}
+
+	/**
+	 * Extracts the key from the given object, entity, and returns it.
+	 *
+	 * @param datastore
+	 *            the Datastore.
+	 * @param entity
+	 *            the entity from which key is to be extracted
+	 * @return extracted key.
+	 */
+	public static IncompleteKey marshalKey(Datastore datastore, Object entity) {
+		Marshaller marshaller = new Marshaller(datastore, entity);
+		marshaller.marshalKey();
+		return marshaller.key;
+	}
+
+	/**
+	 * Marshals the given entity and and returns the equivalent Entity needed
+	 * for the underlying Cloud Datastore API.
+	 * 
+	 * @return the BaseEntity
+	 */
+	private BaseEntity marshal() {
+		marshalKey();
+		if (key instanceof Key) {
+			entityBuilder = Entity.builder((Key) key);
+		} else if (key instanceof IncompleteKey) {
+			entityBuilder = FullEntity.builder(key);
+		} else {
+			throw new RuntimeException(String.format("Unknown or unsupported key type: %s", key.getClass().getName()));
+		}
+		marshalFields();
+		return entityBuilder.build();
+	}
+
+	private boolean isValidId(Object keyValue, DataType identifierType) {
+		boolean validKey = false;
+		if (keyValue != null) {
+			switch (identifierType) {
+			case LONG:
+			case LONG_OBJECT:
+				validKey = (long) keyValue != 0;
+				break;
+			case STRING:
+				validKey = ((String) keyValue).trim().length() > 0;
+				break;
+			default:
+				// we should never get here
+				break;
+			}
+		}
+		return validKey;
+	}
+
+	/**
+	 * Marshals the key.
+	 * 
+	 * @Improve
+	 */
+	private void marshalKey() {
+
+		Key parent = null;
+
+		ParentKeyMetadata parentKeyMetadata = entityMetadata.getParentKeyMetadata();
+		if (parentKeyMetadata != null) {
+			DatastoreKey parentDatastoreKey = (DatastoreKey) getFieldValue(parentKeyMetadata);
+			// if (parentDatastoreKey == null) {
+			// String message = String.format("Encountered null Parent Key in
+			// entity %1s for field %2s",
+			// entity.getClass(), parentKeyMetadata.getName());
+			// throw new EntityManagerException(message);
+			// }
+			if (parentDatastoreKey != null) {
+				parent = parentDatastoreKey.nativeKey();
+			}
+		}
+
+		IdentifierMetadata identifierMetadata = entityMetadata.getIdentifierMetadata();
+		DataType identifierType = identifierMetadata.getDataType();
+		Object idValue = getFieldValue(identifierMetadata);
+
+		boolean validId = isValidId(idValue, identifierType);
+		boolean autoGenerateId = identifierMetadata.isAutoGenerated();
+
+		if (!validId && !autoGenerateId) {
+			throw new EntityManagerException("Identifier is not set and autoGenerated is false. ");
+		}
+
+		if (!validId) {
+			IncompleteKey.Builder keyBuilder = null;
+			switch (identifierType) {
+			case LONG:
+			case LONG_OBJECT:
+				if (parent != null) {
+					keyBuilder = IncompleteKey.builder(parent, entityMetadata.getKind());
+				} else {
+					keyBuilder = IncompleteKey.builder(datastore.options().projectId(), entityMetadata.getKind());
+					keyBuilder.namespace(datastore.options().namespace());
+				}
+				key = keyBuilder.build();
+				break;
+			case STRING:
+				if (parent != null) {
+					key = Key.builder(parent, entityMetadata.getKind(), UUID.randomUUID().toString()).build();
+				} else {
+					key = Key.builder(datastore.options().projectId(), entityMetadata.getKind(),
+							UUID.randomUUID().toString()).namespace(datastore.options().namespace()).build();
+				}
+				break;
+			default:
+				throw new EntityManagerException(
+						String.format("Unknown or unsupported datatype for identifier: %s", identifierType));
+			}
+		} else {
+			switch (identifierType) {
+			case LONG:
+			case LONG_OBJECT:
+				if (parent != null) {
+					key = Key.builder(parent, entityMetadata.getKind(), (long) idValue).build();
+				} else {
+					key = Key.builder(datastore.options().projectId(), entityMetadata.getKind(), (long) idValue)
+							.namespace(datastore.options().namespace()).build();
+				}
+				break;
+			case STRING:
+				if (parent != null) {
+					key = Key.builder(parent, entityMetadata.getKind(), (String) idValue).build();
+				} else {
+					key = Key.builder(datastore.options().projectId(), entityMetadata.getKind(), (String) idValue)
+							.namespace(datastore.options().namespace()).build();
+				}
+				break;
+			default:
+				throw new EntityManagerException(
+						String.format("Unknown or unsupported datatype for identifier: %s", identifierType));
+			}
+		}
+
+	}
+
+	/**
+	 * Marshals all the fields.
+	 */
+	private void marshalFields() {
+		Collection<PropertyMetadata> propertyMetadataCollection = entityMetadata.getPropertyMetadataCollection();
+		for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
+			marshalField(propertyMetadata);
+		}
+	}
+
+	/**
+	 * Marshals the field with the given metadata.
+	 *
+	 * @param propertyMetadata
+	 *            the field's metadata
+	 */
+	private void marshalField(PropertyMetadata propertyMetadata) {
+		Object fieldValue = getFieldValue(propertyMetadata);
+		ValueBuilder<?, ?, ?> valueBuilder = null;
+		if (fieldValue == null) {
+			valueBuilder = NullValue.builder();
+		} else {
+			PropertyConverter converter = propertyMetadata.getDataType().getConverter();
+			valueBuilder = converter.toValueBuilder(fieldValue);
+		}
+		valueBuilder.excludeFromIndexes(!propertyMetadata.isIndexed());
+		Value<?> datastoreValue = valueBuilder.build();
+		entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
+
+	}
+
+	/**
+	 * Returns the field value for the given field.
+	 *
+	 * @param fieldMetadata
+	 *            the field's metadata
+	 * @return the field s value
+	 */
+	private Object getFieldValue(FieldMetadata fieldMetadata) {
+		Method readMethod = fieldMetadata.getReadMethod();
+		try {
+			return readMethod.invoke(entity);
+		} catch (Exception exp) {
+			throw new EntityManagerException(exp.getMessage(), exp);
+		}
+	}
+
+}

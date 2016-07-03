@@ -1,0 +1,483 @@
+/*
+ * Copyright 2016 Sai Pullabhotla.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.jmethods.catatumbo.impl;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
+import com.jmethods.catatumbo.Entity;
+import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.Identifier;
+import com.jmethods.catatumbo.Ignore;
+import com.jmethods.catatumbo.Key;
+import com.jmethods.catatumbo.ParentKey;
+import com.jmethods.catatumbo.Property;
+
+/**
+ * Introspector for entity classes. The introspect method gathers metadata about
+ * the given entity class. This metadata is needed for performing the object to
+ * Datastore mapping and vice versa. The first time an entity class is
+ * introspected, the metadata is cached and reused for better performance.
+ *
+ * @author Sai Pullabhotla
+ */
+public class EntityIntrospector {
+
+	/**
+	 * Cache of introspected classes
+	 */
+	private static LRUCache<Class<?>, EntityMetadata> cache = new LRUCache<>(20, 200);
+
+	/**
+	 * Data types that are valid for identifiers
+	 */
+	private static final DataType[] VALID_IDENTIFIER_TYPES = { DataType.LONG, DataType.LONG_OBJECT, DataType.STRING };
+
+	static {
+		// Sort the valid types so we can do binary search.
+		Arrays.sort(VALID_IDENTIFIER_TYPES);
+	}
+
+	/**
+	 * The class to introspect
+	 */
+	private final Class<?> entityClass;
+
+	/**
+	 * Output of the introspection, the metadata about the entity
+	 */
+	private EntityMetadata entityMetadata;
+
+	/**
+	 * Creates a new instance of <code>EntityIntrospector</code>.
+	 *
+	 * @param entityClass
+	 *            the entity class to introspect
+	 */
+	private EntityIntrospector(Class<?> entityClass) {
+		this.entityClass = entityClass;
+	}
+
+	/**
+	 * Introspects the given entity and returns the metadata associated with the
+	 * entity.
+	 *
+	 * @param entity
+	 *            the entity object to introspect.
+	 * @return the meatadata of the entity
+	 */
+	public static EntityMetadata introspect(Object entity) {
+		return introspect(entity.getClass());
+	}
+
+	/**
+	 * Introspects the given entity class and returns the metadata of the
+	 * entity.
+	 *
+	 * @param entityClass
+	 *            the entity class to introspect
+	 * @return the metadata of the entity
+	 */
+	public static EntityMetadata introspect(Class<?> entityClass) {
+		EntityMetadata cachedMetadata = cache.get(entityClass);
+		if (cachedMetadata != null) {
+			return cachedMetadata;
+		}
+		EntityIntrospector introspector = new EntityIntrospector(entityClass);
+		introspector.process();
+		cache.put(entityClass, introspector.entityMetadata);
+		return introspector.entityMetadata;
+	}
+
+	/**
+	 * Processes the entity class using reflection and builds the metadata.
+	 */
+	private void process() {
+		// If the class does not have the Entity annotation, throw an exception.
+		Entity entity = entityClass.getAnnotation(Entity.class);
+		if (entity == null) {
+			String message = String.format("Class %s must have %s annotation", entityClass.getName(),
+					Entity.class.getName());
+			throw new EntityManagerException(message);
+		}
+		String kind = entity.kind();
+		if (kind.trim().length() == 0) {
+			kind = entityClass.getSimpleName();
+		}
+		entityMetadata = new EntityMetadata(entityClass, kind);
+		processFields();
+		// If we did not find valid Identifier...
+		if (entityMetadata.getIdentifierMetadata() == null) {
+			throw new EntityManagerException(String.format("Class %s requires a field with annotation of %s",
+					entityClass.getName(), Identifier.class.getName()));
+		}
+	}
+
+	/**
+	 * Processes the fields defined in this entity and updates the meatadata.
+	 */
+	private void processFields() {
+		Field[] fields = entityClass.getDeclaredFields();
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(Ignore.class)) {
+				continue;
+			} else if (field.isAnnotationPresent(Identifier.class)) {
+				processIdentifierField(field);
+			} else if (field.isAnnotationPresent(Key.class)) {
+				processKeyField(field);
+			} else if (field.isAnnotationPresent(ParentKey.class)) {
+				processParentKeyField(field);
+			} else {
+				processField(field);
+			}
+		}
+	}
+
+	/**
+	 * Processes the identifier field and builds the identifier metadata.
+	 *
+	 * @param field
+	 *            the identifier field
+	 */
+	private void processIdentifierField(Field field) {
+		String fieldName = field.getName();
+		Identifier identifier = field.getAnnotation(Identifier.class);
+		boolean autoGenerated = identifier.autoGenerated();
+		Class<?> type = field.getType();
+		DataType dataType = DataType.forClass(type);
+		if (dataType == null) {
+			String message = String.format("Unknown or unsupported type, %s, for field %s in class %s. ", type,
+					fieldName, entityClass.getName());
+			throw new EntityManagerException(message);
+		}
+		if (!isValidIdentifierType(dataType)) {
+			throw new EntityManagerException(String.format("Invalid identifier type: %s. ", type));
+		}
+		IdentifierMetadata identifierMetadata = new IdentifierMetadata(fieldName, dataType, autoGenerated);
+		String readMethodName = getReadMethodName(fieldName);
+		Method readMethod = getReadMethod(readMethodName, type);
+		identifierMetadata.setReadMethod(readMethod);
+
+		String writeMethodName = getWriteMethodName(fieldName);
+		Method writeMethod = getWriteMethod(writeMethodName, type);
+		identifierMetadata.setWriteMethod(writeMethod);
+
+		entityMetadata.setIdentifierMetadata(identifierMetadata);
+	}
+
+	/**
+	 * Processes the Key field and builds the entity metadata.
+	 * 
+	 * @param field
+	 *            the Key field
+	 */
+	private void processKeyField(Field field) {
+		String fieldName = field.getName();
+		Class<?> type = field.getType();
+		DataType dataType = DataType.KEY;
+		if (!type.equals(dataType.getDataClass())) {
+			String message = String.format("Invalid type, %s, for Key field %s in class %s. ", type, fieldName,
+					entityClass);
+			throw new EntityManagerException(message);
+		}
+		KeyMetadata keyMetadata = new KeyMetadata(fieldName);
+		String readMethodName = getReadMethodName(fieldName);
+		Method readMethod = getReadMethod(readMethodName, type);
+		keyMetadata.setReadMethod(readMethod);
+
+		String writeMethodName = getWriteMethodName(fieldName);
+		Method writeMethod = getWriteMethod(writeMethodName, type);
+		keyMetadata.setWriteMethod(writeMethod);
+
+		entityMetadata.setKeyMetadata(keyMetadata);
+	}
+
+	/**
+	 * Processes the ParentKey field and builds the entity metadata.
+	 * 
+	 * @param field
+	 *            the ParentKey field
+	 */
+	private void processParentKeyField(Field field) {
+		String fieldName = field.getName();
+		Class<?> type = field.getType();
+		DataType dataType = DataType.KEY;
+		if (!type.equals(dataType.getDataClass())) {
+			String message = String.format("Invalid type, %s, for ParentKey field %s in class %s. ", type, fieldName,
+					entityClass);
+			throw new EntityManagerException(message);
+		}
+		ParentKeyMetadata parentKeyMetadata = new ParentKeyMetadata(fieldName);
+		String readMethodName = getReadMethodName(fieldName);
+		Method readMethod = getReadMethod(readMethodName, type);
+		parentKeyMetadata.setReadMethod(readMethod);
+
+		String writeMethodName = getWriteMethodName(fieldName);
+		Method writeMethod = getWriteMethod(writeMethodName, type);
+		parentKeyMetadata.setWriteMethod(writeMethod);
+
+		entityMetadata.setParentKetMetadata(parentKeyMetadata);
+	}
+
+	/**
+	 * Processes the given field and generates the meatadata.
+	 *
+	 * @param field
+	 *            the field to process
+	 */
+	private void processField(Field field) {
+		int modifiers = field.getModifiers();
+		if (Modifier.isStatic(modifiers)) {
+			return;
+		}
+
+		String fieldName = field.getName();
+		String mappedName = null;
+		boolean indexed = true;
+		Class<?> fieldType = field.getType();
+
+		DataType dataType = null;
+		dataType = DataType.forClass(fieldType);
+		// TODO need to implement support for any type (embedded objects).
+		if (dataType == null) {
+			String message = String.format("Unknown or unsupported type, %s, for field %s in class %s. ", fieldType,
+					fieldName, entityClass.getName());
+			throw new EntityManagerException(message);
+		}
+
+		Property property = field.getAnnotation(Property.class);
+		if (property != null) {
+			mappedName = property.name();
+			indexed = property.indexed();
+		}
+		if (mappedName == null || mappedName.trim().length() == 0) {
+			mappedName = fieldName;
+		}
+
+		PropertyMetadata propertyMetadata = new PropertyMetadata(fieldName, mappedName, dataType, indexed);
+
+		// For fields that have @Property annotation, we expect both setter and
+		// getter methods. For all other fields, we only treat them as
+		// persistable if we find valid getter and setter methods.
+		try {
+			propertyMetadata.setReadMethod(getReadMethod(propertyMetadata));
+			propertyMetadata.setWriteMethod(getWriteMethod(propertyMetadata));
+			entityMetadata.putPropertyMetadata(mappedName, propertyMetadata);
+		} catch (EntityManagerException exp) {
+			if (property != null) {
+				throw exp;
+			}
+		}
+	}
+
+	/**
+	 * Returns the read method for the given property.
+	 *
+	 * @param propertyMetadata
+	 *            the property metadata.
+	 * @return the read method for the given property.
+	 */
+	private Method getReadMethod(PropertyMetadata propertyMetadata) {
+		String fieldName = propertyMetadata.getName();
+		Method readMethod = null;
+		switch (propertyMetadata.getDataType()) {
+		case BOOLEAN:
+			// case BOOLEAN_OBJECT:
+			String booleanReadMethodName = getReadMethodNameForBoolean(fieldName);
+			try {
+				readMethod = getReadMethod(propertyMetadata, booleanReadMethodName);
+				break;
+			} catch (EntityManagerException exp) {
+				// Do nothing... try the default option - getXXX method.
+			}
+		default:
+			String readMethodName = getReadMethodName(fieldName);
+			readMethod = getReadMethod(propertyMetadata, readMethodName);
+			break;
+		}
+		return readMethod;
+	}
+
+	/**
+	 * Gets the method object with the given name and return type.
+	 *
+	 * @param readMethodName
+	 *            the method name
+	 * @param expectedReturnType
+	 *            the return type
+	 * @return the Method object with the given name and return type.
+	 */
+	private Method getReadMethod(String readMethodName, Class<?> expectedReturnType) {
+		try {
+			Method readMethod = entityClass.getMethod(readMethodName);
+			int modifier = readMethod.getModifiers();
+			if (Modifier.isStatic(modifier)) {
+				throw new EntityManagerException(String.format("Method %s in class %s must not be static",
+						readMethodName, entityClass.getName()));
+			}
+			if (Modifier.isAbstract(modifier)) {
+				throw new EntityManagerException(String.format("Method %s in class %s must not be abstract",
+						readMethodName, entityClass.getName()));
+			}
+			if (!Modifier.isPublic(modifier)) {
+				throw new EntityManagerException(
+						String.format("Method %s in class %s must  be public", readMethodName, entityClass.getName()));
+			}
+
+			// if (!readMethod.getReturnType().equals(expectedReturnType)) {
+			// throw new EntityManagerException(String.format("Method %1s in
+			// class %2s must have a return type of %3s",
+			// readMethodName, entityClass.getName(), expectedReturnType));
+			// }
+
+			if (!expectedReturnType.isAssignableFrom(readMethod.getReturnType())) {
+				throw new EntityManagerException(String.format("Method %s in class %s must have a return type of %s",
+						readMethodName, entityClass.getName(), expectedReturnType));
+			}
+			return readMethod;
+		} catch (NoSuchMethodException exp) {
+			throw new EntityManagerException(
+					String.format("Method %s is required in class %s", readMethodName, entityClass.getName()));
+		} catch (SecurityException exp) {
+			throw new EntityManagerException(exp.getMessage(), exp);
+		}
+
+	}
+
+	/**
+	 * Returns the Method object that allows reading of the given property.
+	 *
+	 * @param propertyMetadata
+	 *            the property metadata
+	 * @param readMethodName
+	 *            the method name (e.g. getXXX or isXXX).
+	 * @return the read Method.
+	 */
+	private Method getReadMethod(PropertyMetadata propertyMetadata, String readMethodName) {
+		return getReadMethod(readMethodName, propertyMetadata.getDataType().getDataClass());
+	}
+
+	/**
+	 * Returns the write method(setter method) for the given property.
+	 *
+	 * @param propertyMetadata
+	 *            the property
+	 * @return the write Method
+	 */
+	private Method getWriteMethod(PropertyMetadata propertyMetadata) {
+		String writeMethodName = getWriteMethodName(propertyMetadata.getName());
+		return getWriteMethod(writeMethodName, propertyMetadata.getDataClass());
+	}
+
+	/**
+	 * Returns the write method with the given name and parameter type.
+	 *
+	 * @param writeMethodName
+	 *            the method name
+	 * @param parameterType
+	 *            the parameter type.
+	 * @return the write Method.
+	 */
+	private Method getWriteMethod(String writeMethodName, Class<?> parameterType) {
+		try {
+			Method writeMethod = entityClass.getMethod(writeMethodName, parameterType);
+			int modifier = writeMethod.getModifiers();
+			if (Modifier.isStatic(modifier)) {
+				throw new EntityManagerException(String.format("Method %s in class %s must not be static",
+						writeMethodName, entityClass.getName()));
+			}
+			if (Modifier.isAbstract(modifier)) {
+				throw new EntityManagerException(String.format("Method %s in class %s must not be abstract",
+						writeMethodName, entityClass.getName()));
+			}
+			// if (!Modifier.isPublic(modifier)) {
+			// throw new EntityManagerException(String.format("Method %1s in
+			// class %2s must be public",
+			// writeMethodName, entityClass.getName()));
+			// }
+			return writeMethod;
+		} catch (NoSuchMethodException ex) {
+			throw new EntityManagerException(String.format("Method %s (%s) is required in class %s", writeMethodName,
+					parameterType.getName(), entityClass.getName()));
+		}
+
+	}
+
+	/**
+	 * Returns the name of the method that can be used to read the given field.
+	 *
+	 * @param fieldName
+	 *            the field name
+	 * @return the name of the read method,
+	 */
+	private static String getReadMethodName(String fieldName) {
+		return "get" + getCapitalizedName(fieldName);
+
+	}
+
+	/**
+	 * Returns the name of the method that can be used to read the given boolean
+	 * field.
+	 *
+	 * @param fieldName
+	 *            the field name
+	 * @return the name of the read method.
+	 */
+	private static String getReadMethodNameForBoolean(String fieldName) {
+		return "is" + getCapitalizedName(fieldName);
+
+	}
+
+	/**
+	 * Returns the name of the method that can be used to write (or set) the
+	 * given field.
+	 *
+	 * @param fieldName
+	 *            the name of the field
+	 * @return the name of the write method.
+	 */
+	private static String getWriteMethodName(String fieldName) {
+		return "set" + getCapitalizedName(fieldName);
+
+	}
+
+	/**
+	 * Capitalizes the given field name.
+	 *
+	 * @param fieldName
+	 *            the field name
+	 * @return capitalized field name.
+	 */
+	private static String getCapitalizedName(String fieldName) {
+		return Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+	}
+
+	/**
+	 * Checks to see if the given data type is valid to be used as an
+	 * identifier.
+	 *
+	 * @param dataType
+	 *            the data type to check
+	 * @return true, if the given data type is valid to be used as an
+	 *         identifier; false, otherwise.
+	 */
+	private static boolean isValidIdentifierType(DataType dataType) {
+		return Arrays.binarySearch(VALID_IDENTIFIER_TYPES, dataType) >= 0;
+	}
+
+}
