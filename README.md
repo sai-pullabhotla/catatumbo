@@ -141,22 +141,6 @@ Use this annotation on any field that should be excluded from persistence.
 ```
 
 ##Example Code for CRUD Operations 
-
-###Project Setup 
-The easiest way to include Catatumbo into your project is by adding the following dependency to your Maven project:
-
-```xml
-
-	<dependency>
-	  <groupId>com.jmethods</groupId>
-	  <artifactId>catatumbo</artifactId>
-	  <version>0.1.0</version>
-	</dependency>
-
-```
-
-###Create your Model Class 
-
 We will use the below Person class to demonstrate how to use Catatumbo. 
 
 ```java
@@ -226,7 +210,7 @@ We will use the below Person class to demonstrate how to use Catatumbo.
 	
 ```
 	
-####Explanation
+###Explanation
 * By annotating the class with `@Entity` annotation, you are indicating that 
 the EntityManager is allowed to manage the persistence of Person objects. 
 * Each Entity class must have a field with an annotation of `@Identifier`. In 
