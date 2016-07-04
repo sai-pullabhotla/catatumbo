@@ -141,6 +141,24 @@ Use this annotation on any field that should be excluded from persistence.
 ```
 
 ##Example Code for CRUD Operations 
+
+###Setting up your project 
+The easiest way to include Catatumbo into your project is by adding the below dependency to your Maven project: 
+
+```xml
+
+	<dependency>
+	  <groupId>com.jmethods</groupId>
+	  <artifactId>catatumbo</artifactId>
+	  <version>0.1.0</version>
+	</dependency>
+
+```
+
+This will download the Catatumbo JAR files as well as all necessary dependencies into your project. 
+
+###Create your Model Class 
+
 We will use the below Person class to demonstrate how to use Catatumbo. 
 
 ```java
