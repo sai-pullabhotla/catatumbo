@@ -51,6 +51,8 @@ import com.jmethods.catatumbo.entities.Employee;
 import com.jmethods.catatumbo.entities.FloatField;
 import com.jmethods.catatumbo.entities.FloatObject;
 import com.jmethods.catatumbo.entities.GrandchildEntity;
+import com.jmethods.catatumbo.entities.IgnoreField;
+import com.jmethods.catatumbo.entities.IgnoreField2;
 import com.jmethods.catatumbo.entities.IntegerField;
 import com.jmethods.catatumbo.entities.IntegerObject;
 import com.jmethods.catatumbo.entities.LongField;
@@ -114,6 +116,7 @@ public class EntityManagerTest {
 		em.deleteAll(ChildEntity.class);
 		em.deleteAll(GrandchildEntity.class);
 		em.deleteAll(Task.class);
+		em.deleteAll(IgnoreField.class);
 		populateTasks();
 	}
 
@@ -643,6 +646,16 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testInsert_IgnoredField() {
+		IgnoreField entity = new IgnoreField();
+		entity.setName("John Doe");
+		entity.setComputed("This should not be persisted");
+		entity = em.insert(entity);
+		entity = em.load(IgnoreField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getName().equals("John Doe") && entity.getComputed() == null);
+	}
+
+	@Test
 	public void testUpdateBooleanField() {
 		BooleanField entity = new BooleanField();
 		entity.setAwesome(false);
@@ -1092,6 +1105,20 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testUpdate_IgnoredField() {
+		IgnoreField entity = new IgnoreField();
+		entity.setName("John Doe");
+		entity.setComputed("This should not be persisted");
+		entity = em.insert(entity);
+		entity = em.load(IgnoreField.class, entity.getId());
+		entity.setName("John Smith");
+		entity.setComputed("Wassup!");
+		em.update(entity);
+		entity = em.load(IgnoreField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getName().equals("John Smith") && entity.getComputed() == null);
+	}
+
+	@Test
 	public void testDelete_Root() {
 		StringField entity = new StringField();
 		entity.setName("Hello World!");
@@ -1208,6 +1235,19 @@ public class EntityManagerTest {
 
 		assertTrue(grandchild.getId() == grandchild2.getId() && grandchild.getField1().equals(grandchild2.getField1())
 				&& grandchild.getParentKey().equals(grandchild2.getParentKey()));
+	}
+
+	@Test
+	public void testLoad_IgnoredField() {
+		IgnoreField2 entity = new IgnoreField2();
+		entity.setName("Hello World");
+		entity.setComputed("Hola Mundo");
+		entity = em.insert(entity);
+		entity = em.load(IgnoreField2.class, entity.getId());
+
+		// Load the previously inserted entity using IgnoreFeild.class
+		IgnoreField entity2 = em.load(IgnoreField.class, entity.getId());
+		assertTrue(entity.getId() == entity2.getId() && entity.getComputed() != null && entity2.getComputed() == null);
 	}
 
 	@Test

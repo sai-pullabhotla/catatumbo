@@ -15,12 +15,19 @@
  */
 package com.jmethods.catatumbo;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Specifies that an entity field should be ignored by the EntityManager when
  * saving or loading the entities.
  *
  * @author Sai Pullabhotla
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface Ignore {
-
+	// Simple marker.
 }
