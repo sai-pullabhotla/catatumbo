@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.jmethods.catatumbo.DatastoreKey;
+import com.jmethods.catatumbo.GeoLocation;
 
 /**
  * Various data types supported by the Cloud Datastore and/or framework.
@@ -114,7 +115,12 @@ public enum DataType {
 	 * Key (for an entity's full key, parent key, key references to other
 	 * entities).
 	 */
-	KEY(DatastoreKey.class, KeyConverter.getInstance());
+	KEY(DatastoreKey.class, KeyConverter.getInstance()),
+
+	/**
+	 * Geo Location
+	 */
+	GEO_LOCATION(GeoLocation.class, GeoLocationConverter.getInstance());
 
 	/**
 	 * The Java class type

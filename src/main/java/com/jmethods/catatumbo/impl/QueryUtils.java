@@ -27,6 +27,7 @@ import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.GqlQuery;
 import com.jmethods.catatumbo.DatastoreCursor;
 import com.jmethods.catatumbo.DatastoreKey;
+import com.jmethods.catatumbo.GeoLocation;
 
 /**
  * Utility methods for GQL Queries.
@@ -107,6 +108,8 @@ public class QueryUtils {
 			queryBuilder.addBinding(((DatastoreKey) binding).nativeKey());
 		} else if (binding instanceof DatastoreCursor) {
 			queryBuilder.addBinding(Cursor.fromUrlSafe(((DatastoreCursor) binding).getEncoded()));
+		} else if (binding instanceof GeoLocation) {
+			// @ToDo no support for GeoLocation in the gcloud API
 		}
 	}
 
@@ -147,6 +150,8 @@ public class QueryUtils {
 				} else if (bindingValue instanceof DatastoreCursor) {
 					queryBuilder.setBinding(bindingName,
 							Cursor.fromUrlSafe(((DatastoreCursor) bindingValue).getEncoded()));
+				} else if (bindingValue instanceof GeoLocation) {
+					// @ToDo no support for GeoLocation in the gcloud API
 				}
 			}
 		}

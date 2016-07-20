@@ -50,6 +50,7 @@ import com.jmethods.catatumbo.entities.DoubleObject;
 import com.jmethods.catatumbo.entities.Employee;
 import com.jmethods.catatumbo.entities.FloatField;
 import com.jmethods.catatumbo.entities.FloatObject;
+import com.jmethods.catatumbo.entities.GeoLocationField;
 import com.jmethods.catatumbo.entities.GrandchildEntity;
 import com.jmethods.catatumbo.entities.IgnoreField;
 import com.jmethods.catatumbo.entities.IgnoreField2;
@@ -115,6 +116,7 @@ public class EntityManagerTest {
 		em.deleteAll(ParentEntity.class);
 		em.deleteAll(ChildEntity.class);
 		em.deleteAll(GrandchildEntity.class);
+		em.deleteAll(GeoLocationField.class);
 		em.deleteAll(Task.class);
 		em.deleteAll(IgnoreField.class);
 		populateTasks();
@@ -646,6 +648,24 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testInsert_GeoLocationField() {
+		GeoLocationField ny = GeoLocationField.NEW_YORK_CITY;
+		ny = em.insert(ny);
+		GeoLocationField entity = em.load(GeoLocationField.class, ny.getId());
+		assertTrue(entity.getId() != 0 && entity.getCity().equals(ny.getCity())
+				&& entity.getCoordinates().equals(ny.getCoordinates()));
+	}
+
+	@Test
+	public void testInsert_GeoLocationField_Null() {
+		GeoLocationField entity = new GeoLocationField();
+		entity.setCity("NULL CITY");
+		entity = em.insert(entity);
+		entity = em.load(GeoLocationField.class, entity.getId());
+		assertNull(entity.getCoordinates());
+	}
+
+	@Test
 	public void testInsert_IgnoredField() {
 		IgnoreField entity = new IgnoreField();
 		entity.setName("John Doe");
@@ -1105,6 +1125,29 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testUpdate_GeoLocationField() {
+		GeoLocationField omaha = GeoLocationField.OMAHA;
+		GeoLocationField entity = new GeoLocationField(omaha.getCity(), omaha.getCoordinates());
+		entity = em.insert(entity);
+		GeoLocation newCoordinates = new GeoLocation(10, 10);
+		entity.setCoordinates(newCoordinates);
+		em.update(entity);
+		entity = em.load(GeoLocationField.class, entity.getId());
+		assertTrue(entity.getCoordinates().equals(newCoordinates));
+	}
+
+	@Test
+	public void testUpdate_GeoLocationField_Null() {
+		GeoLocationField paris = GeoLocationField.PARIS;
+		GeoLocationField entity = new GeoLocationField(paris.getCity(), paris.getCoordinates());
+		entity = em.insert(entity);
+		entity.setCoordinates(null);
+		em.update(entity);
+		entity = em.load(GeoLocationField.class, entity.getId());
+		assertNull(entity.getCoordinates());
+	}
+
+	@Test
 	public void testUpdate_IgnoredField() {
 		IgnoreField entity = new IgnoreField();
 		entity.setName("John Doe");
@@ -1404,6 +1447,22 @@ public class EntityManagerTest {
 			System.out.println(task.getId() + "--->" + task.getName());
 		}
 		assertTrue(tasks.size() == 5);
+	}
+
+	@Test
+	public void testExecute_GeoLocation() {
+		em.deleteAll(GeoLocationField.class);
+		GeoLocationField jfk = GeoLocationField.NEW_YORK_CITY;
+		GeoLocationField oma = GeoLocationField.OMAHA;
+		GeoLocationField cdg = GeoLocationField.PARIS;
+		em.insert(jfk);
+		em.insert(oma);
+		em.insert(cdg);
+		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM CityCoordinates ORDER BY city");
+		QueryResponse<GeoLocationField> response = em.execute(GeoLocationField.class, request);
+		List<GeoLocationField> cities = response.getResults();
+		assertTrue(cities.size() == 3 && cities.get(0).getCoordinates().equals(jfk.getCoordinates()));
+
 	}
 
 	private static Calendar getToday() {
