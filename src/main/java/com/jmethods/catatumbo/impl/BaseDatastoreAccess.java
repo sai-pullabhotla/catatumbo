@@ -23,7 +23,6 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreReaderWriter;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Query;
@@ -49,10 +48,13 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	 */
 	private Datastore datastore;
 
+	/**
+	 * DatastoreReaderWriter
+	 */
 	private DatastoreReaderWriter datastoreReaderWriter;
 
 	/**
-	 * Creates a new instance of <code>DefaultEntityManager</code>.
+	 * Creates a new instance of <code>BaseDatastoreAccess</code>.
 	 * 
 	 * @param datastore
 	 *            the Datastore object
@@ -62,6 +64,12 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		this.datastoreReaderWriter = datastore;
 	}
 
+	/**
+	 * Creates a new instance of <code>BaseDatastoreAccess</code>.
+	 * 
+	 * @param transaction
+	 *            Native transaction
+	 */
 	protected BaseDatastoreAccess(Transaction transaction) {
 		this.datastore = transaction.datastore();
 		this.datastoreReaderWriter = transaction;
@@ -79,8 +87,9 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public <E> E insert(E entity) {
 		try {
-			FullEntity<?> datastoreEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			Entity datastoreEntity = Marshaller.marshal(datastore, entity);
 			Entity insertedDatastoreEntity = datastoreReaderWriter.add(datastoreEntity);
+			@SuppressWarnings("unchecked")
 			E insertedEntity = (E) Unmarshaller.unmarshal(insertedDatastoreEntity, entity.getClass());
 			return insertedEntity;
 		} catch (DatastoreException exp) {
@@ -97,14 +106,15 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 			return new ArrayList<E>();
 		}
 		try {
-			FullEntity<?>[] datastoreEntities = new FullEntity<?>[entities.size()];
+			Entity[] datastoreEntities = new Entity[entities.size()];
 			Class<?> entityClass = entities.get(0).getClass();
 			for (int i = 0; i < entities.size(); i++) {
-				datastoreEntities[i] = (FullEntity<?>) Marshaller.marshal(datastore, entities.get(i));
+				datastoreEntities[i] = Marshaller.marshal(datastore, entities.get(i));
 			}
 			List<Entity> insertedDatastoreEntities = datastoreReaderWriter.add(datastoreEntities);
 			List<E> insertedEntities = new ArrayList<>(insertedDatastoreEntities.size());
 			for (Entity insertedDatastoreEntity : insertedDatastoreEntities) {
+				@SuppressWarnings("unchecked")
 				E insertedEntity = (E) Unmarshaller.unmarshal(insertedDatastoreEntity, entityClass);
 				insertedEntities.add(insertedEntity);
 			}
@@ -117,7 +127,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public <E> E update(E entity) {
 		try {
-			Entity datastoreEntity = (Entity) Marshaller.marshal(datastore, entity);
+			Entity datastoreEntity = Marshaller.marshal(datastore, entity, true);
 			datastoreReaderWriter.update(datastoreEntity);
 			return entity;
 		} catch (DatastoreException exp) {
@@ -136,7 +146,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			Entity[] datastoreEntities = new Entity[entities.size()];
 			for (int i = 0; i < entities.size(); i++) {
-				datastoreEntities[i] = (Entity) Marshaller.marshal(datastore, entities.get(i));
+				datastoreEntities[i] = Marshaller.marshal(datastore, entities.get(i), true);
 			}
 			datastoreReaderWriter.update(datastoreEntities);
 			return entities;
@@ -150,7 +160,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
-			com.google.cloud.datastore.Entity datastoreEntity = datastoreReaderWriter.get(key);
+			Entity datastoreEntity = datastoreReaderWriter.get(key);
 			if (datastoreEntity == null) {
 				return null;
 			}
@@ -169,7 +179,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			com.google.cloud.datastore.Entity datastoreEntity = datastoreReaderWriter.get(key);
+			Entity datastoreEntity = datastoreReaderWriter.get(key);
 			if (datastoreEntity == null) {
 				return null;
 			}
@@ -185,7 +195,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
-			com.google.cloud.datastore.Entity datastoreEntity = datastoreReaderWriter.get(key);
+			Entity datastoreEntity = datastoreReaderWriter.get(key);
 			if (datastoreEntity == null) {
 				return null;
 			}
@@ -204,7 +214,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			com.google.cloud.datastore.Entity datastoreEntity = datastoreReaderWriter.get(key);
+			Entity datastoreEntity = datastoreReaderWriter.get(key);
 			if (datastoreEntity == null) {
 				return null;
 			}
@@ -218,7 +228,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public void delete(Object entity) {
 		try {
-			Key key = (Key) Marshaller.marshalKey(datastore, entity);
+			Key key = Marshaller.marshalKey(datastore, entity);
 			datastoreReaderWriter.delete(key);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -230,7 +240,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			Key[] keys = new Key[entities.size()];
 			for (int i = 0; i < entities.size(); i++) {
-				keys[i] = (Key) Marshaller.marshalKey(datastore, entities.get(i));
+				keys[i] = Marshaller.marshalKey(datastore, entities.get(i));
 			}
 			datastoreReaderWriter.delete(keys);
 		} catch (DatastoreException exp) {
