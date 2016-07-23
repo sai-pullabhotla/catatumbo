@@ -76,6 +76,30 @@ public interface DatastoreAccess {
 	<E> List<E> update(List<E> entities);
 
 	/**
+	 * Updates or inserts the given entity in the Cloud Datastore. If the entity
+	 * does not have an ID, it may be generated.
+	 * 
+	 * @param entity
+	 *            the entity to update or insert
+	 * @return the updated/inserted entity.
+	 * @throws EntityManagerException
+	 *             if any error occurs while saving.
+	 */
+	<E> E upsert(E entity);
+
+	/**
+	 * Updates or inserts the given list of entities in the Cloud Datastore. If
+	 * the entities do not have a valid ID, IDs may be generated.
+	 * 
+	 * @param entities
+	 *            the entities to update/or insert.
+	 * @return the updated or inserted entities
+	 * @throws EntityManagerException
+	 *             if any error occurs while saving.
+	 */
+	<E> List<E> upsert(List<E> entities);
+
+	/**
 	 * Deletes the given entity from the Cloud Datastore.
 	 * 
 	 * @param entity

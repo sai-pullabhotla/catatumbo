@@ -156,6 +156,46 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	}
 
 	@Override
+	public <E> E upsert(E entity) {
+		try {
+			Entity datastoreEntity = Marshaller.marshal(datastore, entity);
+			Entity upsertedDatastoreEntity = datastoreReaderWriter.put(datastoreEntity);
+			@SuppressWarnings("unchecked")
+			E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedDatastoreEntity, entity.getClass());
+			return upsertedEntity;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	@Override
+	public <E> List<E> upsert(List<E> entities) {
+		if (entities == null) {
+			return null;
+		}
+		if (entities.isEmpty()) {
+			return new ArrayList<>();
+		}
+		try {
+			Entity[] datastoreEntities = new Entity[entities.size()];
+			Class<?> entityClass = entities.get(0).getClass();
+			for (int i = 0; i < entities.size(); i++) {
+				datastoreEntities[i] = Marshaller.marshal(datastore, entities.get(i));
+			}
+			List<Entity> upsertedDatastoreEntities = datastoreReaderWriter.put(datastoreEntities);
+			List<E> upsertedEntities = new ArrayList<>(upsertedDatastoreEntities.size());
+			for (Entity upsertedDatastoreEntity : upsertedDatastoreEntities) {
+				@SuppressWarnings("unchecked")
+				E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedDatastoreEntity, entityClass);
+				upsertedEntities.add(upsertedEntity);
+			}
+			return upsertedEntities;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	@Override
 	public <E> E load(Class<E> entityClass, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);

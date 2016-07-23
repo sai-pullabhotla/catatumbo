@@ -1215,6 +1215,68 @@ public class EntityManagerTest {
 		assertTrue(entity.getId() > 0 && entity.getName().equals("John Smith") && entity.getComputed() == null);
 	}
 
+	@Test
+	public void testUpsert_LongId_Insert() {
+		final String message = "Upsert created me";
+		LongId entity = new LongId();
+		entity.setField1(message);
+		entity = em.upsert(entity);
+		entity = em.load(LongId.class, entity.getId());
+		assertTrue(message.equals(entity.getField1()));
+	}
+
+	@Test
+	public void testUpsert_LongId_Update() {
+		final String message = "Upsert created me";
+		final String message2 = "Upsert created me, then updated";
+		LongId entity = new LongId();
+		entity.setField1(message);
+		entity = em.upsert(entity);
+		entity = em.load(LongId.class, entity.getId());
+		entity.setField1(message2);
+		em.upsert(entity);
+		entity = em.load(LongId.class, entity.getId());
+		assertTrue(message2.equals(entity.getField1()));
+	}
+
+	@Test
+	public void testUpsert_StringId_Insert() {
+		final String greetings = "Upsert created me";
+		StringId entity = new StringId();
+		entity.setGreetings(greetings);
+		entity = em.upsert(entity);
+		entity = em.load(StringId.class, entity.getId());
+		assertTrue(greetings.equals(entity.getGreetings()));
+
+	}
+
+	@Test
+	public void testUpsert_StringId_Update() {
+		final String greetings1 = "Upsert created me";
+		final String greetings2 = "Upsert first created me, then updated";
+		StringId entity = new StringId();
+		entity.setGreetings(greetings1);
+		entity = em.upsert(entity);
+		entity = em.load(StringId.class, entity.getId());
+		entity.setGreetings(greetings2);
+		em.upsert(entity);
+		entity = em.load(StringId.class, entity.getId());
+		assertTrue(greetings2.equals(entity.getGreetings()));
+
+	}
+
+	@Test
+	public void testUpsert_List_Insert() {
+		List<StringField> entities = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			StringField entity = new StringField();
+			entity.setName("I'm StringField Entity " + i);
+			entities.add(entity);
+		}
+		entities = em.upsert(entities);
+		assertTrue(entities.size() == 5 && entities.get(0).getId() != 0);
+	}
+
 	@Test(expected = EntityManagerException.class)
 	public void testDelete_UnsetId() {
 		StringField entity = new StringField();
