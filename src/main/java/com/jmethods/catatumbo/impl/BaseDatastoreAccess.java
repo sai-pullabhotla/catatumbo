@@ -23,13 +23,14 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreReaderWriter;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
-import com.google.cloud.datastore.Query.ResultType;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.Transaction;
+import com.google.cloud.datastore.Query.ResultType;
 import com.jmethods.catatumbo.BaseQueryResponse;
 import com.jmethods.catatumbo.DatastoreAccess;
 import com.jmethods.catatumbo.DatastoreKey;
@@ -88,38 +89,27 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public <E> E insert(E entity) {
 		try {
-			Entity datastoreEntity = Marshaller.marshal(datastore, entity);
-			Entity insertedDatastoreEntity = datastoreReaderWriter.add(datastoreEntity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			Entity insertedNativeEntity = datastoreReaderWriter.add(nativeEntity);
 			@SuppressWarnings("unchecked")
-			E insertedEntity = (E) Unmarshaller.unmarshal(insertedDatastoreEntity, entity.getClass());
+			E insertedEntity = (E) Unmarshaller.unmarshal(insertedNativeEntity, entity.getClass());
 			return insertedEntity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E> List<E> insert(List<E> entities) {
-		if (entities == null) {
-			return null;
-		}
-		if (entities.isEmpty()) {
+		if (entities == null || entities.isEmpty()) {
 			return new ArrayList<E>();
 		}
 		try {
-			Entity[] datastoreEntities = new Entity[entities.size()];
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities);
 			Class<?> entityClass = entities.get(0).getClass();
-			for (int i = 0; i < entities.size(); i++) {
-				datastoreEntities[i] = Marshaller.marshal(datastore, entities.get(i));
-			}
-			List<Entity> insertedDatastoreEntities = datastoreReaderWriter.add(datastoreEntities);
-			List<E> insertedEntities = new ArrayList<>(insertedDatastoreEntities.size());
-			for (Entity insertedDatastoreEntity : insertedDatastoreEntities) {
-				@SuppressWarnings("unchecked")
-				E insertedEntity = (E) Unmarshaller.unmarshal(insertedDatastoreEntity, entityClass);
-				insertedEntities.add(insertedEntity);
-			}
-			return insertedEntities;
+			List<Entity> insertedNativeEntities = datastoreReaderWriter.add(nativeEntities);
+			return (List<E>) toEntities(entityClass, insertedNativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -128,8 +118,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public <E> E update(E entity) {
 		try {
-			Entity datastoreEntity = Marshaller.marshal(datastore, entity, true);
-			datastoreReaderWriter.update(datastoreEntity);
+			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity, true);
+			datastoreReaderWriter.update(nativeEntity);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -138,18 +128,12 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 
 	@Override
 	public <E> List<E> update(List<E> entities) {
-		if (entities == null) {
-			return null;
-		}
-		if (entities.isEmpty()) {
+		if (entities == null || entities.isEmpty()) {
 			return new ArrayList<>();
 		}
 		try {
-			Entity[] datastoreEntities = new Entity[entities.size()];
-			for (int i = 0; i < entities.size(); i++) {
-				datastoreEntities[i] = Marshaller.marshal(datastore, entities.get(i), true);
-			}
-			datastoreReaderWriter.update(datastoreEntities);
+			Entity[] nativeEntities = toNativeEntities(entities);
+			datastoreReaderWriter.update(nativeEntities);
 			return entities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -159,38 +143,27 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public <E> E upsert(E entity) {
 		try {
-			Entity datastoreEntity = Marshaller.marshal(datastore, entity);
-			Entity upsertedDatastoreEntity = datastoreReaderWriter.put(datastoreEntity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			Entity upsertedNativeEntity = datastoreReaderWriter.put(nativeEntity);
 			@SuppressWarnings("unchecked")
-			E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedDatastoreEntity, entity.getClass());
+			E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedNativeEntity, entity.getClass());
 			return upsertedEntity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E> List<E> upsert(List<E> entities) {
-		if (entities == null) {
-			return null;
-		}
-		if (entities.isEmpty()) {
+		if (entities == null || entities.isEmpty()) {
 			return new ArrayList<>();
 		}
 		try {
-			Entity[] datastoreEntities = new Entity[entities.size()];
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities);
 			Class<?> entityClass = entities.get(0).getClass();
-			for (int i = 0; i < entities.size(); i++) {
-				datastoreEntities[i] = Marshaller.marshal(datastore, entities.get(i));
-			}
-			List<Entity> upsertedDatastoreEntities = datastoreReaderWriter.put(datastoreEntities);
-			List<E> upsertedEntities = new ArrayList<>(upsertedDatastoreEntities.size());
-			for (Entity upsertedDatastoreEntity : upsertedDatastoreEntities) {
-				@SuppressWarnings("unchecked")
-				E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedDatastoreEntity, entityClass);
-				upsertedEntities.add(upsertedEntity);
-			}
-			return upsertedEntities;
+			List<Entity> upsertedNativeEntities = datastoreReaderWriter.put(nativeEntities);
+			return (List<E>) toEntities(entityClass, upsertedNativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -201,11 +174,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
-			Entity datastoreEntity = datastoreReaderWriter.get(key);
-			if (datastoreEntity == null) {
-				return null;
-			}
-			E entity = Unmarshaller.unmarshal(datastoreEntity, entityClass);
+			Entity nativeEntity = datastoreReaderWriter.get(key);
+			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -231,11 +201,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			Entity datastoreEntity = datastoreReaderWriter.get(key);
-			if (datastoreEntity == null) {
-				return null;
-			}
-			E entity = Unmarshaller.unmarshal(datastoreEntity, entityClass);
+			Entity nativeEntity = datastoreReaderWriter.get(key);
+			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -247,11 +214,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
-			Entity datastoreEntity = datastoreReaderWriter.get(key);
-			if (datastoreEntity == null) {
-				return null;
-			}
-			E entity = Unmarshaller.unmarshal(datastoreEntity, entityClass);
+			Entity nativeEntity = datastoreReaderWriter.get(key);
+			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -277,11 +241,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			Entity datastoreEntity = datastoreReaderWriter.get(key);
-			if (datastoreEntity == null) {
-				return null;
-			}
-			E entity = Unmarshaller.unmarshal(datastoreEntity, entityClass);
+			Entity nativeEntity = datastoreReaderWriter.get(key);
+			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -291,8 +252,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public void delete(Object entity) {
 		try {
-			Key key = Marshaller.marshalKey(datastore, entity);
-			datastoreReaderWriter.delete(key);
+			Key nativeKey = Marshaller.marshalKey(datastore, entity);
+			datastoreReaderWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -301,11 +262,11 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	@Override
 	public void delete(List<?> entities) {
 		try {
-			Key[] keys = new Key[entities.size()];
+			Key[] nativeKeys = new Key[entities.size()];
 			for (int i = 0; i < entities.size(); i++) {
-				keys[i] = Marshaller.marshalKey(datastore, entities.get(i));
+				nativeKeys[i] = Marshaller.marshalKey(datastore, entities.get(i));
 			}
-			datastoreReaderWriter.delete(keys);
+			datastoreReaderWriter.delete(nativeKeys);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -337,8 +298,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	public <E> void delete(Class<E> entityClass, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
-			datastoreReaderWriter.delete(key);
+			Key nativeKey = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
+			datastoreReaderWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -348,8 +309,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	public <E> void delete(Class<E> entityClass, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
-			datastoreReaderWriter.delete(key);
+			Key nativeKey = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
+			datastoreReaderWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -359,8 +320,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	public <E> void delete(Class<E> entityClass, DatastoreKey parentKey, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			datastoreReaderWriter.delete(key);
+			Key nativeKey = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
+			datastoreReaderWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -370,8 +331,8 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	public <E> void delete(Class<E> entityClass, DatastoreKey parentKey, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			datastoreReaderWriter.delete(key);
+			Key nativeKey = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
+			datastoreReaderWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -413,6 +374,16 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		}
 	}
 
+	/**
+	 * Converts the given list of identifiers into an array of native Key
+	 * objects.
+	 * 
+	 * @param entityClass
+	 *            the entity class to which these identifiers belong to.
+	 * @param identifiers
+	 *            the list of identifiers to convert.
+	 * @return an array of Key objects
+	 */
 	private Key[] longListToNativeKeys(Class<?> entityClass, List<Long> identifiers) {
 		if (identifiers == null || identifiers.isEmpty()) {
 			return new Key[0];
@@ -428,6 +399,16 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		return nativeKeys;
 	}
 
+	/**
+	 * Converts the given list of identifiers into an array of native Key
+	 * objects.
+	 * 
+	 * @param entityClass
+	 *            the entity class to which these identifiers belong to.
+	 * @param identifiers
+	 *            the list of identifiers to convert.
+	 * @return an array of Key objects
+	 */
 	private Key[] stringListToNativeKeys(Class<?> entityClass, List<String> identifiers) {
 		if (identifiers == null || identifiers.isEmpty()) {
 			return new Key[0];
@@ -443,6 +424,16 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		return nativeKeys;
 	}
 
+	/**
+	 * Converts the given list of native entities to a list of model objects of
+	 * given type, <code>entityClass</code>.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @param nativeEntities
+	 *            native entities to convert
+	 * @return the list of model objects
+	 */
 	private <E> List<E> toEntities(Class<E> entityClass, List<Entity> nativeEntities) {
 		if (nativeEntities == null || nativeEntities.isEmpty()) {
 			return new ArrayList<>();
@@ -454,4 +445,37 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		}
 		return entities;
 	}
+
+	/**
+	 * Converts the given list of model objects to an array of FullEntity
+	 * objects.
+	 * 
+	 * @param entities
+	 *            the model objects to convert.
+	 * @return the equivalent FullEntity array
+	 */
+	private FullEntity<?>[] toNativeFullEntities(List<?> entities) {
+		FullEntity<?>[] nativeEntities = new FullEntity[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			nativeEntities[i] = (FullEntity<?>) Marshaller.marshal(datastore, entities.get(i));
+		}
+		return nativeEntities;
+	}
+
+	/**
+	 * Converts the given list of model objects to an array of native Entity
+	 * objects.
+	 * 
+	 * @param entities
+	 *            the model objects to convert.
+	 * @return the equivalent Entity array
+	 */
+	private Entity[] toNativeEntities(List<?> entities) {
+		Entity[] nativeEntities = new Entity[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			nativeEntities[i] = (Entity) Marshaller.marshal(datastore, entities.get(i), true);
+		}
+		return nativeEntities;
+	}
+
 }

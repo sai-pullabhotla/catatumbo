@@ -16,11 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +34,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.BooleanField;
 import com.jmethods.catatumbo.entities.BooleanObject;
 import com.jmethods.catatumbo.entities.ByteArrayField;
@@ -127,6 +124,10 @@ public class EntityManagerTest {
 		em.deleteAll(GeoLocationField.class);
 		em.deleteAll(Task.class);
 		em.deleteAll(IgnoreField.class);
+		em.deleteAll(Country.class);
+		em.deleteAll(Account.class);
+		em.deleteAll(Department.class);
+		em.deleteAll(Employee.class);
 		populateTasks();
 	}
 
@@ -1418,7 +1419,7 @@ public class EntityManagerTest {
 	@Test
 	public void testLoadById() {
 		List<LongId> entities = new ArrayList<>();
-		for (int i = 0; i < 300; i++) {
+		for (int i = 0; i < 3; i++) {
 			LongId entity = new LongId();
 			entity.setField1("Test for Loading Multiple Entities " + i);
 			entities.add(entity);
@@ -1433,9 +1434,28 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testLoadById_MissingKey() {
+		List<LongId> entities = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			LongId entity = new LongId();
+			entity.setField1("Test for Loading Multiple Entities " + i);
+			entities.add(entity);
+		}
+		entities = em.insert(entities);
+		List<Long> identifiers = new ArrayList<>();
+		for (LongId entity : entities) {
+			identifiers.add(entity.getId());
+		}
+		identifiers.add(0, -100L);
+		identifiers.add(3, -200L);
+		List<LongId> entities2 = em.loadById(LongId.class, identifiers);
+		assertTrue(entities2.get(0) == null && entities2.get(1) != null && entities2.get(3) == null);
+	}
+
+	@Test
 	public void testLoadByName() {
 		List<StringId> entities = new ArrayList<>();
-		for (int i = 0; i < 300; i++) {
+		for (int i = 0; i < 3; i++) {
 			StringId entity = new StringId();
 			entity.setGreetings("Test for Loading Multiple Entities " + i);
 			entities.add(entity);

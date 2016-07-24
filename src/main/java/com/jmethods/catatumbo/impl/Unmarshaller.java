@@ -68,9 +68,14 @@ public class Unmarshaller {
 	 *            the native Entity
 	 * @param entityClass
 	 *            the target type
-	 * @return Object that is equivalent to the given native entity.
+	 * @return Object that is equivalent to the given native entity. If the
+	 *         given <code>datastoreEntity</code> is <code>null</code>, returns
+	 *         <code>null</code>.
 	 */
 	public static <T> T unmarshal(Entity datastoreEntity, Class<T> entityClass) {
+		if (datastoreEntity == null) {
+			return null;
+		}
 		Unmarshaller unmarshaller = new Unmarshaller(datastoreEntity, entityClass);
 		return unmarshaller.unmarshal();
 	}
@@ -83,7 +88,7 @@ public class Unmarshaller {
 	 *            type
 	 * @return the entity POJO
 	 */
-	public <T> T unmarshal() {
+	private <T> T unmarshal() {
 
 		try {
 			instantiateEntity();
