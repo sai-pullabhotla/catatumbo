@@ -16,8 +16,11 @@ instead of Relational Databases.
 * Support for a variety of Data Types - boolean, Boolean, char, Character, short, Short, int, Integer, long, Long, 
 float, Float, double, Double, String, Byte Arrays, Char Arrays, Date, Calendar, Geo Location, Keys, Parent Keys and 
 Key References
-* Create, Update, Delete a single object or multiple objects with a single method call
-* Execute GQL Queries. 
+* Create, Retrieve, Update, Delete, Upsert (update or insert) a single object or multiple objects with a single method call
+* Support for executing GQL Queries. This includes:  
+	* Entity queries 
+	* Projection queries 
+	* Key-only queries 
 * Transaction Support  
 
 ##Quick Start Guide 
