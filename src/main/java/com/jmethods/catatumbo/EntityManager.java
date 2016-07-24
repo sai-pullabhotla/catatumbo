@@ -26,16 +26,16 @@ package com.jmethods.catatumbo;
 public interface EntityManager extends DatastoreAccess {
 
 	/**
-	 * Deletes all entities of given Kind. This is experimental/testing purpose
-	 * only and NOT optimized.
+	 * Deletes all entities of given Kind.
 	 * 
 	 * @param entityClass
 	 *            the entity class - The entity Kind will be determined from
 	 *            this class.
+	 * @return the number of entities that were deleted
 	 * @throws EntityManagerException
 	 *             if any error occurs while inserting.
 	 */
-	<E> void deleteAll(Class<E> entityClass);
+	<E> long deleteAll(Class<E> entityClass);
 
 	/**
 	 * Returns a new Transaction that can be used to perform a set of

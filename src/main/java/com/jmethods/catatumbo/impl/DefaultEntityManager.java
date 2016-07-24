@@ -15,6 +15,8 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.util.Arrays;
+
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.GqlQuery;
@@ -34,6 +36,11 @@ import com.jmethods.catatumbo.EntityManagerException;
  * @author Sai Pullabhotla
  */
 public class DefaultEntityManager extends BaseDatastoreAccess implements EntityManager {
+
+	/**
+	 * Batch size for sending delete requests when using the deleteAll method
+	 */
+	private static final int DEFAULT_DELETE_ALL_BATCH_SIZE = 100;
 
 	/**
 	 * Datastore object
@@ -62,17 +69,28 @@ public class DefaultEntityManager extends BaseDatastoreAccess implements EntityM
 	}
 
 	@Override
-	public <E> void deleteAll(Class<E> entityClass) {
+	public <E> long deleteAll(Class<E> entityClass) {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-		String query = "SELECT __key__ from " + entityMetadata.getKind();
+		String query = "SELECT __key__ FROM " + entityMetadata.getKind();
 		try {
 			GqlQuery<Key> gqlQuery = Query.gqlQueryBuilder(Query.ResultType.KEY, query).build();
 			QueryResults<Key> keys = datastore.run(gqlQuery);
-			// TODO do batch of 100?
+			Key[] nativeKeys = new Key[DEFAULT_DELETE_ALL_BATCH_SIZE];
+			long deleteCount = 0;
+			int i = 0;
 			while (keys.hasNext()) {
-				Key key = keys.next();
-				datastore.delete(key);
+				nativeKeys[i++] = keys.next();
+				if (i % DEFAULT_DELETE_ALL_BATCH_SIZE == 0) {
+					datastore.delete(nativeKeys);
+					deleteCount += DEFAULT_DELETE_ALL_BATCH_SIZE;
+					i = 0;
+				}
 			}
+			if (i > 0) {
+				datastore.delete(Arrays.copyOfRange(nativeKeys, 0, i));
+				deleteCount += i;
+			}
+			return deleteCount;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
