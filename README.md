@@ -13,10 +13,23 @@ instead of Relational Databases.
 ##Features
 * Automatic mapping of model classes (POJOs) to Cloud Datastore Entities and vice versa
 * Automatic generation of Identifiers (for both Numeric and String types)  
-* Support for a variety of Data Types - boolean, Boolean, char, Character, short, Short, int, Integer, long, Long, 
-float, Float, double, Double, String, Byte Arrays, Char Arrays, Date, Calendar, Geo Location, Keys, Parent Keys and 
-Key References
-* Create, Retrieve, Update, Delete, Upsert (update or insert) a single object or multiple objects with a single method call
+* Support for a variety of Data Types: 
+	* boolean, Boolean 
+	* char, Character 
+	* short, Short 
+	* int, Integer 
+	* long, Long 
+	* float, Float 
+	* double, Double 
+	* String 
+	* Byte Arrays 
+	* Char Arrays 
+	* Date 
+	* Calendar 
+	* Geo Location 
+	* Keys, Parent Keys and Key References
+	* List Values 
+* Create, Retrieve, Update, Delete, Upsert (update or insert)  
 * Support for executing GQL Queries. This includes:  
 	* Entity queries 
 	* Projection queries 
