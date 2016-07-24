@@ -303,7 +303,8 @@ public interface DatastoreAccess {
 	 * Creates and returns a new {@link EntityQueryRequest} for the given GQL
 	 * query string. The returned {@link EntityQueryRequest} can be further
 	 * customized to set any bindings (positional or named), and then be
-	 * executed by calling the <code>execute</code> method.
+	 * executed by calling the <code>execute</code> or
+	 * <code>executeEntityQuery</code> methods.
 	 * 
 	 * @param query
 	 *            the GQL query
@@ -312,14 +313,76 @@ public interface DatastoreAccess {
 	EntityQueryRequest createEntityQueryRequest(String query);
 
 	/**
-	 * Executes the given request and returns the response.
+	 * Creates and returns a new {@link ProjectionQueryRequest} for the given
+	 * GQL query string. The returned {@link ProjectionQueryRequest} can further
+	 * be customized to set any positional and/or named bindings, and then be
+	 * executed by calling the <code>execute</code> or
+	 * <code>executeProjectionQuery</code> methods.
+	 * 
+	 * @param query
+	 *            the GQL projection query
+	 * @return a new ProjectionQueryRequest for the given query
+	 */
+	ProjectionQueryRequest createProjectionQueryRequest(String query);
+
+	/**
+	 * Creates and returns a new {@link KeyQueryRequest} for the given GQL query
+	 * string. Key query requests must only have __key__ in the
+	 * <code>SELECT</code> list of field. The returned {@link KeyQueryRequest}
+	 * can further be customized to set any positional and/or named bindings,
+	 * and then be executed by calling the <code>executeKeyQuery</code> method.
+	 * 
+	 * @param query
+	 *            the GQL projection query
+	 * @return a new ProjectionQueryRequest for the given query
+	 */
+	KeyQueryRequest createKeyQueryRequest(String query);
+
+	/**
+	 * Executes the given {@link EntityQueryRequest} and returns the response.
+	 * 
+	 * @param expectedResultType
+	 *            the expected type of results.
+	 * @param request
+	 *            the entity query request
+	 * @return the query response
+	 */
+	<E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request);
+
+	/**
+	 * Executes the given {@link ProjectionQueryRequest} and returns the
+	 * response.
+	 * 
+	 * @param expectedResultType
+	 *            the expected type of results.
+	 * @param request
+	 *            the projection query request
+	 * @return the query response
+	 */
+	<E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType, ProjectionQueryRequest request);
+
+	/**
+	 * Executes the given {@link KeyQueryRequest} and returns the response.
+	 * 
+	 * @param request
+	 *            the key query request
+	 * @return the query response
+	 */
+	QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request);
+
+	/**
+	 * Executes the given request and returns the response. The request can
+	 * either be an {@link EntityQueryRequest} or
+	 * {@link ProjectionQueryRequest}. All other requests will result in an
+	 * Exception.
 	 * 
 	 * @param expectedResultType
 	 *            the expected type of results
 	 * @param request
-	 *            the query request
+	 *            the query request.
 	 * @return the query response
 	 */
+	@Deprecated
 	<E> QueryResponse<E> execute(Class<E> expectedResultType, QueryRequest request);
 
 }

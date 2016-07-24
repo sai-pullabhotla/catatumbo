@@ -70,6 +70,7 @@ import com.jmethods.catatumbo.entities.StringId;
 import com.jmethods.catatumbo.entities.StringId2;
 import com.jmethods.catatumbo.entities.StringListField;
 import com.jmethods.catatumbo.entities.Task;
+import com.jmethods.catatumbo.entities.TaskName;
 
 /**
  * @author Sai Pullabhotla
@@ -1357,6 +1358,15 @@ public class EntityManagerTest {
 		assertTrue(grandchild != null && grandchild2 == null);
 	}
 
+	/*
+	 * @Test public void testDeleteAll() { List<DeleteAll> entities = new
+	 * ArrayList<>(); for (int i = 0; i < 5; i++) { DeleteAll entity = new
+	 * DeleteAll(); entity.setField1("Delete All " + i); entities.add(entity); }
+	 * em.insert(entities); try { Thread.sleep(5000L); } catch
+	 * (InterruptedException e) { e.printStackTrace(); } long deleteCount =
+	 * em.deleteAll(DeleteAll.class); assertTrue(deleteCount == 5); }
+	 */
+
 	@Test
 	public void testLoad_ThatDoesNotExist() {
 		long id = random.nextLong();
@@ -1482,7 +1492,7 @@ public class EntityManagerTest {
 		EntityQueryRequest request = em
 				.createEntityQueryRequest("SELECT * FROM Task WHERE priority = @1 order by __key__");
 		request.addPositionalBinding(0);
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		assertTrue(tasks.size() == 10 && tasks.get(0).getId() == 5 && tasks.get(tasks.size() - 1).getId() == 50);
 	}
@@ -1493,7 +1503,7 @@ public class EntityManagerTest {
 				.createEntityQueryRequest("SELECT * FROM Task WHERE priority = @1 AND complete = @2 order by __key__");
 		request.addPositionalBinding(0);
 		request.addPositionalBinding(true);
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		assertTrue(tasks.size() == 5 && tasks.get(0).getId() == 10 && tasks.get(tasks.size() - 1).getId() == 50);
 	}
@@ -1502,7 +1512,7 @@ public class EntityManagerTest {
 	public void executeTest_SelectTaskNameFilter() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM Task WHERE name = @1 order by __key__");
 		request.addPositionalBinding("My Task 13");
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		assertTrue(tasks.size() == 1 && tasks.get(0).getId() == 13);
 	}
@@ -1515,7 +1525,7 @@ public class EntityManagerTest {
 
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM Task WHERE completionDate <= @1");
 		request.addPositionalBinding(tomorrow);
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		assertTrue(tasks.size() == 20);
 	}
@@ -1534,7 +1544,7 @@ public class EntityManagerTest {
 		EntityQueryRequest request = em.createEntityQueryRequest(
 				"SELECT * FROM Task WHERE completionDate >= @Tomorrow AND completionDate <= @DayAfterTomorrow");
 		request.setNamedBindings(bindings);
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		assertTrue(tasks.size() == 20);
 	}
@@ -1555,7 +1565,7 @@ public class EntityManagerTest {
 			if (i > 0) {
 				request.setNamedBinding("Offset", endCursor);
 			}
-			QueryResponse<Task> response = em.execute(Task.class, request);
+			QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 			tasks = response.getResults();
 			endCursor = response.getEndCursor();
 			System.out.println("**** Page " + (i + 1) + "****");
@@ -1570,7 +1580,7 @@ public class EntityManagerTest {
 	@Test
 	public void testExecute() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * from Task");
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		for (Task task : tasks) {
 			System.out.println(task.getId() + "--->" + task.getName());
@@ -1584,7 +1594,7 @@ public class EntityManagerTest {
 	public void testExecute_Limit_10() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * from Task LIMIT @1");
 		request.addPositionalBinding(10L);
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		System.out.println("Start Cursor: " + response.getStartCursor());
 		System.out.println("End Cursor: " + response.getEndCursor());
@@ -1598,7 +1608,7 @@ public class EntityManagerTest {
 	public void testExecute_PositionalBinding() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * from Task WHERE priority=@1");
 		request.addPositionalBinding(3);
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		System.out.println("Start Cursor: " + response.getStartCursor());
 		System.out.println("End Cursor: " + response.getEndCursor());
@@ -1615,7 +1625,7 @@ public class EntityManagerTest {
 		request.addPositionalBinding(0);
 		request.addPositionalBinding(true);
 
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		System.out.println("Start Cursor: " + response.getStartCursor());
 		System.out.println("End Cursor: " + response.getEndCursor());
@@ -1635,12 +1645,55 @@ public class EntityManagerTest {
 		em.insert(oma);
 		em.insert(cdg);
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM CityCoordinates ORDER BY city");
-		QueryResponse<GeoLocationField> response = em.execute(GeoLocationField.class, request);
+		QueryResponse<GeoLocationField> response = em.executeEntityQueryRequest(GeoLocationField.class, request);
 		List<GeoLocationField> cities = response.getResults();
 		// This test fails sometimes if the below assertion is cities.size() ==
 		// 3.
 		assertTrue(cities.size() > 0 && cities.get(0).getCoordinates().equals(jfk.getCoordinates()));
 
+	}
+
+	@Test
+	public void testExecuteProjectionQuery() {
+		ProjectionQueryRequest request = em.createProjectionQueryRequest("SELECT name FROM Task");
+		QueryResponse<Task> response = em.execute(Task.class, request);
+		List<Task> tasks = response.getResults();
+		for (Task task : tasks) {
+			System.out.printf("Id: %d; Name: %s; Priority: %s; Complete: %s; Completion Date: %s\n", task.getId(),
+					task.getName(), task.getPriority(), task.isComplete(), task.getCompletionDate());
+		}
+		assertTrue(tasks.size() == 50);
+	}
+
+	@Test
+	public void testExecuteProjectionQuery2() {
+		// Uses a different entity - with a subset of properties from the main
+		// entity
+		ProjectionQueryRequest request = em.createProjectionQueryRequest("SELECT name FROM Task");
+		QueryResponse<TaskName> response = em.executeProjectionQueryRequest(TaskName.class, request);
+		List<TaskName> tasks = response.getResults();
+		for (TaskName task : tasks) {
+			System.out.printf("Id: %d; Name: %s; \n", task.getId(), task.getName());
+		}
+		assertTrue(tasks.size() == 50);
+	}
+
+	@Test
+	public void testExecuteKeyQuery() {
+		KeyQueryRequest request = em.createKeyQueryRequest("SELECT __key__ from Task");
+		QueryResponse<DatastoreKey> response = em.executeKeyQueryRequest(request);
+		List<DatastoreKey> keys = response.getResults();
+		for (DatastoreKey key : keys) {
+			System.out.printf("%-10s %20s %s\n", key.kind(), key.nameOrId(), key.getEncoded());
+		}
+		assertTrue(keys.size() == 50);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdate_InvalidStringId() {
+		StringId entity = new StringId();
+		entity.setGreetings("Good Night, this should never show up in the datastore");
+		entity = em.update(entity);
 	}
 
 	private static Calendar getToday() {

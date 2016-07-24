@@ -27,16 +27,20 @@ import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.ProjectionEntity;
 import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.Query.ResultType;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.Transaction;
-import com.google.cloud.datastore.Query.ResultType;
-import com.jmethods.catatumbo.BaseQueryResponse;
+import com.jmethods.catatumbo.DefaultQueryResponse;
 import com.jmethods.catatumbo.DatastoreAccess;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreCursor;
+import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
+import com.jmethods.catatumbo.KeyQueryRequest;
+import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 
@@ -344,14 +348,28 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	}
 
 	@Override
+	public ProjectionQueryRequest createProjectionQueryRequest(String query) {
+		return new ProjectionQueryRequest(query);
+	}
+
+	@Override
+	public KeyQueryRequest createKeyQueryRequest(String query) {
+		return new KeyQueryRequest(query);
+	}
+
+	@Override
 	public <E> QueryResponse<E> execute(Class<E> expectedResultType, QueryRequest request) {
 		if (request instanceof EntityQueryRequest) {
 			return executeEntityQueryRequest(expectedResultType, (EntityQueryRequest) request);
 		}
+		if (request instanceof ProjectionQueryRequest) {
+			return executeProjectionQueryRequest(expectedResultType, (ProjectionQueryRequest) request);
+		}
 		throw new EntityManagerException(String.format("Unsupported QueryRequest: %s", request.getClass()));
 	}
 
-	private <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request) {
+	@Override
+	public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request) {
 		try {
 			GqlQuery.Builder<Entity> queryBuilder = Query.gqlQueryBuilder(ResultType.ENTITY, request.getQuery());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
@@ -359,12 +377,62 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 			GqlQuery<Entity> gqlQuery = queryBuilder.build();
 			QueryResults<Entity> results = datastoreReaderWriter.run(gqlQuery);
 			List<E> entities = new ArrayList<>();
-			BaseQueryResponse<E> response = new BaseQueryResponse<>();
+			DefaultQueryResponse<E> response = new DefaultQueryResponse<>();
 			response.setStartCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
 			while (results.hasNext()) {
 				Entity result = results.next();
 				E entity = Unmarshaller.unmarshal(result, expectedResultType);
 				entities.add(entity);
+			}
+			response.setResults(entities);
+			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			return response;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	@Override
+	public <E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType,
+			ProjectionQueryRequest request) {
+		try {
+			GqlQuery.Builder<ProjectionEntity> queryBuilder = Query.gqlQueryBuilder(ResultType.PROJECTION_ENTITY,
+					request.getQuery());
+			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
+			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
+			GqlQuery<ProjectionEntity> gqlQuery = queryBuilder.build();
+			QueryResults<ProjectionEntity> results = datastoreReaderWriter.run(gqlQuery);
+			List<E> entities = new ArrayList<>();
+			DefaultQueryResponse<E> response = new DefaultQueryResponse<>();
+			response.setStartCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			while (results.hasNext()) {
+				ProjectionEntity result = results.next();
+				E entity = Unmarshaller.unmarshal(result, expectedResultType);
+				entities.add(entity);
+			}
+			response.setResults(entities);
+			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			return response;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	@Override
+	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
+		try {
+			GqlQuery.Builder<Key> queryBuilder = Query.gqlQueryBuilder(ResultType.KEY, request.getQuery());
+			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
+			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
+			GqlQuery<Key> gqlQuery = queryBuilder.build();
+			QueryResults<Key> results = datastoreReaderWriter.run(gqlQuery);
+			List<DatastoreKey> entities = new ArrayList<>();
+			DefaultQueryResponse<DatastoreKey> response = new DefaultQueryResponse<>();
+			response.setStartCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			while (results.hasNext()) {
+				Key result = results.next();
+				DatastoreKey datastoreKey = new DefaultDatastoreKey(result);
+				entities.add(datastoreKey);
 			}
 			response.setResults(entities);
 			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));

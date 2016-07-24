@@ -19,14 +19,14 @@ package com.jmethods.catatumbo;
 import java.util.List;
 
 /**
- * A base implementation of {@link QueryResponse} interface.
+ * Default implementation of {@link QueryResponse} interface.
  * 
  * @param <T>
  *            the expected result type
  * @author Sai Pullabhotla
  *
  */
-public class BaseQueryResponse<T> implements QueryResponse<T> {
+public class DefaultQueryResponse<T> implements QueryResponse<T> {
 
 	/**
 	 * A list to hold the results of the query
@@ -47,7 +47,7 @@ public class BaseQueryResponse<T> implements QueryResponse<T> {
 	 * Creates a new instance of <code>BaseQueryResponse</code>.
 	 * 
 	 */
-	public BaseQueryResponse() {
+	public DefaultQueryResponse() {
 		// Do nothing
 	}
 

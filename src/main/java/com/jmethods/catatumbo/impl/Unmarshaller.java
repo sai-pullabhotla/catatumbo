@@ -20,9 +20,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import com.google.cloud.datastore.BaseEntity;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.NullValue;
+import com.google.cloud.datastore.ProjectionEntity;
 import com.google.cloud.datastore.Value;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
@@ -35,9 +37,10 @@ import com.jmethods.catatumbo.EntityManagerException;
 public class Unmarshaller {
 
 	/**
-	 * Input - Datastore Entity to unmarshal
+	 * Input - Native Entity to unmarshal, could be a ProjectionEntity or an
+	 * Entity
 	 */
-	private Entity datastoreEntity;
+	private BaseEntity<?> nativeEntity;
 
 	/**
 	 * Output - unmarshalled object
@@ -51,9 +54,14 @@ public class Unmarshaller {
 
 	/**
 	 * Creates a new instance of <code>Unmarshaller</code>.
+	 * 
+	 * @param nativeEntity
+	 *            the native entity to unmarshal
+	 * @param entityClass
+	 *            the expected model type
 	 */
-	private Unmarshaller(Entity datastoreEntity, Class entityClass) {
-		this.datastoreEntity = datastoreEntity;
+	private Unmarshaller(BaseEntity<?> nativeEntity, Class<?> entityClass) {
+		this.nativeEntity = nativeEntity;
 		entityMetadata = EntityIntrospector.introspect(entityClass);
 
 	}
@@ -64,7 +72,7 @@ public class Unmarshaller {
 	 * 
 	 * @param <T>
 	 *            target object type
-	 * @param datastoreEntity
+	 * @param nativeEntity
 	 *            the native Entity
 	 * @param entityClass
 	 *            the target type
@@ -72,11 +80,42 @@ public class Unmarshaller {
 	 *         given <code>datastoreEntity</code> is <code>null</code>, returns
 	 *         <code>null</code>.
 	 */
-	public static <T> T unmarshal(Entity datastoreEntity, Class<T> entityClass) {
-		if (datastoreEntity == null) {
+	public static <T> T unmarshal(Entity nativeEntity, Class<T> entityClass) {
+		return unmarshalBaseEntity(nativeEntity, entityClass);
+	}
+
+	/**
+	 * Unmarshals the given native ProjectionEntity into an object of given
+	 * type, entityClass.
+	 * 
+	 * @param <T>
+	 *            target object type
+	 * @param nativeEntity
+	 *            the native Entity
+	 * @param entityClass
+	 *            the target type
+	 * @return Object that is equivalent to the given native entity. If the
+	 *         given <code>datastoreEntity</code> is <code>null</code>, returns
+	 *         <code>null</code>.
+	 */
+	public static <T> T unmarshal(ProjectionEntity nativeEntity, Class<T> entityClass) {
+		return unmarshalBaseEntity(nativeEntity, entityClass);
+	}
+
+	/**
+	 * Unmarshals the given BaseEntity and returns the equivalent model object.
+	 * 
+	 * @param nativeEntity
+	 *            the native entity to unmarshal
+	 * @param entityClass
+	 *            the target type of the model class
+	 * @return the model object
+	 */
+	private static <T> T unmarshalBaseEntity(BaseEntity<?> nativeEntity, Class<T> entityClass) {
+		if (nativeEntity == null) {
 			return null;
 		}
-		Unmarshaller unmarshaller = new Unmarshaller(datastoreEntity, entityClass);
+		Unmarshaller unmarshaller = new Unmarshaller(nativeEntity, entityClass);
 		return unmarshaller.unmarshal();
 	}
 
@@ -112,7 +151,7 @@ public class Unmarshaller {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		IdentifierMetadata identifierMetadata = entityMetadata.getIdentifierMetadata();
 		Method writeMethod = identifierMetadata.getWriteMethod();
-		writeMethod.invoke(entity, datastoreEntity.key().nameOrId());
+		writeMethod.invoke(entity, ((Key) nativeEntity.key()).nameOrId());
 	}
 
 	private void unmarshalKeyAndParentKey()
@@ -120,14 +159,14 @@ public class Unmarshaller {
 		KeyMetadata keyMetadata = entityMetadata.getKeyMetadata();
 		if (keyMetadata != null) {
 			Method writeMethod = keyMetadata.getWriteMethod();
-			Key entityKey = datastoreEntity.key();
+			Key entityKey = (Key) nativeEntity.key();
 			writeMethod.invoke(entity, new DefaultDatastoreKey(entityKey));
 		}
 
 		ParentKeyMetadata parentKeyMetadata = entityMetadata.getParentKeyMetadata();
 		if (parentKeyMetadata != null) {
 			Method writeMethod = parentKeyMetadata.getWriteMethod();
-			Key parentKey = datastoreEntity.key().parent();
+			Key parentKey = nativeEntity.key().parent();
 			if (parentKey != null) {
 				writeMethod.invoke(entity, new DefaultDatastoreKey(parentKey));
 			}
@@ -136,7 +175,7 @@ public class Unmarshaller {
 
 	private void unmarshalProperties()
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Set<String> properties = datastoreEntity.names();
+		Set<String> properties = nativeEntity.names();
 		for (String property : properties) {
 			unmarshalProperty(property);
 		}
@@ -146,12 +185,13 @@ public class Unmarshaller {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		PropertyMetadata propertyMetadata = entityMetadata.getPropertyMetadata(property);
 		if (propertyMetadata == null) {
-			System.out.println("Unmodeled property: " + property);
-			// @ToDo not in the model. Perhaps add support for unmodeled
-			// properties.
+			// System.out.println("Unmodeled property: " + property);
+			// TODO not in the model. Perhaps add support for unmodeled
+			// properties. This could also mean that the property is modeled,
+			// but has @Ignore annotation.
 			return;
 		}
-		Value<?> datastoreValue = datastoreEntity.getValue(property);
+		Value<?> datastoreValue = nativeEntity.getValue(property);
 		Object entityValue = null;
 		if (!(datastoreValue instanceof NullValue)) {
 			PropertyConverter converter = propertyMetadata.getDataType().getConverter();
