@@ -1416,6 +1416,40 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testLoadById() {
+		List<LongId> entities = new ArrayList<>();
+		for (int i = 0; i < 300; i++) {
+			LongId entity = new LongId();
+			entity.setField1("Test for Loading Multiple Entities " + i);
+			entities.add(entity);
+		}
+		entities = em.insert(entities);
+		List<Long> identifiers = new ArrayList<>();
+		for (LongId entity : entities) {
+			identifiers.add(entity.getId());
+		}
+		List<LongId> entities2 = em.loadById(LongId.class, identifiers);
+		assertEquals(entities, entities2);
+	}
+
+	@Test
+	public void testLoadByName() {
+		List<StringId> entities = new ArrayList<>();
+		for (int i = 0; i < 300; i++) {
+			StringId entity = new StringId();
+			entity.setGreetings("Test for Loading Multiple Entities " + i);
+			entities.add(entity);
+		}
+		entities = em.insert(entities);
+		List<String> identifiers = new ArrayList<>();
+		for (StringId entity : entities) {
+			identifiers.add(entity.getId());
+		}
+		List<StringId> entities2 = em.loadByName(StringId.class, identifiers);
+		assertEquals(entities, entities2);
+	}
+
+	@Test
 	public void executeTest_SelectAll() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM Task order by __key__");
 		QueryResponse<Task> response = em.execute(Task.class, request);

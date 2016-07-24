@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo.entities;
 
+import com.google.api.client.util.Objects;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
 
@@ -59,6 +60,15 @@ public class LongId {
 	 */
 	public void setField1(String field1) {
 		this.field1 = field1;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof LongId)) {
+			return false;
+		}
+		LongId that = (LongId) obj;
+		return this.id == that.id && Objects.equal(this.field1, that.field1);
 	}
 
 }

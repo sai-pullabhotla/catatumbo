@@ -214,6 +214,24 @@ public interface DatastoreAccess {
 	<E> E load(Class<E> entityClass, long id);
 
 	/**
+	 * Loads and returns the entities with the given <b>numeric IDs</b>. The
+	 * entities are assumed to be a root entities (no parent). The entity kind
+	 * is determined from the supplied class.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @param identifiers
+	 *            the IDs of the entities
+	 * @return the list of entity objects in the same order as the given list of
+	 *         identifiers. If one or more requested IDs do not exist in the
+	 *         Cloud Datastore, the corresponding item in the returned list be
+	 *         <code>null</code>.
+	 * @throws EntityManagerException
+	 *             if any error occurs while inserting.
+	 */
+	<E> List<E> loadById(Class<E> entityClass, List<Long> identifiers);
+
+	/**
 	 * Loads and returns the entity with the given ID. The entity is assumed to
 	 * be a root entity (no parent). The entity kind is determined from the
 	 * supplied class.
@@ -228,6 +246,24 @@ public interface DatastoreAccess {
 	 *             if any error occurs while inserting.
 	 */
 	<E> E load(Class<E> entityClass, String id);
+
+	/**
+	 * Loads and returns the entities with the given <b>names (a.k.a String
+	 * IDs)</b>. The entities are assumed to be root entities (no parent). The
+	 * entity kind is determined from the supplied class.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @param identifiers
+	 *            the IDs of the entities
+	 * @return the list of entity objects in the same order as the given list of
+	 *         identifiers. If one or more requested IDs do not exist in the
+	 *         Cloud Datastore, the corresponding item in the returned list be
+	 *         <code>null</code>.
+	 * @throws EntityManagerException
+	 *             if any error occurs while inserting.
+	 */
+	<E> List<E> loadByName(Class<E> entityClass, List<String> identifiers);
 
 	/**
 	 * Loads and returns the entity with the given ID. The entity kind is

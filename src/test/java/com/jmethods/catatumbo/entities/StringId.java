@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo.entities;
 
+import com.google.api.client.util.Objects;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
 
@@ -57,6 +58,20 @@ public class StringId {
 	 */
 	public void setGreetings(String greetings) {
 		this.greetings = greetings;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof StringId)) {
+			return false;
+		}
+		StringId that = (StringId) obj;
+		return Objects.equal(this.id, that.id) && Objects.equal(this.greetings, that.greetings);
+	}
+
+	@Override
+	public String toString() {
+		return id + ": " + greetings;
 	}
 
 }

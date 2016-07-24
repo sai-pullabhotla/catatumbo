@@ -25,6 +25,7 @@ import com.google.cloud.datastore.DatastoreReaderWriter;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.Query.ResultType;
 import com.google.cloud.datastore.QueryResults;
@@ -212,6 +213,17 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	}
 
 	@Override
+	public <E> List<E> loadById(Class<E> entityClass, List<Long> identifiers) {
+		try {
+			Key[] nativeKeys = longListToNativeKeys(entityClass, identifiers);
+			List<Entity> nativeEntities = datastore.fetch(nativeKeys);
+			return toEntities(entityClass, nativeEntities);
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	@Override
 	public <E> E load(Class<E> entityClass, DatastoreKey parentKey, long id) {
 		if (parentKey == null) {
 			return load(entityClass, id);
@@ -241,6 +253,17 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 			}
 			E entity = Unmarshaller.unmarshal(datastoreEntity, entityClass);
 			return entity;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	@Override
+	public <E> List<E> loadByName(Class<E> entityClass, List<String> identifiers) {
+		try {
+			Key[] nativeKeys = stringListToNativeKeys(entityClass, identifiers);
+			List<Entity> nativeEntities = datastore.fetch(nativeKeys);
+			return toEntities(entityClass, nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -388,5 +411,47 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
+	}
+
+	private Key[] longListToNativeKeys(Class<?> entityClass, List<Long> identifiers) {
+		if (identifiers == null || identifiers.isEmpty()) {
+			return new Key[0];
+		}
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
+		Key[] nativeKeys = new Key[identifiers.size()];
+		KeyFactory keyFactory = datastore.newKeyFactory();
+		keyFactory.kind(entityMetadata.getKind());
+		for (int i = 0; i < identifiers.size(); i++) {
+			long id = identifiers.get(i);
+			nativeKeys[i] = keyFactory.newKey(id);
+		}
+		return nativeKeys;
+	}
+
+	private Key[] stringListToNativeKeys(Class<?> entityClass, List<String> identifiers) {
+		if (identifiers == null || identifiers.isEmpty()) {
+			return new Key[0];
+		}
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
+		Key[] nativeKeys = new Key[identifiers.size()];
+		KeyFactory keyFactory = datastore.newKeyFactory();
+		keyFactory.kind(entityMetadata.getKind());
+		for (int i = 0; i < identifiers.size(); i++) {
+			String id = identifiers.get(i);
+			nativeKeys[i] = keyFactory.newKey(id);
+		}
+		return nativeKeys;
+	}
+
+	private <E> List<E> toEntities(Class<E> entityClass, List<Entity> nativeEntities) {
+		if (nativeEntities == null || nativeEntities.isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<E> entities = new ArrayList<>(nativeEntities.size());
+		for (Entity nativeEntity : nativeEntities) {
+			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
+			entities.add(entity);
+		}
+		return entities;
 	}
 }
