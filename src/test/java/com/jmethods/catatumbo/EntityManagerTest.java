@@ -51,12 +51,14 @@ import com.jmethods.catatumbo.entities.DoubleObject;
 import com.jmethods.catatumbo.entities.Employee;
 import com.jmethods.catatumbo.entities.FloatField;
 import com.jmethods.catatumbo.entities.FloatObject;
+import com.jmethods.catatumbo.entities.GenericListField;
 import com.jmethods.catatumbo.entities.GeoLocationField;
 import com.jmethods.catatumbo.entities.GrandchildEntity;
 import com.jmethods.catatumbo.entities.IgnoreField;
 import com.jmethods.catatumbo.entities.IgnoreField2;
 import com.jmethods.catatumbo.entities.IntegerField;
 import com.jmethods.catatumbo.entities.IntegerObject;
+import com.jmethods.catatumbo.entities.KeyListField;
 import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
@@ -69,6 +71,7 @@ import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
 import com.jmethods.catatumbo.entities.StringId2;
 import com.jmethods.catatumbo.entities.StringListField;
+import com.jmethods.catatumbo.entities.Tag;
 import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
 
@@ -129,6 +132,9 @@ public class EntityManagerTest {
 		em.deleteAll(Account.class);
 		em.deleteAll(Department.class);
 		em.deleteAll(Employee.class);
+		em.deleteAll(Tag.class);
+		em.deleteAll(KeyListField.class);
+		em.deleteAll(GenericListField.class);
 		populateTasks();
 	}
 
@@ -636,6 +642,69 @@ public class EntityManagerTest {
 		entity = em.insert(entity);
 		entity = em.load(LongListField.class, entity.getId());
 		assertTrue(entity.getId() > 0 && numbers.equals(entity.getNumbers()));
+	}
+
+	@Test
+	public void testInsertKeyListField() {
+		List<Tag> tags = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			Tag tag = new Tag();
+			tag.setName("tag" + i);
+			tags.add(tag);
+		}
+		tags = em.insert(tags);
+		KeyListField entity = new KeyListField();
+		List<DatastoreKey> keys = new ArrayList<>();
+		keys.add(tags.get(1).getKey());
+		keys.add(tags.get(4).getKey());
+		keys.add(tags.get(3).getKey());
+		entity.setTags(keys);
+		entity = em.insert(entity);
+		entity = em.load(KeyListField.class, entity.getId());
+		assertTrue(keys.equals(entity.getTags()));
+	}
+
+	@Test
+	public void testInsertBooleanListField() {
+		GenericListField entity = new GenericListField();
+		List<Boolean> booleanList = new ArrayList<>();
+		booleanList.add(true);
+		booleanList.add(false);
+		entity.setItems(booleanList);
+		entity = em.insert(entity);
+		entity = em.load(GenericListField.class, entity.getId());
+		assertTrue(booleanList.equals(entity.getItems()));
+	}
+
+	@Test
+	public void testInsertDoubleListField() {
+		GenericListField entity = new GenericListField();
+		List<Double> doubleList = new ArrayList<>();
+		doubleList.add(1.5);
+		doubleList.add(3.14);
+		entity.setItems(doubleList);
+		entity = em.insert(entity);
+		entity = em.load(GenericListField.class, entity.getId());
+		assertTrue(doubleList.equals(entity.getItems()));
+	}
+
+	@Test
+	public void testInsertMixedListField() {
+		Tag tag = new Tag();
+		tag.setName("super tag");
+		tag = em.insert(tag);
+
+		GenericListField entity = new GenericListField();
+		List items = new ArrayList<>();
+		items.add("Catatumbo");
+		items.add(512L);
+		items.add(3.14);
+		items.add(false);
+		items.add(tag.getKey());
+		entity.setItems(items);
+		entity = em.insert(entity);
+		entity = em.load(GenericListField.class, entity.getId());
+		assertTrue(items.equals(entity.getItems()));
 	}
 
 	@Test

@@ -20,11 +20,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.cloud.datastore.BooleanValue;
+import com.google.cloud.datastore.DoubleValue;
+import com.google.cloud.datastore.KeyValue;
 import com.google.cloud.datastore.ListValue;
 import com.google.cloud.datastore.LongValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.DatastoreKey;
 
 /**
  * An implementation of {@link PropertyConverter} for handling List types.
@@ -42,18 +46,33 @@ public class ListConverter extends AbstractConverter {
 	/**
 	 * String Converter
 	 */
-	private static final PropertyConverter stringConverter = StringConverter.getInstance();
+	private static final PropertyConverter STRING_CONVERTER = StringConverter.getInstance();
 
 	/**
 	 * Long Converter
 	 */
-	private static final PropertyConverter longConverter = LongConverter.getInstance();
+	private static final PropertyConverter LONG_CONVERTER = LongConverter.getInstance();
+
+	/**
+	 * Key Converter
+	 */
+	private static final PropertyConverter KEY_CONVERTER = KeyConverter.getInstance();
+
+	/**
+	 * Boolean Converter
+	 */
+	private static final PropertyConverter BOOLEAN_CONVERTER = BooleanConverter.getInstance();
+
+	/**
+	 * Double Converter
+	 */
+	private static final PropertyConverter DOUBLE_CONVERTER = DoubleConverter.getInstance();
 
 	/**
 	 * Creates a new instance of <code>ListConverter</code>.
 	 */
 	private ListConverter() {
-		// TODO Auto-generated constructor stub
+		// Hide the constructor
 	}
 
 	@Override
@@ -65,9 +84,15 @@ public class ListConverter extends AbstractConverter {
 			Object item = iterator.next();
 			PropertyConverter converter;
 			if (item instanceof String) {
-				converter = stringConverter;
+				converter = STRING_CONVERTER;
 			} else if (item instanceof Long) {
-				converter = longConverter;
+				converter = LONG_CONVERTER;
+			} else if (item instanceof DatastoreKey) {
+				converter = KEY_CONVERTER;
+			} else if (item instanceof Boolean) {
+				converter = BOOLEAN_CONVERTER;
+			} else if (item instanceof Double) {
+				converter = DOUBLE_CONVERTER;
 			} else {
 				throw new RuntimeException("Unsupported type in List");
 			}
@@ -88,9 +113,15 @@ public class ListConverter extends AbstractConverter {
 		while (iterator.hasNext()) {
 			Value<?> item = iterator.next();
 			if (item instanceof StringValue) {
-				converter = stringConverter;
+				converter = STRING_CONVERTER;
 			} else if (item instanceof LongValue) {
-				converter = longConverter;
+				converter = LONG_CONVERTER;
+			} else if (item instanceof KeyValue) {
+				converter = KEY_CONVERTER;
+			} else if (item instanceof BooleanValue) {
+				converter = BOOLEAN_CONVERTER;
+			} else if (item instanceof DoubleValue) {
+				converter = DOUBLE_CONVERTER;
 			} else {
 				throw new RuntimeException("Unsupported type in list");
 			}
