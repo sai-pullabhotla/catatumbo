@@ -1696,6 +1696,46 @@ public class EntityManagerTest {
 		entity = em.update(entity);
 	}
 
+	@Test(expected = EntityManagerException.class)
+	public void testExecute_WithLiteral_Default() {
+		EntityQueryRequest request = em
+				.createEntityQueryRequest("SELECT * FROM Task WHERE priority = 0 order by __key__");
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testExecute_WithLiteral_False() {
+		EntityQueryRequest request = em
+				.createEntityQueryRequest("SELECT * FROM Task WHERE priority = 0 order by __key__");
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
+	}
+
+	@Test
+	public void testExecute_WithLiteral_True() {
+		EntityQueryRequest request = em
+				.createEntityQueryRequest("SELECT * FROM Task WHERE priority = 0 order by __key__");
+		request.setAllowLiterals(true);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
+		List<Task> tasks = response.getResults();
+		assertTrue(tasks.size() == 10 && tasks.get(0).getId() == 5 && tasks.get(tasks.size() - 1).getId() == 50);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testExecute_WithSyntheticLiteral_Default() {
+		EntityQueryRequest request = em.createEntityQueryRequest(
+				"SELECT * FROM Task where completionDate > datetime('2016-08-10T00:00:00.000000z')");
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
+	}
+
+	@Test
+	public void testExecute_WithSyntheticLiteral_True() {
+		EntityQueryRequest request = em.createEntityQueryRequest(
+				"SELECT * FROM Task where completionDate > datetime('2016-08-10T00:00:00.000000z')");
+		request.setAllowLiterals(true);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
+		// Let's not worry about the results
+	}
+
 	private static Calendar getToday() {
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 0);

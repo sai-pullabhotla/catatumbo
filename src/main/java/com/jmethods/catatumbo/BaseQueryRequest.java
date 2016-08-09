@@ -45,6 +45,11 @@ public abstract class BaseQueryRequest implements QueryRequest {
 	protected List<Object> positionalBindings = null;
 
 	/**
+	 * Whether or not to allow literals in the query
+	 */
+	protected boolean allowLiterals = false;
+
+	/**
 	 * Creates a new instance of <code>BaseQueryRequest</code>.
 	 * 
 	 * @param query
@@ -52,6 +57,7 @@ public abstract class BaseQueryRequest implements QueryRequest {
 	 */
 	public BaseQueryRequest(String query) {
 		this.query = query;
+		this.allowLiterals = false;
 		// Initialize the named and positional bindings.
 		namedBindings = new HashMap<>();
 		positionalBindings = new ArrayList<Object>();
@@ -157,6 +163,22 @@ public abstract class BaseQueryRequest implements QueryRequest {
 	public void clearBindings() {
 		clearPositionalBindings();
 		clearNamedBindings();
+	}
+
+	@Override
+	public boolean isAllowLiterals() {
+		return allowLiterals;
+	}
+
+	/**
+	 * Allows or disallows presence of any literals (constants or synthetic
+	 * literals) in the query.
+	 * 
+	 * @param allowLiterals
+	 *            whether or not to allow literals in the query.
+	 */
+	public void setAllowLiterals(boolean allowLiterals) {
+		this.allowLiterals = allowLiterals;
 	}
 
 }

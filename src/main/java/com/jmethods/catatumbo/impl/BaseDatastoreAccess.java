@@ -32,11 +32,11 @@ import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.Query.ResultType;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.Transaction;
-import com.jmethods.catatumbo.DefaultQueryResponse;
 import com.jmethods.catatumbo.DatastoreAccess;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreCursor;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
+import com.jmethods.catatumbo.DefaultQueryResponse;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
@@ -372,6 +372,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request) {
 		try {
 			GqlQuery.Builder<Entity> queryBuilder = Query.gqlQueryBuilder(ResultType.ENTITY, request.getQuery());
+			queryBuilder.allowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
 			GqlQuery<Entity> gqlQuery = queryBuilder.build();
@@ -398,6 +399,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		try {
 			GqlQuery.Builder<ProjectionEntity> queryBuilder = Query.gqlQueryBuilder(ResultType.PROJECTION_ENTITY,
 					request.getQuery());
+			queryBuilder.allowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
 			GqlQuery<ProjectionEntity> gqlQuery = queryBuilder.build();
@@ -422,6 +424,7 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
 		try {
 			GqlQuery.Builder<Key> queryBuilder = Query.gqlQueryBuilder(ResultType.KEY, request.getQuery());
+			queryBuilder.allowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
 			GqlQuery<Key> gqlQuery = queryBuilder.build();

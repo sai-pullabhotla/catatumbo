@@ -52,4 +52,13 @@ public interface QueryRequest {
 	 */
 	public List<Object> getPositionalBindings();
 
+	/**
+	 * Tells whether or not to allow literals (constant values or synthetic
+	 * literals) in the query.
+	 * 
+	 * @return <code>true</code>, if literals are to be allowed in the query;
+	 *         <code>false</code>, otherwise.
+	 */
+	public boolean isAllowLiterals();
+
 }
