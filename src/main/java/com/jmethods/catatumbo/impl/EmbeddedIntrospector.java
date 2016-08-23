@@ -1,0 +1,172 @@
+/*
+ * Copyright 2016 Sai Pullabhotla.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.jmethods.catatumbo.impl;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import com.jmethods.catatumbo.Embeddable;
+import com.jmethods.catatumbo.Embedded;
+import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.Ignore;
+import com.jmethods.catatumbo.Property;
+
+/**
+ * Introspects and prepares the meatdata of an embedded field. An embedded field
+ * is a complex object that is embedded in an entity or another embedded field.
+ * 
+ * @author Sai Pullabhotla
+ *
+ */
+public class EmbeddedIntrospector {
+
+	/**
+	 * Embedded field that is being introspected
+	 */
+	private EmbeddedField field;
+
+	/**
+	 * The meatadata of the embedded field
+	 */
+	private EmbeddedMetadata metadata;
+
+	/**
+	 * The type of the embedded field
+	 */
+	private Class<?> clazz;
+
+	/**
+	 * Metadata of the owning entity
+	 */
+	private EntityMetadata entityMetadata;
+
+	/**
+	 * Creates a new instance of <code>EmbeddedIntrospector</code>.
+	 * 
+	 * @param field
+	 *            the embedded field to introspect.
+	 * @param entityMetadata
+	 *            metadata of the owning entity
+	 */
+	private EmbeddedIntrospector(EmbeddedField field, EntityMetadata entityMetadata) {
+		this.field = field;
+		this.entityMetadata = entityMetadata;
+		this.clazz = field.getType();
+	}
+
+	/**
+	 * Introspects the given embedded field and returns its metadata.
+	 * 
+	 * @param field
+	 *            the embedded field to introspect
+	 * @param entityMetadata
+	 *            metadata of the owning entity
+	 * @return the metadata of the embedded field
+	 */
+	public static EmbeddedMetadata introspect(EmbeddedField field, EntityMetadata entityMetadata) {
+		EmbeddedIntrospector introspector = new EmbeddedIntrospector(field, entityMetadata);
+		introspector.process();
+		return introspector.metadata;
+	}
+
+	/**
+	 * Worker class for introspection.
+	 */
+	private void process() {
+		metadata = new EmbeddedMetadata(field);
+
+		// Make sure the class has @Embeddable annotation
+		if (!clazz.isAnnotationPresent(Embeddable.class)) {
+			String message = String.format("Class %s must have %s annotation", clazz.getName(),
+					Embeddable.class.getName());
+			throw new EntityManagerException(message);
+		}
+
+		// Find and set the accessor method for this embedded field.
+		Class<?> declaringClass = field.getDeclaringClass();
+
+		String readMethodName = IntrospectionUtils.getReadMethodName(field.getField());
+		String writeMethodName = IntrospectionUtils.getWriteMethodName(field.getField());
+		Method readMethod = IntrospectionUtils.getReadMethod(declaringClass, readMethodName, field.getType());
+		Method writeMethod = IntrospectionUtils.getWriteMethod(declaringClass, writeMethodName, field.getType());
+		metadata.setReadMethod(readMethod);
+		metadata.setWriteMethod(writeMethod);
+
+		// Process the fields (primitive and nested embedded)
+		Field[] children = clazz.getDeclaredFields();
+		for (Field child : children) {
+			if (child.isAnnotationPresent(Ignore.class)) {
+				continue;
+			} else if (child.isAnnotationPresent(Embedded.class)) {
+				processEmbeddedField(child);
+			} else {
+				processSimpleField(child);
+			}
+		}
+	}
+
+	/**
+	 * Processes the given simple (or primitive) field and updates the
+	 * meatadata.
+	 * 
+	 * @param child
+	 *            the field to process
+	 */
+	private void processSimpleField(Field child) {
+		PropertyMetadata propertyMetadata = IntrospectionUtils.getPropertyMetadata(child);
+		if (propertyMetadata != null) {
+			// Process override
+			processPropertyOverride(propertyMetadata);
+			metadata.putPropertyMetadata(propertyMetadata);
+			// Update the master list so we can detect any property name
+			// conflicts across the entity tree.
+			entityMetadata.updateMasterPropertyMetadataMap(propertyMetadata);
+		}
+	}
+
+	/**
+	 * Processes the override, if any, for the given property.
+	 * 
+	 * @param propertyMetadata
+	 *            the meatadata of the property
+	 */
+	private void processPropertyOverride(PropertyMetadata propertyMetadata) {
+		String qualifiedName = field.getQualifiedName() + "." + propertyMetadata.getField().getName();
+		Property override = entityMetadata.getPropertyOverride(qualifiedName);
+		if (override != null) {
+			String mappedName = override.name();
+			boolean indexed = override.indexed();
+			if (mappedName != null && mappedName.trim().length() > 0) {
+				propertyMetadata.setMappedName(mappedName);
+			}
+			propertyMetadata.setIndexed(indexed);
+		}
+	}
+
+	/**
+	 * Processes a nested embedded field.
+	 * 
+	 * @param child
+	 *            the nested embedded field.
+	 */
+	private void processEmbeddedField(Field child) {
+		EmbeddedField embeddedChild = new EmbeddedField(child, field);
+		EmbeddedMetadata childMetadata = EmbeddedIntrospector.introspect(embeddedChild, entityMetadata);
+		metadata.putEmbeddedMetadata(childMetadata);
+	}
+
+}

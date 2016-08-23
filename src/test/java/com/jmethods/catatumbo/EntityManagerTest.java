@@ -44,6 +44,7 @@ import com.jmethods.catatumbo.entities.CharField;
 import com.jmethods.catatumbo.entities.CharObject;
 import com.jmethods.catatumbo.entities.ChildEntity;
 import com.jmethods.catatumbo.entities.Country;
+import com.jmethods.catatumbo.entities.Customer;
 import com.jmethods.catatumbo.entities.DateField;
 import com.jmethods.catatumbo.entities.Department;
 import com.jmethods.catatumbo.entities.DoubleField;
@@ -135,6 +136,7 @@ public class EntityManagerTest {
 		em.deleteAll(Tag.class);
 		em.deleteAll(KeyListField.class);
 		em.deleteAll(GenericListField.class);
+		em.deleteAll(Customer.class);
 		populateTasks();
 	}
 
@@ -1803,6 +1805,117 @@ public class EntityManagerTest {
 		request.setAllowLiterals(true);
 		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		// Let's not worry about the results
+	}
+
+	@Test
+	public void testInsert_Embedded() {
+		Customer entity = Customer.SAMPLE_CUSTOMER1;
+		entity = em.insert(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_Embedded_NullAddress() {
+		Customer entity = Customer.SAMPLE_CUSTOMER2;
+		entity = em.insert(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_Embedded_NullZipCode() {
+		Customer entity = Customer.SAMPLE_CUSTOMER3;
+		entity = em.insert(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testUpdate_Embedded() {
+		Customer entity = Customer.SAMPLE_CUSTOMER1;
+		entity = em.insert(entity);
+		entity = em.load(Customer.class, entity.getId());
+		entity.setName("John Smith");
+		entity.getBillingAddress().setCity("Lincoln");
+		entity.getShippingAddress().getZipCode().setFiveDigits("65432");
+		em.update(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testUpdate_Embedded_NullAddress() {
+		Customer entity = Customer.SAMPLE_CUSTOMER2;
+		entity = em.insert(entity);
+		entity = em.load(Customer.class, entity.getId());
+		entity.setName("Super Customer Updated");
+		entity.getBillingAddress().setCity("Lincoln");
+		entity.getShippingAddress().getZipCode().setFiveDigits("65432");
+		em.update(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testUpdate_Embedded_NullZipCode() {
+		Customer entity = Customer.SAMPLE_CUSTOMER3;
+		entity = em.insert(entity);
+		entity = em.load(Customer.class, entity.getId());
+		entity.setName("Super Customer Updated");
+		entity.getShippingAddress().getZipCode().setFiveDigits("65432");
+		entity.getBillingAddress().getZipCode().setFiveDigits("65432");
+		em.update(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testDelete_Embedded() {
+		Customer entity = Customer.SAMPLE_CUSTOMER1;
+		entity = em.insert(entity);
+		entity = em.load(Customer.class, entity.getId());
+		em.delete(entity);
+		Customer entity2 = em.load(Customer.class, entity.getId());
+		assertTrue(entity != null && entity2 == null);
+	}
+
+	@Test
+	public void testExecuteEntityQuery_Embedded() {
+		em.deleteAll(Customer.class);
+		List<Customer> customers = new ArrayList<>();
+		customers.add(Customer.SAMPLE_CUSTOMER1);
+		customers.add(Customer.SAMPLE_CUSTOMER2);
+		customers.add(Customer.SAMPLE_CUSTOMER3);
+		em.insert(customers);
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM Customer");
+		QueryResponse<Customer> response = em.executeEntityQueryRequest(Customer.class, request);
+		List<Customer> output = response.getResults();
+		assertTrue(output.size() == 3);
+	}
+
+	@Test
+	public void testExecuteProjectionQuery_Embedded() {
+		em.deleteAll(Customer.class);
+		List<Customer> customers = new ArrayList<>();
+		customers.add(Customer.SAMPLE_CUSTOMER1);
+		customers.add(Customer.SAMPLE_CUSTOMER2);
+		customers.add(Customer.SAMPLE_CUSTOMER3);
+		em.insert(customers);
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		ProjectionQueryRequest request = em.createProjectionQueryRequest("SELECT name FROM Customer");
+		QueryResponse<Customer> response = em.executeProjectionQueryRequest(Customer.class, request);
+		List<Customer> output = response.getResults();
+		assertTrue(output.size() == 3);
 	}
 
 	private static Calendar getToday() {

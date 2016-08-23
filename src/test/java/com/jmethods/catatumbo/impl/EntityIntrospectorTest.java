@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Field;
+import org.junit.Test;
+
+import com.jmethods.catatumbo.entities.Customer;
 
 /**
- * Objects of this class contain the meatadata about parent key of an entity.
- * 
  * @author Sai Pullabhotla
+ *
  */
-public class ParentKeyMetadata extends KeyMetadata {
+public class EntityIntrospectorTest {
 
-	/**
-	 * Creates a new instance of <code>ParentKeyMeatadata</code>.
-	 * 
-	 * @param field
-	 *            the field
-	 */
-	public ParentKeyMetadata(Field field) {
-		super(field);
+	@Test
+	public void testIntrospect_Embedded() {
+		EntityMetadata metadata = EntityIntrospector.introspect(Customer.class);
+		System.out.println(metadata);
+		System.out.println("************");
+		metadata = EntityIntrospector.introspect(Customer.class);
+		System.out.println(metadata);
+
 	}
 
 }

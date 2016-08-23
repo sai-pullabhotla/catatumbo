@@ -15,7 +15,6 @@
  */
 package com.jmethods.catatumbo.impl;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ import com.jmethods.catatumbo.Identifier;
 import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.ParentKey;
 import com.jmethods.catatumbo.Property;
+import com.jmethods.catatumbo.PropertyOverride;
 
 /**
  * Objects of this class hold metadata information about an entity. Metadata
@@ -33,9 +33,7 @@ import com.jmethods.catatumbo.Property;
  *
  * @author Sai Pullabhotla
  */
-
-// TODO reduce visibility of various methods.
-public class EntityMetadata {
+public class EntityMetadata extends MetadataBase {
 
 	/**
 	 * Entity class to which this metadata belongs
@@ -63,11 +61,16 @@ public class EntityMetadata {
 	private ParentKeyMetadata parentKeyMetadata;
 
 	/**
-	 * Metadata about various entity properties. The keys of this map are the
-	 * property names in the Cloud Datastore. Key references are part of this
-	 * map.
+	 * Property overrides for embeeded fields of the entity. The key is the
+	 * override name that uniquely identifies a primitive property in the entity
+	 * tree.
 	 */
-	private Map<String, PropertyMetadata> propertyMetadataMap;
+	private Map<String, Property> propertyOverrideMap;
+
+	/**
+	 * Master list of properties, used for detecting duplicate property names
+	 */
+	private Map<String, PropertyMetadata> masterPropertyMetadataMap;
 
 	/**
 	 * Creates a new instance of <code>EntityMetadata</code>.
@@ -78,9 +81,12 @@ public class EntityMetadata {
 	 *            the entity kind
 	 */
 	public EntityMetadata(Class<?> entityClass, String kind) {
+		super(entityClass);
 		this.entityClass = entityClass;
 		this.kind = kind;
-		propertyMetadataMap = new HashMap<>();
+		propertyOverrideMap = new HashMap<>();
+		masterPropertyMetadataMap = new HashMap<>();
+
 	}
 
 	/**
@@ -93,32 +99,12 @@ public class EntityMetadata {
 	}
 
 	/**
-	 * Sets the entity class.
-	 *
-	 * @param entityClass
-	 *            the entity class.
-	 */
-	public void setEntityClass(Class<?> entityClass) {
-		this.entityClass = entityClass;
-	}
-
-	/**
 	 * Returns the entity kind.
 	 *
 	 * @return the entity kind.
 	 */
 	public String getKind() {
 		return kind;
-	}
-
-	/**
-	 * Sets the entity kind.
-	 *
-	 * @param kind
-	 *            the entity kind.
-	 */
-	public void setKind(String kind) {
-		this.kind = kind;
 	}
 
 	/**
@@ -204,59 +190,64 @@ public class EntityMetadata {
 	/**
 	 * Puts/adds the given property metadata.
 	 *
-	 * @param mappedName
-	 *            the property name in the Cloud Datastore.
 	 * @param propertyMetadata
 	 *            the property metadata
 	 */
-	public void putPropertyMetadata(String mappedName, PropertyMetadata propertyMetadata) {
-		PropertyMetadata old = propertyMetadataMap.put(mappedName, propertyMetadata);
+	@Override
+	public void putPropertyMetadata(PropertyMetadata propertyMetadata) {
+		super.putPropertyMetadata(propertyMetadata);
+		updateMasterPropertyMetadataMap(propertyMetadata);
+	}
+
+	/**
+	 * Puts/adds the given property override.
+	 * 
+	 * @param propertyOverride
+	 *            the property override
+	 */
+	public void putPropertyOverride(PropertyOverride propertyOverride) {
+		propertyOverrideMap.put(propertyOverride.name(), propertyOverride.property());
+	}
+
+	/**
+	 * Returns the property override, if any for the given name. May return
+	 * <code>null</code> if there is no override exists for the given name.
+	 * 
+	 * @param name
+	 *            the name of the property
+	 * @return the property override for the given property name. May return
+	 *         <code>null</code>.
+	 */
+	public Property getPropertyOverride(String name) {
+		return propertyOverrideMap.get(name);
+	}
+
+	/**
+	 * Updates the master property metadata map with the given property
+	 * metadata.
+	 * 
+	 * @param propertyMetadata
+	 *            the property metadata
+	 * @throws EntityManagerException
+	 *             if a property with the same mapped name already exists.
+	 */
+	public void updateMasterPropertyMetadataMap(PropertyMetadata propertyMetadata) {
+		String mappedName = propertyMetadata.getMappedName();
+		PropertyMetadata old = masterPropertyMetadataMap.put(mappedName, propertyMetadata);
 		if (old != null) {
-			String format = "Class %s has two fields, %s and %s, marked with %s annotation and both are set to use the same name, %s";
-			String message = String.format(format, entityClass.getName(), old.getName(), propertyMetadata.getName(),
-					Property.class.getName(), mappedName);
-			throw new EntityManagerException(message);
+			String message = "Duplicate property %s in entity %s. Check fields %s and %s";
+			throw new EntityManagerException(String.format(message, mappedName, entityClass.getName(), old.getField(),
+					propertyMetadata.getField()));
 		}
+
 	}
 
 	/**
-	 * Returns the property metadata for the given property name. The property
-	 * name is the name used in the Cloud Datastore.
-	 *
-	 * @param mappedName
-	 *            the property name in the Cloud Datastore
-	 * @return the property metadata
+	 * Cleans up this metadata by clearing unnecessary data.
 	 */
-	public PropertyMetadata getPropertyMetadata(String mappedName) {
-		return propertyMetadataMap.get(mappedName);
-	}
-
-	/**
-	 * Returns the collection of PropertyMetadata.
-	 *
-	 * @return the collection of property metadata.
-	 */
-	public Collection<PropertyMetadata> getPropertyMetadataCollection() {
-		return propertyMetadataMap.values();
-	}
-
-	/**
-	 * Returns a map of property names and their metadata.
-	 * 
-	 * @return a map of property names and their metadata.
-	 */
-	public Map<String, PropertyMetadata> getPropertyMetadataMap() {
-		return propertyMetadataMap;
-	}
-
-	/**
-	 * Sets the property metadata to the given map.
-	 * 
-	 * @param propertyMetadataMap
-	 *            the metadata of the properties.
-	 */
-	public void setPropertyMetadataMap(Map<String, PropertyMetadata> propertyMetadataMap) {
-		this.propertyMetadataMap = propertyMetadataMap;
+	public void cleanup() {
+		propertyOverrideMap.clear();
+		masterPropertyMetadataMap.clear();
 	}
 
 }

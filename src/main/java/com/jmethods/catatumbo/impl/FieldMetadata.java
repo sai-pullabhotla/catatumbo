@@ -15,20 +15,21 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Base class for holding the metadata about an entity's field (e.g. identifier,
- * key or property).
+ * Base class for holding the metadata about an entity's or embedded object's
+ * field (e.g. identifier, key or property).
  *
  * @author Sai Pullabhotla
  */
 public abstract class FieldMetadata {
 
 	/**
-	 * Field name
+	 * Reference to the field
 	 */
-	protected String name;
+	protected Field field;
 
 	/**
 	 * Data type
@@ -47,15 +48,25 @@ public abstract class FieldMetadata {
 
 	/**
 	 * Creates a new instance of <code>FieldMetadata</code>.
+	 * 
+	 * @param field
+	 *            the field
 	 *
-	 * @param name
-	 *            the field name
 	 * @param dataType
 	 *            the data type
 	 */
-	public FieldMetadata(String name, DataType dataType) {
-		this.name = name;
+	public FieldMetadata(Field field, DataType dataType) {
+		this.field = field;
 		this.dataType = dataType;
+	}
+
+	/**
+	 * Returns the field.
+	 * 
+	 * @return the field.
+	 */
+	public Field getField() {
+		return field;
 	}
 
 	/**
@@ -64,17 +75,7 @@ public abstract class FieldMetadata {
 	 * @return the field name.
 	 */
 	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets the field name.
-	 *
-	 * @param name
-	 *            the field name.
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return field.getName();
 	}
 
 	/**

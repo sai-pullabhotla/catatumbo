@@ -15,6 +15,8 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.lang.reflect.Field;
+
 /**
  * Objects of this class contain the metadata about an entity's full key.
  * 
@@ -25,11 +27,11 @@ public class KeyMetadata extends FieldMetadata {
 	/**
 	 * Creates a new instance of <code>KeyMeatadata</code>.
 	 * 
-	 * @param name
-	 *            the field name.
+	 * @param field
+	 *            the field.
 	 */
-	public KeyMetadata(String name) {
-		super(name, DataType.KEY);
+	public KeyMetadata(Field field) {
+		super(field, DataType.KEY);
 	}
 
 }

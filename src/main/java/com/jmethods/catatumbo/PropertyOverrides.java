@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Field;
+package com.jmethods.catatumbo;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * Objects of this class contain the meatadata about parent key of an entity.
+ * Used to override mappings of properties. Typically used if the entity
+ * contains embedded objects. This annotation must be applied to an
+ * {@link Entity} only.
  * 
  * @author Sai Pullabhotla
+ *
  */
-public class ParentKeyMetadata extends KeyMetadata {
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface PropertyOverrides {
 
 	/**
-	 * Creates a new instance of <code>ParentKeyMeatadata</code>.
+	 * One or more property overrides.
 	 * 
-	 * @param field
-	 *            the field
+	 * @return the property overrides
 	 */
-	public ParentKeyMetadata(Field field) {
-		super(field);
-	}
+	PropertyOverride[] value();
 
 }

@@ -153,6 +153,7 @@ public class Marshaller {
 			entityBuilder = FullEntity.builder(key);
 		}
 		marshalFields();
+		marshalEmbeddedFields();
 		return entityBuilder.build();
 	}
 
@@ -308,18 +309,12 @@ public class Marshaller {
 	private void marshalFields() {
 		Collection<PropertyMetadata> propertyMetadataCollection = entityMetadata.getPropertyMetadataCollection();
 		for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
-			marshalField(propertyMetadata);
+			marshalField(propertyMetadata, entity);
 		}
 	}
 
-	/**
-	 * Marshals the field with the given metadata.
-	 *
-	 * @param propertyMetadata
-	 *            the field's metadata
-	 */
-	private void marshalField(PropertyMetadata propertyMetadata) {
-		Object fieldValue = getFieldValue(propertyMetadata);
+	private void marshalField(PropertyMetadata propertyMetadata, Object target) {
+		Object fieldValue = getFieldValue(propertyMetadata, target);
 		ValueBuilder<?, ?, ?> valueBuilder = null;
 		if (fieldValue == null) {
 			valueBuilder = NullValue.builder();
@@ -341,11 +336,65 @@ public class Marshaller {
 	 * @return the field s value
 	 */
 	private Object getFieldValue(FieldMetadata fieldMetadata) {
+		return getFieldValue(fieldMetadata, entity);
+	}
+
+	/**
+	 * Returns the value of the field represented by the given metadata.
+	 * 
+	 * @param fieldMetadata
+	 *            the metadata of the field
+	 * @param target
+	 *            the target object to which the field belongs.
+	 * @return the value of the field.
+	 */
+	private Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
 		Method readMethod = fieldMetadata.getReadMethod();
 		try {
-			return readMethod.invoke(entity);
+			return readMethod.invoke(target);
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp.getMessage(), exp);
+		}
+	}
+
+	/**
+	 * Marshals the embedded fields.
+	 */
+	private void marshalEmbeddedFields() {
+		Collection<EmbeddedMetadata> embeddedMetadataCollection = entityMetadata.getEmbeddedMetadataCollection();
+		for (EmbeddedMetadata embeddedMetadata : embeddedMetadataCollection) {
+			marshalEmbeddedField(embeddedMetadata, entity);
+		}
+
+	}
+
+	/**
+	 * Marshals an embedded field represented by the given metadata.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the embedded field
+	 * @param target
+	 *            the target object to which the embedded object belongs
+	 */
+	private void marshalEmbeddedField(EmbeddedMetadata embeddedMetadata, Object target) {
+		try {
+			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+			if (embeddedObject == null) {
+				embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
+				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+			}
+
+			Collection<PropertyMetadata> propertyMetadataCollection = embeddedMetadata.getPropertyMetadataCollection();
+			for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
+				marshalField(propertyMetadata, embeddedObject);
+			}
+
+			Collection<EmbeddedMetadata> embeddedMetadataCollection2 = embeddedMetadata.getEmbeddedMetadataCollection();
+			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadataCollection2) {
+				marshalEmbeddedField(embeddedMetadata2, embeddedObject);
+			}
+		} catch (Exception exp) {
+			throw new EntityManagerException(exp);
 		}
 	}
 

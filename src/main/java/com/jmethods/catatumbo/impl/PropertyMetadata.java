@@ -15,6 +15,8 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.lang.reflect.Field;
+
 /**
  * Objects of this class contain metadata about a property of an entity.
  *
@@ -22,64 +24,69 @@ package com.jmethods.catatumbo.impl;
  */
 public class PropertyMetadata extends FieldMetadata {
 
-    /**
-     * The property name, in the Cloud Datastore, to which a field is mapped
-     */
-    private String mappedName;
+	/**
+	 * The property name, in the Cloud Datastore, to which a field is mapped
+	 */
+	private String mappedName;
 
-    /**
-     * If the property is indexed or not
-     */
-    private boolean indexed;
+	/**
+	 * If the property is indexed or not
+	 */
+	private boolean indexed;
 
-    /**
-     * Creates an instance of <code>PropertyMetadata</code>.
-     *
-     * @param name the field name of the entity
-     * @param mappedName the property name in the Cloud Datastore
-     * @param dataType the data type.
-     * @param indexed whether or not to index
-     */
-    public PropertyMetadata(String name, String mappedName, DataType dataType,
-            boolean indexed) {
-        super(name, dataType);
-        this.mappedName = mappedName;
-        this.indexed = indexed;
-    }
+	/**
+	 * Creates an instance of <code>PropertyMetadata</code>.
+	 *
+	 * @param field
+	 *            the field
+	 * @param mappedName
+	 *            the property name in the Cloud Datastore
+	 * @param dataType
+	 *            the data type.
+	 * @param indexed
+	 *            whether or not to index
+	 */
+	public PropertyMetadata(Field field, String mappedName, DataType dataType, boolean indexed) {
+		super(field, dataType);
+		this.mappedName = mappedName;
+		this.indexed = indexed;
+	}
 
-    /**
-     * Returns the mapped name.
-     *
-     * @return the mapped name.
-     */
-    public String getMappedName() {
-        return mappedName;
-    }
+	/**
+	 * Returns the mapped name.
+	 *
+	 * @return the mapped name.
+	 */
+	public String getMappedName() {
+		return mappedName;
+	}
 
-    /**
-     * Sets the mapped name.
-     *
-     * @param mappedName the mapped name.
-     */
-    public void setMappedName(String mappedName) {
-        this.mappedName = mappedName;
-    }
+	/**
+	 * Sets the mapped name.
+	 *
+	 * @param mappedName
+	 *            the mapped name.
+	 */
+	public void setMappedName(String mappedName) {
+		this.mappedName = mappedName;
+	}
 
-    /**
-     * Returns whether or not the property is indexed.
-     *
-     * @return true, if indexed; false, otherwise.
-     */
-    public boolean isIndexed() {
-        return indexed;
-    }
+	/**
+	 * Returns whether or not the property is indexed.
+	 *
+	 * @return true, if indexed; false, otherwise.
+	 */
+	public boolean isIndexed() {
+		return indexed;
+	}
 
-    /**
-     * Sets whether or not the property is indexed.
-     *
-     * @param indexed whether or not the property is indexed.
-     */
-    public void setIndexed(boolean indexed) {
-        this.indexed = indexed;
-    }
+	/**
+	 * Sets whether or not the property is indexed.
+	 *
+	 * @param indexed
+	 *            whether or not the property is indexed.
+	 */
+	public void setIndexed(boolean indexed) {
+		this.indexed = indexed;
+	}
 }
