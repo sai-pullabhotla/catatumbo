@@ -24,7 +24,8 @@ import java.lang.annotation.Target;
 
 /**
  * Used to override mapping of a property. This annotation must be specified on
- * the top-level entity to override any properties of embedded objects.
+ * the top-level entity to override any properties of {@link Embedded} objects
+ * or a {@link MappedSuperClass}.
  * 
  * @author Sai Pullabhotla
  *

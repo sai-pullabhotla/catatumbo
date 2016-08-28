@@ -23,22 +23,26 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Used to override mappings of properties. Typically used if the entity
- * contains {@link Embedded} objects or inherits a {@link MappedSuperClass}.
- * This annotation must be applied to an {@link Entity} only.
+ * Designates a class whose mapping information is applied to the entities that
+ * inherit from it. A class designated with the MappedSuperclass annotation can
+ * be mapped in the same way as an entity except that the mappings will apply
+ * only to its subclasses. This means, a MappedSuperClass may contain fields
+ * with {@link Identifier}, {@link Key}, {@link ParentKey}, {@link Property},
+ * {@link Embedded} and {@link Ignore} annotations. The mapping information
+ * defined in the MappedSuperClass can be overridden by the Entity using the
+ * {@link PropertyOverrides} and {@link PropertyOverride} annotations. This
+ * allows an entity to use a different property name or turn on/off the indexing
+ * of a property.
+ * 
+ * <p>
+ * It is legal for a MappedSuperClass extend from another MappedSuperClass.
+ * </p>
  * 
  * @author Sai Pullabhotla
  *
  */
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface PropertyOverrides {
-
-	/**
-	 * One or more property overrides.
-	 * 
-	 * @return the property overrides
-	 */
-	PropertyOverride[] value();
+public @interface MappedSuperClass {
 
 }

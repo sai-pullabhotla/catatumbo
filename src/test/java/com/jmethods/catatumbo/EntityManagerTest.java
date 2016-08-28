@@ -72,6 +72,10 @@ import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
 import com.jmethods.catatumbo.entities.StringId2;
 import com.jmethods.catatumbo.entities.StringListField;
+import com.jmethods.catatumbo.entities.SubClass1;
+import com.jmethods.catatumbo.entities.SubClass2;
+import com.jmethods.catatumbo.entities.SubClass3;
+import com.jmethods.catatumbo.entities.SubClass4;
 import com.jmethods.catatumbo.entities.Tag;
 import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
@@ -137,6 +141,10 @@ public class EntityManagerTest {
 		em.deleteAll(KeyListField.class);
 		em.deleteAll(GenericListField.class);
 		em.deleteAll(Customer.class);
+		em.deleteAll(SubClass1.class);
+		em.deleteAll(SubClass2.class);
+		em.deleteAll(SubClass3.class);
+		em.deleteAll(SubClass4.class);
 		populateTasks();
 	}
 
@@ -1916,6 +1924,76 @@ public class EntityManagerTest {
 		QueryResponse<Customer> response = em.executeProjectionQueryRequest(Customer.class, request);
 		List<Customer> output = response.getResults();
 		assertTrue(output.size() == 3);
+	}
+
+	@Test
+	public void testInsert_MappedSupperClass() {
+		SubClass1 entity = new SubClass1();
+		entity.setName("John Doe");
+		entity.setCreatedBy("user1");
+		entity.setCreatedOn(new Date());
+		entity.setModifiedBy("user2");
+		entity.setModifiedOn(new Date());
+		entity = em.insert(entity);
+		SubClass1 entity2 = em.load(SubClass1.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_MappedSupperClass2() {
+		SubClass2 entity = new SubClass2();
+		entity.setName("John Doe");
+		entity.setCreatedBy("user1");
+		entity.setCreatedOn(new Date());
+		entity.setModifiedBy("user2");
+		entity.setModifiedOn(new Date());
+		entity = em.insert(entity);
+		SubClass2 entity2 = em.load(SubClass2.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testUpdate_MappedSupperClass2() {
+		SubClass2 entity = new SubClass2();
+		entity.setName("John Doe");
+		entity.setCreatedBy("user1");
+		entity.setCreatedOn(new Date());
+		entity.setModifiedBy("user2");
+		entity.setModifiedOn(new Date());
+		entity = em.insert(entity);
+		SubClass2 entity2 = em.load(SubClass2.class, entity.getId());
+		entity2.setName("John Smith");
+		em.update(entity2);
+		SubClass2 entity3 = em.load(SubClass2.class, entity2.getId());
+		assertTrue(entity3.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_MappedSupperClass3() {
+		SubClass3 entity = new SubClass3();
+		entity.setFieldx("I'm super super!");
+		entity.setName("John Doe");
+		entity.setCreatedBy("user1");
+		entity.setCreatedOn(new Date());
+		entity.setModifiedBy("user2");
+		entity.setModifiedOn(new Date());
+		entity = em.insert(entity);
+		SubClass3 entity2 = em.load(SubClass3.class, entity.getId());
+		assertTrue(entity.equals(entity2) && entity2.getMyKey() != null);
+	}
+
+	@Test
+	public void testInsert_MappedSupperClass4() {
+		SubClass4 entity = new SubClass4();
+		entity.setFieldx("I'm super super!");
+		entity.setName("John Doe");
+		entity.setCreatedBy("user1");
+		entity.setCreatedOn(new Date());
+		entity.setModifiedBy("user2");
+		entity.setModifiedOn(new Date());
+		entity = em.insert(entity);
+		SubClass4 entity2 = em.load(SubClass4.class, entity.getId());
+		assertTrue(entity.equals(entity2) && entity2.getCreatedBy() == null);
 	}
 
 	private static Calendar getToday() {

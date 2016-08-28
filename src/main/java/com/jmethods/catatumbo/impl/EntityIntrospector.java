@@ -17,7 +17,9 @@ package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.Entity;
@@ -25,7 +27,9 @@ import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Identifier;
 import com.jmethods.catatumbo.Ignore;
 import com.jmethods.catatumbo.Key;
+import com.jmethods.catatumbo.MappedSuperClass;
 import com.jmethods.catatumbo.ParentKey;
+import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
 import com.jmethods.catatumbo.PropertyOverrides;
 
@@ -153,7 +157,7 @@ public class EntityIntrospector {
 	 * Processes the fields defined in this entity and updates the meatadata.
 	 */
 	private void processFields() {
-		Field[] fields = entityClass.getDeclaredFields();
+		List<Field> fields = getAllFields();
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(Ignore.class)) {
 				continue;
@@ -169,6 +173,27 @@ public class EntityIntrospector {
 				processField(field);
 			}
 		}
+	}
+
+	/**
+	 * Processes the entity class and any super classes that are
+	 * MappedSupperClasses and returns the fields.
+	 * 
+	 * @return all fields of the entity hierarchy.
+	 */
+	private List<Field> getAllFields() {
+		List<Field> allFields = new ArrayList<>();
+		Class<?> clazz = entityClass;
+		boolean stop = false;
+		do {
+			Field[] fields = clazz.getDeclaredFields();
+			for (Field field : fields) {
+				allFields.add(field);
+			}
+			clazz = clazz.getSuperclass();
+			stop = (clazz == null || !clazz.isAnnotationPresent(MappedSuperClass.class));
+		} while (!stop);
+		return allFields;
 	}
 
 	/**
@@ -266,7 +291,31 @@ public class EntityIntrospector {
 	private void processField(Field field) {
 		PropertyMetadata propertyMetadata = IntrospectionUtils.getPropertyMetadata(field);
 		if (propertyMetadata != null) {
+			// If the field is from a super class, there might be some
+			// overrides...
+			if (!field.getDeclaringClass().equals(entityClass)) {
+				applyPropertyOverride(propertyMetadata);
+			}
 			entityMetadata.putPropertyMetadata(propertyMetadata);
+		}
+	}
+
+	/**
+	 * Applies any override information for the property with the given
+	 * metadata.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the property
+	 */
+	private void applyPropertyOverride(PropertyMetadata propertyMetadata) {
+		String name = propertyMetadata.getName();
+		Property override = entityMetadata.getPropertyOverride(name);
+		if (override != null) {
+			String mappedName = override.name();
+			if (mappedName != null && mappedName.trim().length() > 0) {
+				propertyMetadata.setMappedName(mappedName);
+			}
+			propertyMetadata.setIndexed(override.indexed());
 		}
 
 	}
