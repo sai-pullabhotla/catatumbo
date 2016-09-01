@@ -36,7 +36,7 @@ public class ZipCode {
 	private String fourDigits;
 
 	@Embedded
-	private AnotherEmbeddable anotherEmbeddable;
+	private AnotherEmbeddable anotherEmbeddable = new AnotherEmbeddable();
 
 	/**
 	 * 

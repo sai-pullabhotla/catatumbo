@@ -258,8 +258,11 @@ public class Unmarshaller {
 	private void unmarshalEmbeddedField(EmbeddedMetadata embeddedMetadata, Object target)
 			throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
-		Object embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
-		embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+		Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+		if (embeddedObject == null) {
+			embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
+			embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+		}
 		Collection<PropertyMetadata> propertyMetadataCollection = embeddedMetadata.getPropertyMetadataCollection();
 		for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
 			unmarshalProperty(propertyMetadata, embeddedObject);
