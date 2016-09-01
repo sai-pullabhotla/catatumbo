@@ -40,6 +40,7 @@ import com.jmethods.catatumbo.DefaultQueryResponse;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
+import com.jmethods.catatumbo.OptimisticLockException;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
@@ -119,14 +120,58 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E> E update(E entity) {
 		try {
 			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity, true);
-			datastoreReaderWriter.update(nativeEntity);
-			return entity;
+			PropertyMetadata versionMetadata = EntityIntrospector.getVersionMetadata(entity);
+			if (versionMetadata == null) {
+				datastoreReaderWriter.update(nativeEntity);
+			} else {
+				nativeEntity = updateWithOptimisticLocking(nativeEntity, versionMetadata);
+			}
+			return (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
+		}
+
+	}
+
+	/**
+	 * Updates the given entity by first checking the version number of the
+	 * entity in the Cloud Datastore. Entity is only updated if the version
+	 * numbers are compatible, otherwise OptimisticLockException is thrown.
+	 * 
+	 * @param nativeEntity
+	 *            the native entity
+	 * @param versionMetadata
+	 *            the meatdata of the version property
+	 * @return the updated native entity, with version incremented by 1.
+	 */
+	private Entity updateWithOptimisticLocking(Entity nativeEntity, PropertyMetadata versionMetadata) {
+		Transaction transaction = null;
+		try {
+			transaction = datastore.newTransaction();
+			Entity storedNativeEntity = transaction.get(nativeEntity.key());
+			if (storedNativeEntity == null) {
+				throw new OptimisticLockException(String.format("Entity does not exist: %s", nativeEntity.key()));
+			}
+			String versionPropertyName = versionMetadata.getMappedName();
+			long version = nativeEntity.getLong(versionPropertyName);
+			long storedVersion = storedNativeEntity.getLong(versionPropertyName);
+			if (version != storedVersion) {
+				throw new OptimisticLockException(
+						String.format("Expecting version %d, but found %d", version, storedVersion));
+			}
+			nativeEntity = incrementVersion(nativeEntity, versionMetadata);
+			transaction.update(nativeEntity);
+			transaction.commit();
+			return nativeEntity;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		} finally {
+			rollback(transaction);
 		}
 	}
 
@@ -547,6 +592,38 @@ public abstract class BaseDatastoreAccess implements DatastoreAccess {
 			nativeEntities[i] = (Entity) Marshaller.marshal(datastore, entities.get(i), true);
 		}
 		return nativeEntities;
+	}
+
+	/**
+	 * Increments the version property of the given entity by one.
+	 * 
+	 * @param nativeEntity
+	 *            the target entity
+	 * @param versionMetadata
+	 *            the meatdata of the version property
+	 * @return a new entity (copy of the given), but with the incremented
+	 *         version.
+	 */
+	private Entity incrementVersion(Entity nativeEntity, PropertyMetadata versionMetadata) {
+		String versionPropertyName = versionMetadata.getMappedName();
+		long version = nativeEntity.getLong(versionPropertyName);
+		return Entity.builder(nativeEntity).set(versionPropertyName, ++version).build();
+	}
+
+	/**
+	 * Rolls back the given transaction.
+	 * 
+	 * @param transaction
+	 *            the transaction to roll back.
+	 */
+	private static void rollback(Transaction transaction) {
+		try {
+			if (transaction != null && transaction.active()) {
+				transaction.rollback();
+			}
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
 	}
 
 }

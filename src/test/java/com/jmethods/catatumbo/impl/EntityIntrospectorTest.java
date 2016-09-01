@@ -16,9 +16,17 @@
 
 package com.jmethods.catatumbo.impl;
 
+import static org.junit.Assert.*;
+
+import java.util.Objects;
+
 import org.junit.Test;
 
+import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.entities.Customer;
+import com.jmethods.catatumbo.entities.OptimisticLock1;
+import com.jmethods.catatumbo.entities.OptimisticLockBad1;
+import com.jmethods.catatumbo.entities.OptimisticLockBad2;
 
 /**
  * @author Sai Pullabhotla
@@ -34,6 +42,22 @@ public class EntityIntrospectorTest {
 		metadata = EntityIntrospector.introspect(Customer.class);
 		System.out.println(metadata);
 
+	}
+
+	@Test
+	public void testIntrospect_OptimisticLock1() {
+		EntityMetadata metadata = EntityIntrospector.introspect(OptimisticLock1.class);
+		assertTrue(Objects.equals(metadata.getVersionMetadata(), metadata.getPropertyMetadata("version")));
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testIntrospect_OptimisticLock_StringField() {
+		EntityMetadata metadata = EntityIntrospector.introspect(OptimisticLockBad1.class);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testIntrospect_OptimisticLock_TwoVersionFields() {
+		EntityMetadata metadata = EntityIntrospector.introspect(OptimisticLockBad2.class);
 	}
 
 }

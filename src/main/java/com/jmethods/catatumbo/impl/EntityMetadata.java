@@ -24,6 +24,7 @@ import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.ParentKey;
 import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
+import com.jmethods.catatumbo.Version;
 
 /**
  * Objects of this class hold metadata information about an entity. Metadata
@@ -59,6 +60,12 @@ public class EntityMetadata extends MetadataBase {
 	 * Metadata of the parent key.
 	 */
 	private ParentKeyMetadata parentKeyMetadata;
+
+	/**
+	 * Meatdata of the field that is used for optimistic locking/entity
+	 * versioning
+	 */
+	private PropertyMetadata versionMetadata;
 
 	/**
 	 * Property overrides for embeeded fields of the entity. The key is the
@@ -185,6 +192,33 @@ public class EntityMetadata extends MetadataBase {
 
 		}
 		this.parentKeyMetadata = parentKeyMetadata;
+	}
+
+	/**
+	 * Returns the meatdata of the field that is used for optimistic locking.
+	 * 
+	 * @return the versionMetadata the meatdata of the field that is used for
+	 *         optimistic locking.
+	 */
+	public PropertyMetadata getVersionMetadata() {
+		return versionMetadata;
+	}
+
+	/**
+	 * Sets the metadata of the field that is used for optimistic locking.
+	 * 
+	 * @param versionMetadata
+	 *            metadata of the field that is used for optimistic locking.
+	 */
+	public void setVersionMetadata(PropertyMetadata versionMetadata) {
+		if (this.versionMetadata != null) {
+			String format = "Class %s has at least two fields, %s and %s, with an annotation of %s. A given entity "
+					+ "can have atmost one field with this annotation. ";
+			String message = String.format(format, entityClass.getName(), this.versionMetadata.getName(),
+					versionMetadata.getName(), Version.class.getName());
+			throw new EntityManagerException(message);
+		}
+		this.versionMetadata = versionMetadata;
 	}
 
 	/**

@@ -65,6 +65,7 @@ import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
 import com.jmethods.catatumbo.entities.LongListField;
 import com.jmethods.catatumbo.entities.LongObject;
+import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
 import com.jmethods.catatumbo.entities.ShortField;
 import com.jmethods.catatumbo.entities.ShortObject;
@@ -145,6 +146,7 @@ public class EntityManagerTest {
 		em.deleteAll(SubClass2.class);
 		em.deleteAll(SubClass3.class);
 		em.deleteAll(SubClass4.class);
+		em.deleteAll(OptimisticLock1.class);
 		populateTasks();
 	}
 
@@ -1994,6 +1996,66 @@ public class EntityManagerTest {
 		entity = em.insert(entity);
 		SubClass4 entity2 = em.load(SubClass4.class, entity.getId());
 		assertTrue(entity.equals(entity2) && entity2.getCreatedBy() == null);
+	}
+
+	@Test
+	public void testInsert_OptimisticLock1() {
+		OptimisticLock1 entity = new OptimisticLock1();
+		entity.setName("Optimistic Lock Test Insert Single");
+		OptimisticLock1 entity2 = em.insert(entity);
+		assertTrue(entity2.getId() != 0 && entity2.getVersion() == 1);
+	}
+
+	@Test
+	public void testInsert_OptimisticLock1_Multiple() {
+		List<OptimisticLock1> entities = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			OptimisticLock1 entity = new OptimisticLock1();
+			entity.setName("Optimistic Lock Test Insert Multiple " + i);
+			entities.add(entity);
+		}
+		List<OptimisticLock1> insertedEntities = em.insert(entities);
+		assertTrue(insertedEntities.get(0).getVersion() == 1 && insertedEntities.get(1).getVersion() == 1
+				&& insertedEntities.get(2).getVersion() == 1 && insertedEntities.get(3).getVersion() == 1
+				&& insertedEntities.get(4).getVersion() == 1);
+	}
+
+	@Test
+	public void testUpdate_OptimisticLock1() {
+		OptimisticLock1 entity = new OptimisticLock1();
+		entity.setName("Before Update!");
+		OptimisticLock1 entity2 = em.insert(entity);
+		OptimisticLock1 entity3 = em.load(OptimisticLock1.class, entity2.getId());
+		entity3.setName("After Update");
+		OptimisticLock1 entity4 = em.update(entity3);
+		OptimisticLock1 entity5 = em.load(OptimisticLock1.class, entity4.getId());
+		assertTrue(entity2.getVersion() == 1 && entity3.getVersion() == 1 && entity4.getVersion() == 2
+				&& entity5.getVersion() == 2);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdate_OptimisticLock2() {
+		OptimisticLock1 entity = new OptimisticLock1();
+		entity.setName("Hello World!");
+		entity = em.insert(entity);
+		OptimisticLock1 entity2 = em.load(OptimisticLock1.class, entity.getId());
+		entity2.setName("Hello World! After Update!!");
+		entity2 = em.update(entity2);
+		entity2 = em.update(entity2);
+		entity2 = em.update(entity2);
+		entity = em.update(entity);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdate_OptimisticLock3() {
+		OptimisticLock1 entity = new OptimisticLock1();
+		entity.setName("Hello World!");
+		entity = em.insert(entity);
+		OptimisticLock1 entity2 = em.load(OptimisticLock1.class, entity.getId());
+		entity2.setName("Hello World! After Update!!");
+		entity2 = em.update(entity2);
+		em.delete(entity);
+		entity2 = em.update(entity2);
 	}
 
 	private static Calendar getToday() {

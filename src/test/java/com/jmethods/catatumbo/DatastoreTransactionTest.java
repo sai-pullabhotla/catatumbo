@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import static org.junit.Assert.*;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -105,4 +107,60 @@ public class DatastoreTransactionTest {
 
 	}
 
+	@Test
+	public void testInsert_OptimisticLock1() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			Account entity = new Account();
+			entity.setName("Version Test");
+			entity.setEmail("user@example.com");
+			Account entity2 = transaction.insert(entity);
+			transaction.commit();
+			assertTrue(entity2.getId() != 0 && entity2.getVersion() == 1);
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	@Test
+	public void testUpdate_OptimisticLock1() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			Account entity = new Account();
+			entity.setName("Hello World!");
+			entity = em.insert(entity);
+			entity = transaction.load(Account.class, entity.getId());
+			entity.setName("Hello World! After Update!!");
+			entity = transaction.update(entity);
+			transaction.commit();
+			assertTrue(entity.getId() != 0 && entity.getVersion() == 2);
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdate_OptimisticLock2() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			Account entity = new Account();
+			entity.setName("Hello World!");
+			entity = em.insert(entity);
+			Account entity2 = em.load(Account.class, entity.getId());
+			entity2.setName("Hello World! After Update!!");
+			entity2 = transaction.update(entity2);
+			entity2 = transaction.update(entity2);
+			entity2 = transaction.update(entity2);
+			entity = transaction.update(entity);
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
 }

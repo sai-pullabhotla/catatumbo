@@ -18,7 +18,6 @@ package com.jmethods.catatumbo.entities;
 
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
-import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.Version;
 
 /**
@@ -26,13 +25,14 @@ import com.jmethods.catatumbo.Version;
  *
  */
 @Entity
-public class Account {
+public class OptimisticLock1 {
+
 	@Identifier
 	private long id;
-	private String email;
+
 	private String name;
+
 	@Version
-	@Property(name = "ENTITY_VERSION")
 	private long version = 1;
 
 	/**
@@ -48,21 +48,6 @@ public class Account {
 	 */
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	/**

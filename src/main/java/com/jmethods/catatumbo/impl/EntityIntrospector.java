@@ -32,6 +32,7 @@ import com.jmethods.catatumbo.ParentKey;
 import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
 import com.jmethods.catatumbo.PropertyOverrides;
+import com.jmethods.catatumbo.Version;
 
 /**
  * Introspector for entity classes. The introspect method gathers metadata about
@@ -107,7 +108,6 @@ public class EntityIntrospector {
 		}
 		EntityIntrospector introspector = new EntityIntrospector(entityClass);
 		introspector.process();
-		introspector.entityMetadata.cleanup();
 		cache.put(entityClass, introspector.entityMetadata);
 		return introspector.entityMetadata;
 	}
@@ -137,6 +137,7 @@ public class EntityIntrospector {
 			throw new EntityManagerException(String.format("Class %s requires a field with annotation of %s",
 					entityClass.getName(), Identifier.class.getName()));
 		}
+		entityMetadata.cleanup();
 	}
 
 	/**
@@ -292,12 +293,31 @@ public class EntityIntrospector {
 		PropertyMetadata propertyMetadata = IntrospectionUtils.getPropertyMetadata(field);
 		if (propertyMetadata != null) {
 			// If the field is from a super class, there might be some
-			// overrides...
+			// overrides, so process those.
 			if (!field.getDeclaringClass().equals(entityClass)) {
 				applyPropertyOverride(propertyMetadata);
 			}
 			entityMetadata.putPropertyMetadata(propertyMetadata);
+			if (field.isAnnotationPresent(Version.class)) {
+				processVersionField(propertyMetadata);
+			}
 		}
+	}
+
+	/**
+	 * Processes the Version annotation of the field with the given metadata.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the field that has the Version annotation.
+	 */
+	private void processVersionField(PropertyMetadata propertyMetadata) {
+		DataType dataType = propertyMetadata.getDataType();
+		if (dataType != DataType.LONG) {
+			String messageFormat = "Field %s in class %s must be of type %s";
+			throw new EntityManagerException(String.format(messageFormat, propertyMetadata.getField(), entityClass,
+					DataType.LONG.getDataClass()));
+		}
+		entityMetadata.setVersionMetadata(propertyMetadata);
 	}
 
 	/**
@@ -346,6 +366,34 @@ public class EntityIntrospector {
 	 */
 	private static boolean isValidIdentifierType(DataType dataType) {
 		return Arrays.binarySearch(VALID_IDENTIFIER_TYPES, dataType) >= 0;
+	}
+
+	/**
+	 * Convenient method for getting the metadata of the field used for
+	 * optimistic locking.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @return the metadata of the field used for optimistic locking. Returns
+	 *         <code>null</code>, if the class does not have a field with
+	 *         {@link Version} annotation.
+	 */
+	public static PropertyMetadata getVersionMetadata(Class<?> entityClass) {
+		return introspect(entityClass).getVersionMetadata();
+	}
+
+	/**
+	 * Convenient method for getting the metadata of the field used for
+	 * optimistic locking.
+	 * 
+	 * @param entity
+	 *            the entity
+	 * @return the metadata of the field used for optimistic locking. Returns
+	 *         <code>null</code>, if the class does not have a field with
+	 *         {@link Version} annotation.
+	 */
+	public static PropertyMetadata getVersionMetadata(Object entity) {
+		return introspect(entity.getClass()).getVersionMetadata();
 	}
 
 }
