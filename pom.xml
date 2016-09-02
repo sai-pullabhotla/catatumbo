@@ -3,11 +3,11 @@
 
 	<groupId>com.jmethods</groupId>
 	<artifactId>catatumbo</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.4.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Catatumbo</name>
 	<description>
-		Object Mapping and Persistence framework for Google Cloud Datastore
+		Object Mapping and Persistence Framework for Google Cloud Datastore
 	</description>
 	<url>http://www.jMethods.com</url>
 	<inceptionYear>2016</inceptionYear>
