@@ -18,6 +18,9 @@ package com.jmethods.catatumbo;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,6 +30,10 @@ import org.junit.Test;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.jmethods.catatumbo.entities.Account;
+import com.jmethods.catatumbo.entities.ChildEntity;
+import com.jmethods.catatumbo.entities.LongId;
+import com.jmethods.catatumbo.entities.ParentEntity;
+import com.jmethods.catatumbo.entities.StringId;
 
 /**
  * @author Sai Pullabhotla
@@ -35,8 +42,6 @@ import com.jmethods.catatumbo.entities.Account;
 public class DatastoreTransactionTest {
 
 	private static EntityManager em = null;
-
-	private static Datastore datastore = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -52,8 +57,11 @@ public class DatastoreTransactionTest {
 				String.format("Running tests against project %s with credentials from file %s using namespace %s",
 						projectId, jsonCredentialsFile, namespace));
 
-		datastore = DatastoreOptions.defaultInstance().service();
 		em.deleteAll(Account.class);
+		em.deleteAll(LongId.class);
+		em.deleteAll(StringId.class);
+		em.deleteAll(ParentEntity.class);
+		em.deleteAll(ChildEntity.class);
 
 	}
 
@@ -157,10 +165,82 @@ public class DatastoreTransactionTest {
 			entity2 = transaction.update(entity2);
 			entity2 = transaction.update(entity2);
 			entity = transaction.update(entity);
+			transaction.commit();
 		} finally {
 			if (transaction.isActive()) {
 				transaction.rollback();
 			}
 		}
 	}
+
+	@Test
+	public void testInsertWithDeferredIdAllocation_LongId() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			LongId entity = new LongId();
+			entity.setField1("Transaction Insert Test with Deferred ID Allocation");
+			transaction.insertWithDeferredIdAllocation(entity);
+			DatastoreTransaction.Response response = transaction.commit();
+			assertTrue(response.getGneratedKeys().size() == 1);
+
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	@Test
+	public void testInsertWithDeferredIdAllocation_LongId_List() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			List<LongId> entities = new ArrayList<>();
+			for (int i = 0; i < 5; i++) {
+				LongId entity = new LongId();
+				entity.setField1("Transaction Insert Test with Deferred ID Allocation " + i);
+				entities.add(entity);
+			}
+			transaction.insertWithDeferredIdAllocation(entities);
+			DatastoreTransaction.Response response = transaction.commit();
+			assertTrue(response.getGneratedKeys().size() == 5);
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsertWithDeferredIdAllocation_StringId() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			StringId entity = new StringId();
+			transaction.insertWithDeferredIdAllocation(entity);
+			transaction.commit();
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsertWithDeferredIdAllocation_StringId_List() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			List<StringId> entities = new ArrayList<>();
+			for (int i = 0; i < 5; i++) {
+				StringId entity = new StringId();
+				entities.add(entity);
+			}
+			transaction.insertWithDeferredIdAllocation(entities);
+			transaction.commit();
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
 }

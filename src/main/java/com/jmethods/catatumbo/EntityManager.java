@@ -46,4 +46,13 @@ public interface EntityManager extends DatastoreAccess {
 	 */
 	DatastoreTransaction newTransaction();
 
+	/**
+	 * Creates and returns a new {@link DatastoreBatch} that can be used for
+	 * processing multiple write operations in one request.
+	 * 
+	 * @return a new <code>DatastoreBatch</code> for processing multiple write
+	 *         operations in one request.
+	 */
+	DatastoreBatch newBatch();
+
 }

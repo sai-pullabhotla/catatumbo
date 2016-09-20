@@ -23,6 +23,7 @@ import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
+import com.jmethods.catatumbo.DatastoreBatch;
 import com.jmethods.catatumbo.EntityManager;
 import com.jmethods.catatumbo.EntityManagerException;
 
@@ -43,11 +44,6 @@ public class DefaultEntityManager extends BaseDatastoreAccess implements EntityM
 	private static final int DEFAULT_DELETE_ALL_BATCH_SIZE = 100;
 
 	/**
-	 * Datastore object
-	 */
-	private Datastore datastore;
-
-	/**
 	 * Creates a new instance of <code>DefaultEntityManager</code>.
 	 * 
 	 * @param datastore
@@ -55,7 +51,6 @@ public class DefaultEntityManager extends BaseDatastoreAccess implements EntityM
 	 */
 	public DefaultEntityManager(Datastore datastore) {
 		super(datastore);
-		this.datastore = datastore;
 	}
 
 	/**
@@ -99,6 +94,11 @@ public class DefaultEntityManager extends BaseDatastoreAccess implements EntityM
 	@Override
 	public DefaultDatastoreTransaction newTransaction() {
 		return new DefaultDatastoreTransaction(datastore.newTransaction());
+	}
+
+	@Override
+	public DatastoreBatch newBatch() {
+		return new DefaultDatastoreBatch(datastore.newBatch());
 	}
 
 }

@@ -396,4 +396,27 @@ public class EntityIntrospector {
 		return introspect(entity.getClass()).getVersionMetadata();
 	}
 
+	/**
+	 * Returns the Identifier Metadata for the given entity.
+	 * 
+	 * @param entity
+	 *            the entity
+	 * @return the Identifier Metadata
+	 */
+	public static IdentifierMetadata getIdentifierMetadata(Object entity) {
+		return getIdentifierMetadata(entity.getClass());
+	}
+
+	/**
+	 * Returns the Identifier Metadata for the given entity class.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @return the Identifier Metadata
+	 */
+	public static IdentifierMetadata getIdentifierMetadata(Class<?> entityClass) {
+		return introspect(entityClass).getIdentifierMetadata();
+
+	}
+
 }

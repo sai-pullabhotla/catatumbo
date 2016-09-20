@@ -37,6 +37,7 @@ instead of Relational Databases.
 	* Entity queries 
 	* Projection queries 
 	* Key-only queries 
+* Support for Batch Write operations 
 * Transaction Support  
 
 ##Quick Start Guide 
