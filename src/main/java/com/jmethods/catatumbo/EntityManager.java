@@ -55,4 +55,21 @@ public interface EntityManager extends DatastoreAccess {
 	 */
 	DatastoreBatch newBatch();
 
+	/**
+	 * Runs the given {@link TransactionalTask} in a new transaction. The
+	 * {@link TransactionalTask#execute(DatastoreTransaction)} will receive a
+	 * reference to the newly created {@link DatastoreTransaction} to perform
+	 * reads/writes from/to the Cloud Datastore. When the
+	 * {@link TransactionalTask} finishes, the transaction is committed. If any
+	 * error occurs during the execution of the {@link TransactionalTask}, the
+	 * transaction will be rolled back.
+	 * 
+	 * @param task
+	 *            the task (or call back) to execute
+	 * @return the return value from the execution of
+	 *         {@link TransactionalTask#execute(DatastoreTransaction)}.
+	 * 
+	 */
+	<T> T executeInTransaction(TransactionalTask<T> task);
+
 }

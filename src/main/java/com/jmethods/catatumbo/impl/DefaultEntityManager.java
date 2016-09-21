@@ -24,8 +24,10 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.jmethods.catatumbo.DatastoreBatch;
+import com.jmethods.catatumbo.DatastoreTransaction;
 import com.jmethods.catatumbo.EntityManager;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.TransactionalTask;
 
 /**
  * Default implementation of {@link EntityManager} interface. Manages entities
@@ -99,6 +101,24 @@ public class DefaultEntityManager extends BaseDatastoreAccess implements EntityM
 	@Override
 	public DatastoreBatch newBatch() {
 		return new DefaultDatastoreBatch(datastore.newBatch());
+	}
+
+	@Override
+	public <T> T executeInTransaction(TransactionalTask<T> task) {
+		DatastoreTransaction transaction = null;
+		try {
+			transaction = newTransaction();
+			T returnValue = task.execute(transaction);
+			transaction.commit();
+			return returnValue;
+		} catch (Exception exp) {
+			transaction.rollback();
+			throw new EntityManagerException(exp);
+		} finally {
+			if (transaction != null && transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
 	}
 
 }

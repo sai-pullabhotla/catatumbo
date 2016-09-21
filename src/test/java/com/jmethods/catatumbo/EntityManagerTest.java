@@ -2058,6 +2058,43 @@ public class EntityManagerTest {
 		entity2 = em.update(entity2);
 	}
 
+	@Test
+	public void testRunInTransaction() {
+		final StringField entity = new StringField();
+		entity.setName("Run in transaction test");
+		final StringField insertedEntity = em.insert(entity);
+		StringField updatedEntity = em.executeInTransaction(new TransactionalTask<StringField>() {
+			@Override
+			public StringField execute(DatastoreTransaction transaction) {
+				// StringField entity = new StringField();
+				StringField loadedEntity = transaction.load(StringField.class, insertedEntity.getId());
+				loadedEntity.setName("Updated from runInTransaction");
+				loadedEntity = transaction.update(loadedEntity);
+				return loadedEntity;
+			}
+		});
+		assertTrue(updatedEntity.getName().equals("Updated from runInTransaction"));
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testRunInTransaction_Failure() {
+		final StringField entity = new StringField();
+		entity.setId(3001);
+		entity.setName("Run in transaction test");
+		final StringField insertedEntity = em.insert(entity);
+		em.executeInTransaction(new TransactionalTask<Void>() {
+			@Override
+			public Void execute(DatastoreTransaction transaction) {
+				for (int i = 3000; i < 3005; i++) {
+					StringField entity = new StringField();
+					entity.setId(i);
+					transaction.insert(entity);
+				}
+				return null;
+			}
+		});
+	}
+
 	private static Calendar getToday() {
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 0);
