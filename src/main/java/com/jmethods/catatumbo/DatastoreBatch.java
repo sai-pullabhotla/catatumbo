@@ -218,7 +218,7 @@ public interface DatastoreBatch {
 	void deleteByKey(List<DatastoreKey> keys);
 
 	/**
-	 * Adds the given ID & entity type to this batch for deletion.
+	 * Adds the given ID and entity type to this batch for deletion.
 	 * 
 	 * @param entityClass
 	 *            the entity class.
@@ -230,7 +230,7 @@ public interface DatastoreBatch {
 	<E> void delete(Class<E> entityClass, long id);
 
 	/**
-	 * Adds the given ID & entity type to this batch for deletion.
+	 * Adds the given ID and entity type to this batch for deletion.
 	 * 
 	 * @param entityClass
 	 *            the entity class.
