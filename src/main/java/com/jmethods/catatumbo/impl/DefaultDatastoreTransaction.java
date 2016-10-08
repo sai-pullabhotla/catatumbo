@@ -20,12 +20,18 @@ import static com.jmethods.catatumbo.impl.DatastoreUtils.*;
 
 import java.util.List;
 
+import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.Transaction;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DatastoreTransaction;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.EntityQueryRequest;
+import com.jmethods.catatumbo.KeyQueryRequest;
+import com.jmethods.catatumbo.ProjectionQueryRequest;
+import com.jmethods.catatumbo.QueryRequest;
+import com.jmethods.catatumbo.QueryResponse;
 
 /**
  * Default implementation of the {@link DatastoreTransaction} interface.
@@ -33,7 +39,12 @@ import com.jmethods.catatumbo.EntityManagerException;
  * @author Sai Pullabhotla
  *
  */
-public class DefaultDatastoreTransaction extends BaseDatastoreAccess implements DatastoreTransaction {
+public class DefaultDatastoreTransaction implements DatastoreTransaction {
+
+	/**
+	 * Entity manager that created this transaction
+	 */
+	private DefaultEntityManager entityManager;
 
 	/**
 	 * Native transaction
@@ -41,14 +52,41 @@ public class DefaultDatastoreTransaction extends BaseDatastoreAccess implements 
 	private Transaction nativeTransaction;
 
 	/**
+	 * Datastore
+	 */
+	private Datastore datastore;
+
+	/**
+	 * Reader
+	 */
+	private DefaultDatastoreReader reader;
+
+	/**
+	 * Writer
+	 */
+	private DefaultDatastoreWriter writer;
+
+	/**
 	 * Creates a new instance of <code>DatastoreTransaction</code>.
 	 * 
-	 * @param nativeTransaction
-	 *            native transaction
+	 * @param entityManager
+	 *            the entity manager that created this transaction.
 	 */
-	public DefaultDatastoreTransaction(Transaction nativeTransaction) {
-		super(nativeTransaction);
-		this.nativeTransaction = nativeTransaction;
+	public DefaultDatastoreTransaction(DefaultEntityManager entityManager) {
+		this.entityManager = entityManager;
+		this.datastore = entityManager.getDatastore();
+		this.nativeTransaction = datastore.newTransaction();
+		this.reader = new DefaultDatastoreReader(this);
+		this.writer = new DefaultDatastoreWriter(this);
+	}
+
+	/**
+	 * Returns the entity manager that created this transaction.
+	 * 
+	 * @return the entity manager that created this transaction.
+	 */
+	public DefaultEntityManager getEntityManager() {
+		return entityManager;
 	}
 
 	/**
@@ -153,6 +191,142 @@ public class DefaultDatastoreTransaction extends BaseDatastoreAccess implements 
 			return DatastoreUtils.toDatastoreKeys(nativeResponse.generatedKeys());
 		}
 
+	}
+
+	@Override
+	public <E> E insert(E entity) {
+		return writer.insert(entity);
+	}
+
+	@Override
+	public <E> List<E> insert(List<E> entities) {
+		return writer.insert(entities);
+	}
+
+	@Override
+	public <E> E update(E entity) {
+		return writer.updateWithOptimisticLock(entity);
+	}
+
+	@Override
+	public <E> List<E> update(List<E> entities) {
+		return writer.update(entities);
+	}
+
+	@Override
+	public <E> E upsert(E entity) {
+		return writer.upsert(entity);
+	}
+
+	@Override
+	public <E> List<E> upsert(List<E> entities) {
+		return writer.upsert(entities);
+	}
+
+	@Override
+	public void delete(Object entity) {
+		writer.delete(entity);
+	}
+
+	@Override
+	public void delete(List<?> entities) {
+		writer.delete(entities);
+	}
+
+	@Override
+	public void deleteByKey(DatastoreKey key) {
+		writer.deleteByKey(key);
+	}
+
+	@Override
+	public void deleteByKey(List<DatastoreKey> keys) {
+		writer.deleteByKey(keys);
+	}
+
+	@Override
+	public <E> void delete(Class<E> entityClass, long id) {
+		writer.delete(entityClass, id);
+	}
+
+	@Override
+	public <E> void delete(Class<E> entityClass, String id) {
+		writer.delete(entityClass, id);
+	}
+
+	@Override
+	public <E> void delete(Class<E> entityClass, DatastoreKey parentKey, long id) {
+		writer.delete(entityClass, parentKey, id);
+	}
+
+	@Override
+	public <E> void delete(Class<E> entityClass, DatastoreKey parentKey, String id) {
+		writer.delete(entityClass, parentKey, id);
+	}
+
+	@Override
+	public <E> E load(Class<E> entityClass, long id) {
+		return reader.load(entityClass, id);
+	}
+
+	@Override
+	public <E> List<E> loadById(Class<E> entityClass, List<Long> identifiers) {
+		return reader.loadById(entityClass, identifiers);
+	}
+
+	@Override
+	public <E> E load(Class<E> entityClass, String id) {
+		return reader.load(entityClass, id);
+	}
+
+	@Override
+	public <E> List<E> loadByName(Class<E> entityClass, List<String> identifiers) {
+		return reader.loadByName(entityClass, identifiers);
+	}
+
+	@Override
+	public <E> E load(Class<E> entityClass, DatastoreKey parentKey, long id) {
+		return reader.load(entityClass, parentKey, id);
+	}
+
+	@Override
+	public <E> E load(Class<E> entityClass, DatastoreKey parentKey, String id) {
+		return reader.load(entityClass, parentKey, id);
+	}
+
+	@Override
+	public EntityQueryRequest createEntityQueryRequest(String query) {
+		return reader.createEntityQueryRequest(query);
+	}
+
+	@Override
+	public ProjectionQueryRequest createProjectionQueryRequest(String query) {
+		return reader.createProjectionQueryRequest(query);
+	}
+
+	@Override
+	public KeyQueryRequest createKeyQueryRequest(String query) {
+		return reader.createKeyQueryRequest(query);
+	}
+
+	@Override
+	public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request) {
+		return reader.executeEntityQueryRequest(expectedResultType, request);
+	}
+
+	@Override
+	public <E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType,
+			ProjectionQueryRequest request) {
+		return reader.executeProjectionQueryRequest(expectedResultType, request);
+	}
+
+	@Override
+	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
+		return reader.executeKeyQueryRequest(request);
+	}
+
+	@Override
+	public <E> QueryResponse<E> execute(Class<E> expectedResultType, QueryRequest request) {
+		return reader.execute(expectedResultType, request);
 	}
 
 }

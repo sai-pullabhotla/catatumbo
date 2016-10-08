@@ -51,6 +51,11 @@ import com.jmethods.catatumbo.QueryResponse;
 public class DefaultDatastoreReader {
 
 	/**
+	 * A reference to the entity manager
+	 */
+	private DefaultEntityManager entityManager;
+
+	/**
 	 * Native datastore reader. This could either be {@link Datastore} or
 	 * {@link Transaction}.
 	 */
@@ -64,24 +69,25 @@ public class DefaultDatastoreReader {
 	/**
 	 * Creates a new instance of <code>DefaultDatastoreReader</code>.
 	 * 
-	 * @param datastore
-	 *            the Datastore object
+	 * @param entityManager
+	 *            the entity manager that created this reader.
 	 */
-	public DefaultDatastoreReader(Datastore datastore) {
-		this.datastore = datastore;
+	public DefaultDatastoreReader(DefaultEntityManager entityManager) {
+		this.entityManager = entityManager;
+		this.datastore = entityManager.getDatastore();
 		this.nativeReader = datastore;
-
 	}
 
 	/**
 	 * Creates a new instance of <code>DefaultDatastoreReader</code>.
 	 * 
 	 * @param transaction
-	 *            the Transaction object
+	 *            the transaction that created this reader.
 	 */
-	public DefaultDatastoreReader(Transaction transaction) {
-		this.datastore = transaction.datastore();
-		this.nativeReader = transaction;
+	public DefaultDatastoreReader(DefaultDatastoreTransaction transaction) {
+		this.entityManager = transaction.getEntityManager();
+		this.datastore = entityManager.getDatastore();
+		this.nativeReader = transaction.getNativeTransaction();
 	}
 
 	/**
@@ -104,6 +110,7 @@ public class DefaultDatastoreReader {
 			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -130,7 +137,9 @@ public class DefaultDatastoreReader {
 		try {
 			Key[] nativeKeys = longListToNativeKeys(entityClass, identifiers);
 			List<Entity> nativeEntities = nativeReader.fetch(nativeKeys);
-			return DatastoreUtils.toEntities(entityClass, nativeEntities);
+			List<E> entities = DatastoreUtils.toEntities(entityClass, nativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
+			return entities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -160,6 +169,7 @@ public class DefaultDatastoreReader {
 			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -186,6 +196,7 @@ public class DefaultDatastoreReader {
 			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -212,7 +223,9 @@ public class DefaultDatastoreReader {
 		try {
 			Key[] nativeKeys = stringListToNativeKeys(entityClass, identifiers);
 			List<Entity> nativeEntities = nativeReader.fetch(nativeKeys);
-			return DatastoreUtils.toEntities(entityClass, nativeEntities);
+			List<E> entities = DatastoreUtils.toEntities(entityClass, nativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
+			return entities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -242,6 +255,7 @@ public class DefaultDatastoreReader {
 			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -343,6 +357,7 @@ public class DefaultDatastoreReader {
 			}
 			response.setResults(entities);
 			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
 			return response;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -379,6 +394,9 @@ public class DefaultDatastoreReader {
 			}
 			response.setResults(entities);
 			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			// TODO should we invoke PostLoad callback for projected entities?
+			// entityManager.executeEntityListeners(CallbackEventType.POST_LOAD,
+			// entities);
 			return response;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

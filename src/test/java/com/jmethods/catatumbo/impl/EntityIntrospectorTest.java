@@ -23,10 +23,12 @@ import java.util.Objects;
 import org.junit.Test;
 
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.entities.Cat;
 import com.jmethods.catatumbo.entities.Customer;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad2;
+import com.jmethods.catatumbo.entities.StringField;
 
 /**
  * @author Sai Pullabhotla
@@ -58,6 +60,20 @@ public class EntityIntrospectorTest {
 	@Test(expected = EntityManagerException.class)
 	public void testIntrospect_OptimisticLock_TwoVersionFields() {
 		EntityMetadata metadata = EntityIntrospector.introspect(OptimisticLockBad2.class);
+	}
+
+	@Test
+	public void testIntrospect_Listeners1() {
+		EntityMetadata metadata = EntityIntrospector.introspect(StringField.class);
+		assertNull(metadata.getEntityListenersMetadata().getCallbacks());
+	}
+
+	@Test
+	public void testIntrospect_Listeners2() {
+		EntityMetadata metadata = EntityIntrospector.introspect(Cat.class);
+		EntityListenersMetadata elm = metadata.getEntityListenersMetadata();
+		assertEquals(1, elm.getCallbacks().size());
+		assertEquals(3, elm.getCallbacks(CallbackType.PRE_INSERT).size());
 	}
 
 }

@@ -42,6 +42,11 @@ import com.jmethods.catatumbo.OptimisticLockException;
 public class DefaultDatastoreWriter {
 
 	/**
+	 * A reference to the entity manager
+	 */
+	private DefaultEntityManager entityManager;
+
+	/**
 	 * Reference to the native DatastoreWriter for updating the Cloud Datastore.
 	 * This could be the {@link Datastore}, {@link Transaction} or
 	 * {@link Batch}.
@@ -56,11 +61,12 @@ public class DefaultDatastoreWriter {
 	/**
 	 * Creates a new instance of <code>DefaultDatastoreWriter</code>.
 	 * 
-	 * @param datastore
-	 *            a reference to the {@link Datastore}.
+	 * @param entityManager
+	 *            a reference to the entity manager.
 	 */
-	public DefaultDatastoreWriter(Datastore datastore) {
-		this.datastore = datastore;
+	public DefaultDatastoreWriter(DefaultEntityManager entityManager) {
+		this.entityManager = entityManager;
+		this.datastore = entityManager.getDatastore();
 		this.nativeWriter = datastore;
 	}
 
@@ -69,11 +75,12 @@ public class DefaultDatastoreWriter {
 	 * executing batch updates.
 	 * 
 	 * @param batch
-	 *            the {@link Batch}.
+	 *            the {@link DefaultDatastoreBatch}.
 	 */
-	public DefaultDatastoreWriter(Batch batch) {
-		this.datastore = batch.datastore();
-		this.nativeWriter = batch;
+	public DefaultDatastoreWriter(DefaultDatastoreBatch batch) {
+		this.entityManager = batch.getEntityManager();
+		this.datastore = entityManager.getDatastore();
+		this.nativeWriter = batch.getNativeBatch();
 	}
 
 	/**
@@ -81,11 +88,12 @@ public class DefaultDatastoreWriter {
 	 * transactional updates.
 	 * 
 	 * @param transaction
-	 *            the {@link Transaction}.
+	 *            the {@link DefaultDatastoreTransaction}.
 	 */
-	public DefaultDatastoreWriter(Transaction transaction) {
-		this.datastore = transaction.datastore();
-		this.nativeWriter = transaction;
+	public DefaultDatastoreWriter(DefaultDatastoreTransaction transaction) {
+		this.entityManager = transaction.getEntityManager();
+		this.datastore = entityManager.getDatastore();
+		this.nativeWriter = transaction.getNativeTransaction();
 	}
 
 	/**
@@ -101,10 +109,12 @@ public class DefaultDatastoreWriter {
 	 */
 	public <E> E insert(E entity) {
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_INSERT, entity);
 			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
 			Entity insertedNativeEntity = nativeWriter.add(nativeEntity);
 			@SuppressWarnings("unchecked")
 			E insertedEntity = (E) Unmarshaller.unmarshal(insertedNativeEntity, entity.getClass());
+			entityManager.executeEntityListeners(CallbackType.POST_INSERT, insertedEntity);
 			return insertedEntity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -128,10 +138,13 @@ public class DefaultDatastoreWriter {
 			return new ArrayList<E>();
 		}
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_INSERT, entities);
 			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
 			Class<?> entityClass = entities.get(0).getClass();
 			List<Entity> insertedNativeEntities = nativeWriter.add(nativeEntities);
-			return (List<E>) toEntities(entityClass, insertedNativeEntities);
+			List<E> insertedEntities = (List<E>) toEntities(entityClass, insertedNativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_INSERT, insertedEntities);
+			return insertedEntities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -149,8 +162,10 @@ public class DefaultDatastoreWriter {
 	 */
 	public <E> E update(E entity) {
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
 			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity, true);
 			nativeWriter.update(nativeEntity);
+			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, entity);
 			return entity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -189,6 +204,7 @@ public class DefaultDatastoreWriter {
 	private <E> E updateWithOptimisticLockingInternal(E entity, PropertyMetadata versionMetadata) {
 		Transaction transaction = null;
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
 			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity);
 			transaction = datastore.newTransaction();
 			Entity storedNativeEntity = transaction.get(nativeEntity.key());
@@ -205,7 +221,9 @@ public class DefaultDatastoreWriter {
 			nativeEntity = incrementVersion(nativeEntity, versionMetadata);
 			transaction.update(nativeEntity);
 			transaction.commit();
-			return (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
+			E updatedEntity = (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
+			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntity);
+			return updatedEntity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		} finally {
@@ -228,8 +246,10 @@ public class DefaultDatastoreWriter {
 			return new ArrayList<>();
 		}
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entities);
 			Entity[] nativeEntities = toNativeEntities(entities, datastore);
 			nativeWriter.update(nativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, entities);
 			return entities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -248,10 +268,12 @@ public class DefaultDatastoreWriter {
 	 */
 	public <E> E upsert(E entity) {
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_UPSERT, entity);
 			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
 			Entity upsertedNativeEntity = nativeWriter.put(nativeEntity);
 			@SuppressWarnings("unchecked")
 			E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedNativeEntity, entity.getClass());
+			entityManager.executeEntityListeners(CallbackType.POST_UPSERT, upsertedEntity);
 			return upsertedEntity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -274,10 +296,13 @@ public class DefaultDatastoreWriter {
 			return new ArrayList<>();
 		}
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_UPSERT, entities);
 			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
 			Class<?> entityClass = entities.get(0).getClass();
 			List<Entity> upsertedNativeEntities = nativeWriter.put(nativeEntities);
-			return (List<E>) toEntities(entityClass, upsertedNativeEntities);
+			List<E> upsertedEntities = (List<E>) toEntities(entityClass, upsertedNativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_UPSERT, upsertedEntities);
+			return upsertedEntities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -294,8 +319,10 @@ public class DefaultDatastoreWriter {
 	 */
 	public void delete(Object entity) {
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_DELETE, entity);
 			Key nativeKey = Marshaller.marshalKey(datastore, entity);
 			nativeWriter.delete(nativeKey);
+			entityManager.executeEntityListeners(CallbackType.POST_DELETE, entity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -312,11 +339,13 @@ public class DefaultDatastoreWriter {
 	 */
 	public void delete(List<?> entities) {
 		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_DELETE, entities);
 			Key[] nativeKeys = new Key[entities.size()];
 			for (int i = 0; i < entities.size(); i++) {
 				nativeKeys[i] = Marshaller.marshalKey(datastore, entities.get(i));
 			}
 			nativeWriter.delete(nativeKeys);
+			entityManager.executeEntityListeners(CallbackType.POST_DELETE, entities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}

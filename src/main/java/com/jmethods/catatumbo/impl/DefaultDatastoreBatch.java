@@ -16,8 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static com.jmethods.catatumbo.impl.DatastoreUtils.*;
-
 import java.util.List;
 
 import com.google.cloud.datastore.Batch;
@@ -37,6 +35,11 @@ import com.jmethods.catatumbo.EntityManagerException;
 public class DefaultDatastoreBatch implements DatastoreBatch {
 
 	/**
+	 * Reference to the entity manager
+	 */
+	private DefaultEntityManager entityManager;
+
+	/**
 	 * Native Batch object
 	 */
 	private Batch nativeBatch = null;
@@ -54,13 +57,32 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 	/**
 	 * Creates a new instance of <code>DefaultDatastoreBatch</code>.
 	 * 
-	 * @param nativeBatch
-	 *            a reference to the native {@link Batch} object
+	 * @param entityManager
+	 *            a reference to the entity manager
 	 */
-	public DefaultDatastoreBatch(Batch nativeBatch) {
-		this.nativeBatch = nativeBatch;
-		writer = new DefaultDatastoreWriter(nativeBatch);
-		this.datastore = nativeBatch.datastore();
+	public DefaultDatastoreBatch(DefaultEntityManager entityManager) {
+		this.entityManager = entityManager;
+		this.datastore = entityManager.getDatastore();
+		this.nativeBatch = datastore.newBatch();
+		this.writer = new DefaultDatastoreWriter(this);
+	}
+
+	/**
+	 * Returns the entity manager from which this batch was created.
+	 * 
+	 * @return the entity manager from which this batch was created.
+	 */
+	public DefaultEntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	/**
+	 * Returns the native batch.
+	 * 
+	 * @return the native batch
+	 */
+	public Batch getNativeBatch() {
+		return nativeBatch;
 	}
 
 	@Override
@@ -91,7 +113,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, datastore);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -138,7 +160,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, datastore);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

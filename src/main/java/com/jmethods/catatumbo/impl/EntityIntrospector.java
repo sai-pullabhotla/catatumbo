@@ -106,6 +106,7 @@ public class EntityIntrospector {
 		if (cachedMetadata != null) {
 			return cachedMetadata;
 		}
+		// TODO need synchronization
 		EntityIntrospector introspector = new EntityIntrospector(entityClass);
 		introspector.process();
 		cache.put(entityClass, introspector.entityMetadata);
@@ -137,11 +138,12 @@ public class EntityIntrospector {
 			throw new EntityManagerException(String.format("Class %s requires a field with annotation of %s",
 					entityClass.getName(), Identifier.class.getName()));
 		}
+		entityMetadata.setEntityListenersMetadata(EntityListenersIntrospector.introspect(entityClass));
 		entityMetadata.cleanup();
 	}
 
 	/**
-	 * Processes the property overrides for the emdedded objects, if any.
+	 * Processes the property overrides for the embedded objects, if any.
 	 */
 	private void processPropertyOverrides() {
 		PropertyOverrides propertyOverrides = entityClass.getAnnotation(PropertyOverrides.class);
@@ -417,6 +419,31 @@ public class EntityIntrospector {
 	public static IdentifierMetadata getIdentifierMetadata(Class<?> entityClass) {
 		return introspect(entityClass).getIdentifierMetadata();
 
+	}
+
+	/**
+	 * Returns the metadata of entity listeners associated with the given
+	 * entity.
+	 * 
+	 * @param entity
+	 *            the entity
+	 * @return the metadata of EntityListeners associated with the given entity.
+	 */
+	public static EntityListenersMetadata getEntityLstenersMetadata(Object entity) {
+		return introspect(entity.getClass()).getEntityListenersMetadata();
+	}
+
+	/**
+	 * Returns the metadata of entity listeners associated with the given entity
+	 * class.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @return the metadata of entity listeners associated with the given entity
+	 *         class.
+	 */
+	public static EntityListenersMetadata getEntityLstenersMetadata(Class<?> entityClass) {
+		return introspect(entityClass).getEntityListenersMetadata();
 	}
 
 }

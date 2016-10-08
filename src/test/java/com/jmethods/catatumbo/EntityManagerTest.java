@@ -92,17 +92,7 @@ public class EntityManagerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String jsonCredentialsFile = System.getenv("jsonCredentialsFile");
-		String projectId = System.getenv("projectId");
-		String namespace = System.getenv("namespace");
-		if (jsonCredentialsFile == null) {
-			em = EntityManagerFactory.getInstance().createDefaultEntityManager(namespace);
-		} else {
-			em = EntityManagerFactory.getInstance().createEntityManager(projectId, jsonCredentialsFile, namespace);
-		}
-		System.out.println(
-				String.format("Running tests against project %s with credentials from file %s using namespace %s",
-						projectId, jsonCredentialsFile, namespace));
+		em = TestUtils.setupEntityManager();
 		em.deleteAll(LongId.class);
 		em.deleteAll(StringId.class);
 		em.deleteAll(LongId2.class);

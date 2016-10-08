@@ -27,8 +27,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
 import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.ChildEntity;
 import com.jmethods.catatumbo.entities.LongId;
@@ -45,18 +43,7 @@ public class DatastoreTransactionTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String jsonCredentialsFile = System.getenv("jsonCredentialsFile");
-		String projectId = System.getenv("projectId");
-		String namespace = System.getenv("namespace");
-		if (jsonCredentialsFile == null) {
-			em = EntityManagerFactory.getInstance().createDefaultEntityManager(namespace);
-		} else {
-			em = EntityManagerFactory.getInstance().createEntityManager(projectId, jsonCredentialsFile, namespace);
-		}
-		System.out.println(
-				String.format("Running tests against project %s with credentials from file %s using namespace %s",
-						projectId, jsonCredentialsFile, namespace));
-
+		em = TestUtils.setupEntityManager();
 		em.deleteAll(Account.class);
 		em.deleteAll(LongId.class);
 		em.deleteAll(StringId.class);

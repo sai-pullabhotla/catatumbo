@@ -29,9 +29,10 @@ instead of Relational Databases.
 	* Geo Location 
 	* Keys, Parent Keys and Key References
 	* List Values 
-* Support for embedded objects through the use of Embedded and @Embeddable annotations. 
+* Support for embedded objects through the use of @Embedded and @Embeddable annotations. 
 * Persisting of inherited fields of an Entity through the use of @MappedSuperClass annotation. 
 * Optimistic Locking support through the use of @Version annotation. 
+* Support for entity life cycle listeners (e.g. PreInsert, PostInsert callbacks) 
 * Create, Retrieve, Update, Delete, Upsert (update or insert)  
 * Support for executing GQL Queries. This includes:  
 	* Entity queries 

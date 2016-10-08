@@ -80,6 +80,11 @@ public class EntityMetadata extends MetadataBase {
 	private Map<String, PropertyMetadata> masterPropertyMetadataMap;
 
 	/**
+	 * Metadata of various entity listeners
+	 */
+	private EntityListenersMetadata entityListenersMetadata;
+
+	/**
 	 * Creates a new instance of <code>EntityMetadata</code>.
 	 *
 	 * @param entityClass
@@ -274,6 +279,25 @@ public class EntityMetadata extends MetadataBase {
 					propertyMetadata.getField()));
 		}
 
+	}
+
+	/**
+	 * Returns the metadata of the entity listeners.
+	 * 
+	 * @return the metadata of the entity listeners.
+	 */
+	public EntityListenersMetadata getEntityListenersMetadata() {
+		return entityListenersMetadata;
+	}
+
+	/**
+	 * Sets the metadata of the entity listeners.
+	 * 
+	 * @param entityListenersMetadata
+	 *            the metadata of the entity listeners.
+	 */
+	public void setEntityListenersMetadata(EntityListenersMetadata entityListenersMetadata) {
+		this.entityListenersMetadata = entityListenersMetadata;
 	}
 
 	/**

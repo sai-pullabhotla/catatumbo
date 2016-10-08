@@ -72,4 +72,14 @@ public interface EntityManager extends DatastoreAccess {
 	 */
 	<T> T executeInTransaction(TransactionalTask<T> task);
 
+	/**
+	 * Registers the given entity lifecycle listeners with this entity manager.
+	 * 
+	 * @param classes
+	 *            the classes that should receive entity lifecycle events.
+	 *            Lifecycle callbacks are executed for all types of entities
+	 *            that are managed by this EntityManager.
+	 */
+	void setDefaultListeners(Class<?>... classes);
+
 }
