@@ -49,7 +49,7 @@ public class EntityIntrospector {
 	/**
 	 * Cache of introspected classes
 	 */
-	private static LRUCache<Class<?>, EntityMetadata> cache = new LRUCache<>(20, 200);
+	private static Cache<Class<?>, EntityMetadata> cache = new Cache<>(64);
 
 	/**
 	 * Data types that are valid for identifiers
@@ -106,11 +106,28 @@ public class EntityIntrospector {
 		if (cachedMetadata != null) {
 			return cachedMetadata;
 		}
-		// TODO need synchronization
-		EntityIntrospector introspector = new EntityIntrospector(entityClass);
-		introspector.process();
-		cache.put(entityClass, introspector.entityMetadata);
-		return introspector.entityMetadata;
+		return loadMetadata(entityClass);
+	}
+
+	/**
+	 * Loads the metadata for the given class and puts it in the cache and
+	 * returns it.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @return the metadata for the given class
+	 */
+	private static EntityMetadata loadMetadata(Class<?> entityClass) {
+		synchronized (entityClass) {
+			EntityMetadata metadata = cache.get(entityClass);
+			if (metadata == null) {
+				EntityIntrospector introspector = new EntityIntrospector(entityClass);
+				introspector.process();
+				metadata = introspector.entityMetadata;
+				cache.put(entityClass, metadata);
+			}
+			return metadata;
+		}
 	}
 
 	/**

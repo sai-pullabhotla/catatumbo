@@ -227,7 +227,7 @@ public class DefaultAndExternalListenersTest {
 	}
 
 	@Test
-	public void testPreAndPostLoad_Query() {
+	public void testPostLoad_Query() {
 		em.deleteAll(ExternalCalculatorEntity4.class);
 		ExternalCalculatorEntity4 entity = new ExternalCalculatorEntity4(8, 9);
 		entity = em.insert(entity);
@@ -237,8 +237,8 @@ public class DefaultAndExternalListenersTest {
 			e.printStackTrace();
 		}
 		EntityQueryRequest request = em.createEntityQueryRequest(
-				String.format("SELECT * FROM %s LIMIT 1", ExternalCalculatorEntity4.class.getSimpleName()));
-		request.setAllowLiterals(true);
+				String.format("SELECT * FROM %s WHERE __key__ = @1", ExternalCalculatorEntity4.class.getSimpleName()));
+		request.addPositionalBinding(entity.getKey());
 		QueryResponse<ExternalCalculatorEntity4> response = em
 				.executeEntityQueryRequest(ExternalCalculatorEntity4.class, request);
 		List<ExternalCalculatorEntity4> entities = response.getResults();

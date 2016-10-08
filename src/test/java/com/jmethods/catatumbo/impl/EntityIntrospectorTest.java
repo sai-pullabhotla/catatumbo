@@ -29,6 +29,7 @@ import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad2;
 import com.jmethods.catatumbo.entities.StringField;
+import com.jmethods.catatumbo.entities.StringId;
 
 /**
  * @author Sai Pullabhotla
@@ -74,6 +75,37 @@ public class EntityIntrospectorTest {
 		EntityListenersMetadata elm = metadata.getEntityListenersMetadata();
 		assertEquals(1, elm.getCallbacks().size());
 		assertEquals(3, elm.getCallbacks(CallbackType.PRE_INSERT).size());
+	}
+
+	@Test
+	public void testIntrospect_MultiThreaded() {
+		class MyRunnable implements Runnable {
+			private Class<?> clazz;
+
+			public MyRunnable(Class<?> clazz) {
+				this.clazz = clazz;
+			}
+
+			@Override
+			public void run() {
+				EntityMetadata metadata = EntityIntrospector.introspect(clazz);
+				System.out.println(metadata);
+			}
+		}
+		;
+		Thread[] threads = new Thread[4];
+		Class<?>[] entityClasses = { StringId.class, StringField.class, StringId.class, StringField.class };
+		for (int i = 0; i < threads.length; i++) {
+			threads[i] = new Thread(new MyRunnable(entityClasses[i]));
+			threads[i].start();
+		}
+		for (int i = 0; i < threads.length; i++) {
+			try {
+				threads[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -16,8 +16,10 @@
 
 package com.jmethods.catatumbo.entities;
 
+import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.Identifier;
 import com.jmethods.catatumbo.Ignore;
+import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.MappedSuperClass;
 
 /**
@@ -29,6 +31,9 @@ public class CalculatorEntity {
 
 	@Identifier
 	private long id;
+
+	@Key
+	private DatastoreKey key;
 
 	private long operand1;
 
@@ -76,6 +81,21 @@ public class CalculatorEntity {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the key
+	 */
+	public DatastoreKey getKey() {
+		return key;
+	}
+
+	/**
+	 * @param key
+	 *            the key to set
+	 */
+	public void setKey(DatastoreKey key) {
+		this.key = key;
 	}
 
 	/**

@@ -222,8 +222,8 @@ public class ExcludeDefaultListenerTest {
 			e.printStackTrace();
 		}
 		EntityQueryRequest request = em.createEntityQueryRequest(
-				String.format("SELECT * FROM %s LIMIT 1", ExternalCalculatorEntity3.class.getSimpleName()));
-		request.setAllowLiterals(true);
+				String.format("SELECT * FROM %s WHERE __key__ = @1", ExternalCalculatorEntity3.class.getSimpleName()));
+		request.addPositionalBinding(entity.getKey());
 		QueryResponse<ExternalCalculatorEntity3> response = em
 				.executeEntityQueryRequest(ExternalCalculatorEntity3.class, request);
 		List<ExternalCalculatorEntity3> entities = response.getResults();

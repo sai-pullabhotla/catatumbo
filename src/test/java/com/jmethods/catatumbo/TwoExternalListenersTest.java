@@ -205,8 +205,8 @@ public class TwoExternalListenersTest {
 			e.printStackTrace();
 		}
 		EntityQueryRequest request = em.createEntityQueryRequest(
-				String.format("SELECT * FROM %s LIMIT 1", ExternalCalculatorEntity2.class.getSimpleName()));
-		request.setAllowLiterals(true);
+				String.format("SELECT * FROM %s WHERE __key__=@1", ExternalCalculatorEntity2.class.getSimpleName()));
+		request.addPositionalBinding(entity.getKey());
 		QueryResponse<ExternalCalculatorEntity2> response = em
 				.executeEntityQueryRequest(ExternalCalculatorEntity2.class, request);
 		List<ExternalCalculatorEntity2> entities = response.getResults();

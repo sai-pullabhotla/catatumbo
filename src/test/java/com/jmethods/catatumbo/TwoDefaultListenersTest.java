@@ -210,8 +210,8 @@ public class TwoDefaultListenersTest {
 			e.printStackTrace();
 		}
 		EntityQueryRequest request = em.createEntityQueryRequest(
-				String.format("SELECT * FROM %s LIMIT 1", GlobalCalculatorEntity.class.getSimpleName()));
-		request.setAllowLiterals(true);
+				String.format("SELECT * FROM %s WHERE __key__ = @1", GlobalCalculatorEntity.class.getSimpleName()));
+		request.addPositionalBinding(entity.getKey());
 		QueryResponse<GlobalCalculatorEntity> response = em.executeEntityQueryRequest(GlobalCalculatorEntity.class,
 				request);
 		List<GlobalCalculatorEntity> entities = response.getResults();
