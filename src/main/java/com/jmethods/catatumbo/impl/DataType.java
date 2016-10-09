@@ -18,6 +18,7 @@ package com.jmethods.catatumbo.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.jmethods.catatumbo.DatastoreKey;
@@ -121,6 +122,11 @@ public enum DataType {
 	 * Set object
 	 */
 	SET(Set.class, SetConverter.getInstance()),
+
+	/**
+	 * Map object
+	 */
+	MAP(Map.class, MapConverter.getInstance()),
 
 	/**
 	 * Key (for an entity's full key, parent key, key references to other

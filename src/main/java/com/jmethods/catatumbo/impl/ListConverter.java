@@ -21,16 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.cloud.datastore.BooleanValue;
-import com.google.cloud.datastore.DoubleValue;
-import com.google.cloud.datastore.KeyValue;
 import com.google.cloud.datastore.ListValue;
-import com.google.cloud.datastore.LongValue;
-import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
-import com.jmethods.catatumbo.DatastoreKey;
-import com.jmethods.catatumbo.DefaultDatastoreKey;
 
 /**
  * An implementation of {@link PropertyConverter} for handling List types.
@@ -59,22 +52,7 @@ public class ListConverter extends AbstractConverter {
 		ListValue.Builder listValurBuilder = ListValue.builder();
 		while (iterator.hasNext()) {
 			Object item = iterator.next();
-			Value<?> convertedItem = null;
-			if (item instanceof String) {
-				convertedItem = StringValue.builder((String) item).build();
-			} else if (item instanceof Long) {
-				convertedItem = LongValue.builder((long) item).build();
-			} else if (item instanceof DatastoreKey) {
-				DatastoreKey datastoreKey = (DatastoreKey) item;
-				convertedItem = KeyValue.builder(datastoreKey.nativeKey()).build();
-			} else if (item instanceof Boolean) {
-				convertedItem = BooleanValue.builder((boolean) item).build();
-			} else if (item instanceof Double) {
-				convertedItem = DoubleValue.builder((double) item).build();
-			} else {
-				throw new RuntimeException("Unsupported type in List");
-			}
-			listValurBuilder.addValue(convertedItem);
+			listValurBuilder.addValue(javaToNative(item));
 		}
 		return listValurBuilder;
 
@@ -98,22 +76,7 @@ public class ListConverter extends AbstractConverter {
 		// List<Object> output = new ArrayList<>(list.size());
 		while (iterator.hasNext()) {
 			Value<?> item = iterator.next();
-			Object convertedItem = null;
-			if (item instanceof StringValue) {
-				convertedItem = item.get();
-			} else if (item instanceof LongValue) {
-				convertedItem = item.get();
-			} else if (item instanceof KeyValue) {
-				KeyValue keyValue = (KeyValue) item;
-				convertedItem = new DefaultDatastoreKey(keyValue.get());
-			} else if (item instanceof BooleanValue) {
-				convertedItem = item.get();
-			} else if (item instanceof DoubleValue) {
-				convertedItem = item.get();
-			} else {
-				throw new RuntimeException("Unsupported type in list");
-			}
-			output.add(convertedItem);
+			output.add(nativeToJava(item));
 		}
 		return output;
 	}

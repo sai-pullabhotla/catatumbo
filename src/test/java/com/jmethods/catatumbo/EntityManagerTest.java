@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -74,6 +76,7 @@ import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
 import com.jmethods.catatumbo.entities.LongListField;
 import com.jmethods.catatumbo.entities.LongObject;
+import com.jmethods.catatumbo.entities.MapFields;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
 import com.jmethods.catatumbo.entities.SetFields;
@@ -150,6 +153,7 @@ public class EntityManagerTest {
 		em.deleteAll(EnumField.class);
 		em.deleteAll(ListFields.class);
 		em.deleteAll(SetFields.class);
+		em.deleteAll(MapFields.class);
 		populateTasks();
 	}
 
@@ -1561,6 +1565,159 @@ public class EntityManagerTest {
 		assertEquals(0, entity.getHashSet().size());
 		assertEquals(0, entity.getLinkedHashSet().size());
 		assertEquals(0, entity.getTreeSet().size());
+	}
+
+	@Test
+	public void testInsert_Map() {
+		MapFields entity = new MapFields();
+		Map<String, Object> map = new HashMap<>();
+		map.put("color", "black");
+		map.put("isBig", true);
+		map.put("age", 21L);
+		map.put("pi", Math.PI);
+		entity.setGenericMap(map);
+		entity = em.insert(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getGenericMap().equals(entity2.getGenericMap()));
+	}
+
+	@Test
+	public void testUpdate_Map() {
+		MapFields entity = new MapFields();
+		Map<String, Object> map = new HashMap<>();
+		map.put("color", "black");
+		map.put("isBig", true);
+		map.put("age", 21L);
+		map.put("pi", Math.PI);
+		entity.setGenericMap(map);
+		entity = em.insert(entity);
+		map.put("size", "large");
+		entity.setGenericMap(map);
+		entity = em.update(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getGenericMap().equals(entity2.getGenericMap()));
+	}
+
+	@Test
+	public void testInsert_HashMap() {
+		MapFields entity = new MapFields();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("color", "black");
+		map.put("isBig", true);
+		map.put("age", 21L);
+		map.put("pi", Math.PI);
+		entity.setHashMap(map);
+		entity = em.insert(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getHashMap().equals(entity2.getHashMap()));
+	}
+
+	@Test
+	public void testUpdate_HashMap() {
+		MapFields entity = new MapFields();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("color", "black");
+		map.put("isBig", true);
+		map.put("age", 21L);
+		map.put("pi", Math.PI);
+		entity.setHashMap(map);
+		entity = em.insert(entity);
+		map.put("size", "large");
+		entity.setHashMap(map);
+		entity = em.update(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getHashMap().equals(entity2.getHashMap()));
+	}
+
+	@Test
+	public void testInsert_LinkedHashMap() {
+		MapFields entity = new MapFields();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put("color", "black");
+		map.put("isBig", true);
+		map.put("age", 21L);
+		map.put("pi", Math.PI);
+		entity.setLinkedHashMap(map);
+		entity = em.insert(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getLinkedHashMap().equals(entity2.getLinkedHashMap()));
+	}
+
+	@Test
+	public void testUpdate_LinkedHashMap() {
+		MapFields entity = new MapFields();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put("color", "black");
+		map.put("isBig", true);
+		map.put("age", 21L);
+		map.put("pi", Math.PI);
+		entity.setLinkedHashMap(map);
+		entity = em.insert(entity);
+		map.put("size", "large");
+		entity.setLinkedHashMap(map);
+		entity = em.update(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getLinkedHashMap().equals(entity2.getLinkedHashMap()));
+	}
+
+	@Test
+	public void testInsert_TreeMap() {
+		MapFields entity = new MapFields();
+		TreeMap<String, String> map = new TreeMap<>();
+		map.put("one", "abc");
+		map.put("first", "first element");
+		map.put("akey", "another element");
+		entity.setTreeMap(map);
+		entity = em.insert(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getTreeMap().equals(entity2.getTreeMap()));
+	}
+
+	@Test
+	public void testUpdate_TreeMap() {
+		MapFields entity = new MapFields();
+		TreeMap<String, String> map = new TreeMap<>();
+		map.put("one", "abc");
+		map.put("first", "first element");
+		map.put("akey", "another element");
+		entity.setTreeMap(map);
+		entity = em.insert(entity);
+		map.put("bkey", "b comes after a");
+		entity.setTreeMap(map);
+		entity = em.update(entity);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.getTreeMap().equals(entity2.getTreeMap()));
+	}
+
+	@Test
+	public void testInsertMapFields_Null() {
+		MapFields entity = new MapFields();
+		entity = em.insert(entity);
+		entity = em.load(MapFields.class, entity.getId());
+		assertNull(entity.getGenericMap());
+		assertNull(entity.getHashMap());
+		assertNull(entity.getLinkedHashMap());
+		assertNull(entity.getTreeMap());
+	}
+
+	@Test
+	public void testUpdateMapFields_Null() {
+		MapFields entity = new MapFields();
+		entity.setGenericMap(new HashMap<String, Object>());
+		entity.setHashMap(new HashMap<String, Object>());
+		entity.setLinkedHashMap(new LinkedHashMap<String, Object>());
+		entity.setTreeMap(new TreeMap<String, String>());
+		entity = em.insert(entity);
+		entity.setGenericMap(null);
+		entity.setHashMap(null);
+		entity.setLinkedHashMap(null);
+		entity.setTreeMap(null);
+		entity = em.update(entity);
+		entity = em.load(MapFields.class, entity.getId());
+		assertNull(entity.getGenericMap());
+		assertNull(entity.getHashMap());
+		assertNull(entity.getLinkedHashMap());
+		assertNull(entity.getTreeMap());
 	}
 
 	@Test(expected = EntityManagerException.class)
