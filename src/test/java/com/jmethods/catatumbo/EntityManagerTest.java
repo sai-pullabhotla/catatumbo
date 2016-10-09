@@ -23,10 +23,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Stack;
 import java.util.TimeZone;
+import java.util.Vector;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -61,6 +64,7 @@ import com.jmethods.catatumbo.entities.IgnoreField2;
 import com.jmethods.catatumbo.entities.IntegerField;
 import com.jmethods.catatumbo.entities.IntegerObject;
 import com.jmethods.catatumbo.entities.KeyListField;
+import com.jmethods.catatumbo.entities.ListFields;
 import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
@@ -139,6 +143,7 @@ public class EntityManagerTest {
 		em.deleteAll(SubClass4.class);
 		em.deleteAll(OptimisticLock1.class);
 		em.deleteAll(EnumField.class);
+		em.deleteAll(ListFields.class);
 		populateTasks();
 	}
 
@@ -1277,6 +1282,118 @@ public class EntityManagerTest {
 		entity = em.update(entity);
 		entity = em.load(LongListField.class, entity.getId());
 		assertNull(entity.getNumbers());
+	}
+
+	@Test
+	public void testInsert_ArrayList() {
+		ListFields entity = new ListFields();
+		ArrayList<String> list = new ArrayList<>();
+		list.add("One");
+		list.add("Two");
+		entity.setArrayList(list);
+		entity = em.insert(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getArrayList().equals(entity2.getArrayList()));
+	}
+
+	@Test
+	public void testUpdate_ArrayList() {
+		ListFields entity = new ListFields();
+		ArrayList<String> list = new ArrayList<>();
+		list.add("One");
+		list.add("Two");
+		entity.setArrayList(list);
+		entity = em.insert(entity);
+		list.add("Three");
+		list.add("Four");
+		entity.setArrayList(list);
+		entity = em.update(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getArrayList().equals(entity2.getArrayList()));
+	}
+
+	@Test
+	public void testInsert_LinkedList() {
+		ListFields entity = new ListFields();
+		LinkedList<String> list = new LinkedList<>();
+		list.add("One");
+		list.add("Two");
+		entity.setLinkedList(list);
+		entity = em.insert(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getLinkedList().equals(entity2.getLinkedList()));
+	}
+
+	@Test
+	public void testUpdate_LinkedList() {
+		ListFields entity = new ListFields();
+		LinkedList<String> list = new LinkedList<>();
+		list.add("One");
+		list.add("Two");
+		entity.setLinkedList(list);
+		entity = em.insert(entity);
+		list.add("Three");
+		list.add("Four");
+		entity.setLinkedList(list);
+		entity = em.update(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getLinkedList().equals(entity2.getLinkedList()));
+	}
+
+	@Test
+	public void testInsert_Vector() {
+		ListFields entity = new ListFields();
+		Vector<String> list = new Vector<>();
+		list.add("One");
+		list.add("Two");
+		entity.setVector(list);
+		entity = em.insert(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getVector().equals(entity2.getVector()));
+	}
+
+	@Test
+	public void testUpdate_Vector() {
+		ListFields entity = new ListFields();
+		Vector<String> list = new Vector<>();
+		list.add("One");
+		list.add("Two");
+		entity.setVector(list);
+		entity = em.insert(entity);
+		list.add("Three");
+		list.add("Four");
+		entity.setVector(list);
+		entity = em.update(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getVector().equals(entity2.getVector()));
+	}
+
+	@Test
+	public void testInsert_Stack() {
+		ListFields entity = new ListFields();
+		Stack<String> list = new Stack<>();
+		list.add("One");
+		list.add("Two");
+		entity.setStack(list);
+		entity = em.insert(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getStack().equals(entity2.getStack()));
+	}
+
+	@Test
+	public void testUpdate_Stack() {
+		ListFields entity = new ListFields();
+		Stack<String> list = new Stack<>();
+		list.add("One");
+		list.add("Two");
+		entity.setStack(list);
+		entity = em.insert(entity);
+		list.add("Three");
+		list.add("Four");
+		entity.setStack(list);
+		entity = em.update(entity);
+		ListFields entity2 = em.load(ListFields.class, entity.getId());
+		assertTrue(entity.getStack().equals(entity2.getStack()));
 	}
 
 	@Test(expected = EntityManagerException.class)

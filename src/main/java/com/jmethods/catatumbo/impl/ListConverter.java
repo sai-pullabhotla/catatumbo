@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo.impl;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -79,12 +80,22 @@ public class ListConverter extends AbstractConverter {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object toObject(Value<?> value, PropertyMetadata metadata) {
 		ListValue listValue = (ListValue) value;
 		List<? extends Value<?>> list = listValue.get();
 		Iterator<? extends Value<?>> iterator = list.iterator();
-		List<Object> output = new ArrayList<>(list.size());
+
+		List<Object> output = null;
+		Class<?> listType = metadata.getDeclaredType();
+		if (Modifier.isAbstract(listType.getModifiers())) {
+			output = new ArrayList<>();
+		} else {
+			output = (List<Object>) IntrospectionUtils.instantiateObject(listType);
+		}
+
+		// List<Object> output = new ArrayList<>(list.size());
 		while (iterator.hasNext()) {
 			Value<?> item = iterator.next();
 			Object convertedItem = null;
