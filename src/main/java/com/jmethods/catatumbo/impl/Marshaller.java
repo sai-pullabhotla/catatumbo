@@ -320,7 +320,7 @@ public class Marshaller {
 			valueBuilder = NullValue.builder();
 		} else {
 			PropertyConverter converter = propertyMetadata.getDataType().getConverter();
-			valueBuilder = converter.toValueBuilder(fieldValue);
+			valueBuilder = converter.toValueBuilder(fieldValue, propertyMetadata);
 		}
 		valueBuilder.excludeFromIndexes(!propertyMetadata.isIndexed());
 		Value<?> datastoreValue = valueBuilder.build();

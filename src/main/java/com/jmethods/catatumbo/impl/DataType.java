@@ -37,6 +37,11 @@ public enum DataType {
 	 */
 	CHARACTER(char.class, CharConverter.getInstance()),
 	/**
+	 * Java Enum (Stored as String in the Cloud Datastore, by calling the
+	 * toString() method.
+	 */
+	ENUM(Enum.class, EnumConverter.getInstance()),
+	/**
 	 * Primitive short (Stored as Integer in the Cloud Datastore).
 	 */
 	SHORT(short.class, ShortConverter.getInstance()),

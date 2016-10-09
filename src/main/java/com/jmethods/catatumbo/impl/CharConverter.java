@@ -42,12 +42,12 @@ public class CharConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return StringValue.builder(String.valueOf((char) input));
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		String str = ((StringValue) input).get();
 		if (str.length() != 1) {
 			throw new DataConversionException(String.format("Unable to convert %s to char", str));

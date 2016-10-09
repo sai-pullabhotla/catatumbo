@@ -29,6 +29,7 @@ import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.DatastoreKey;
+import com.jmethods.catatumbo.DefaultDatastoreKey;
 
 /**
  * An implementation of {@link PropertyConverter} for handling List types.
@@ -44,31 +45,6 @@ public class ListConverter extends AbstractConverter {
 	private static final ListConverter INSTANCE = new ListConverter();
 
 	/**
-	 * String Converter
-	 */
-	private static final PropertyConverter STRING_CONVERTER = StringConverter.getInstance();
-
-	/**
-	 * Long Converter
-	 */
-	private static final PropertyConverter LONG_CONVERTER = LongConverter.getInstance();
-
-	/**
-	 * Key Converter
-	 */
-	private static final PropertyConverter KEY_CONVERTER = KeyConverter.getInstance();
-
-	/**
-	 * Boolean Converter
-	 */
-	private static final PropertyConverter BOOLEAN_CONVERTER = BooleanConverter.getInstance();
-
-	/**
-	 * Double Converter
-	 */
-	private static final PropertyConverter DOUBLE_CONVERTER = DoubleConverter.getInstance();
-
-	/**
 	 * Creates a new instance of <code>ListConverter</code>.
 	 */
 	private ListConverter() {
@@ -76,27 +52,27 @@ public class ListConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object obj) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object obj, PropertyMetadata metadata) {
 		List<?> list = (List<?>) obj;
 		Iterator<?> iterator = list.iterator();
 		ListValue.Builder listValurBuilder = ListValue.builder();
 		while (iterator.hasNext()) {
 			Object item = iterator.next();
-			PropertyConverter converter;
+			Value<?> convertedItem = null;
 			if (item instanceof String) {
-				converter = STRING_CONVERTER;
+				convertedItem = StringValue.builder((String) item).build();
 			} else if (item instanceof Long) {
-				converter = LONG_CONVERTER;
+				convertedItem = LongValue.builder((long) item).build();
 			} else if (item instanceof DatastoreKey) {
-				converter = KEY_CONVERTER;
+				DatastoreKey datastoreKey = (DatastoreKey) item;
+				convertedItem = KeyValue.builder(datastoreKey.nativeKey()).build();
 			} else if (item instanceof Boolean) {
-				converter = BOOLEAN_CONVERTER;
+				convertedItem = BooleanValue.builder((boolean) item).build();
 			} else if (item instanceof Double) {
-				converter = DOUBLE_CONVERTER;
+				convertedItem = DoubleValue.builder((double) item).build();
 			} else {
 				throw new RuntimeException("Unsupported type in List");
 			}
-			Value<?> convertedItem = converter.toValue(item);
 			listValurBuilder.addValue(convertedItem);
 		}
 		return listValurBuilder;
@@ -104,28 +80,28 @@ public class ListConverter extends AbstractConverter {
 	}
 
 	@Override
-	public Object toObject(Value<?> value) {
+	public Object toObject(Value<?> value, PropertyMetadata metadata) {
 		ListValue listValue = (ListValue) value;
 		List<? extends Value<?>> list = listValue.get();
 		Iterator<? extends Value<?>> iterator = list.iterator();
 		List<Object> output = new ArrayList<>(list.size());
-		PropertyConverter converter;
 		while (iterator.hasNext()) {
 			Value<?> item = iterator.next();
+			Object convertedItem = null;
 			if (item instanceof StringValue) {
-				converter = STRING_CONVERTER;
+				convertedItem = item.get();
 			} else if (item instanceof LongValue) {
-				converter = LONG_CONVERTER;
+				convertedItem = item.get();
 			} else if (item instanceof KeyValue) {
-				converter = KEY_CONVERTER;
+				KeyValue keyValue = (KeyValue) item;
+				convertedItem = new DefaultDatastoreKey(keyValue.get());
 			} else if (item instanceof BooleanValue) {
-				converter = BOOLEAN_CONVERTER;
+				convertedItem = item.get();
 			} else if (item instanceof DoubleValue) {
-				converter = DOUBLE_CONVERTER;
+				convertedItem = item.get();
 			} else {
 				throw new RuntimeException("Unsupported type in list");
 			}
-			Object convertedItem = converter.toObject(item);
 			output.add(convertedItem);
 		}
 		return output;

@@ -43,12 +43,12 @@ public class ByteArrayConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return BlobValue.builder(Blob.copyFrom((byte[]) input));
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		return ((BlobValue) input).get().toByteArray();
 	}
 

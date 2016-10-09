@@ -44,13 +44,13 @@ public class GeoLocationConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		GeoLocation geoLocation = (GeoLocation) input;
 		return LatLngValue.builder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		LatLngValue value = (LatLngValue) input;
 		LatLng coordinates = value.get();
 		return new GeoLocation(coordinates.latitude(), coordinates.longitude());

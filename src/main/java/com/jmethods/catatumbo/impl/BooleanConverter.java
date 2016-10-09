@@ -42,12 +42,12 @@ public class BooleanConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return BooleanValue.builder((boolean) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		return input.get();
 	}
 

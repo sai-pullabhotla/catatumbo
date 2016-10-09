@@ -35,9 +35,11 @@ public interface PropertyConverter {
 	 * @param input
 	 *            the object to convert - can be any of the supported types by
 	 *            this API.
+	 * @param metadata
+	 *            the metadata of the property
 	 * @return a Value that is equivalent to the given object.
 	 */
-	Value<?> toValue(Object input);
+	Value<?> toValue(Object input, PropertyMetadata metadata);
 
 	/**
 	 * Converts the given input to a ValueBuilder. Used when marshaling a POJO
@@ -45,9 +47,11 @@ public interface PropertyConverter {
 	 * 
 	 * @param input
 	 *            the object to convert.
+	 * @param metadata
+	 *            the metadata of the property
 	 * @return A ValueBuilder that is equivalent to the given object.
 	 */
-	ValueBuilder<?, ?, ?> toValueBuilder(Object input);
+	ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata);
 
 	/**
 	 * Converts the given input to an object. Used when unmarshaling an Entity
@@ -55,8 +59,10 @@ public interface PropertyConverter {
 	 * 
 	 * @param input
 	 *            the Value to convert.
+	 * @param metadata
+	 *            the metadata of the property
 	 * @return An object that is equivalent to the given Value.
 	 */
-	Object toObject(Value<?> input);
+	Object toObject(Value<?> input, PropertyMetadata metadata);
 
 }

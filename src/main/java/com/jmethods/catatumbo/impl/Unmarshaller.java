@@ -299,7 +299,7 @@ public class Unmarshaller {
 			Object entityValue = null;
 			if (!(datastoreValue instanceof NullValue)) {
 				PropertyConverter converter = propertyMetadata.getDataType().getConverter();
-				entityValue = converter.toObject(datastoreValue);
+				entityValue = converter.toObject(datastoreValue, propertyMetadata);
 				Method writeMethod = propertyMetadata.getWriteMethod();
 				writeMethod.invoke(target, entityValue);
 			}

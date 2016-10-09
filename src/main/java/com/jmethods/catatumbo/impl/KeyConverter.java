@@ -43,13 +43,13 @@ public class KeyConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object obj) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object obj, PropertyMetadata metadata) {
 		DatastoreKey datastoreKey = (DatastoreKey) obj;
 		return KeyValue.builder(datastoreKey.nativeKey());
 	}
 
 	@Override
-	public Object toObject(Value<?> value) {
+	public Object toObject(Value<?> value, PropertyMetadata metadata) {
 		KeyValue keyValue = (KeyValue) value;
 		return new DefaultDatastoreKey(keyValue.get());
 	}

@@ -42,12 +42,12 @@ public class FloatConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return DoubleValue.builder((float) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		// @ToDo check the value to make sure it is in the bounds of float?
 		return ((DoubleValue) input).get().floatValue();
 	}

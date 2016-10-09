@@ -16,40 +16,41 @@
 
 package com.jmethods.catatumbo.impl;
 
-import com.google.cloud.datastore.LongValue;
+import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 
 /**
  * An implementation of {@link PropertyConverter} interface for dealing with
- * primitive integer and wrapper Integer types.
+ * enumerated types (enum).
  * 
  * @author Sai Pullabhotla
  *
  */
-public class IntegerConverter extends AbstractConverter {
+public class EnumConverter extends AbstractConverter {
 
 	/**
 	 * Singleton instance
 	 */
-	private static final IntegerConverter INSTANCE = new IntegerConverter();
+	private static final EnumConverter INSTANCE = new EnumConverter();
 
 	/**
-	 * Creates a new instance of <code>IntegerConverter</code>.
+	 * Creates a new instance of <code>EnumConverter</code>.
 	 */
-	private IntegerConverter() {
+	private EnumConverter() {
 		// Do nothing
 	}
 
 	@Override
 	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
-		return LongValue.builder((int) input);
+		return StringValue.builder(input.toString());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object toObject(Value<?> input, PropertyMetadata metadata) {
-		// @ToDo check the value and make sure it is in the range of integer.
-		return ((LongValue) input).get().intValue();
+		String value = ((StringValue) input).get();
+		return Enum.valueOf(metadata.getDeclaredType(), value);
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class IntegerConverter extends AbstractConverter {
 	 * 
 	 * @return the singleton instance of this class.
 	 */
-	public static IntegerConverter getInstance() {
+	public static EnumConverter getInstance() {
 		return INSTANCE;
 	}
 

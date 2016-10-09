@@ -45,12 +45,12 @@ public class DateConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return DateTimeValue.builder(DateTime.copyFrom((Date) input));
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		return ((DateTimeValue) input).get().toDate();
 	}
 

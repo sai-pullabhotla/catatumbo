@@ -14,21 +14,55 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.entities;
 
-import com.google.cloud.datastore.Value;
+import com.jmethods.catatumbo.Entity;
+import com.jmethods.catatumbo.Identifier;
 
 /**
- * Base class for various converters.
- * 
  * @author Sai Pullabhotla
  *
  */
-public abstract class AbstractConverter implements PropertyConverter {
+@Entity
+public class EnumField {
 
-	@Override
-	public Value<?> toValue(Object input, PropertyMetadata metadata) {
-		return toValueBuilder(input, metadata).build();
+	@Identifier
+	private long id;
+
+	private Size size;
+
+	public enum Size {
+		SMALL, MEDIUM, LARGE, EXTRA_LARGE;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the size
+	 */
+	public Size getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size
+	 *            the size to set
+	 */
+	public void setSize(Size size) {
+		this.size = size;
 	}
 
 }

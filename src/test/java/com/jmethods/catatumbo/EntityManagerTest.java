@@ -50,6 +50,7 @@ import com.jmethods.catatumbo.entities.Department;
 import com.jmethods.catatumbo.entities.DoubleField;
 import com.jmethods.catatumbo.entities.DoubleObject;
 import com.jmethods.catatumbo.entities.Employee;
+import com.jmethods.catatumbo.entities.EnumField;
 import com.jmethods.catatumbo.entities.FloatField;
 import com.jmethods.catatumbo.entities.FloatObject;
 import com.jmethods.catatumbo.entities.GenericListField;
@@ -137,6 +138,7 @@ public class EntityManagerTest {
 		em.deleteAll(SubClass3.class);
 		em.deleteAll(SubClass4.class);
 		em.deleteAll(OptimisticLock1.class);
+		em.deleteAll(EnumField.class);
 		populateTasks();
 	}
 
@@ -610,6 +612,45 @@ public class EntityManagerTest {
 		entity = em.insert(entity);
 		entity = em.load(CharArrayField.class, entity.getId());
 		assertTrue(entity.getId() > 0 && entity.getPassword() == null);
+	}
+
+	@Test
+	public void testInsertEnumField() {
+		EnumField entity = new EnumField();
+		entity.setSize(EnumField.Size.LARGE);
+		entity = em.insert(entity);
+		entity = em.load(EnumField.class, entity.getId());
+		assertEquals(EnumField.Size.LARGE, entity.getSize());
+	}
+
+	@Test
+	public void testInsertEnumField_Null() {
+		EnumField entity = new EnumField();
+		entity = em.insert(entity);
+		entity = em.load(EnumField.class, entity.getId());
+		assertNull(entity.getSize());
+	}
+
+	@Test
+	public void testUpdateEnumField() {
+		EnumField entity = new EnumField();
+		entity.setSize(EnumField.Size.LARGE);
+		entity = em.insert(entity);
+		entity.setSize(EnumField.Size.SMALL);
+		entity = em.update(entity);
+		entity = em.load(EnumField.class, entity.getId());
+		assertEquals(EnumField.Size.SMALL, entity.getSize());
+	}
+
+	@Test
+	public void testUpdateEnumField_Null() {
+		EnumField entity = new EnumField();
+		entity.setSize(EnumField.Size.LARGE);
+		entity = em.insert(entity);
+		entity.setSize(null);
+		entity = em.update(entity);
+		entity = em.load(EnumField.class, entity.getId());
+		assertNull(entity.getSize());
 	}
 
 	@Test

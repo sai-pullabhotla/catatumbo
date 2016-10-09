@@ -166,7 +166,7 @@ public class IntrospectionUtils {
 	 */
 	public static Method getReadMethod(PropertyMetadata propertyMetadata, String readMethodName) {
 		return getReadMethod(propertyMetadata.getField().getDeclaringClass(), readMethodName,
-				propertyMetadata.getDataType().getDataClass());
+				propertyMetadata.getDeclaredType());
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class IntrospectionUtils {
 	public static Method getWriteMethod(PropertyMetadata propertyMetadata) {
 		String writeMethodName = getWriteMethodName(propertyMetadata.getField());
 		return getWriteMethod(propertyMetadata.getField().getDeclaringClass(), writeMethodName,
-				propertyMetadata.getDataClass());
+				propertyMetadata.getField().getType());
 	}
 
 	/**

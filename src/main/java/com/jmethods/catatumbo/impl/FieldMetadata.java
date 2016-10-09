@@ -144,4 +144,14 @@ public abstract class FieldMetadata {
 		return dataType.getDataClass();
 	}
 
+	/**
+	 * Returns the declared type of the field to which this metadata belongs.
+	 * 
+	 * @return the declared type of the field to which this metadata belongs.
+	 */
+	@SuppressWarnings("rawtypes")
+	public Class getDeclaredType() {
+		return field.getType();
+	}
+
 }

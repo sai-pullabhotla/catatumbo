@@ -21,8 +21,8 @@ import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 
 /**
- * An implementation of the {@link PropertyConverter} interface for dealing with String
- * type.
+ * An implementation of the {@link PropertyConverter} interface for dealing with
+ * String type.
  * 
  * @author Sai Pullabhotla
  *
@@ -42,12 +42,12 @@ public class StringConverter extends AbstractConverter {
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return StringValue.builder((String) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		return input.get();
 	}
 

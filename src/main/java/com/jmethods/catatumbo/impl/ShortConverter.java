@@ -42,13 +42,13 @@ public class ShortConverter extends AbstractConverter {
 	}
 
 	@Override
-	public Object toObject(Value<?> input) {
+	public Object toObject(Value<?> input, PropertyMetadata metadata) {
 		// @ToDo check the value to make sure it is in the range of short.
 		return ((LongValue) input).get().shortValue();
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input) {
+	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
 		return LongValue.builder((short) input);
 	}
 
