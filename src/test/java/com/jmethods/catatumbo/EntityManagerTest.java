@@ -23,12 +23,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.Stack;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import org.junit.After;
@@ -72,6 +76,7 @@ import com.jmethods.catatumbo.entities.LongListField;
 import com.jmethods.catatumbo.entities.LongObject;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
+import com.jmethods.catatumbo.entities.SetFields;
 import com.jmethods.catatumbo.entities.ShortField;
 import com.jmethods.catatumbo.entities.ShortObject;
 import com.jmethods.catatumbo.entities.StringField;
@@ -144,6 +149,7 @@ public class EntityManagerTest {
 		em.deleteAll(OptimisticLock1.class);
 		em.deleteAll(EnumField.class);
 		em.deleteAll(ListFields.class);
+		em.deleteAll(SetFields.class);
 		populateTasks();
 	}
 
@@ -1394,6 +1400,167 @@ public class EntityManagerTest {
 		entity = em.update(entity);
 		ListFields entity2 = em.load(ListFields.class, entity.getId());
 		assertTrue(entity.getStack().equals(entity2.getStack()));
+	}
+
+	@Test
+	public void testInsert_Set() {
+		SetFields entity = new SetFields();
+		Set<Object> set = new HashSet();
+		set.add("One");
+		set.add(222L);
+		set.add(Math.PI);
+		set.add(Boolean.TRUE);
+		set.add("Two");
+		entity.setSet(set);
+		entity = em.insert(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(HashSet.class, entity2.getSet().getClass());
+		assertTrue(entity.getSet().equals(entity2.getSet()));
+	}
+
+	@Test
+	public void testUpdate_Set() {
+		SetFields entity = new SetFields();
+		Set<Object> set = new HashSet();
+		set.add("One");
+		set.add(222L);
+		set.add(Math.PI);
+		set.add(Boolean.TRUE);
+		set.add("Two");
+		entity.setSet(set);
+		entity = em.insert(entity);
+		set.add(501L);
+		entity.setSet(set);
+		entity = em.update(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(HashSet.class, entity2.getSet().getClass());
+		assertTrue(entity.getSet().equals(entity2.getSet()));
+	}
+
+	@Test
+	public void testInsert_HashSet() {
+		SetFields entity = new SetFields();
+		HashSet<Object> set = new HashSet();
+		set.add("One");
+		set.add(222L);
+		set.add(Math.PI);
+		set.add(Boolean.TRUE);
+		set.add("Two");
+		entity.setHashSet(set);
+		entity = em.insert(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(HashSet.class, entity2.getHashSet().getClass());
+		assertTrue(entity.getHashSet().equals(entity2.getHashSet()));
+	}
+
+	@Test
+	public void testUpdate_HashSet() {
+		SetFields entity = new SetFields();
+		HashSet<Object> set = new HashSet();
+		set.add("One");
+		set.add(222L);
+		set.add(Math.PI);
+		set.add(Boolean.TRUE);
+		set.add("Two");
+		entity.setHashSet(set);
+		entity = em.insert(entity);
+		set.add(501L);
+		entity.setHashSet(set);
+		entity = em.update(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(HashSet.class, entity2.getHashSet().getClass());
+		assertTrue(entity.getHashSet().equals(entity2.getHashSet()));
+	}
+
+	@Test
+	public void testInsert_LinkedHashSet() {
+		SetFields entity = new SetFields();
+		LinkedHashSet<Object> set = new LinkedHashSet();
+		set.add("One");
+		set.add(222L);
+		set.add(Math.PI);
+		set.add(Boolean.TRUE);
+		set.add("Two");
+		entity.setLinkedHashSet(set);
+		entity = em.insert(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(LinkedHashSet.class, entity2.getLinkedHashSet().getClass());
+		assertTrue(entity.getLinkedHashSet().equals(entity2.getLinkedHashSet()));
+	}
+
+	@Test
+	public void testUpdate_LinkedHashSet() {
+		SetFields entity = new SetFields();
+		LinkedHashSet<Object> set = new LinkedHashSet();
+		set.add("One");
+		set.add(222L);
+		set.add(Math.PI);
+		set.add(Boolean.TRUE);
+		set.add("Two");
+		entity.setLinkedHashSet(set);
+		entity = em.insert(entity);
+		set.add(501L);
+		entity.setLinkedHashSet(set);
+		entity = em.update(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(LinkedHashSet.class, entity2.getLinkedHashSet().getClass());
+		assertTrue(entity.getLinkedHashSet().equals(entity2.getLinkedHashSet()));
+	}
+
+	@Test
+	public void testInsert_TreeSet() {
+		SetFields entity = new SetFields();
+		TreeSet<String> set = new TreeSet();
+		set.add("One");
+		set.add("Two");
+		set.add("Three");
+		entity.setTreeSet(set);
+		entity = em.insert(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(TreeSet.class, entity2.getTreeSet().getClass());
+		assertTrue(entity.getTreeSet().equals(entity2.getTreeSet()));
+	}
+
+	@Test
+	public void testUpdate_TreeSet() {
+		SetFields entity = new SetFields();
+		TreeSet<String> set = new TreeSet();
+		set.add("One");
+		set.add("Two");
+		set.add("Three");
+		entity.setTreeSet(set);
+		entity = em.insert(entity);
+		set.add("Zero");
+		set.add("Eight");
+		entity.setTreeSet(set);
+		entity = em.update(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertEquals(TreeSet.class, entity2.getTreeSet().getClass());
+		assertTrue(entity.getTreeSet().equals(entity2.getTreeSet()));
+	}
+
+	@Test
+	public void testInsert_SetFields_Null() {
+		SetFields entity = new SetFields();
+		em.insert(entity);
+		assertNull(entity.getSet());
+		assertNull(entity.getHashSet());
+		assertNull(entity.getLinkedHashSet());
+		assertNull(entity.getTreeSet());
+	}
+
+	@Test
+	public void testInsert_SetFields_EmptySets() {
+		SetFields entity = new SetFields();
+		entity.setSet(new HashSet<>());
+		entity.setHashSet(new HashSet<>());
+		entity.setLinkedHashSet(new LinkedHashSet<>());
+		entity.setTreeSet(new TreeSet<String>());
+		em.insert(entity);
+		assertEquals(0, entity.getSet().size());
+		assertEquals(0, entity.getHashSet().size());
+		assertEquals(0, entity.getLinkedHashSet().size());
+		assertEquals(0, entity.getTreeSet().size());
 	}
 
 	@Test(expected = EntityManagerException.class)

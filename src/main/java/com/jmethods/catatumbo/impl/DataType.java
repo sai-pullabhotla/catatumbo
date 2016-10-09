@@ -18,6 +18,7 @@ package com.jmethods.catatumbo.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.GeoLocation;
@@ -115,6 +116,11 @@ public enum DataType {
 	 * List object
 	 */
 	LIST(List.class, ListConverter.getInstance()),
+
+	/**
+	 * Set object
+	 */
+	SET(Set.class, SetConverter.getInstance()),
 
 	/**
 	 * Key (for an entity's full key, parent key, key references to other
