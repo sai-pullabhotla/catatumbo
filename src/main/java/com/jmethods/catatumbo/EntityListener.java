@@ -38,6 +38,8 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * Callback methods must have one or more of these annotations:
+ * </p>
+ * 
  * <ul>
  * <li>{@link PreInsert}</li>
  * <li>{@link PostInsert}</li>
@@ -49,10 +51,11 @@ import java.lang.annotation.Target;
  * <li>{@link PostDelete}</li>
  * <li>{@link PostLoad}</li>
  * </ul>
- * </p>
  * 
  * <p>
  * Entity Listener classes must conform to the following specification:
+ * </p>
+ * 
  * <ul>
  * <li>Must have a default (no-arg) constructor</li>
  * <li>Each callback method must be public, must not be static, abstract or
@@ -67,7 +70,6 @@ import java.lang.annotation.Target;
  * can have both {@link PreInsert}, {@link PreUpdate} and {@link PreUpsert}
  * annotations.</li>
  * </ul>
- * </p>
  * 
  * @author Sai Pullabhotla
  *
