@@ -344,7 +344,7 @@ public class DefaultEntityManager implements EntityManager {
 		if (entity == null) {
 			return;
 		}
-		EntityListenersMetadata entityListenersMetadata = EntityIntrospector.getEntityLstenersMetadata(entity);
+		EntityListenersMetadata entityListenersMetadata = EntityIntrospector.getEntityListenersMetadata(entity);
 		List<CallbackMetadata> callbacks = entityListenersMetadata.getCallbacks(callbackType);
 		if (!entityListenersMetadata.isExcludeDefaultListeners()) {
 			executeGlobalListeners(callbackType, entity);

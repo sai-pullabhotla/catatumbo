@@ -446,7 +446,7 @@ public class EntityIntrospector {
 	 *            the entity
 	 * @return the metadata of EntityListeners associated with the given entity.
 	 */
-	public static EntityListenersMetadata getEntityLstenersMetadata(Object entity) {
+	public static EntityListenersMetadata getEntityListenersMetadata(Object entity) {
 		return introspect(entity.getClass()).getEntityListenersMetadata();
 	}
 
@@ -459,7 +459,7 @@ public class EntityIntrospector {
 	 * @return the metadata of entity listeners associated with the given entity
 	 *         class.
 	 */
-	public static EntityListenersMetadata getEntityLstenersMetadata(Class<?> entityClass) {
+	public static EntityListenersMetadata getEntityListenersMetadata(Class<?> entityClass) {
 		return introspect(entityClass).getEntityListenersMetadata();
 	}
 
