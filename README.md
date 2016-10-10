@@ -22,13 +22,15 @@ instead of Relational Databases.
 	* float, Float 
 	* double, Double 
 	* String 
+	* Enum 
 	* Byte Arrays 
 	* Char Arrays 
 	* Date 
 	* Calendar 
 	* Geo Location 
 	* Keys, Parent Keys and Key References
-	* List Values 
+	* List Values (List & Set) 
+	* Maps 
 * Support for embedded objects through the use of @Embedded and @Embeddable annotations. 
 * Persisting of inherited fields of an Entity through the use of @MappedSuperClass annotation. 
 * Optimistic Locking support through the use of @Version annotation. 
