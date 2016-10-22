@@ -35,7 +35,7 @@ public class ZipCode {
 	@Property(name = "zipx", indexed = false)
 	private String fourDigits;
 
-	@Embedded
+	@Embedded(name = "useless", indexed = true)
 	private AnotherEmbeddable anotherEmbeddable = new AnotherEmbeddable();
 
 	/**
@@ -86,7 +86,8 @@ public class ZipCode {
 			return false;
 		}
 		ZipCode that = (ZipCode) obj;
-		return Objects.equals(this.fiveDigits, that.fiveDigits) && Objects.equals(this.fourDigits, that.fourDigits);
+		return Objects.equals(this.fiveDigits, that.fiveDigits) && Objects.equals(this.fourDigits, that.fourDigits)
+				&& Objects.equals(this.anotherEmbeddable, that.anotherEmbeddable);
 	}
 
 	/**

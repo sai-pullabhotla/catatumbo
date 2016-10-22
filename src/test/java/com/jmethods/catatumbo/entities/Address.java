@@ -42,7 +42,7 @@ public class Address {
 
 	private String state;
 
-	@Embedded()
+	@Embedded(name = "postal_code")
 	private ZipCode zipCode;
 
 	@Ignore

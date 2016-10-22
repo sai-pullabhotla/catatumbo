@@ -45,10 +45,6 @@ import com.jmethods.catatumbo.PropertyOverrides;
 })
 public class Customer {
 
-	public static final Customer SAMPLE_CUSTOMER1 = createSampleCustomer1();
-	public static final Customer SAMPLE_CUSTOMER2 = createSampleCustomer2();
-	public static final Customer SAMPLE_CUSTOMER3 = createSampleCustomer3();
-
 	@Identifier
 	private long id;
 
@@ -132,7 +128,7 @@ public class Customer {
 				&& Objects.equals(this.shippingAddress, that.shippingAddress);
 	}
 
-	private static Customer createSampleCustomer1() {
+	public static Customer createSampleCustomer1() {
 		Customer customer = new Customer();
 		customer.setName("John Doe");
 		Address ba = new Address();
@@ -173,13 +169,13 @@ public class Customer {
 		return customer;
 	}
 
-	private static Customer createSampleCustomer2() {
+	public static Customer createSampleCustomer2() {
 		Customer customer = new Customer();
 		customer.setName("Super Customer");
 		return customer;
 	}
 
-	private static Customer createSampleCustomer3() {
+	public static Customer createSampleCustomer3() {
 		Customer customer = new Customer();
 		customer.setName("Super Customer");
 		Address ba = new Address();

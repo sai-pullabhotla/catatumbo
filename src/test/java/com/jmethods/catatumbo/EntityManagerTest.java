@@ -52,6 +52,7 @@ import com.jmethods.catatumbo.entities.CharArrayField;
 import com.jmethods.catatumbo.entities.CharField;
 import com.jmethods.catatumbo.entities.CharObject;
 import com.jmethods.catatumbo.entities.ChildEntity;
+import com.jmethods.catatumbo.entities.Contact;
 import com.jmethods.catatumbo.entities.Country;
 import com.jmethods.catatumbo.entities.Customer;
 import com.jmethods.catatumbo.entities.DateField;
@@ -79,6 +80,7 @@ import com.jmethods.catatumbo.entities.LongObject;
 import com.jmethods.catatumbo.entities.MapFields;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
+import com.jmethods.catatumbo.entities.PhoneNumber;
 import com.jmethods.catatumbo.entities.SetFields;
 import com.jmethods.catatumbo.entities.ShortField;
 import com.jmethods.catatumbo.entities.ShortObject;
@@ -93,6 +95,7 @@ import com.jmethods.catatumbo.entities.SubClass4;
 import com.jmethods.catatumbo.entities.Tag;
 import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
+import com.jmethods.catatumbo.entities.UnindexedStringField;
 
 /**
  * @author Sai Pullabhotla
@@ -154,6 +157,8 @@ public class EntityManagerTest {
 		em.deleteAll(ListFields.class);
 		em.deleteAll(SetFields.class);
 		em.deleteAll(MapFields.class);
+		em.deleteAll(Contact.class);
+		em.deleteAll(UnindexedStringField.class);
 		populateTasks();
 	}
 
@@ -2291,7 +2296,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testInsert_Embedded() {
-		Customer entity = Customer.SAMPLE_CUSTOMER1;
+		Customer entity = Customer.createSampleCustomer1();
 		entity = em.insert(entity);
 		Customer entity2 = em.load(Customer.class, entity.getId());
 		assertTrue(entity.equals(entity2));
@@ -2299,7 +2304,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testInsert_Embedded_NullAddress() {
-		Customer entity = Customer.SAMPLE_CUSTOMER2;
+		Customer entity = Customer.createSampleCustomer2();
 		entity = em.insert(entity);
 		Customer entity2 = em.load(Customer.class, entity.getId());
 		assertTrue(entity.equals(entity2));
@@ -2307,7 +2312,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testInsert_Embedded_NullZipCode() {
-		Customer entity = Customer.SAMPLE_CUSTOMER3;
+		Customer entity = Customer.createSampleCustomer3();
 		entity = em.insert(entity);
 		Customer entity2 = em.load(Customer.class, entity.getId());
 		assertTrue(entity.equals(entity2));
@@ -2315,7 +2320,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testUpdate_Embedded() {
-		Customer entity = Customer.SAMPLE_CUSTOMER1;
+		Customer entity = Customer.createSampleCustomer1();
 		entity = em.insert(entity);
 		entity = em.load(Customer.class, entity.getId());
 		entity.setName("John Smith");
@@ -2328,7 +2333,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testUpdate_Embedded_NullAddress() {
-		Customer entity = Customer.SAMPLE_CUSTOMER2;
+		Customer entity = Customer.createSampleCustomer2();
 		entity = em.insert(entity);
 		entity = em.load(Customer.class, entity.getId());
 		entity.setName("Super Customer Updated");
@@ -2341,7 +2346,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testUpdate_Embedded_NullZipCode() {
-		Customer entity = Customer.SAMPLE_CUSTOMER3;
+		Customer entity = Customer.createSampleCustomer3();
 		entity = em.insert(entity);
 		entity = em.load(Customer.class, entity.getId());
 		entity.setName("Super Customer Updated");
@@ -2354,7 +2359,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void testDelete_Embedded() {
-		Customer entity = Customer.SAMPLE_CUSTOMER1;
+		Customer entity = Customer.createSampleCustomer1();
 		entity = em.insert(entity);
 		entity = em.load(Customer.class, entity.getId());
 		em.delete(entity);
@@ -2366,9 +2371,9 @@ public class EntityManagerTest {
 	public void testExecuteEntityQuery_Embedded() {
 		em.deleteAll(Customer.class);
 		List<Customer> customers = new ArrayList<>();
-		customers.add(Customer.SAMPLE_CUSTOMER1);
-		customers.add(Customer.SAMPLE_CUSTOMER2);
-		customers.add(Customer.SAMPLE_CUSTOMER3);
+		customers.add(Customer.createSampleCustomer1());
+		customers.add(Customer.createSampleCustomer2());
+		customers.add(Customer.createSampleCustomer3());
 		em.insert(customers);
 		try {
 			Thread.sleep(5000);
@@ -2385,9 +2390,9 @@ public class EntityManagerTest {
 	public void testExecuteProjectionQuery_Embedded() {
 		em.deleteAll(Customer.class);
 		List<Customer> customers = new ArrayList<>();
-		customers.add(Customer.SAMPLE_CUSTOMER1);
-		customers.add(Customer.SAMPLE_CUSTOMER2);
-		customers.add(Customer.SAMPLE_CUSTOMER3);
+		customers.add(Customer.createSampleCustomer1());
+		customers.add(Customer.createSampleCustomer2());
+		customers.add(Customer.createSampleCustomer3());
 		em.insert(customers);
 		try {
 			Thread.sleep(5000);
@@ -2565,6 +2570,69 @@ public class EntityManagerTest {
 				return null;
 			}
 		});
+	}
+
+	@Test
+	public void testInsert_IndexedString_MaxLimit() {
+		StringField entity = new StringField();
+		final int length = 1500;
+		entity.setName(TestUtils.getString(length));
+		StringField insertedEntity = em.insert(entity);
+		StringField loadedEntity = em.load(StringField.class, insertedEntity.getId());
+		assertEquals(length, insertedEntity.getName().length());
+		assertEquals(length, loadedEntity.getName().length());
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsert_IndexedString_MaxLimit_Exceeded() {
+		StringField entity = new StringField();
+		final int length = 1501;
+		entity.setName(TestUtils.getString(length));
+		StringField insertedEntity = em.insert(entity);
+	}
+
+	@Test
+	public void testInsert_UnIndexedString_5K() {
+		UnindexedStringField entity = new UnindexedStringField();
+		final int length = 5 * 1024;
+		entity.setHugeString(TestUtils.getString(length));
+		UnindexedStringField insertedEntity = em.insert(entity);
+		UnindexedStringField loadedEntity = em.load(UnindexedStringField.class, insertedEntity.getId());
+		assertEquals(length, insertedEntity.getHugeString().length());
+		assertEquals(length, loadedEntity.getHugeString().length());
+	}
+
+	@Test
+	public void testInsertEmbedded_Imploded1() {
+		Contact contact = Contact.createContact1();
+		Contact insertedContact = em.insert(contact);
+		Contact loadedContact = em.load(Contact.class, insertedContact.getId());
+		assertTrue(contact.equalsExceptId(insertedContact));
+		assertTrue(insertedContact.equals(loadedContact));
+	}
+
+	@Test
+	public void testInsertEmbedded_Imploded2() {
+		Contact contact = Contact.createContact2();
+		Contact insertedContact = em.insert(contact);
+		Contact loadedContact = em.load(Contact.class, insertedContact.getId());
+		assertTrue(contact.equalsExceptId(insertedContact));
+		assertTrue(insertedContact.equals(loadedContact));
+	}
+
+	@Test
+	public void testUpdateEmbedded_Imploded1() {
+		Contact contact = Contact.createContact2();
+		contact = em.insert(contact);
+		contact = em.load(Contact.class, contact.getId());
+		PhoneNumber phone = new PhoneNumber();
+		phone.setCountryCode("1");
+		phone.setAreaCode("111");
+		phone.setSubscriberNumber("2223333");
+		contact.setMobileNumber(phone);
+		em.update(contact);
+		contact = em.load(Contact.class, contact.getId());
+		assertEquals("2223333", contact.getMobileNumber().getSubscriberNumber());
 	}
 
 	private static Calendar getToday() {

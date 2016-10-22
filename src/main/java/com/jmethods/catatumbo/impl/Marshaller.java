@@ -22,6 +22,7 @@ import java.util.UUID;
 import com.google.cloud.datastore.BaseEntity;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.EntityValue;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.Key;
@@ -96,7 +97,8 @@ public class Marshaller {
 	 *            the entity to marshal
 	 * @return the marshaled object.
 	 */
-	public static BaseEntity<?> marshal(Datastore datastore, Object entity) {
+	@SuppressWarnings("rawtypes")
+	public static BaseEntity marshal(Datastore datastore, Object entity) {
 		return marshal(datastore, entity, false);
 	}
 
@@ -115,7 +117,8 @@ public class Marshaller {
 	 *            case it is expected that the entity have a valid ID.
 	 * @return the marshaled object
 	 */
-	public static BaseEntity<?> marshal(Datastore datastore, Object entity, boolean doNotGenerateId) {
+	@SuppressWarnings("rawtypes")
+	public static BaseEntity marshal(Datastore datastore, Object entity, boolean doNotGenerateId) {
 		Marshaller marshaller = new Marshaller(datastore, entity);
 		marshaller.doNotGenerateId = doNotGenerateId;
 		return marshaller.marshal();
@@ -313,9 +316,32 @@ public class Marshaller {
 		}
 	}
 
+	/**
+	 * Marshals the field with the given property metadata.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the field to be marshaled.
+	 * @param target
+	 *            the object in which the field is defined/accessible from.
+	 */
 	private void marshalField(PropertyMetadata propertyMetadata, Object target) {
+		marshalField(propertyMetadata, target, entityBuilder);
+	}
+
+	/**
+	 * Marshals the field with the given property metadata.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the field to be marshaled.
+	 * @param target
+	 *            the object in which the field is defined/accessible from
+	 * @param entityBuilder
+	 *            the native entity on which the marshaled field should be set
+	 */
+	private static void marshalField(PropertyMetadata propertyMetadata, Object target,
+			BaseEntity.Builder<?, ?> entityBuilder) {
 		Object fieldValue = getFieldValue(propertyMetadata, target);
-		ValueBuilder<?, ?, ?> valueBuilder = null;
+		ValueBuilder<?, ?, ?> valueBuilder;
 		if (fieldValue == null) {
 			valueBuilder = NullValue.builder();
 		} else {
@@ -325,15 +351,14 @@ public class Marshaller {
 		valueBuilder.excludeFromIndexes(!propertyMetadata.isIndexed());
 		Value<?> datastoreValue = valueBuilder.build();
 		entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
-
 	}
 
 	/**
-	 * Returns the field value for the given field.
+	 * Returns the value for the given field of the entity being marshaled.
 	 *
 	 * @param fieldMetadata
 	 *            the field's metadata
-	 * @return the field s value
+	 * @return the field's value
 	 */
 	private Object getFieldValue(FieldMetadata fieldMetadata) {
 		return getFieldValue(fieldMetadata, entity);
@@ -348,7 +373,7 @@ public class Marshaller {
 	 *            the target object to which the field belongs.
 	 * @return the value of the field.
 	 */
-	private Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
+	private static Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
 		Method readMethod = fieldMetadata.getReadMethod();
 		try {
 			return readMethod.invoke(target);
@@ -361,9 +386,13 @@ public class Marshaller {
 	 * Marshals the embedded fields.
 	 */
 	private void marshalEmbeddedFields() {
-		Collection<EmbeddedMetadata> embeddedMetadataCollection = entityMetadata.getEmbeddedMetadataCollection();
-		for (EmbeddedMetadata embeddedMetadata : embeddedMetadataCollection) {
-			marshalEmbeddedField(embeddedMetadata, entity);
+		for (EmbeddedMetadata embeddedMetadata : entityMetadata.getEmbeddedMetadataCollection()) {
+			if (embeddedMetadata.getStorageStrategy() == StorageStrategy.EXPLODED) {
+				marshalWithExplodedStrategy(embeddedMetadata, entity);
+			} else {
+				ValueBuilder<?, ?, ?> embeddedEntityBuilder = marshalWithImplodedStrategy(embeddedMetadata, entity);
+				entityBuilder.set(embeddedMetadata.getMappedName(), embeddedEntityBuilder.build());
+			}
 		}
 
 	}
@@ -376,26 +405,55 @@ public class Marshaller {
 	 * @param target
 	 *            the target object to which the embedded object belongs
 	 */
-	private void marshalEmbeddedField(EmbeddedMetadata embeddedMetadata, Object target) {
+	private void marshalWithExplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target) {
 		try {
-			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
-			if (embeddedObject == null) {
-				embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
-				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
-			}
-
-			Collection<PropertyMetadata> propertyMetadataCollection = embeddedMetadata.getPropertyMetadataCollection();
-			for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
+			Object embeddedObject = IntrospectionUtils.initializeEmbedded(embeddedMetadata, target);
+			for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
 				marshalField(propertyMetadata, embeddedObject);
 			}
-
-			Collection<EmbeddedMetadata> embeddedMetadataCollection2 = embeddedMetadata.getEmbeddedMetadataCollection();
-			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadataCollection2) {
-				marshalEmbeddedField(embeddedMetadata2, embeddedObject);
+			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
+				marshalWithExplodedStrategy(embeddedMetadata2, embeddedObject);
 			}
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp);
 		}
+	}
+
+	/**
+	 * Marshals the embedded field represented by the given metadata.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the embedded field.
+	 * @param target
+	 *            the object in which the embedded field is defined/accessible
+	 *            from.
+	 * @return the ValueBuilder equivalent to embedded object
+	 */
+	private ValueBuilder<?, ?, ?> marshalWithImplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target) {
+		try {
+			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+			if (embeddedObject == null) {
+				NullValue.Builder nullValueBuilder = NullValue.builder();
+				nullValueBuilder.excludeFromIndexes(!embeddedMetadata.isIndexed());
+				return nullValueBuilder;
+			}
+			FullEntity.Builder<IncompleteKey> embeddedEntityBuilder = FullEntity.builder();
+			for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
+				marshalField(propertyMetadata, embeddedObject, embeddedEntityBuilder);
+			}
+			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
+				ValueBuilder<?, ?, ?> embeddedEntityBuilder2 = marshalWithImplodedStrategy(embeddedMetadata2,
+						embeddedObject);
+				embeddedEntityBuilder.set(embeddedMetadata2.getMappedName(), embeddedEntityBuilder2.build());
+			}
+			EntityValue.Builder valueBuilder = EntityValue.builder(embeddedEntityBuilder.build());
+			valueBuilder.excludeFromIndexes(!embeddedMetadata.isIndexed());
+			return valueBuilder;
+
+		} catch (Exception exp) {
+			throw new EntityManagerException(exp);
+		}
+
 	}
 
 }

@@ -75,9 +75,11 @@ public class EntityMetadata extends MetadataBase {
 	private Map<String, Property> propertyOverrideMap;
 
 	/**
-	 * Master list of properties, used for detecting duplicate property names
+	 * Master list of properties, used for detecting duplicate property names.
+	 * Key is the mapped name (or property name in the datastore) and value is
+	 * the qualified name of the field to report in the exception.
 	 */
-	private Map<String, PropertyMetadata> masterPropertyMetadataMap;
+	private Map<String, String> masterPropertyMetadataMap;
 
 	/**
 	 * Metadata of various entity listeners
@@ -227,18 +229,6 @@ public class EntityMetadata extends MetadataBase {
 	}
 
 	/**
-	 * Puts/adds the given property metadata.
-	 *
-	 * @param propertyMetadata
-	 *            the property metadata
-	 */
-	@Override
-	public void putPropertyMetadata(PropertyMetadata propertyMetadata) {
-		super.putPropertyMetadata(propertyMetadata);
-		updateMasterPropertyMetadataMap(propertyMetadata);
-	}
-
-	/**
 	 * Puts/adds the given property override.
 	 * 
 	 * @param propertyOverride
@@ -265,18 +255,20 @@ public class EntityMetadata extends MetadataBase {
 	 * Updates the master property metadata map with the given property
 	 * metadata.
 	 * 
-	 * @param propertyMetadata
-	 *            the property metadata
+	 * @param mappedName
+	 *            the mapped name (or property name in the datastore)
+	 * @param qualifiedName
+	 *            the qualified name of the field
+	 * 
 	 * @throws EntityManagerException
 	 *             if a property with the same mapped name already exists.
 	 */
-	public void updateMasterPropertyMetadataMap(PropertyMetadata propertyMetadata) {
-		String mappedName = propertyMetadata.getMappedName();
-		PropertyMetadata old = masterPropertyMetadataMap.put(mappedName, propertyMetadata);
+	public void updateMasterPropertyMetadataMap(String mappedName, String qualifiedName) {
+		String old = masterPropertyMetadataMap.put(mappedName, qualifiedName);
 		if (old != null) {
 			String message = "Duplicate property %s in entity %s. Check fields %s and %s";
-			throw new EntityManagerException(String.format(message, mappedName, entityClass.getName(), old.getField(),
-					propertyMetadata.getField()));
+			throw new EntityManagerException(
+					String.format(message, mappedName, entityClass.getName(), old, qualifiedName));
 		}
 
 	}
@@ -306,6 +298,48 @@ public class EntityMetadata extends MetadataBase {
 	public void cleanup() {
 		propertyOverrideMap.clear();
 		masterPropertyMetadataMap.clear();
+	}
+
+	/**
+	 * Validates this metadata to ensure there are no duplicate property names
+	 * defined in this entity/embedded objects.
+	 */
+	public void ensureUniqueProperties() {
+		masterPropertyMetadataMap.clear();
+		for (PropertyMetadata propertyMetadata : getPropertyMetadataCollection()) {
+			updateMasterPropertyMetadataMap(propertyMetadata.getMappedName(), propertyMetadata.getName());
+		}
+		// top level embedded objects
+		for (EmbeddedMetadata embeddedMetadata : getEmbeddedMetadataCollection()) {
+			ensureUniqueProperties(embeddedMetadata, embeddedMetadata.getStorageStrategy());
+		}
+	}
+
+	/**
+	 * Validates the embedded field represented by the given metadata to ensure
+	 * there are no duplicate property names defined across the entity.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the embedded field
+	 * @param storageStrategy
+	 *            the storage strategy of the embedded field
+	 */
+	private void ensureUniqueProperties(EmbeddedMetadata embeddedMetadata, StorageStrategy storageStrategy) {
+		if (embeddedMetadata.getStorageStrategy() == StorageStrategy.EXPLODED) {
+			for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
+				updateMasterPropertyMetadataMap(propertyMetadata.getMappedName(),
+						embeddedMetadata.getField().getQualifiedName() + "." + propertyMetadata.getName());
+			}
+			// Run through the nested embedded objects recursively
+			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
+				ensureUniqueProperties(embeddedMetadata2, storageStrategy);
+			}
+		} else {
+			// IMPLODED storage strategy... we don't have to check the
+			// individual properties or nested embeddables
+			updateMasterPropertyMetadataMap(embeddedMetadata.getMappedName(),
+					embeddedMetadata.getField().getQualifiedName());
+		}
 	}
 
 }

@@ -25,16 +25,35 @@ import java.lang.annotation.Target;
 /**
  * Specifies a persistent property of an entity whose value is an instance of an
  * embeddable class. The embeddable class must be annotated as
- * {@link Embeddable}. Each primitive field (processed recursively, if the
- * embedded object contains nested embedded objects) in the embedded object is
- * created as a property in the Cloud Datastore.
+ * {@link Embeddable}.
  * 
+ * <p>
+ * Embedded objects in an entity can be stored using two strategies:
+ * </p>
+ * <ul>
+ * <li><strong>EXPLODED</strong> - Each primitive field (processed recursively,
+ * if the embedded object contains nested embedded objects) in the embedded
+ * object is created as a separate property in the Cloud Datastore.</li>
+ * <li><strong>IMPLODED</strong> - The embdded object and any nested embedded
+ * objects will be stored as a single property in the Cloud Datastore. The type
+ * of the property in the Datastore will be Embedded Entity.</li>
+ * </ul>
+ * 
+ * <p>
+ * By default, Embedded objects are stored using the EXPLODED strategy. To
+ * change the strategy to IMPLODED, simply add the {@link Imploded} annotation
+ * to the Embedded field. You may also annotate the field explicitly with the
+ * {@link Exploded} annotation.
+ * </p>
+ * 
+ * <p>
  * The class that has an Embedded field, must have a corresponding accessor
  * methods. For example, if <code>homeAddress</code> is of type
  * <code>Address</code> and is a field defined in <code>Person</code> class,
  * then the <code>Person</code> class must have
  * <code>setHomeAddress(Address homeAddress)</code> and
  * <code>Address getHomeAddress()</code> methods.
+ * </p>
  * 
  * @author Sai Pullabhotla
  *
@@ -42,5 +61,21 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Embedded {
-	// No special configuration
+
+	/**
+	 * Property name to use for this embedded in the Cloud Datastore. This is
+	 * only used if the embedded object is stored using the {@link Imploded}
+	 * strategy.
+	 * 
+	 * @return the property name.
+	 */
+	String name() default "";
+
+	/**
+	 * Whether or not to index this property. This is only used if the embedded
+	 * object is stored using the {@link Imploded} strategy.
+	 * 
+	 * @return Whether or not to index this property.
+	 */
+	boolean indexed() default true;
 }

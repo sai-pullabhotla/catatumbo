@@ -18,12 +18,14 @@ package com.jmethods.catatumbo.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
 import java.util.Objects;
 
 import org.junit.Test;
 
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.entities.Cat;
+import com.jmethods.catatumbo.entities.Contact;
 import com.jmethods.catatumbo.entities.Customer;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad1;
@@ -106,6 +108,13 @@ public class EntityIntrospectorTest {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Test
+	public void testIntrospect_Embedded_Imploded() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(Contact.class);
+		Map<EmbeddedField, EmbeddedMetadata> embeddedMetadataMap = entityMetadata.getEmbeddedMetadataMap();
+		assertEquals(3, embeddedMetadataMap.size());
 	}
 
 }

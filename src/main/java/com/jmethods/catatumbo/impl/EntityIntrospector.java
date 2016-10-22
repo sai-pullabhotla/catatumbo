@@ -156,6 +156,7 @@ public class EntityIntrospector {
 					entityClass.getName(), Identifier.class.getName()));
 		}
 		entityMetadata.setEntityListenersMetadata(EntityListenersIntrospector.introspect(entityClass));
+		entityMetadata.ensureUniqueProperties();
 		entityMetadata.cleanup();
 	}
 
@@ -204,14 +205,14 @@ public class EntityIntrospector {
 	private List<Field> getAllFields() {
 		List<Field> allFields = new ArrayList<>();
 		Class<?> clazz = entityClass;
-		boolean stop = false;
+		boolean stop;
 		do {
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				allFields.add(field);
 			}
 			clazz = clazz.getSuperclass();
-			stop = (clazz == null || !clazz.isAnnotationPresent(MappedSuperClass.class));
+			stop = clazz == null || !clazz.isAnnotationPresent(MappedSuperClass.class);
 		} while (!stop);
 		return allFields;
 	}

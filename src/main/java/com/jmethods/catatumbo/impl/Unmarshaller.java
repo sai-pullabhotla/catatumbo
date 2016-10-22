@@ -21,6 +21,8 @@ import java.util.Collection;
 
 import com.google.cloud.datastore.BaseEntity;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.EntityValue;
+import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.ProjectionEntity;
@@ -126,6 +128,7 @@ public class Unmarshaller {
 	 *            type
 	 * @return the entity POJO
 	 */
+	@SuppressWarnings("unchecked")
 	private <T> T unmarshal() {
 
 		try {
@@ -157,8 +160,7 @@ public class Unmarshaller {
 	 * @throws InvocationTargetException
 	 *             propagated
 	 */
-	private void unmarshalIdentifier()
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private void unmarshalIdentifier() throws IllegalAccessException, InvocationTargetException {
 		IdentifierMetadata identifierMetadata = entityMetadata.getIdentifierMetadata();
 		Method writeMethod = identifierMetadata.getWriteMethod();
 		writeMethod.invoke(entity, ((Key) nativeEntity.key()).nameOrId());
@@ -174,8 +176,7 @@ public class Unmarshaller {
 	 * @throws InvocationTargetException
 	 *             propagated
 	 */
-	private void unmarshalKeyAndParentKey()
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private void unmarshalKeyAndParentKey() throws IllegalAccessException, InvocationTargetException {
 		KeyMetadata keyMetadata = entityMetadata.getKeyMetadata();
 		if (keyMetadata != null) {
 			Method writeMethod = keyMetadata.getWriteMethod();
@@ -203,8 +204,7 @@ public class Unmarshaller {
 	 * @throws InvocationTargetException
 	 *             propagated
 	 */
-	private void unmarshalProperties()
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private void unmarshalProperties() throws IllegalAccessException, InvocationTargetException {
 		Collection<PropertyMetadata> propertyMetadataCollection = entityMetadata.getPropertyMetadataCollection();
 		for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
 			unmarshalProperty(propertyMetadata, entity);
@@ -227,11 +227,14 @@ public class Unmarshaller {
 	 * @throws InvocationTargetException
 	 *             propagated
 	 */
-	private void unmarshalEmbeddedFields() throws NoSuchMethodException, SecurityException, InstantiationException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Collection<EmbeddedMetadata> embeddedMetadataCollection = entityMetadata.getEmbeddedMetadataCollection();
-		for (EmbeddedMetadata embeddedMetadata : embeddedMetadataCollection) {
-			unmarshalEmbeddedField(embeddedMetadata, entity);
+	private void unmarshalEmbeddedFields()
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		for (EmbeddedMetadata embeddedMetadata : entityMetadata.getEmbeddedMetadataCollection()) {
+			if (embeddedMetadata.getStorageStrategy() == StorageStrategy.EXPLODED) {
+				unmarshalWithExplodedStrategy(embeddedMetadata, entity);
+			} else {
+				unmarshalWithImplodedStrategy(embeddedMetadata, entity, nativeEntity);
+			}
 		}
 	}
 
@@ -250,26 +253,62 @@ public class Unmarshaller {
 	 *             propagated
 	 * @throws IllegalAccessException
 	 *             propagated
-	 * @throws IllegalArgumentException
-	 *             propagated
 	 * @throws InvocationTargetException
 	 *             propagated
 	 */
-	private void unmarshalEmbeddedField(EmbeddedMetadata embeddedMetadata, Object target)
-			throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
-		if (embeddedObject == null) {
-			embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
-			embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
-		}
-		Collection<PropertyMetadata> propertyMetadataCollection = embeddedMetadata.getPropertyMetadataCollection();
-		for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
+	private void unmarshalWithExplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		Object embeddedObject = IntrospectionUtils.initializeEmbedded(embeddedMetadata, target);
+		for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
 			unmarshalProperty(propertyMetadata, embeddedObject);
 		}
 		for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
-			unmarshalEmbeddedField(embeddedMetadata2, embeddedObject);
+			unmarshalWithExplodedStrategy(embeddedMetadata2, embeddedObject);
 		}
+	}
+
+	/**
+	 * Unmarshals the embedded field represented by the given metadata.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the field to unmarshal
+	 * @param target
+	 *            the object in which the embedded field is declared/accessible
+	 *            from
+	 * @param nativeEntity
+	 *            the native entity from which the embedded entity is to be
+	 *            extracted
+	 * @throws InvocationTargetException
+	 *             propagated
+	 * @throws IllegalArgumentException
+	 *             propagated
+	 * @throws IllegalAccessException
+	 *             propagated
+	 */
+	private static void unmarshalWithImplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target,
+			BaseEntity<?> nativeEntity) throws IllegalAccessException, InvocationTargetException {
+		Object embeddedObject = null;
+		FullEntity<?> nativeEmbeddedEntity = null;
+		String propertyName = embeddedMetadata.getMappedName();
+		if (nativeEntity.contains(propertyName)) {
+			Value<?> nativeValue = nativeEntity.getValue(propertyName);
+			if (nativeValue instanceof NullValue) {
+				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+			} else {
+				nativeEmbeddedEntity = ((EntityValue) nativeValue).get();
+				embeddedObject = IntrospectionUtils.initializeEmbedded(embeddedMetadata, target);
+			}
+		}
+		if (embeddedObject == null) {
+			return;
+		}
+		for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
+			unmarshalProperty(propertyMetadata, embeddedObject, nativeEmbeddedEntity);
+		}
+		for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
+			unmarshalWithImplodedStrategy(embeddedMetadata2, embeddedObject, nativeEmbeddedEntity);
+		}
+
 	}
 
 	/**
@@ -288,7 +327,12 @@ public class Unmarshaller {
 	 *             propagated
 	 */
 	private void unmarshalProperty(PropertyMetadata propertyMetadata, Object target)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			throws IllegalAccessException, InvocationTargetException {
+		unmarshalProperty(propertyMetadata, target, nativeEntity);
+	}
+
+	private static void unmarshalProperty(PropertyMetadata propertyMetadata, Object target, BaseEntity<?> nativeEntity)
+			throws IllegalAccessException, InvocationTargetException {
 		// The datastore may not have every property that the entity class has
 		// defined. For example, if we are running a projection query or if the
 		// entity class added a new field without updating existing data...So
@@ -300,9 +344,9 @@ public class Unmarshaller {
 			if (!(datastoreValue instanceof NullValue)) {
 				PropertyConverter converter = propertyMetadata.getDataType().getConverter();
 				entityValue = converter.toObject(datastoreValue, propertyMetadata);
-				Method writeMethod = propertyMetadata.getWriteMethod();
-				writeMethod.invoke(target, entityValue);
 			}
+			Method writeMethod = propertyMetadata.getWriteMethod();
+			writeMethod.invoke(target, entityValue);
 		}
 	}
 

@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo.entities;
 
+import java.util.Objects;
+
 import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Property;
 
@@ -35,6 +37,11 @@ public class AnotherEmbeddable {
 	 */
 	public AnotherEmbeddable() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public AnotherEmbeddable(String field1, String field2) {
+		this.field1 = field1;
+		this.field2 = field2;
 	}
 
 	/**
@@ -65,6 +72,18 @@ public class AnotherEmbeddable {
 	 */
 	public void setField2(String field2) {
 		this.field2 = field2;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof AnotherEmbeddable)) {
+			return false;
+		}
+		if (this == obj) {
+			return true;
+		}
+		AnotherEmbeddable that = (AnotherEmbeddable) obj;
+		return Objects.equals(this.field1, that.field1) && Objects.equals(this.field2, that.field2);
 	}
 
 }

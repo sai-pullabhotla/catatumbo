@@ -23,6 +23,7 @@ import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Ignore;
+import com.jmethods.catatumbo.Imploded;
 import com.jmethods.catatumbo.Property;
 
 /**
@@ -96,6 +97,21 @@ public class EmbeddedIntrospector {
 			throw new EntityManagerException(message);
 		}
 
+		// Check the mapped name and indexed attributes
+		Embedded embeddedAnnotation = field.getField().getAnnotation(Embedded.class);
+		String mappedName = embeddedAnnotation.name();
+		if (mappedName == null || mappedName.trim().length() == 0) {
+			mappedName = field.getName();
+		}
+		metadata.setMappedName(mappedName);
+		metadata.setIndexed(embeddedAnnotation.indexed());
+
+		// If there is an annotation for storing the embedded with Imploded
+		// strategy...
+		if (field.getField().isAnnotationPresent(Imploded.class)) {
+			metadata.setStorageStrategy(StorageStrategy.IMPLODED);
+		}
+
 		// Find and set the accessor method for this embedded field.
 		Class<?> declaringClass = field.getDeclaringClass();
 
@@ -106,7 +122,13 @@ public class EmbeddedIntrospector {
 		metadata.setReadMethod(readMethod);
 		metadata.setWriteMethod(writeMethod);
 
-		// Process the fields (primitive and nested embedded)
+		processFields();
+	}
+
+	/**
+	 * Processes each field in this embedded object and updates the metadata.
+	 */
+	private void processFields() {
 		Field[] children = clazz.getDeclaredFields();
 		for (Field child : children) {
 			if (child.isAnnotationPresent(Ignore.class)) {
@@ -132,9 +154,6 @@ public class EmbeddedIntrospector {
 			// Process override
 			processPropertyOverride(propertyMetadata);
 			metadata.putPropertyMetadata(propertyMetadata);
-			// Update the master list so we can detect any property name
-			// conflicts across the entity tree.
-			entityMetadata.updateMasterPropertyMetadataMap(propertyMetadata);
 		}
 	}
 

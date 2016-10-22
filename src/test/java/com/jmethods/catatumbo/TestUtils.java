@@ -39,4 +39,17 @@ public class TestUtils {
 
 	}
 
+	public static String getString(int length) {
+		final String word = "aaaa ";
+		int iterations = length / 5;
+		if (length % 5 > 0) {
+			iterations++;
+		}
+		StringBuilder output = new StringBuilder(iterations * 5);
+		for (int i = 0; i < iterations; i++) {
+			output.append(word);
+		}
+		return output.subSequence(0, length).toString();
+	}
+
 }

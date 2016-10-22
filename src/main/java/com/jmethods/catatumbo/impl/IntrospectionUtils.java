@@ -50,8 +50,7 @@ public class IntrospectionUtils {
 		boolean indexed = true;
 		Class<?> fieldType = field.getType();
 
-		DataType dataType = null;
-		dataType = DataType.forClass(fieldType);
+		DataType dataType = DataType.forClass(fieldType);
 		if (dataType == null) {
 			String message = String.format("Unknown or unsupported type, %s, for field %s in class %s. ", fieldType,
 					fieldName, field.getDeclaringClass().getName());
@@ -96,7 +95,6 @@ public class IntrospectionUtils {
 		Method readMethod = null;
 		switch (propertyMetadata.getDataType()) {
 		case BOOLEAN:
-			// case BOOLEAN_OBJECT:
 			String booleanReadMethodName = getReadMethodNameForBoolean(field);
 			try {
 				readMethod = getReadMethod(propertyMetadata, booleanReadMethodName);
@@ -147,8 +145,8 @@ public class IntrospectionUtils {
 			}
 			return readMethod;
 		} catch (NoSuchMethodException exp) {
-			throw new EntityManagerException(
-					String.format("Method %s is required in class %s", readMethodName, clazz.getName()));
+			throw new EntityManagerException(String.format("Method %s %s() is required in class %s",
+					expectedReturnType.getName(), readMethodName, clazz.getName()), exp);
 		} catch (SecurityException exp) {
 			throw new EntityManagerException(exp.getMessage(), exp);
 		}
@@ -207,9 +205,9 @@ public class IntrospectionUtils {
 						String.format("Method %s in class %s must not be abstract", writeMethodName, clazz.getName()));
 			}
 			return writeMethod;
-		} catch (NoSuchMethodException ex) {
-			throw new EntityManagerException(String.format("Method %s (%s) is required in class %s", writeMethodName,
-					parameterType.getName(), clazz.getName()));
+		} catch (NoSuchMethodException exp) {
+			throw new EntityManagerException(String.format("Method %s(%s) is required in class %s", writeMethodName,
+					parameterType.getName(), clazz.getName()), exp);
 		}
 
 	}
@@ -281,6 +279,32 @@ public class IntrospectionUtils {
 			throw new EntityManagerException(exp);
 		}
 
+	}
+
+	/**
+	 * Initializes the Embedded object represented by the given metadata.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the embedded field
+	 * @param target
+	 *            the object in which the embedded field is declared/accessible
+	 *            from
+	 * @return the initialized object
+	 * @throws EntityManagerException
+	 *             if any error occurs during initialization of the embedded
+	 *             object
+	 */
+	public static Object initializeEmbedded(EmbeddedMetadata embeddedMetadata, Object target) {
+		try {
+			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+			if (embeddedObject == null) {
+				embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
+				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+			}
+			return embeddedObject;
+		} catch (Exception exp) {
+			throw new EntityManagerException(exp);
+		}
 	}
 
 }
