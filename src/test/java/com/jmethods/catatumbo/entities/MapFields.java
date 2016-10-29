@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -28,8 +29,6 @@ import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.GeoLocation;
 import com.jmethods.catatumbo.Identifier;
-
-import autovalue.shaded.com.google.common.common.base.Objects;
 
 /**
  * @author Sai Pullabhotla
@@ -433,18 +432,18 @@ public class MapFields {
 			return true;
 		}
 		MapFields that = (MapFields) obj;
-		return Objects.equal(this.booleanMap, that.booleanMap) && Objects.equal(this.charMap, that.charMap)
-				&& Objects.equal(this.shortMap, that.shortMap) && Objects.equal(this.intMap, that.intMap)
-				&& Objects.equal(this.longMap, that.longMap) && Objects.equal(this.stringMap, that.stringMap)
-				&& Objects.equal(this.enumMap, that.enumMap) && Objects.equal(this.floatMap, that.floatMap)
-				&& Objects.equal(this.doubleMap, that.doubleMap) && Objects.equal(this.dateMap, that.dateMap)
-				&& Objects.equal(this.calendarMap, that.calendarMap)
-				&& Objects.equal(this.geoLocationMap, that.geoLocationMap) && Objects.equal(this.keyMap, that.keyMap)
-				&& Objects.equal(this.objectMap, that.objectMap) && Objects.equal(this.genericMap, that.genericMap)
-				&& Objects.equal(this.wildcardValueMap, that.wildcardValueMap)
-				&& Objects.equal(this.wildcardMap, that.wildcardMap) && Objects.equal(this.hashMap, that.hashMap)
-				&& Objects.equal(this.sortedMap, that.sortedMap)
-				&& Objects.equal(this.linkedHashMap, that.linkedHashMap) && Objects.equal(this.treeMap, that.treeMap);
+		return Objects.equals(this.booleanMap, that.booleanMap) && Objects.equals(this.charMap, that.charMap)
+				&& Objects.equals(this.shortMap, that.shortMap) && Objects.equals(this.intMap, that.intMap)
+				&& Objects.equals(this.longMap, that.longMap) && Objects.equals(this.stringMap, that.stringMap)
+				&& Objects.equals(this.enumMap, that.enumMap) && Objects.equals(this.floatMap, that.floatMap)
+				&& Objects.equals(this.doubleMap, that.doubleMap) && Objects.equals(this.dateMap, that.dateMap)
+				&& Objects.equals(this.calendarMap, that.calendarMap)
+				&& Objects.equals(this.geoLocationMap, that.geoLocationMap) && Objects.equals(this.keyMap, that.keyMap)
+				&& Objects.equals(this.objectMap, that.objectMap) && Objects.equals(this.genericMap, that.genericMap)
+				&& Objects.equals(this.wildcardValueMap, that.wildcardValueMap)
+				&& Objects.equals(this.wildcardMap, that.wildcardMap) && Objects.equals(this.hashMap, that.hashMap)
+				&& Objects.equals(this.sortedMap, that.sortedMap)
+				&& Objects.equals(this.linkedHashMap, that.linkedHashMap) && Objects.equals(this.treeMap, that.treeMap);
 	}
 
 	public static MapFields getSampleEntity1() {
