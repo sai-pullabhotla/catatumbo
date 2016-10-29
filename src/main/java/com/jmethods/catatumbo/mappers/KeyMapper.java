@@ -14,52 +14,41 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
 import com.google.cloud.datastore.KeyValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link PropertyConverter} for handling Keys.
+ * An implementation of {@link Mapper} for mapping Key types to/from the Cloud
+ * Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class KeyConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static final KeyConverter INSTANCE = new KeyConverter();
-
-	/**
-	 * Creates a new instance of <code>KeyConverter</code>.
-	 */
-	private KeyConverter() {
-		// Do nothing
-	}
+public class KeyMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object obj, PropertyMetadata metadata) {
-		DatastoreKey datastoreKey = (DatastoreKey) obj;
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
+		DatastoreKey datastoreKey = (DatastoreKey) input;
 		return KeyValue.builder(datastoreKey.nativeKey());
 	}
 
 	@Override
-	public Object toObject(Value<?> value, PropertyMetadata metadata) {
-		KeyValue keyValue = (KeyValue) value;
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
+		KeyValue keyValue = (KeyValue) input;
 		return new DefaultDatastoreKey(keyValue.get());
 	}
 
-	/**
-	 * Returns the singleton instance of <code>KeyConverter</code>.
-	 * 
-	 * @return the singleton instance of <code>KeyConverter</code>.
-	 */
-	public static KeyConverter getInstance() {
-		return INSTANCE;
-	}
 }

@@ -14,52 +14,56 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link PropertyConverter} interface for dealing with
- * enumerated types (enum).
+ * An implementation of {@link Mapper} for mapping Enum types to/from Cloud
+ * Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class EnumConverter extends AbstractConverter {
+public class EnumMapper implements Mapper {
 
 	/**
-	 * Singleton instance
+	 * Enum class
 	 */
-	private static final EnumConverter INSTANCE = new EnumConverter();
+	@SuppressWarnings("rawtypes")
+	private Class enumClass;
 
 	/**
-	 * Creates a new instance of <code>EnumConverter</code>.
+	 * Creates a new instance of <code>EnumMapper</code>.
+	 * 
+	 * @param enumClass
+	 *            the enum class
 	 */
-	private EnumConverter() {
-		// Do nothing
+	@SuppressWarnings("rawtypes")
+	public EnumMapper(Class enumClass) {
+		this.enumClass = enumClass;
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		return StringValue.builder(input.toString());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
 		String value = ((StringValue) input).get();
-		return Enum.valueOf(metadata.getDeclaredType(), value);
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static EnumConverter getInstance() {
-		return INSTANCE;
+		return Enum.valueOf(enumClass, value);
 	}
 
 }

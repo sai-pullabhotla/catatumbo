@@ -341,13 +341,7 @@ public class Marshaller {
 	private static void marshalField(PropertyMetadata propertyMetadata, Object target,
 			BaseEntity.Builder<?, ?> entityBuilder) {
 		Object fieldValue = getFieldValue(propertyMetadata, target);
-		ValueBuilder<?, ?, ?> valueBuilder;
-		if (fieldValue == null) {
-			valueBuilder = NullValue.builder();
-		} else {
-			PropertyConverter converter = propertyMetadata.getDataType().getConverter();
-			valueBuilder = converter.toValueBuilder(fieldValue, propertyMetadata);
-		}
+		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
 		valueBuilder.excludeFromIndexes(!propertyMetadata.isIndexed());
 		Value<?> datastoreValue = valueBuilder.build();
 		entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);

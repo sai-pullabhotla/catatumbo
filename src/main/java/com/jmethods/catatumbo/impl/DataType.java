@@ -33,111 +33,111 @@ public enum DataType {
 	/**
 	 * Primitive boolean (Stored as Boolean in the Cloud Datastore).
 	 */
-	BOOLEAN(boolean.class, BooleanConverter.getInstance()),
+	BOOLEAN(boolean.class),
 	/**
 	 * Primitive char (Stored as String int he Cloud Datastore)
 	 */
-	CHARACTER(char.class, CharConverter.getInstance()),
+	CHARACTER(char.class),
 	/**
 	 * Java Enum (Stored as String in the Cloud Datastore, by calling the
 	 * toString() method.
 	 */
-	ENUM(Enum.class, EnumConverter.getInstance()),
+	ENUM(Enum.class),
 	/**
 	 * Primitive short (Stored as Integer in the Cloud Datastore).
 	 */
-	SHORT(short.class, ShortConverter.getInstance()),
+	SHORT(short.class),
 	/**
 	 * Primitive int (stored as Integer in the Cloud Datastore).
 	 */
-	INTEGER(int.class, IntegerConverter.getInstance()),
+	INTEGER(int.class),
 	/**
 	 * Primitive long (Stored as Integer in the Cloud Datastore).
 	 */
-	LONG(long.class, LongConverter.getInstance()),
+	LONG(long.class),
 	/**
 	 * Primitive float (Stored as Floating point number in the Cloud Datastore).
 	 */
-	FLOAT(float.class, FloatConverter.getInstance()),
+	FLOAT(float.class),
 	/**
 	 * Primitive double (stored as Floating point number in the Cloud
 	 * Datastore).
 	 */
-	DOUBLE(double.class, DoubleConverter.getInstance()),
+	DOUBLE(double.class),
 	/**
 	 * Boolean wrapper (Stored as Boolean in the Cloud Datastore).
 	 */
-	BOOLEAN_OBJECT(Boolean.class, BooleanConverter.getInstance()),
+	BOOLEAN_OBJECT(Boolean.class),
 	/**
 	 * Character wrapper (Stored as String in the Cloud Datastore).
 	 */
-	CHARACTER_OBJECT(Character.class, CharConverter.getInstance()),
+	CHARACTER_OBJECT(Character.class),
 	/**
 	 * Short wrapper (stored as Integer in the Cloud Datastore).
 	 */
-	SHORT_OBJECT(Short.class, ShortConverter.getInstance()),
+	SHORT_OBJECT(Short.class),
 	/**
 	 * Integer wrapper (stored as Integer in the Cloud Datastore).
 	 */
-	INTEGER_OBJECT(Integer.class, IntegerConverter.getInstance()),
+	INTEGER_OBJECT(Integer.class),
 	/**
 	 * Long wrapper (stored as Integer in the Cloud Datastore).
 	 */
-	LONG_OBJECT(Long.class, LongConverter.getInstance()),
+	LONG_OBJECT(Long.class),
 	/**
 	 * Float wrapper (stored as Floating point number in the Cloud Datastore).
 	 */
-	FLOAT_OBJECT(Float.class, FloatConverter.getInstance()),
+	FLOAT_OBJECT(Float.class),
 	/**
 	 * Double wrapper (stored as Floating point number in the Cloud Datastore).
 	 */
-	DOUBLE_OBJECT(Double.class, DoubleConverter.getInstance()),
+	DOUBLE_OBJECT(Double.class),
 	/**
 	 * java.lang.String (stored as String in the Cloud Datastore).
 	 */
-	STRING(String.class, StringConverter.getInstance()),
+	STRING(String.class),
 	/**
 	 * java.util.Date (stored as Date and Time in the Cloud Datastore).
 	 */
-	DATE(Date.class, DateConverter.getInstance()),
+	DATE(Date.class),
 	/**
 	 * java.util.Calendar (stored as Date and Time in the Cloud Datastore).
 	 */
-	CALENDAR(Calendar.class, CalendarConverter.getInstance()),
+	CALENDAR(Calendar.class),
 	/**
 	 * Array of bytes (stored as Binary or Blob in the Cloud Datastore).
 	 */
-	BYTE_ARRAY(byte[].class, ByteArrayConverter.getInstance()),
+	BYTE_ARRAY(byte[].class),
 	/**
 	 * Array of characters (stored as String in the Cloud Datastore).
 	 */
-	CHAR_ARRAY(char[].class, CharArrayConverter.getInstance()),
+	CHAR_ARRAY(char[].class),
 
 	/**
 	 * List object
 	 */
-	LIST(List.class, ListConverter.getInstance()),
+	LIST(List.class),
 
 	/**
 	 * Set object
 	 */
-	SET(Set.class, SetConverter.getInstance()),
+	SET(Set.class),
 
 	/**
 	 * Map object
 	 */
-	MAP(Map.class, MapConverter.getInstance()),
+	MAP(Map.class),
 
 	/**
 	 * Key (for an entity's full key, parent key, key references to other
 	 * entities).
 	 */
-	KEY(DatastoreKey.class, KeyConverter.getInstance()),
+	KEY(DatastoreKey.class),
 
 	/**
 	 * Geo Location
 	 */
-	GEO_LOCATION(GeoLocation.class, GeoLocationConverter.getInstance());
+	GEO_LOCATION(GeoLocation.class);
 
 	/**
 	 * The Java class type
@@ -145,21 +145,13 @@ public enum DataType {
 	private final Class<?> dataClass;
 
 	/**
-	 * A converter to convert POJOs to Datastore properties and vice versa.
-	 */
-	private final PropertyConverter converter;
-
-	/**
 	 * Creates a new instance of <code>DataType</code>.
 	 *
 	 * @param dataClass
 	 *            the Java class type.
-	 * @param converter
-	 *            the converter associated with this <code>DataType<code>.
 	 */
-	private DataType(Class<?> dataClass, PropertyConverter converter) {
+	private DataType(Class<?> dataClass) {
 		this.dataClass = dataClass;
-		this.converter = converter;
 	}
 
 	/**
@@ -169,15 +161,6 @@ public enum DataType {
 	 */
 	public Class<?> getDataClass() {
 		return dataClass;
-	}
-
-	/**
-	 * Returns the converter associated with this <code>DataType</code>.
-	 * 
-	 * @return the converter associated with this <code>DataType</code>.
-	 */
-	public PropertyConverter getConverter() {
-		return converter;
 	}
 
 	/**

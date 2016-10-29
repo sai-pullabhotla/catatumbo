@@ -20,6 +20,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Property;
@@ -305,6 +307,72 @@ public class IntrospectionUtils {
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp);
 		}
+	}
+
+	/**
+	 * Examines the given Collection type (List and Set) and returns the Class
+	 * and Parameterized type, if any.
+	 * 
+	 * @param type
+	 *            the Collection type
+	 * @return an array of Class objects with two elements. The first element
+	 *         will contain the raw type of the collection and the second will
+	 *         contain the parameterized type. If the collection declaration is
+	 *         not parameterized, the second element in the array is set to
+	 *         <code>null</code>.
+	 */
+	public static Class<?>[] resolveCollectionType(Type type) {
+		Class<?>[] output = new Class[2];
+		if (type instanceof Class) {
+			output[0] = (Class<?>) type;
+		} else if (type instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			Type[] argTypes = parameterizedType.getActualTypeArguments();
+			output[0] = (Class<?>) parameterizedType.getRawType();
+			if (argTypes != null && argTypes.length == 1 && argTypes[0] instanceof Class) {
+				output[1] = (Class<?>) argTypes[0];
+			}
+		} else {
+			throw new IllegalArgumentException(
+					String.format("Type %s is neither a Class nor a ParameterizedType", type));
+		}
+		return output;
+	}
+
+	/**
+	 * Examines the given Map type and returns the raw type, type of keys, type
+	 * of values in the map.
+	 * 
+	 * @param type
+	 *            the type of map
+	 * @return an array containing three elements:
+	 *         <ul>
+	 *         <li>Raw type of Map</li>
+	 *         <li>Type of Keys, may be <code>null</code></li>
+	 *         <li>Type of Values, may be <code>null</code></li>
+	 *         </ul>
+	 */
+	public static Class<?>[] resolveMapType(Type type) {
+		Class<?>[] output = new Class[3];
+		if (type instanceof Class) {
+			output[0] = (Class<?>) type;
+		} else if (type instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			output[0] = (Class<?>) parameterizedType.getRawType();
+			Type[] argTypes = parameterizedType.getActualTypeArguments();
+			if (argTypes != null && argTypes.length == 2) {
+				if (argTypes[0] instanceof Class) {
+					output[1] = (Class<?>) argTypes[0];
+				}
+				if (argTypes[1] instanceof Class) {
+					output[2] = (Class<?>) argTypes[1];
+				}
+			}
+		} else {
+			throw new IllegalArgumentException(
+					String.format("Type %s is neither a Class nor a ParameterizedType", type));
+		}
+		return output;
 	}
 
 }

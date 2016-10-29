@@ -14,51 +14,38 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
 import com.google.cloud.datastore.Blob;
 import com.google.cloud.datastore.BlobValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link PropertyConverter} for dealing with byte arrays
- * (blobs).
+ * An implementation of {@link Mapper} for mapping byte array types to/from
+ * Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class ByteArrayConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static final ByteArrayConverter INSTANCE = new ByteArrayConverter();
-
-	/**
-	 * Creates a new instance of <code>ByteArrayConverter</code>.
-	 */
-	private ByteArrayConverter() {
-		// Do nothing
-	}
+public class ByteArrayMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		return BlobValue.builder(Blob.copyFrom((byte[]) input));
 	}
 
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
 		return ((BlobValue) input).get().toByteArray();
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static ByteArrayConverter getInstance() {
-		return INSTANCE;
 	}
 
 }

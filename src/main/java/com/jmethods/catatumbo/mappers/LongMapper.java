@@ -14,50 +14,37 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
 import com.google.cloud.datastore.LongValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link PropertyConverter} interface for dealing with
- * primitive long and wrapper Long types.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper and
+ * Long types to/from the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class LongConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static final LongConverter INSTANCE = new LongConverter();
-
-	/**
-	 * Creates a new instance of <code>LongConverter</code>.
-	 */
-	private LongConverter() {
-		// Do nothing
-	}
+public class LongMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		return LongValue.builder((long) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
-		return input.get();
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static LongConverter getInstance() {
-		return INSTANCE;
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
+		return ((LongValue) input).get();
 	}
 
 }

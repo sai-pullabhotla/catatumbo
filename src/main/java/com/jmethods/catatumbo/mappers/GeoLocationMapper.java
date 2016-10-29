@@ -14,55 +14,42 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
 import com.google.cloud.datastore.LatLng;
 import com.google.cloud.datastore.LatLngValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.GeoLocation;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * A converter for converting {@link GeoLocation} to the Cloud Datastore
- * equivalent type and vice versa.
+ * An implementation of {@link Mapper} for mapping GeoLocation (a.k.a GeoPoint)
+ * type to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class GeoLocationConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static GeoLocationConverter INSTANCE = new GeoLocationConverter();
-
-	/**
-	 * Creates a new instance of <code>GeoLocationConverter</code>.
-	 */
-	private GeoLocationConverter() {
-		// Hiding the constructor
-	}
+public class GeoLocationMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		GeoLocation geoLocation = (GeoLocation) input;
 		return LatLngValue.builder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
 	}
 
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
 		LatLngValue value = (LatLngValue) input;
 		LatLng coordinates = value.get();
 		return new GeoLocation(coordinates.latitude(), coordinates.longitude());
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static GeoLocationConverter getInstance() {
-		return INSTANCE;
 	}
 
 }

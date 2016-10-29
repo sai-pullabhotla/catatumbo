@@ -14,50 +14,37 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
 import com.google.cloud.datastore.BooleanValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link PropertyConverter} interface to handle the
- * conversion of primitive boolean and wrapper Boolean.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper boolean
+ * types to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class BooleanConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static final BooleanConverter INSTANCE = new BooleanConverter();
-
-	/**
-	 * Creates a new instance of <code>BooleanConverter</code>.
-	 */
-	private BooleanConverter() {
-		// Do nothing
-	}
+public class BooleanMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		return BooleanValue.builder((boolean) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
-		return input.get();
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static BooleanConverter getInstance() {
-		return INSTANCE;
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
+		return ((BooleanValue) input).get();
 	}
 
 }

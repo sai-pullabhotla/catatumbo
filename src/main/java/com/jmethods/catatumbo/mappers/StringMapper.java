@@ -14,50 +14,37 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of the {@link PropertyConverter} interface for dealing with
- * String type.
+ * An implementation of {@link Mapper} for mapping String types to/from the
+ * Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class StringConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static final StringConverter INSTANCE = new StringConverter();
-
-	/**
-	 * Creates a new instance of <code>StringConverter</code>.
-	 */
-	private StringConverter() {
-		// Do nothing
-	}
+public class StringMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		return StringValue.builder((String) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
-		return input.get();
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static StringConverter getInstance() {
-		return INSTANCE;
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
+		return ((StringValue) input).get();
 	}
 
 }

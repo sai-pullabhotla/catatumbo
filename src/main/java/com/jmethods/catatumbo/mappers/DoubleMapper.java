@@ -14,50 +14,37 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
 import com.google.cloud.datastore.DoubleValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of the {@link PropertyConverter} interface for dealing with
- * primitive double and wrapper Double types.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper double
+ * types to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class DoubleConverter extends AbstractConverter {
-
-	/**
-	 * Singleton instance
-	 */
-	private static final DoubleConverter INSTANCE = new DoubleConverter();
-
-	/**
-	 * Creates a new instance of <code>DoubleConverter</code>.
-	 */
-	private DoubleConverter() {
-		// Do nothing
-	}
+public class DoubleMapper implements Mapper {
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
 		return DoubleValue.builder((double) input);
 	}
 
 	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
-		return input.get();
-	}
-
-	/**
-	 * Returns the singleton instance of this class.
-	 * 
-	 * @return the singleton instance of this class.
-	 */
-	public static DoubleConverter getInstance() {
-		return INSTANCE;
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
+		return ((DoubleValue) input).get();
 	}
 
 }

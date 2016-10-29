@@ -14,51 +14,40 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo.mappers;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.DateTimeValue;
+import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of the {@link PropertyConverter} interface for dealing with
- * Date objects (Date/time).
+ * An implementation of {@link Mapper} for mapping Calendar type to/from Cloud
+ * Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class DateConverter extends AbstractConverter {
+public class CalendarMapper implements Mapper {
 
-	/**
-	 * Singleton instance
-	 */
-	private static final DateConverter INSTANCE = new DateConverter();
-
-	/**
-	 * Creates a new instance of <code>DateConverter</code>.
-	 */
-	private DateConverter() {
-		// Do nothing
+	@Override
+	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+		if (input == null) {
+			return NullValue.builder();
+		}
+		return DateTimeValue.builder(DateTime.copyFrom((Calendar) input));
 	}
 
 	@Override
-	public ValueBuilder<?, ?, ?> toValueBuilder(Object input, PropertyMetadata metadata) {
-		return DateTimeValue.builder(DateTime.copyFrom((Date) input));
-	}
-
-	@Override
-	public Object toObject(Value<?> input, PropertyMetadata metadata) {
-		return ((DateTimeValue) input).get().toDate();
-	}
-
-	/**
-	 * @return the instance
-	 */
-	public static DateConverter getInstance() {
-		return INSTANCE;
+	public Object toModel(Value<?> input) {
+		if (input instanceof NullValue) {
+			return null;
+		}
+		return ((DateTimeValue) input).get().toCalendar();
 	}
 
 }

@@ -18,6 +18,9 @@ package com.jmethods.catatumbo.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.jmethods.catatumbo.Mapper;
+import com.jmethods.catatumbo.MapperFactory;
+
 /**
  * Base class for holding the metadata about an entity's or embedded object's
  * field (e.g. identifier, key or property).
@@ -47,6 +50,11 @@ public abstract class FieldMetadata {
 	protected Method writeMethod;
 
 	/**
+	 * Mapper for the field represented by this metadata
+	 */
+	protected Mapper mapper;
+
+	/**
 	 * Creates a new instance of <code>FieldMetadata</code>.
 	 * 
 	 * @param field
@@ -58,6 +66,7 @@ public abstract class FieldMetadata {
 	public FieldMetadata(Field field, DataType dataType) {
 		this.field = field;
 		this.dataType = dataType;
+		this.mapper = MapperFactory.getInstance().getMapper(field.getGenericType());
 	}
 
 	/**
@@ -152,6 +161,17 @@ public abstract class FieldMetadata {
 	@SuppressWarnings("rawtypes")
 	public Class getDeclaredType() {
 		return field.getType();
+	}
+
+	/**
+	 * Returns the {@link Mapper} associated with the field to which this
+	 * metadata belongs.
+	 * 
+	 * @return he {@link Mapper} associated with the field to which this
+	 *         metadata belongs.
+	 */
+	public Mapper getMapper() {
+		return mapper;
 	}
 
 }

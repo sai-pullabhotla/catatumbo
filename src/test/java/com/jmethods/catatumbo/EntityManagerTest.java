@@ -24,18 +24,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.Stack;
 import java.util.TimeZone;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.Vector;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -63,19 +56,16 @@ import com.jmethods.catatumbo.entities.Employee;
 import com.jmethods.catatumbo.entities.EnumField;
 import com.jmethods.catatumbo.entities.FloatField;
 import com.jmethods.catatumbo.entities.FloatObject;
-import com.jmethods.catatumbo.entities.GenericListField;
 import com.jmethods.catatumbo.entities.GeoLocationField;
 import com.jmethods.catatumbo.entities.GrandchildEntity;
 import com.jmethods.catatumbo.entities.IgnoreField;
 import com.jmethods.catatumbo.entities.IgnoreField2;
 import com.jmethods.catatumbo.entities.IntegerField;
 import com.jmethods.catatumbo.entities.IntegerObject;
-import com.jmethods.catatumbo.entities.KeyListField;
 import com.jmethods.catatumbo.entities.ListFields;
 import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
-import com.jmethods.catatumbo.entities.LongListField;
 import com.jmethods.catatumbo.entities.LongObject;
 import com.jmethods.catatumbo.entities.MapFields;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
@@ -87,7 +77,6 @@ import com.jmethods.catatumbo.entities.ShortObject;
 import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
 import com.jmethods.catatumbo.entities.StringId2;
-import com.jmethods.catatumbo.entities.StringListField;
 import com.jmethods.catatumbo.entities.SubClass1;
 import com.jmethods.catatumbo.entities.SubClass2;
 import com.jmethods.catatumbo.entities.SubClass3;
@@ -132,8 +121,6 @@ public class EntityManagerTest {
 		em.deleteAll(DateField.class);
 		em.deleteAll(ByteArrayField.class);
 		em.deleteAll(CharArrayField.class);
-		em.deleteAll(StringListField.class);
-		em.deleteAll(LongListField.class);
 		em.deleteAll(ParentEntity.class);
 		em.deleteAll(ChildEntity.class);
 		em.deleteAll(GrandchildEntity.class);
@@ -145,8 +132,6 @@ public class EntityManagerTest {
 		em.deleteAll(Department.class);
 		em.deleteAll(Employee.class);
 		em.deleteAll(Tag.class);
-		em.deleteAll(KeyListField.class);
-		em.deleteAll(GenericListField.class);
 		em.deleteAll(Customer.class);
 		em.deleteAll(SubClass1.class);
 		em.deleteAll(SubClass2.class);
@@ -674,103 +659,6 @@ public class EntityManagerTest {
 	}
 
 	@Test
-	public void testInsertStringListField() {
-		List<String> hobbies = new ArrayList<>();
-		hobbies.add("Tennis");
-		hobbies.add("Stamp Collection");
-		hobbies.add("Long Drives");
-		StringListField entity = new StringListField();
-		entity.setHobbies(hobbies);
-		entity = em.insert(entity);
-		entity = em.load(StringListField.class, entity.getId());
-		assertTrue(entity.getId() > 0 && hobbies.equals(entity.getHobbies()));
-	}
-
-	@Test
-	public void testInsertStringListField_Null() {
-		StringListField entity = new StringListField();
-		entity = em.insert(entity);
-		entity = em.load(StringListField.class, entity.getId());
-		assertTrue(entity.getId() > 0 && entity.getHobbies() == null);
-	}
-
-	@Test
-	public void testInsertLongListField() {
-		List<Long> numbers = new ArrayList<>();
-		numbers.add(Long.MIN_VALUE);
-		numbers.add(0L);
-		numbers.add(Long.MAX_VALUE);
-		LongListField entity = new LongListField();
-		entity.setNumbers(numbers);
-		entity = em.insert(entity);
-		entity = em.load(LongListField.class, entity.getId());
-		assertTrue(entity.getId() > 0 && numbers.equals(entity.getNumbers()));
-	}
-
-	@Test
-	public void testInsertKeyListField() {
-		List<Tag> tags = new ArrayList<>();
-		for (int i = 0; i < 5; i++) {
-			Tag tag = new Tag();
-			tag.setName("tag" + i);
-			tags.add(tag);
-		}
-		tags = em.insert(tags);
-		KeyListField entity = new KeyListField();
-		List<DatastoreKey> keys = new ArrayList<>();
-		keys.add(tags.get(1).getKey());
-		keys.add(tags.get(4).getKey());
-		keys.add(tags.get(3).getKey());
-		entity.setTags(keys);
-		entity = em.insert(entity);
-		entity = em.load(KeyListField.class, entity.getId());
-		assertTrue(keys.equals(entity.getTags()));
-	}
-
-	@Test
-	public void testInsertBooleanListField() {
-		GenericListField entity = new GenericListField();
-		List<Boolean> booleanList = new ArrayList<>();
-		booleanList.add(true);
-		booleanList.add(false);
-		entity.setItems(booleanList);
-		entity = em.insert(entity);
-		entity = em.load(GenericListField.class, entity.getId());
-		assertTrue(booleanList.equals(entity.getItems()));
-	}
-
-	@Test
-	public void testInsertDoubleListField() {
-		GenericListField entity = new GenericListField();
-		List<Double> doubleList = new ArrayList<>();
-		doubleList.add(1.5);
-		doubleList.add(3.14);
-		entity.setItems(doubleList);
-		entity = em.insert(entity);
-		entity = em.load(GenericListField.class, entity.getId());
-		assertTrue(doubleList.equals(entity.getItems()));
-	}
-
-	@Test
-	public void testInsertMixedListField() {
-		Tag tag = new Tag();
-		tag.setName("super tag");
-		tag = em.insert(tag);
-
-		GenericListField entity = new GenericListField();
-		List items = new ArrayList<>();
-		items.add("Catatumbo");
-		items.add(512L);
-		items.add(3.14);
-		items.add(false);
-		items.add(tag.getKey());
-		entity.setItems(items);
-		entity = em.insert(entity);
-		entity = em.load(GenericListField.class, entity.getId());
-		assertTrue(items.equals(entity.getItems()));
-	}
-
-	@Test
 	public void testInsertKeyReference() {
 		Department department = new Department();
 		department.setName("Sales");
@@ -1233,496 +1121,178 @@ public class EntityManagerTest {
 	}
 
 	@Test
-	public void testUpdateStringListField() {
-		List<String> hobbies = new ArrayList<>();
-		hobbies.add("Tennis");
-		hobbies.add("Stamp Collection");
-		hobbies.add("Long Drives");
-		StringListField entity = new StringListField();
-		entity.setHobbies(hobbies);
-		entity = em.insert(entity);
-		hobbies.add("Watching TV");
-		hobbies.add("Sleeping");
-		hobbies.remove("Stamp Collection");
-		entity.setHobbies(hobbies);
-		entity = em.update(entity);
-		entity = em.load(StringListField.class, entity.getId());
-		assertTrue(hobbies.equals(entity.getHobbies()));
-	}
-
-	@Test
-	public void testUpdateStringListField_Null() {
-		List<String> hobbies = new ArrayList<>();
-		hobbies.add("Tennis");
-		hobbies.add("Stamp Collection");
-		hobbies.add("Long Drives");
-		StringListField entity = new StringListField();
-		entity.setHobbies(hobbies);
-		entity = em.insert(entity);
-		hobbies = null;
-		entity.setHobbies(hobbies);
-		entity = em.update(entity);
-		entity = em.load(StringListField.class, entity.getId());
-		assertTrue(entity.getHobbies() == null);
-	}
-
-	@Test
-	public void testUpdateLongListField() {
-		List<Long> numbers = new ArrayList<>();
-		numbers.add(Long.MIN_VALUE);
-		numbers.add(0L);
-		numbers.add(Long.MAX_VALUE);
-		LongListField entity = new LongListField();
-		entity.setNumbers(numbers);
-		entity = em.insert(entity);
-		numbers.add(42L);
-		numbers.remove(Long.MIN_VALUE);
-		entity.setNumbers(numbers);
-		entity = em.update(entity);
-		entity = em.load(LongListField.class, entity.getId());
-		assertTrue(numbers.equals(entity.getNumbers()));
-	}
-
-	@Test
-	public void testUpdateLongListField_Null() {
-		List<Long> numbers = new ArrayList<>();
-		numbers.add(Long.MIN_VALUE);
-		numbers.add(0L);
-		numbers.add(Long.MAX_VALUE);
-		LongListField entity = new LongListField();
-		entity.setNumbers(numbers);
-		entity = em.insert(entity);
-		numbers = null;
-		entity.setNumbers(numbers);
-		entity = em.update(entity);
-		entity = em.load(LongListField.class, entity.getId());
-		assertNull(entity.getNumbers());
-	}
-
-	@Test
-	public void testInsert_ArrayList() {
-		ListFields entity = new ListFields();
-		ArrayList<String> list = new ArrayList<>();
-		list.add("One");
-		list.add("Two");
-		entity.setArrayList(list);
+	public void testInsert_ListFields() {
+		ListFields entity = ListFields.getSampleEntity1();
 		entity = em.insert(entity);
 		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getArrayList().equals(entity2.getArrayList()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testUpdate_ArrayList() {
+	public void testInsert_ListFields_Null() {
 		ListFields entity = new ListFields();
-		ArrayList<String> list = new ArrayList<>();
-		list.add("One");
-		list.add("Two");
-		entity.setArrayList(list);
-		entity = em.insert(entity);
-		list.add("Three");
-		list.add("Four");
-		entity.setArrayList(list);
-		entity = em.update(entity);
-		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getArrayList().equals(entity2.getArrayList()));
-	}
-
-	@Test
-	public void testInsert_LinkedList() {
-		ListFields entity = new ListFields();
-		LinkedList<String> list = new LinkedList<>();
-		list.add("One");
-		list.add("Two");
-		entity.setLinkedList(list);
 		entity = em.insert(entity);
 		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getLinkedList().equals(entity2.getLinkedList()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testUpdate_LinkedList() {
-		ListFields entity = new ListFields();
-		LinkedList<String> list = new LinkedList<>();
-		list.add("One");
-		list.add("Two");
-		entity.setLinkedList(list);
+	public void testUpdate_ListFields() {
+		ListFields entity = ListFields.getSampleEntity1();
 		entity = em.insert(entity);
-		list.add("Three");
-		list.add("Four");
-		entity.setLinkedList(list);
+		List<String> stringList = entity.getStringList();
+		stringList.add("Ten");
+		stringList.add("Hundred");
 		entity = em.update(entity);
 		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getLinkedList().equals(entity2.getLinkedList()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testInsert_Vector() {
-		ListFields entity = new ListFields();
-		Vector<String> list = new Vector<>();
-		list.add("One");
-		list.add("Two");
-		entity.setVector(list);
+	public void testUpdate_ListFields_Null() {
+		ListFields entity = ListFields.getSampleEntity1();
 		entity = em.insert(entity);
-		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getVector().equals(entity2.getVector()));
-	}
-
-	@Test
-	public void testUpdate_Vector() {
-		ListFields entity = new ListFields();
-		Vector<String> list = new Vector<>();
-		list.add("One");
-		list.add("Two");
-		entity.setVector(list);
-		entity = em.insert(entity);
-		list.add("Three");
-		list.add("Four");
-		entity.setVector(list);
+		entity.setStringList(null);
 		entity = em.update(entity);
 		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getVector().equals(entity2.getVector()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testInsert_Stack() {
+	public void testInsert_ListFields_Keys() {
 		ListFields entity = new ListFields();
-		Stack<String> list = new Stack<>();
-		list.add("One");
-		list.add("Two");
-		entity.setStack(list);
+		String[] tagNames = { "List", "ArrayList", "LinkedList" };
+		List<Tag> tags = new ArrayList<>();
+		for (String tagName : tagNames) {
+			Tag tag = new Tag();
+			tag.setName(tagName);
+			tags.add(tag);
+		}
+		tags = em.insert(tags);
+		List<DatastoreKey> keyList = new ArrayList<>();
+		for (Tag tag : tags) {
+			keyList.add(tag.getKey());
+		}
+		entity.setKeyList(keyList);
 		entity = em.insert(entity);
 		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getStack().equals(entity2.getStack()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testUpdate_Stack() {
-		ListFields entity = new ListFields();
-		Stack<String> list = new Stack<>();
-		list.add("One");
-		list.add("Two");
-		entity.setStack(list);
-		entity = em.insert(entity);
-		list.add("Three");
-		list.add("Four");
-		entity.setStack(list);
-		entity = em.update(entity);
-		ListFields entity2 = em.load(ListFields.class, entity.getId());
-		assertTrue(entity.getStack().equals(entity2.getStack()));
-	}
-
-	@Test
-	public void testInsert_Set() {
-		SetFields entity = new SetFields();
-		Set<Object> set = new HashSet();
-		set.add("One");
-		set.add(222L);
-		set.add(Math.PI);
-		set.add(Boolean.TRUE);
-		set.add("Two");
-		entity.setSet(set);
+	public void testInsert_SetFields() {
+		SetFields entity = SetFields.getSampleEntity1();
 		entity = em.insert(entity);
 		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(HashSet.class, entity2.getSet().getClass());
-		assertTrue(entity.getSet().equals(entity2.getSet()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testUpdate_Set() {
-		SetFields entity = new SetFields();
-		Set<Object> set = new HashSet();
-		set.add("One");
-		set.add(222L);
-		set.add(Math.PI);
-		set.add(Boolean.TRUE);
-		set.add("Two");
-		entity.setSet(set);
+	public void testUpdate_SetFields() {
+		SetFields entity = SetFields.getSampleEntity1();
 		entity = em.insert(entity);
-		set.add(501L);
-		entity.setSet(set);
+		Set<String> stringSet = entity.getStringSet();
+		stringSet.add("Powerball");
 		entity = em.update(entity);
 		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(HashSet.class, entity2.getSet().getClass());
-		assertTrue(entity.getSet().equals(entity2.getSet()));
-	}
-
-	@Test
-	public void testInsert_HashSet() {
-		SetFields entity = new SetFields();
-		HashSet<Object> set = new HashSet();
-		set.add("One");
-		set.add(222L);
-		set.add(Math.PI);
-		set.add(Boolean.TRUE);
-		set.add("Two");
-		entity.setHashSet(set);
-		entity = em.insert(entity);
-		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(HashSet.class, entity2.getHashSet().getClass());
-		assertTrue(entity.getHashSet().equals(entity2.getHashSet()));
-	}
-
-	@Test
-	public void testUpdate_HashSet() {
-		SetFields entity = new SetFields();
-		HashSet<Object> set = new HashSet();
-		set.add("One");
-		set.add(222L);
-		set.add(Math.PI);
-		set.add(Boolean.TRUE);
-		set.add("Two");
-		entity.setHashSet(set);
-		entity = em.insert(entity);
-		set.add(501L);
-		entity.setHashSet(set);
-		entity = em.update(entity);
-		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(HashSet.class, entity2.getHashSet().getClass());
-		assertTrue(entity.getHashSet().equals(entity2.getHashSet()));
-	}
-
-	@Test
-	public void testInsert_LinkedHashSet() {
-		SetFields entity = new SetFields();
-		LinkedHashSet<Object> set = new LinkedHashSet();
-		set.add("One");
-		set.add(222L);
-		set.add(Math.PI);
-		set.add(Boolean.TRUE);
-		set.add("Two");
-		entity.setLinkedHashSet(set);
-		entity = em.insert(entity);
-		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(LinkedHashSet.class, entity2.getLinkedHashSet().getClass());
-		assertTrue(entity.getLinkedHashSet().equals(entity2.getLinkedHashSet()));
-	}
-
-	@Test
-	public void testUpdate_LinkedHashSet() {
-		SetFields entity = new SetFields();
-		LinkedHashSet<Object> set = new LinkedHashSet();
-		set.add("One");
-		set.add(222L);
-		set.add(Math.PI);
-		set.add(Boolean.TRUE);
-		set.add("Two");
-		entity.setLinkedHashSet(set);
-		entity = em.insert(entity);
-		set.add(501L);
-		entity.setLinkedHashSet(set);
-		entity = em.update(entity);
-		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(LinkedHashSet.class, entity2.getLinkedHashSet().getClass());
-		assertTrue(entity.getLinkedHashSet().equals(entity2.getLinkedHashSet()));
-	}
-
-	@Test
-	public void testInsert_TreeSet() {
-		SetFields entity = new SetFields();
-		TreeSet<String> set = new TreeSet();
-		set.add("One");
-		set.add("Two");
-		set.add("Three");
-		entity.setTreeSet(set);
-		entity = em.insert(entity);
-		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(TreeSet.class, entity2.getTreeSet().getClass());
-		assertTrue(entity.getTreeSet().equals(entity2.getTreeSet()));
-	}
-
-	@Test
-	public void testUpdate_TreeSet() {
-		SetFields entity = new SetFields();
-		TreeSet<String> set = new TreeSet();
-		set.add("One");
-		set.add("Two");
-		set.add("Three");
-		entity.setTreeSet(set);
-		entity = em.insert(entity);
-		set.add("Zero");
-		set.add("Eight");
-		entity.setTreeSet(set);
-		entity = em.update(entity);
-		SetFields entity2 = em.load(SetFields.class, entity.getId());
-		assertEquals(TreeSet.class, entity2.getTreeSet().getClass());
-		assertTrue(entity.getTreeSet().equals(entity2.getTreeSet()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
 	public void testInsert_SetFields_Null() {
 		SetFields entity = new SetFields();
-		em.insert(entity);
-		assertNull(entity.getSet());
-		assertNull(entity.getHashSet());
-		assertNull(entity.getLinkedHashSet());
-		assertNull(entity.getTreeSet());
+		entity = em.insert(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testInsert_SetFields_EmptySets() {
+	public void testUpdate_SetFields_Null() {
+		SetFields entity = SetFields.getSampleEntity1();
+		entity = em.insert(entity);
+		entity.setStringSet(null);
+		entity = em.update(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_SetFields_Keys() {
 		SetFields entity = new SetFields();
-		entity.setSet(new HashSet<>());
-		entity.setHashSet(new HashSet<>());
-		entity.setLinkedHashSet(new LinkedHashSet<>());
-		entity.setTreeSet(new TreeSet<String>());
-		em.insert(entity);
-		assertEquals(0, entity.getSet().size());
-		assertEquals(0, entity.getHashSet().size());
-		assertEquals(0, entity.getLinkedHashSet().size());
-		assertEquals(0, entity.getTreeSet().size());
+		String[] tagNames = { "Set", "HashSet", "LinkedHashSet", "TreeSet" };
+		List<Tag> tags = new ArrayList<>();
+		for (String tagName : tagNames) {
+			Tag tag = new Tag();
+			tag.setName(tagName);
+			tags.add(tag);
+		}
+		tags = em.insert(tags);
+		Set<DatastoreKey> keySet = new HashSet<>();
+		for (Tag tag : tags) {
+			keySet.add(tag.getKey());
+		}
+		entity.setKeySet(keySet);
+		entity = em.insert(entity);
+		SetFields entity2 = em.load(SetFields.class, entity.getId());
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testInsert_Map() {
-		MapFields entity = new MapFields();
-		Map<String, Object> map = new HashMap<>();
-		map.put("color", "black");
-		map.put("isBig", true);
-		map.put("age", 21L);
-		map.put("pi", Math.PI);
-		entity.setGenericMap(map);
+	public void testInsert_MapFields() {
+		MapFields entity = MapFields.getSampleEntity1();
 		entity = em.insert(entity);
 		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getGenericMap().equals(entity2.getGenericMap()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testUpdate_Map() {
+	public void testInsert_MapFields_Null() {
 		MapFields entity = new MapFields();
-		Map<String, Object> map = new HashMap<>();
-		map.put("color", "black");
-		map.put("isBig", true);
-		map.put("age", 21L);
-		map.put("pi", Math.PI);
-		entity.setGenericMap(map);
 		entity = em.insert(entity);
-		map.put("size", "large");
-		entity.setGenericMap(map);
+		MapFields entity2 = em.load(MapFields.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testUpdate_MapFields() {
+		MapFields entity = MapFields.getSampleEntity1();
+		entity = em.insert(entity);
+		entity.getStringMap().put("Catatumbo", "Framework for GCS");
 		entity = em.update(entity);
 		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getGenericMap().equals(entity2.getGenericMap()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testInsert_HashMap() {
-		MapFields entity = new MapFields();
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("color", "black");
-		map.put("isBig", true);
-		map.put("age", 21L);
-		map.put("pi", Math.PI);
-		entity.setHashMap(map);
+	public void testUpdate_MapFields_Null() {
+		MapFields entity = MapFields.getSampleEntity1();
 		entity = em.insert(entity);
-		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getHashMap().equals(entity2.getHashMap()));
-	}
-
-	@Test
-	public void testUpdate_HashMap() {
-		MapFields entity = new MapFields();
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("color", "black");
-		map.put("isBig", true);
-		map.put("age", 21L);
-		map.put("pi", Math.PI);
-		entity.setHashMap(map);
-		entity = em.insert(entity);
-		map.put("size", "large");
-		entity.setHashMap(map);
+		entity.setStringMap(null);
 		entity = em.update(entity);
 		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getHashMap().equals(entity2.getHashMap()));
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test
-	public void testInsert_LinkedHashMap() {
+	public void testInsert_MapFields_Keys() {
 		MapFields entity = new MapFields();
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put("color", "black");
-		map.put("isBig", true);
-		map.put("age", 21L);
-		map.put("pi", Math.PI);
-		entity.setLinkedHashMap(map);
+		String[] tagNames = { "Map", "HashMap", "SortedMap", "TreeMap", "LinkedHashMap" };
+		List<Tag> tags = new ArrayList<>();
+		for (String tagName : tagNames) {
+			Tag tag = new Tag();
+			tag.setName(tagName);
+			tags.add(tag);
+		}
+		tags = em.insert(tags);
+		Map<String, DatastoreKey> keyMap = new HashMap<>();
+		int i = 0;
+		for (Tag tag : tags) {
+			keyMap.put(tag.getName(), tag.getKey());
+		}
+		entity.setKeyMap(keyMap);
 		entity = em.insert(entity);
 		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getLinkedHashMap().equals(entity2.getLinkedHashMap()));
-	}
-
-	@Test
-	public void testUpdate_LinkedHashMap() {
-		MapFields entity = new MapFields();
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put("color", "black");
-		map.put("isBig", true);
-		map.put("age", 21L);
-		map.put("pi", Math.PI);
-		entity.setLinkedHashMap(map);
-		entity = em.insert(entity);
-		map.put("size", "large");
-		entity.setLinkedHashMap(map);
-		entity = em.update(entity);
-		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getLinkedHashMap().equals(entity2.getLinkedHashMap()));
-	}
-
-	@Test
-	public void testInsert_TreeMap() {
-		MapFields entity = new MapFields();
-		TreeMap<String, String> map = new TreeMap<>();
-		map.put("one", "abc");
-		map.put("first", "first element");
-		map.put("akey", "another element");
-		entity.setTreeMap(map);
-		entity = em.insert(entity);
-		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getTreeMap().equals(entity2.getTreeMap()));
-	}
-
-	@Test
-	public void testUpdate_TreeMap() {
-		MapFields entity = new MapFields();
-		TreeMap<String, String> map = new TreeMap<>();
-		map.put("one", "abc");
-		map.put("first", "first element");
-		map.put("akey", "another element");
-		entity.setTreeMap(map);
-		entity = em.insert(entity);
-		map.put("bkey", "b comes after a");
-		entity.setTreeMap(map);
-		entity = em.update(entity);
-		MapFields entity2 = em.load(MapFields.class, entity.getId());
-		assertTrue(entity.getTreeMap().equals(entity2.getTreeMap()));
-	}
-
-	@Test
-	public void testInsertMapFields_Null() {
-		MapFields entity = new MapFields();
-		entity = em.insert(entity);
-		entity = em.load(MapFields.class, entity.getId());
-		assertNull(entity.getGenericMap());
-		assertNull(entity.getHashMap());
-		assertNull(entity.getLinkedHashMap());
-		assertNull(entity.getTreeMap());
-	}
-
-	@Test
-	public void testUpdateMapFields_Null() {
-		MapFields entity = new MapFields();
-		entity.setGenericMap(new HashMap<String, Object>());
-		entity.setHashMap(new HashMap<String, Object>());
-		entity.setLinkedHashMap(new LinkedHashMap<String, Object>());
-		entity.setTreeMap(new TreeMap<String, String>());
-		entity = em.insert(entity);
-		entity.setGenericMap(null);
-		entity.setHashMap(null);
-		entity.setLinkedHashMap(null);
-		entity.setTreeMap(null);
-		entity = em.update(entity);
-		entity = em.load(MapFields.class, entity.getId());
-		assertNull(entity.getGenericMap());
-		assertNull(entity.getHashMap());
-		assertNull(entity.getLinkedHashMap());
-		assertNull(entity.getTreeMap());
+		assertTrue(entity.equals(entity2));
 	}
 
 	@Test(expected = EntityManagerException.class)

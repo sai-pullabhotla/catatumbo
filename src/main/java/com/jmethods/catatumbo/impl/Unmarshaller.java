@@ -340,11 +340,7 @@ public class Unmarshaller {
 		// datastore.
 		if (nativeEntity.contains(propertyMetadata.getMappedName())) {
 			Value<?> datastoreValue = nativeEntity.getValue(propertyMetadata.getMappedName());
-			Object entityValue = null;
-			if (!(datastoreValue instanceof NullValue)) {
-				PropertyConverter converter = propertyMetadata.getDataType().getConverter();
-				entityValue = converter.toObject(datastoreValue, propertyMetadata);
-			}
+			Object entityValue = propertyMetadata.getMapper().toModel(datastoreValue);
 			Method writeMethod = propertyMetadata.getWriteMethod();
 			writeMethod.invoke(target, entityValue);
 		}

@@ -14,57 +14,59 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo;
 
 /**
- * An exception to indicate any data conversion errors.
+ * An exception thrown by {@link Mapper} to indicate any errors during data
+ * mapping.
  * 
  * @author Sai Pullabhotla
  *
  */
-public class DataConversionException extends RuntimeException {
+public class MappingException extends RuntimeException {
 
 	/**
 	 * Serial version UID
 	 */
-	private static final long serialVersionUID = 648197695147327873L;
+	private static final long serialVersionUID = -3940373782421116805L;
 
 	/**
-	 * Creates a new instance of <code>DataConversionException</code>.
+	 * Creates a new instance of <code>MappingException</code>.
 	 */
-	public DataConversionException() {
+	public MappingException() {
 		super();
 	}
 
 	/**
-	 * Creates a new instance of <code>DataConversionException</code>.
+	 * Creates a new instance of <code>MappingException</code>.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 */
+	public MappingException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	/**
+	 * Creates a new instance of <code>MappingException</code>.
 	 * 
 	 * @param message
 	 *            the message
 	 */
-	public DataConversionException(String message) {
+	public MappingException(String message) {
 		super(message);
 	}
 
 	/**
-	 * Creates a new instance of <code>DataConversionException</code>.
+	 * Creates a new instance of <code>MappingException</code>.
 	 * 
 	 * @param cause
 	 *            the cause
 	 */
-	public DataConversionException(Throwable cause) {
+	public MappingException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * Creates a new instance of <code>DataConversionException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public DataConversionException(String message, Throwable cause) {
-		super(message, cause);
-	}
 }
