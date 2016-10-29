@@ -18,6 +18,7 @@ package com.jmethods.catatumbo;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.jmethods.catatumbo.impl.Cache;
+import com.jmethods.catatumbo.mappers.BigDecimalMapper;
 import com.jmethods.catatumbo.mappers.BooleanMapper;
 import com.jmethods.catatumbo.mappers.ByteArrayMapper;
 import com.jmethods.catatumbo.mappers.CalendarMapper;
@@ -213,6 +215,7 @@ public class MapperFactory {
 		cache.put(double.class, doubleMapper);
 		cache.put(Double.class, doubleMapper);
 		cache.put(String.class, new StringMapper());
+		cache.put(BigDecimal.class, new BigDecimalMapper());
 		cache.put(byte[].class, new ByteArrayMapper());
 		cache.put(char[].class, new CharArrayMapper());
 		cache.put(GeoLocation.class, new GeoLocationMapper());

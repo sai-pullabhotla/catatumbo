@@ -18,6 +18,7 @@ package com.jmethods.catatumbo;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.jmethods.catatumbo.entities.Account;
+import com.jmethods.catatumbo.entities.BigDecimalField;
 import com.jmethods.catatumbo.entities.BooleanField;
 import com.jmethods.catatumbo.entities.BooleanObject;
 import com.jmethods.catatumbo.entities.ByteArrayField;
@@ -144,6 +146,7 @@ public class EntityManagerTest {
 		em.deleteAll(MapFields.class);
 		em.deleteAll(Contact.class);
 		em.deleteAll(UnindexedStringField.class);
+		em.deleteAll(BigDecimalField.class);
 		populateTasks();
 	}
 
@@ -2203,6 +2206,46 @@ public class EntityManagerTest {
 		em.update(contact);
 		contact = em.load(Contact.class, contact.getId());
 		assertEquals("2223333", contact.getMobileNumber().getSubscriberNumber());
+	}
+
+	@Test
+	public void testInsert_BigDecimal() {
+		BigDecimalField entity = new BigDecimalField(new BigDecimal(23.654));
+		entity = em.insert(entity);
+		BigDecimalField entity2 = em.load(BigDecimalField.class, entity.getId());
+		assertTrue(entity.getId() != 0);
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_BigDecimal_Null() {
+		BigDecimalField entity = new BigDecimalField();
+		entity = em.insert(entity);
+		BigDecimalField entity2 = em.load(BigDecimalField.class, entity.getId());
+		assertTrue(entity.getId() != 0);
+		assertTrue(entity.equals(entity2) && entity2.getValue() == null);
+	}
+
+	@Test
+	public void testUpdate_BigDecimal() {
+		BigDecimalField entity = new BigDecimalField(new BigDecimal("500"));
+		entity = em.insert(entity);
+		entity.setValue(new BigDecimal(0));
+		entity = em.update(entity);
+		BigDecimalField entity2 = em.load(BigDecimalField.class, entity.getId());
+		assertTrue(entity.getId() != 0);
+		assertTrue(entity.equals(entity2) && entity2.getValue().compareTo(BigDecimal.ZERO) == 0);
+	}
+
+	@Test
+	public void testUpdate_BigDecimal_Null() {
+		BigDecimalField entity = new BigDecimalField(new BigDecimal("5000"));
+		entity = em.insert(entity);
+		entity.setValue(null);
+		entity = em.update(entity);
+		BigDecimalField entity2 = em.load(BigDecimalField.class, entity.getId());
+		assertTrue(entity.getId() != 0);
+		assertTrue(entity.equals(entity2) && entity2.getValue() == null);
 	}
 
 	private static Calendar getToday() {

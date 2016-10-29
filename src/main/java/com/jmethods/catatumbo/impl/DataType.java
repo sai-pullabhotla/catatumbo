@@ -15,6 +15,7 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -137,7 +138,12 @@ public enum DataType {
 	/**
 	 * Geo Location
 	 */
-	GEO_LOCATION(GeoLocation.class);
+	GEO_LOCATION(GeoLocation.class),
+
+	/**
+	 * BigDecimal - Maps to a Floating Point number in the Cloud Datastore.
+	 */
+	BIG_DECIMAL(BigDecimal.class);
 
 	/**
 	 * The Java class type
