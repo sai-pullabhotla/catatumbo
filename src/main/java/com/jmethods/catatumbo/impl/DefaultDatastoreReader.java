@@ -39,7 +39,6 @@ import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
-import com.jmethods.catatumbo.QueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 
 /**
@@ -305,29 +304,6 @@ public class DefaultDatastoreReader {
 	 */
 	public KeyQueryRequest createKeyQueryRequest(String query) {
 		return new KeyQueryRequest(query);
-	}
-
-	/**
-	 * Executes the given request and returns the response. The request can
-	 * either be an {@link EntityQueryRequest} or
-	 * {@link ProjectionQueryRequest}. All other requests will result in an
-	 * Exception.
-	 * 
-	 * @param expectedResultType
-	 *            the expected type of results
-	 * @param request
-	 *            the query request.
-	 * @return the query response
-	 */
-	@Deprecated
-	public <E> QueryResponse<E> execute(Class<E> expectedResultType, QueryRequest request) {
-		if (request instanceof EntityQueryRequest) {
-			return executeEntityQueryRequest(expectedResultType, (EntityQueryRequest) request);
-		}
-		if (request instanceof ProjectionQueryRequest) {
-			return executeProjectionQueryRequest(expectedResultType, (ProjectionQueryRequest) request);
-		}
-		throw new EntityManagerException(String.format("Unsupported QueryRequest: %s", request.getClass()));
 	}
 
 	/**

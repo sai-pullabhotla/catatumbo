@@ -1,4 +1,3 @@
-package com.jmethods.catatumbo;
 /*
  * Copyright 2016 Sai Pullabhotla.
  *
@@ -14,6 +13,8 @@ package com.jmethods.catatumbo;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.jmethods.catatumbo;
 
 import java.util.List;
 
@@ -369,20 +370,5 @@ public interface DatastoreAccess {
 	 * @return the query response
 	 */
 	QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request);
-
-	/**
-	 * Executes the given request and returns the response. The request can
-	 * either be an {@link EntityQueryRequest} or
-	 * {@link ProjectionQueryRequest}. All other requests will result in an
-	 * Exception.
-	 * 
-	 * @param expectedResultType
-	 *            the expected type of results
-	 * @param request
-	 *            the query request.
-	 * @return the query response
-	 */
-	@Deprecated
-	<E> QueryResponse<E> execute(Class<E> expectedResultType, QueryRequest request);
 
 }

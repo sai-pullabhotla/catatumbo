@@ -60,7 +60,7 @@ public abstract class BaseQueryRequest implements QueryRequest {
 		this.allowLiterals = false;
 		// Initialize the named and positional bindings.
 		namedBindings = new HashMap<>();
-		positionalBindings = new ArrayList<Object>();
+		positionalBindings = new ArrayList<>();
 	}
 
 	@Override

@@ -1613,7 +1613,7 @@ public class EntityManagerTest {
 	@Test
 	public void executeTest_SelectAll() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM Task order by __key__");
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		assertTrue(tasks.size() == 50 && tasks.get(0).getId() == 1 && tasks.get(tasks.size() - 1).getId() == 50);
 	}
@@ -1787,7 +1787,7 @@ public class EntityManagerTest {
 	@Test
 	public void testExecuteProjectionQuery() {
 		ProjectionQueryRequest request = em.createProjectionQueryRequest("SELECT name FROM Task");
-		QueryResponse<Task> response = em.execute(Task.class, request);
+		QueryResponse<Task> response = em.executeProjectionQueryRequest(Task.class, request);
 		List<Task> tasks = response.getResults();
 		for (Task task : tasks) {
 			System.out.printf("Id: %d; Name: %s; Priority: %s; Complete: %s; Completion Date: %s\n", task.getId(),

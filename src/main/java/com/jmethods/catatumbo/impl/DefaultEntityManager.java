@@ -36,7 +36,6 @@ import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
-import com.jmethods.catatumbo.QueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 import com.jmethods.catatumbo.TransactionalTask;
 
@@ -287,11 +286,6 @@ public class DefaultEntityManager implements EntityManager {
 	@Override
 	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
 		return reader.executeKeyQueryRequest(request);
-	}
-
-	@Override
-	public <E> QueryResponse<E> execute(Class<E> expectedResultType, QueryRequest request) {
-		return reader.execute(expectedResultType, request);
 	}
 
 	@Override
