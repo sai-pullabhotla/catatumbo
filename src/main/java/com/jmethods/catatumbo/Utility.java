@@ -28,6 +28,14 @@ import java.io.IOException;
 public class Utility {
 
 	/**
+	 * Creates a new instance of <code>Utility</code>. This exists to hide the
+	 * implicit public constructor.
+	 */
+	private Utility() {
+		// Do nothing
+	}
+
+	/**
 	 * Closes the given Closeable.
 	 * 
 	 * @param closeable
