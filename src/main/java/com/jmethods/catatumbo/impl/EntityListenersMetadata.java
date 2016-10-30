@@ -17,7 +17,7 @@
 package com.jmethods.catatumbo.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,7 +124,7 @@ public class EntityListenersMetadata {
 	 */
 	public void put(CallbackType callbackType, CallbackMetadata callbackMetadata) {
 		if (callbacks == null) {
-			callbacks = new HashMap<>();
+			callbacks = new EnumMap<>(CallbackType.class);
 		}
 		List<CallbackMetadata> callbackMetadataList = callbacks.get(callbackType);
 		if (callbackMetadataList == null) {
