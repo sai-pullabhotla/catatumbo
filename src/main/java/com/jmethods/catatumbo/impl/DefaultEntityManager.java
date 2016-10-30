@@ -18,7 +18,7 @@ package com.jmethods.catatumbo.impl;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,11 +69,6 @@ public class DefaultEntityManager implements EntityManager {
 	 * Datastore reader
 	 */
 	private DefaultDatastoreReader reader;
-
-	/**
-	 * Entity listeners
-	 */
-	private Class<?>[] entityListeners;
 
 	/**
 	 * Metadata of global callbacks
@@ -148,7 +143,9 @@ public class DefaultEntityManager implements EntityManager {
 			transaction.commit();
 			return returnValue;
 		} catch (Exception exp) {
-			transaction.rollback();
+			if (transaction != null) {
+				transaction.rollback();
+			}
 			throw new EntityManagerException(exp);
 		} finally {
 			if (transaction != null && transaction.isActive()) {
@@ -290,14 +287,14 @@ public class DefaultEntityManager implements EntityManager {
 
 	@Override
 	public void setDefaultListeners(Class<?>... entityListeners) {
-		this.entityListeners = entityListeners;
-		globalCallbacks = new HashMap<>();
+		globalCallbacks = new EnumMap<>(CallbackType.class);
 		for (Class<?> listenerClass : entityListeners) {
 			ExternalListenerMetadata listenerMetadata = ExternalListenerIntrospector.introspect(listenerClass);
 			Map<CallbackType, Method> callbacks = listenerMetadata.getCallbacks();
 			if (callbacks != null) {
-				for (CallbackType callbackType : callbacks.keySet()) {
-					Method callbackMethod = callbacks.get(callbackType);
+				for (Map.Entry<CallbackType, Method> entry : callbacks.entrySet()) {
+					CallbackType callbackType = entry.getKey();
+					Method callbackMethod = entry.getValue();
 					CallbackMetadata callbackMetadata = new CallbackMetadata(EntityListenerType.DEFAULT, callbackType,
 							callbackMethod);
 					putDefaultCallback(callbackType, callbackMetadata);
