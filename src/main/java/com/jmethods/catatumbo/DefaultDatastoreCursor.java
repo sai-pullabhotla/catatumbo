@@ -45,10 +45,7 @@ public class DefaultDatastoreCursor implements DatastoreCursor, Serializable {
 	 *            will be converted to an empty string.
 	 */
 	public DefaultDatastoreCursor(String encoded) {
-		if (encoded == null) {
-			encoded = "";
-		}
-		this.encoded = encoded;
+		this.encoded = encoded != null ? encoded : "";
 	}
 
 	/**
