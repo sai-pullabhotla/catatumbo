@@ -35,6 +35,13 @@ import com.jmethods.catatumbo.Property;
 public class IntrospectionUtils {
 
 	/**
+	 * Hide the default constructor.
+	 */
+	private IntrospectionUtils() {
+		// Do nothing
+	}
+
+	/**
 	 * Returns the meatdata for the given field.
 	 * 
 	 * @param field
@@ -94,7 +101,7 @@ public class IntrospectionUtils {
 	 */
 	public static Method getReadMethod(PropertyMetadata propertyMetadata) {
 		Field field = propertyMetadata.getField();
-		Method readMethod = null;
+		Method readMethod;
 		switch (propertyMetadata.getDataType()) {
 		case BOOLEAN:
 			String booleanReadMethodName = getReadMethodNameForBoolean(field);
