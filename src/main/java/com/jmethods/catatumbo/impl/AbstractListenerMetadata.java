@@ -17,7 +17,7 @@
 package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import com.jmethods.catatumbo.Entity;
@@ -69,7 +69,7 @@ public class AbstractListenerMetadata {
 	 */
 	public void putListener(CallbackType callbackType, Method method) {
 		if (callbacks == null) {
-			callbacks = new HashMap<>();
+			callbacks = new EnumMap<>(CallbackType.class);
 		}
 		Method oldMethod = callbacks.put(callbackType, method);
 		if (oldMethod != null) {
