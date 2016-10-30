@@ -145,9 +145,8 @@ public class EntityListenersIntrospector {
 		ExternalListenerMetadata listenerMetadata = ExternalListenerIntrospector.introspect(listenerClass);
 		Map<CallbackType, Method> callbacks = listenerMetadata.getCallbacks();
 		if (callbacks != null) {
-			for (CallbackType callbackType : callbacks.keySet()) {
-				Method callbackMethod = callbacks.get(callbackType);
-				validateExternalCallback(callbackMethod, callbackType);
+			for (Map.Entry<CallbackType, Method> entry : callbacks.entrySet()) {
+				validateExternalCallback(entry.getValue(), entry.getKey());
 			}
 		}
 	}
@@ -212,8 +211,9 @@ public class EntityListenersIntrospector {
 		InternalListenerMetadata listenerMetadata = InternalListenerIntrospector.introspect(listenerClass);
 		Map<CallbackType, Method> callbacks = listenerMetadata.getCallbacks();
 		if (callbacks != null) {
-			for (CallbackType callbackType : callbacks.keySet()) {
-				Method callbackMethod = callbacks.get(callbackType);
+			for (Map.Entry<CallbackType, Method> entry : callbacks.entrySet()) {
+				CallbackType callbackType = entry.getKey();
+				Method callbackMethod = entry.getValue();
 				CallbackMetadata callbackMetadata = new CallbackMetadata(EntityListenerType.INTERNAL, callbackType,
 						callbackMethod);
 				metadata.put(callbackType, callbackMetadata);
