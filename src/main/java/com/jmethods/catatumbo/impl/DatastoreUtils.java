@@ -38,6 +38,13 @@ import com.jmethods.catatumbo.EntityManagerException;
 class DatastoreUtils {
 
 	/**
+	 * Hide the implicit constructor
+	 */
+	private DatastoreUtils() {
+		// Do nothing.
+	}
+
+	/**
 	 * Converts the given list of native entities to a list of model objects of
 	 * given type, <code>entityClass</code>.
 	 * 
