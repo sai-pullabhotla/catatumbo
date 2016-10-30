@@ -135,7 +135,7 @@ public class DefaultDatastoreWriter {
 	@SuppressWarnings("unchecked")
 	public <E> List<E> insert(List<E> entities) {
 		if (entities == null || entities.isEmpty()) {
-			return new ArrayList<E>();
+			return new ArrayList<>();
 		}
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_INSERT, entities);
