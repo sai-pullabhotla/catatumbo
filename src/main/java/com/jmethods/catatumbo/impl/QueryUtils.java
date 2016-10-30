@@ -38,6 +38,13 @@ import com.jmethods.catatumbo.GeoLocation;
 public class QueryUtils {
 
 	/**
+	 * Hide the default constructor.
+	 */
+	private QueryUtils() {
+		// Do nothing
+	}
+
+	/**
 	 * Applies the given positional bindings to the given query builder.
 	 * 
 	 * @param queryBuilder
@@ -123,8 +130,9 @@ public class QueryUtils {
 	 */
 	static void applyNamedBindings(GqlQuery.Builder<?> queryBuilder, Map<String, Object> namedBindings) {
 		if (namedBindings != null) {
-			for (String bindingName : namedBindings.keySet()) {
-				Object bindingValue = namedBindings.get(bindingName);
+			for (Map.Entry<String, Object> entry : namedBindings.entrySet()) {
+				String bindingName = entry.getKey();
+				Object bindingValue = entry.getValue();
 				if (bindingValue instanceof Short) {
 					queryBuilder.setBinding(bindingName, (short) bindingValue);
 				} else if (bindingValue instanceof Integer) {
