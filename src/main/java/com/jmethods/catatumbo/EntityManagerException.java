@@ -33,6 +33,7 @@ public class EntityManagerException extends RuntimeException {
 	 * detail message.
 	 */
 	public EntityManagerException() {
+		super();
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class EntityManagerException extends RuntimeException {
 	 *            the cause.
 	 */
 	public EntityManagerException(Throwable cause) {
-		super(cause.getMessage(), cause);
+		super(cause);
 	}
 
 }
