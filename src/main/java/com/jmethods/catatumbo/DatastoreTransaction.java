@@ -18,8 +18,6 @@ package com.jmethods.catatumbo;
 
 import java.util.List;
 
-import com.google.cloud.datastore.DatastoreException;
-
 /**
  * A Datastore Transaction. This interface extends the {@link DatastoreAccess}.
  * DatastoreTransaction objects are created with a call to
@@ -105,15 +103,15 @@ public interface DatastoreTransaction extends DatastoreAccess {
 	 * @throws EntityManagerException
 	 *             if the commit fails.
 	 */
-	Response commit() throws EntityManagerException;
+	Response commit();
 
 	/**
 	 * Rolls back the changes made in this transaction.
 	 * 
-	 * @throws DatastoreException
+	 * @throws EntityManagerException
 	 *             if this transaction was already committed.
 	 */
-	void rollback() throws DatastoreException;
+	void rollback();
 
 	/**
 	 * Transaction's commit Response. Used for returning generated keys for
