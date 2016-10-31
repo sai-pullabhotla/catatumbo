@@ -35,9 +35,9 @@ public class FloatMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return DoubleValue.builder((float) input);
+		return DoubleValue.newBuilder((float) input);
 	}
 
 	@Override

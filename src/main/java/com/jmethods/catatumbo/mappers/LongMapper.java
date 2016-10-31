@@ -34,9 +34,9 @@ public class LongMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return LongValue.builder((long) input);
+		return LongValue.newBuilder((long) input);
 	}
 
 	@Override

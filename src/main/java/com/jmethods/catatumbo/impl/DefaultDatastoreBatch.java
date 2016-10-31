@@ -210,7 +210,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 
 	@Override
 	public boolean isActive() {
-		return nativeBatch.active();
+		return nativeBatch.isActive();
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 
 		@Override
 		public List<DatastoreKey> getGneratedKeys() {
-			return DatastoreUtils.toDatastoreKeys(nativeResponse.generatedKeys());
+			return DatastoreUtils.toDatastoreKeys(nativeResponse.getGeneratedKeys());
 		}
 
 	}

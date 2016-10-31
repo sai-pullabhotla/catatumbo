@@ -101,7 +101,7 @@ public class DefaultEntityManager implements EntityManager {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 		String query = "SELECT __key__ FROM " + entityMetadata.getKind();
 		try {
-			GqlQuery<Key> gqlQuery = Query.gqlQueryBuilder(Query.ResultType.KEY, query).build();
+			GqlQuery<Key> gqlQuery = Query.newGqlQueryBuilder(Query.ResultType.KEY, query).build();
 			QueryResults<Key> keys = datastore.run(gqlQuery);
 			Key[] nativeKeys = new Key[DEFAULT_DELETE_ALL_BATCH_SIZE];
 			long deleteCount = 0;

@@ -109,15 +109,15 @@ public class MapMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
 		Map<String, ?> map = (Map<String, ?>) input;
-		FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.builder();
+		FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
 		for (Map.Entry<String, ?> entry : map.entrySet()) {
 			String key = entry.getKey();
 			entityBuilder.set(key, valueMapper.toDatastore(entry.getValue()).build());
 		}
-		return EntityValue.builder(entityBuilder.build());
+		return EntityValue.newBuilder(entityBuilder.build());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -138,7 +138,7 @@ public class MapMapper implements Mapper {
 		} else {
 			map = (Map<String, Object>) IntrospectionUtils.instantiateObject(mapClass);
 		}
-		for (String property : entity.names()) {
+		for (String property : entity.getNames()) {
 			map.put(property, valueMapper.toModel(entity.getValue(property)));
 		}
 		return map;

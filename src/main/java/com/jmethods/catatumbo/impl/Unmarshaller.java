@@ -163,7 +163,7 @@ public class Unmarshaller {
 	private void unmarshalIdentifier() throws IllegalAccessException, InvocationTargetException {
 		IdentifierMetadata identifierMetadata = entityMetadata.getIdentifierMetadata();
 		Method writeMethod = identifierMetadata.getWriteMethod();
-		writeMethod.invoke(entity, ((Key) nativeEntity.key()).nameOrId());
+		writeMethod.invoke(entity, ((Key) nativeEntity.getKey()).getNameOrId());
 	}
 
 	/**
@@ -180,14 +180,14 @@ public class Unmarshaller {
 		KeyMetadata keyMetadata = entityMetadata.getKeyMetadata();
 		if (keyMetadata != null) {
 			Method writeMethod = keyMetadata.getWriteMethod();
-			Key entityKey = (Key) nativeEntity.key();
+			Key entityKey = (Key) nativeEntity.getKey();
 			writeMethod.invoke(entity, new DefaultDatastoreKey(entityKey));
 		}
 
 		ParentKeyMetadata parentKeyMetadata = entityMetadata.getParentKeyMetadata();
 		if (parentKeyMetadata != null) {
 			Method writeMethod = parentKeyMetadata.getWriteMethod();
-			Key parentKey = nativeEntity.key().parent();
+			Key parentKey = nativeEntity.getKey().getParent();
 			if (parentKey != null) {
 				writeMethod.invoke(entity, new DefaultDatastoreKey(parentKey));
 			}

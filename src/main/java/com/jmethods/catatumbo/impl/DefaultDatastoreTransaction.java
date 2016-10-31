@@ -152,7 +152,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	@Override
 	public boolean isActive() {
 		try {
-			return nativeTransaction.active();
+			return nativeTransaction.isActive();
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -187,7 +187,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 
 		@Override
 		public List<DatastoreKey> getGneratedKeys() {
-			return DatastoreUtils.toDatastoreKeys(nativeResponse.generatedKeys());
+			return DatastoreUtils.toDatastoreKeys(nativeResponse.getGeneratedKeys());
 		}
 
 	}

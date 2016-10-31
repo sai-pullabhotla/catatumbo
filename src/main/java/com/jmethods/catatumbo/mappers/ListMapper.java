@@ -91,10 +91,10 @@ public class ListMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
 		List<?> list = (List<?>) input;
-		ListValue.Builder listValurBuilder = ListValue.builder();
+		ListValue.Builder listValurBuilder = ListValue.newBuilder();
 		for (Object item : list) {
 			listValurBuilder.addValue(itemMapper.toDatastore(item).build());
 		}

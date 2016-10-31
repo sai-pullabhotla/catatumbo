@@ -35,9 +35,9 @@ public class CharMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return StringValue.builder(String.valueOf((char) input));
+		return StringValue.newBuilder(String.valueOf((char) input));
 	}
 
 	@Override

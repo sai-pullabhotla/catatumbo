@@ -36,9 +36,9 @@ public class BigDecimalMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return DoubleValue.builder(((BigDecimal) input).doubleValue());
+		return DoubleValue.newBuilder(((BigDecimal) input).doubleValue());
 	}
 
 	@Override

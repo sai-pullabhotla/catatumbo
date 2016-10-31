@@ -94,10 +94,10 @@ public class SetMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
 		Set<?> set = (Set<?>) input;
-		ListValue.Builder listValurBuilder = ListValue.builder();
+		ListValue.Builder listValurBuilder = ListValue.newBuilder();
 		for (Object item : set) {
 			listValurBuilder.addValue(itemMapper.toDatastore(item).build());
 		}

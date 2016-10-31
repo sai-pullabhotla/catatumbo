@@ -37,9 +37,9 @@ public class DateMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return DateTimeValue.builder(DateTime.copyFrom((Date) input));
+		return DateTimeValue.newBuilder(DateTime.copyFrom((Date) input));
 	}
 
 	@Override

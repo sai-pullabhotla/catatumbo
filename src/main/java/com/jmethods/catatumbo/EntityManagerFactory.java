@@ -66,12 +66,12 @@ public class EntityManagerFactory {
 	public EntityManager createDefaultEntityManager(String namespace) {
 		try {
 			AuthCredentials authCredentials = AuthCredentials.createApplicationDefaults();
-			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.builder()
-					.authCredentials(authCredentials);
+			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
+					.setAuthCredentials(authCredentials);
 			if (namespace != null) {
 				datastoreOptionsBuilder.namespace(namespace);
 			}
-			Datastore datastore = datastoreOptionsBuilder.build().service();
+			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
 		} catch (Exception exp) {
 			throw new EntityManagerFactoryException(exp);
@@ -184,15 +184,15 @@ public class EntityManagerFactory {
 	public EntityManager createEntityManager(String projectId, InputStream jsonCredentialsStream, String namespace) {
 		try {
 			AuthCredentials authCredentials = AuthCredentials.createForJson(jsonCredentialsStream);
-			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.builder()
-					.authCredentials(authCredentials);
+			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
+					.setAuthCredentials(authCredentials);
 			if (projectId != null) {
-				datastoreOptionsBuilder.projectId(projectId);
+				datastoreOptionsBuilder.setProjectId(projectId);
 			}
 			if (namespace != null) {
 				datastoreOptionsBuilder.namespace(namespace);
 			}
-			Datastore datastore = datastoreOptionsBuilder.build().service();
+			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
 		} catch (Exception exp) {
 			throw new EntityManagerFactoryException(exp);

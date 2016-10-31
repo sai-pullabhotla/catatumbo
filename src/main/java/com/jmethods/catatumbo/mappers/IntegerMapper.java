@@ -35,9 +35,9 @@ public class IntegerMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return LongValue.builder((int) input);
+		return LongValue.newBuilder((int) input);
 	}
 
 	@Override

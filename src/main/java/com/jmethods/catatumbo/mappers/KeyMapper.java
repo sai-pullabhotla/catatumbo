@@ -36,10 +36,10 @@ public class KeyMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
 		DatastoreKey datastoreKey = (DatastoreKey) input;
-		return KeyValue.builder(datastoreKey.nativeKey());
+		return KeyValue.newBuilder(datastoreKey.nativeKey());
 	}
 
 	@Override

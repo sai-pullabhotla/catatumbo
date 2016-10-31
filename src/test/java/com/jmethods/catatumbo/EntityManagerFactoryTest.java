@@ -38,8 +38,8 @@ public class EntityManagerFactoryTest {
 		EntityManager em = emf.createDefaultEntityManager();
 		DefaultEntityManager dem = (DefaultEntityManager) em;
 		Datastore ds = dem.getDatastore();
-		assertTrue(ds.options().projectId() != null && ds.options().projectId().length() != 0
-				&& ds.options().namespace().equals(""));
+		assertTrue(ds.getOptions().getProjectId() != null && ds.getOptions().getProjectId().length() != 0
+				&& ds.getOptions().getNamespace().equals(""));
 	}
 
 	@Test
@@ -48,8 +48,8 @@ public class EntityManagerFactoryTest {
 		EntityManager em = emf.createDefaultEntityManager("junit");
 		DefaultEntityManager dem = (DefaultEntityManager) em;
 		Datastore ds = dem.getDatastore();
-		assertTrue(ds.options().projectId() != null && ds.options().projectId().length() != 0
-				&& ds.options().namespace().equals("junit"));
+		assertTrue(ds.getOptions().getProjectId() != null && ds.getOptions().getProjectId().length() != 0
+				&& ds.getOptions().getNamespace().equals("junit"));
 	}
 
 	@Test(expected = EntityManagerFactoryException.class)
@@ -75,8 +75,8 @@ public class EntityManagerFactoryTest {
 		EntityManager em = emf.createEntityManager(projectId, jsonFile);
 		DefaultEntityManager dem = (DefaultEntityManager) em;
 		Datastore ds = dem.getDatastore();
-		assertTrue(ds.options().projectId() != null && ds.options().projectId().length() != 0
-				&& ds.options().namespace().equals(""));
+		assertTrue(ds.getOptions().getProjectId() != null && ds.getOptions().getProjectId().length() != 0
+				&& ds.getOptions().getNamespace().equals(""));
 	}
 
 	@Test(expected = EntityManagerFactoryException.class)
@@ -118,8 +118,8 @@ public class EntityManagerFactoryTest {
 			EntityManager em = emf.createEntityManager(projectId, new File(jsonFile), "junit");
 			DefaultEntityManager dem = (DefaultEntityManager) em;
 			Datastore ds = dem.getDatastore();
-			assertTrue(ds.options().projectId() != null && ds.options().projectId().length() != 0
-					&& ds.options().namespace().equals("junit"));
+			assertTrue(ds.getOptions().getProjectId() != null && ds.getOptions().getProjectId().length() != 0
+					&& ds.getOptions().getNamespace().equals("junit"));
 		} catch (Exception exp) {
 			System.out.println(exp);
 			throw exp;

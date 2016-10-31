@@ -34,9 +34,9 @@ public class CharArrayMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return StringValue.builder(new String((char[]) input));
+		return StringValue.newBuilder(new String((char[]) input));
 	}
 
 	@Override

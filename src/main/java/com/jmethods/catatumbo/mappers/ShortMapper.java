@@ -35,9 +35,9 @@ public class ShortMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return LongValue.builder((short) input);
+		return LongValue.newBuilder((short) input);
 	}
 
 	@Override

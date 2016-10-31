@@ -53,7 +53,7 @@ public class DefaultDatastoreKey implements DatastoreKey {
 
 	@Override
 	public String kind() {
-		return key.kind();
+		return key.getKind();
 	}
 
 	@Override
@@ -68,22 +68,22 @@ public class DefaultDatastoreKey implements DatastoreKey {
 
 	@Override
 	public long id() {
-		return key.id();
+		return key.getId();
 	}
 
 	@Override
 	public String name() {
-		return key.name();
+		return key.getName();
 	}
 
 	@Override
 	public Object nameOrId() {
-		return key.nameOrId();
+		return key.getNameOrId();
 	}
 
 	@Override
 	public DatastoreKey parent() {
-		Key parent = key.parent();
+		Key parent = key.getParent();
 		if (parent != null) {
 			return new DefaultDatastoreKey(parent);
 		}

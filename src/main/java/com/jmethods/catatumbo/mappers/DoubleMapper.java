@@ -34,9 +34,9 @@ public class DoubleMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return DoubleValue.builder((double) input);
+		return DoubleValue.newBuilder((double) input);
 	}
 
 	@Override

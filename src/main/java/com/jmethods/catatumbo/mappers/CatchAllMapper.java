@@ -68,20 +68,20 @@ public class CatchAllMapper implements Mapper {
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		ValueBuilder<?, ?, ?> builder;
 		if (input == null) {
-			builder = NullValue.builder();
+			builder = NullValue.newBuilder();
 		} else if (input instanceof Long) {
-			builder = LongValue.builder((long) input);
+			builder = LongValue.newBuilder((long) input);
 		} else if (input instanceof Double) {
-			builder = DoubleValue.builder((double) input);
+			builder = DoubleValue.newBuilder((double) input);
 		} else if (input instanceof Boolean) {
-			builder = BooleanValue.builder((boolean) input);
+			builder = BooleanValue.newBuilder((boolean) input);
 		} else if (input instanceof String) {
-			builder = StringValue.builder((String) input);
+			builder = StringValue.newBuilder((String) input);
 		} else if (input instanceof DatastoreKey) {
-			builder = KeyValue.builder(((DatastoreKey) input).nativeKey());
+			builder = KeyValue.newBuilder(((DatastoreKey) input).nativeKey());
 		} else if (input instanceof GeoLocation) {
 			GeoLocation geoLocation = (GeoLocation) input;
-			builder = LatLngValue.builder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
+			builder = LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
 		} else {
 			throw new MappingException(String.format("Unsupported type: %s", input.getClass().getName()));
 		}
@@ -105,7 +105,7 @@ public class CatchAllMapper implements Mapper {
 			javaValue = new DefaultDatastoreKey(((KeyValue) input).get());
 		} else if (input instanceof LatLngValue) {
 			LatLng latLong = ((LatLngValue) input).get();
-			javaValue = new GeoLocation(latLong.latitude(), latLong.longitude());
+			javaValue = new GeoLocation(latLong.getLatitude(), latLong.getLongitude());
 		} else {
 			throw new MappingException(String.format("Unsupported type %s", input.getClass().getName()));
 		}

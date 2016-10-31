@@ -35,9 +35,9 @@ public class ByteArrayMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return BlobValue.builder(Blob.copyFrom((byte[]) input));
+		return BlobValue.newBuilder(Blob.copyFrom((byte[]) input));
 	}
 
 	@Override

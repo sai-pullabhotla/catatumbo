@@ -207,9 +207,9 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
 			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity);
 			transaction = datastore.newTransaction();
-			Entity storedNativeEntity = transaction.get(nativeEntity.key());
+			Entity storedNativeEntity = transaction.get(nativeEntity.getKey());
 			if (storedNativeEntity == null) {
-				throw new OptimisticLockException(String.format("Entity does not exist: %s", nativeEntity.key()));
+				throw new OptimisticLockException(String.format("Entity does not exist: %s", nativeEntity.getKey()));
 			}
 			String versionPropertyName = versionMetadata.getMappedName();
 			long version = nativeEntity.getLong(versionPropertyName);
@@ -402,7 +402,7 @@ public class DefaultDatastoreWriter {
 	public <E> void delete(Class<E> entityClass, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key nativeKey = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
+			Key nativeKey = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -424,7 +424,7 @@ public class DefaultDatastoreWriter {
 	public <E> void delete(Class<E> entityClass, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key nativeKey = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
+			Key nativeKey = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -446,7 +446,7 @@ public class DefaultDatastoreWriter {
 	public <E> void delete(Class<E> entityClass, DatastoreKey parentKey, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key nativeKey = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
+			Key nativeKey = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -468,7 +468,7 @@ public class DefaultDatastoreWriter {
 	public <E> void delete(Class<E> entityClass, DatastoreKey parentKey, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key nativeKey = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
+			Key nativeKey = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

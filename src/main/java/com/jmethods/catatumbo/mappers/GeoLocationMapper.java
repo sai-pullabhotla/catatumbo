@@ -36,10 +36,10 @@ public class GeoLocationMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
 		GeoLocation geoLocation = (GeoLocation) input;
-		return LatLngValue.builder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
+		return LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class GeoLocationMapper implements Mapper {
 		}
 		LatLngValue value = (LatLngValue) input;
 		LatLng coordinates = value.get();
-		return new GeoLocation(coordinates.latitude(), coordinates.longitude());
+		return new GeoLocation(coordinates.getLatitude(), coordinates.getLongitude());
 	}
 
 }

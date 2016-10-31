@@ -39,8 +39,9 @@ public class MarshallerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		AuthCredentials authCredentials = AuthCredentials.createApplicationDefaults();
-		DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.builder().authCredentials(authCredentials);
-		datastore = datastoreOptionsBuilder.build().service();
+		DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
+				.setAuthCredentials(authCredentials);
+		datastore = datastoreOptionsBuilder.build().getService();
 	}
 
 	@Test

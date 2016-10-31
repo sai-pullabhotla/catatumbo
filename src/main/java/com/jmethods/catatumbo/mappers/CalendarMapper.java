@@ -37,9 +37,9 @@ public class CalendarMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return DateTimeValue.builder(DateTime.copyFrom((Calendar) input));
+		return DateTimeValue.newBuilder(DateTime.copyFrom((Calendar) input));
 	}
 
 	@Override

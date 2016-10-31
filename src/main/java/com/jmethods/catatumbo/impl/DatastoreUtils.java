@@ -115,7 +115,7 @@ class DatastoreUtils {
 	static Entity incrementVersion(Entity nativeEntity, PropertyMetadata versionMetadata) {
 		String versionPropertyName = versionMetadata.getMappedName();
 		long version = nativeEntity.getLong(versionPropertyName);
-		return Entity.builder(nativeEntity).set(versionPropertyName, ++version).build();
+		return Entity.newBuilder(nativeEntity).set(versionPropertyName, ++version).build();
 	}
 
 	/**
@@ -126,7 +126,7 @@ class DatastoreUtils {
 	 */
 	static void rollbackIfActive(Transaction transaction) {
 		try {
-			if (transaction != null && transaction.active()) {
+			if (transaction != null && transaction.isActive()) {
 				transaction.rollback();
 			}
 		} catch (DatastoreException exp) {

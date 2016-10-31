@@ -34,9 +34,9 @@ public class StringMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return StringValue.builder((String) input);
+		return StringValue.newBuilder((String) input);
 	}
 
 	@Override

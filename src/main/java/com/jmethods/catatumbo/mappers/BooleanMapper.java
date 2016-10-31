@@ -34,9 +34,9 @@ public class BooleanMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return BooleanValue.builder((boolean) input);
+		return BooleanValue.newBuilder((boolean) input);
 	}
 
 	@Override

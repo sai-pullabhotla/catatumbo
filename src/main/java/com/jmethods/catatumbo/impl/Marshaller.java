@@ -151,9 +151,9 @@ public class Marshaller {
 	private BaseEntity<?> marshal() {
 		marshalKey();
 		if (key instanceof Key) {
-			entityBuilder = Entity.builder((Key) key);
+			entityBuilder = Entity.newBuilder((Key) key);
 		} else {
-			entityBuilder = FullEntity.builder(key);
+			entityBuilder = FullEntity.newBuilder(key);
 		}
 		marshalFields();
 		marshalEmbeddedFields();
@@ -251,9 +251,9 @@ public class Marshaller {
 	private void createCompleteKey(Key parent, long id) {
 		String kind = entityMetadata.getKind();
 		if (parent == null) {
-			key = datastore.newKeyFactory().kind(kind).newKey(id);
+			key = datastore.newKeyFactory().setKind(kind).newKey(id);
 		} else {
-			key = Key.builder(parent, kind, id).build();
+			key = Key.newBuilder(parent, kind, id).build();
 		}
 	}
 
@@ -268,9 +268,9 @@ public class Marshaller {
 	private void createCompleteKey(Key parent, String id) {
 		String kind = entityMetadata.getKind();
 		if (parent == null) {
-			key = datastore.newKeyFactory().kind(kind).newKey(id);
+			key = datastore.newKeyFactory().setKind(kind).newKey(id);
 		} else {
-			key = Key.builder(parent, kind, id).build();
+			key = Key.newBuilder(parent, kind, id).build();
 		}
 	}
 
@@ -285,9 +285,9 @@ public class Marshaller {
 		String kind = entityMetadata.getKind();
 		String id = UUID.randomUUID().toString();
 		if (parent == null) {
-			key = datastore.newKeyFactory().kind(kind).newKey(id);
+			key = datastore.newKeyFactory().setKind(kind).newKey(id);
 		} else {
-			key = Key.builder(parent, kind, id).build();
+			key = Key.newBuilder(parent, kind, id).build();
 		}
 	}
 
@@ -300,9 +300,9 @@ public class Marshaller {
 	private void createIncompleteKey(Key parent) {
 		String kind = entityMetadata.getKind();
 		if (parent == null) {
-			key = datastore.newKeyFactory().kind(kind).newKey();
+			key = datastore.newKeyFactory().setKind(kind).newKey();
 		} else {
-			key = IncompleteKey.builder(parent, kind).build();
+			key = IncompleteKey.newBuilder(parent, kind).build();
 		}
 	}
 
@@ -342,7 +342,7 @@ public class Marshaller {
 			BaseEntity.Builder<?, ?> entityBuilder) {
 		Object fieldValue = getFieldValue(propertyMetadata, target);
 		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
-		valueBuilder.excludeFromIndexes(!propertyMetadata.isIndexed());
+		valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
 		Value<?> datastoreValue = valueBuilder.build();
 		entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
 	}
@@ -427,11 +427,11 @@ public class Marshaller {
 		try {
 			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
 			if (embeddedObject == null) {
-				NullValue.Builder nullValueBuilder = NullValue.builder();
-				nullValueBuilder.excludeFromIndexes(!embeddedMetadata.isIndexed());
+				NullValue.Builder nullValueBuilder = NullValue.newBuilder();
+				nullValueBuilder.setExcludeFromIndexes(!embeddedMetadata.isIndexed());
 				return nullValueBuilder;
 			}
-			FullEntity.Builder<IncompleteKey> embeddedEntityBuilder = FullEntity.builder();
+			FullEntity.Builder<IncompleteKey> embeddedEntityBuilder = FullEntity.newBuilder();
 			for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
 				marshalField(propertyMetadata, embeddedObject, embeddedEntityBuilder);
 			}
@@ -440,8 +440,8 @@ public class Marshaller {
 						embeddedObject);
 				embeddedEntityBuilder.set(embeddedMetadata2.getMappedName(), embeddedEntityBuilder2.build());
 			}
-			EntityValue.Builder valueBuilder = EntityValue.builder(embeddedEntityBuilder.build());
-			valueBuilder.excludeFromIndexes(!embeddedMetadata.isIndexed());
+			EntityValue.Builder valueBuilder = EntityValue.newBuilder(embeddedEntityBuilder.build());
+			valueBuilder.setExcludeFromIndexes(!embeddedMetadata.isIndexed());
 			return valueBuilder;
 
 		} catch (Exception exp) {

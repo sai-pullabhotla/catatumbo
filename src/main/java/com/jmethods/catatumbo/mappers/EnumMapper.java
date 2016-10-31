@@ -51,9 +51,9 @@ public class EnumMapper implements Mapper {
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
 		if (input == null) {
-			return NullValue.builder();
+			return NullValue.newBuilder();
 		}
-		return StringValue.builder(input.toString());
+		return StringValue.newBuilder(input.toString());
 	}
 
 	@SuppressWarnings("unchecked")

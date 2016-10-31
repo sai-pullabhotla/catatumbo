@@ -106,7 +106,7 @@ public class DefaultDatastoreReader {
 	public <E> E load(Class<E> entityClass, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
+			Key key = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
@@ -165,7 +165,7 @@ public class DefaultDatastoreReader {
 		}
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
+			Key key = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
@@ -192,7 +192,7 @@ public class DefaultDatastoreReader {
 	public <E> E load(Class<E> entityClass, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = datastore.newKeyFactory().kind(entityMetadata.getKind()).newKey(id);
+			Key key = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
@@ -251,7 +251,7 @@ public class DefaultDatastoreReader {
 		}
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = Key.builder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
+			Key key = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
@@ -317,22 +317,22 @@ public class DefaultDatastoreReader {
 	 */
 	public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request) {
 		try {
-			GqlQuery.Builder<Entity> queryBuilder = Query.gqlQueryBuilder(ResultType.ENTITY, request.getQuery());
-			queryBuilder.allowLiteral(request.isAllowLiterals());
+			GqlQuery.Builder<Entity> queryBuilder = Query.newGqlQueryBuilder(ResultType.ENTITY, request.getQuery());
+			queryBuilder.setAllowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
 			GqlQuery<Entity> gqlQuery = queryBuilder.build();
 			QueryResults<Entity> results = nativeReader.run(gqlQuery);
 			List<E> entities = new ArrayList<>();
 			DefaultQueryResponse<E> response = new DefaultQueryResponse<>();
-			response.setStartCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			response.setStartCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
 			while (results.hasNext()) {
 				Entity result = results.next();
 				E entity = Unmarshaller.unmarshal(result, expectedResultType);
 				entities.add(entity);
 			}
 			response.setResults(entities);
-			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
 			return response;
 		} catch (DatastoreException exp) {
@@ -353,26 +353,24 @@ public class DefaultDatastoreReader {
 	public <E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType,
 			ProjectionQueryRequest request) {
 		try {
-			GqlQuery.Builder<ProjectionEntity> queryBuilder = Query.gqlQueryBuilder(ResultType.PROJECTION_ENTITY,
+			GqlQuery.Builder<ProjectionEntity> queryBuilder = Query.newGqlQueryBuilder(ResultType.PROJECTION_ENTITY,
 					request.getQuery());
-			queryBuilder.allowLiteral(request.isAllowLiterals());
+			queryBuilder.setAllowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
 			GqlQuery<ProjectionEntity> gqlQuery = queryBuilder.build();
 			QueryResults<ProjectionEntity> results = nativeReader.run(gqlQuery);
 			List<E> entities = new ArrayList<>();
 			DefaultQueryResponse<E> response = new DefaultQueryResponse<>();
-			response.setStartCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			response.setStartCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
 			while (results.hasNext()) {
 				ProjectionEntity result = results.next();
 				E entity = Unmarshaller.unmarshal(result, expectedResultType);
 				entities.add(entity);
 			}
 			response.setResults(entities);
-			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
 			// TODO should we invoke PostLoad callback for projected entities?
-			// entityManager.executeEntityListeners(CallbackEventType.POST_LOAD,
-			// entities);
 			return response;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -388,22 +386,22 @@ public class DefaultDatastoreReader {
 	 */
 	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
 		try {
-			GqlQuery.Builder<Key> queryBuilder = Query.gqlQueryBuilder(ResultType.KEY, request.getQuery());
-			queryBuilder.allowLiteral(request.isAllowLiterals());
+			GqlQuery.Builder<Key> queryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, request.getQuery());
+			queryBuilder.setAllowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
 			GqlQuery<Key> gqlQuery = queryBuilder.build();
 			QueryResults<Key> results = nativeReader.run(gqlQuery);
 			List<DatastoreKey> entities = new ArrayList<>();
 			DefaultQueryResponse<DatastoreKey> response = new DefaultQueryResponse<>();
-			response.setStartCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			response.setStartCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
 			while (results.hasNext()) {
 				Key result = results.next();
 				DatastoreKey datastoreKey = new DefaultDatastoreKey(result);
 				entities.add(datastoreKey);
 			}
 			response.setResults(entities);
-			response.setEndCursor(new DefaultDatastoreCursor(results.cursorAfter().toUrlSafe()));
+			response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
 			return response;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -427,7 +425,7 @@ public class DefaultDatastoreReader {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 		Key[] nativeKeys = new Key[identifiers.size()];
 		KeyFactory keyFactory = datastore.newKeyFactory();
-		keyFactory.kind(entityMetadata.getKind());
+		keyFactory.setKind(entityMetadata.getKind());
 		for (int i = 0; i < identifiers.size(); i++) {
 			long id = identifiers.get(i);
 			nativeKeys[i] = keyFactory.newKey(id);
@@ -452,7 +450,7 @@ public class DefaultDatastoreReader {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 		Key[] nativeKeys = new Key[identifiers.size()];
 		KeyFactory keyFactory = datastore.newKeyFactory();
-		keyFactory.kind(entityMetadata.getKind());
+		keyFactory.setKind(entityMetadata.getKind());
 		for (int i = 0; i < identifiers.size(); i++) {
 			String id = identifiers.get(i);
 			nativeKeys[i] = keyFactory.newKey(id);
