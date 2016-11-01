@@ -382,4 +382,27 @@ public class IntrospectionUtils {
 		return output;
 	}
 
+	/**
+	 * Returns a public constructor of the given class with the given parameter
+	 * types. Returns <code>null</code>, if there is no matching constructor.
+	 * 
+	 * @param clazz
+	 *            the class
+	 * @param parameterTypes
+	 *            expected types of parameters
+	 * @return the matching public constructor or <code>null</code>, if there is
+	 *         no matching constructor.
+	 */
+	public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
+		try {
+			if (parameterTypes != null && parameterTypes.length > 0) {
+				return clazz.getConstructor(parameterTypes);
+			} else {
+				return clazz.getConstructor();
+			}
+		} catch (Exception exp) {
+			return null;
+		}
+	}
+
 }

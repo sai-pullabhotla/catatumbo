@@ -33,6 +33,8 @@ public interface Mapper {
 	 * @param input
 	 *            the input to map
 	 * @return the equivalent native value
+	 * @throws MappingException
+	 *             if the input is not compatible.
 	 */
 	public ValueBuilder<?, ?, ?> toDatastore(Object input);
 
@@ -42,6 +44,8 @@ public interface Mapper {
 	 * @param input
 	 *            the native Cloud Datastore value
 	 * @return the equivalent model object
+	 * @throws MappingException
+	 *             if the input is not compatible.
 	 */
 	public Object toModel(Value<?> input);
 

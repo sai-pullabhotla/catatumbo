@@ -66,7 +66,7 @@ public abstract class FieldMetadata {
 	public FieldMetadata(Field field, DataType dataType) {
 		this.field = field;
 		this.dataType = dataType;
-		this.mapper = MapperFactory.getInstance().getMapper(field.getGenericType());
+		this.mapper = MapperFactory.getInstance().getMapper(field);
 	}
 
 	/**

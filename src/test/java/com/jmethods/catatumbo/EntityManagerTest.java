@@ -52,6 +52,7 @@ import com.jmethods.catatumbo.entities.Country;
 import com.jmethods.catatumbo.entities.Customer;
 import com.jmethods.catatumbo.entities.DateField;
 import com.jmethods.catatumbo.entities.Department;
+import com.jmethods.catatumbo.entities.DeviceType;
 import com.jmethods.catatumbo.entities.DoubleField;
 import com.jmethods.catatumbo.entities.DoubleObject;
 import com.jmethods.catatumbo.entities.Employee;
@@ -64,6 +65,7 @@ import com.jmethods.catatumbo.entities.IgnoreField;
 import com.jmethods.catatumbo.entities.IgnoreField2;
 import com.jmethods.catatumbo.entities.IntegerField;
 import com.jmethods.catatumbo.entities.IntegerObject;
+import com.jmethods.catatumbo.entities.Item;
 import com.jmethods.catatumbo.entities.ListFields;
 import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
@@ -86,7 +88,10 @@ import com.jmethods.catatumbo.entities.SubClass4;
 import com.jmethods.catatumbo.entities.Tag;
 import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
+import com.jmethods.catatumbo.entities.UnindexedByteArrayField;
 import com.jmethods.catatumbo.entities.UnindexedStringField;
+import com.jmethods.catatumbo.entities.Visitor;
+import com.jmethods.catatumbo.mappers.DeviceTypeMapper;
 
 /**
  * @author Sai Pullabhotla
@@ -99,6 +104,9 @@ public class EntityManagerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		// Register a custom mapper
+		MapperFactory.getInstance().setDefaultMapper(DeviceType.class, new DeviceTypeMapper());
+
 		em = TestUtils.setupEntityManager();
 		em.deleteAll(LongId.class);
 		em.deleteAll(StringId.class);
@@ -146,7 +154,10 @@ public class EntityManagerTest {
 		em.deleteAll(MapFields.class);
 		em.deleteAll(Contact.class);
 		em.deleteAll(UnindexedStringField.class);
+		em.deleteAll(UnindexedByteArrayField.class);
 		em.deleteAll(BigDecimalField.class);
+		em.deleteAll(Item.class);
+		em.deleteAll(Visitor.class);
 		populateTasks();
 	}
 
@@ -2149,7 +2160,7 @@ public class EntityManagerTest {
 	public void testInsert_IndexedString_MaxLimit() {
 		StringField entity = new StringField();
 		final int length = 1500;
-		entity.setName(TestUtils.getString(length));
+		entity.setName(TestUtils.getRandomString(length));
 		StringField insertedEntity = em.insert(entity);
 		StringField loadedEntity = em.load(StringField.class, insertedEntity.getId());
 		assertEquals(length, insertedEntity.getName().length());
@@ -2160,7 +2171,7 @@ public class EntityManagerTest {
 	public void testInsert_IndexedString_MaxLimit_Exceeded() {
 		StringField entity = new StringField();
 		final int length = 1501;
-		entity.setName(TestUtils.getString(length));
+		entity.setName(TestUtils.getRandomString(length));
 		StringField insertedEntity = em.insert(entity);
 	}
 
@@ -2168,7 +2179,7 @@ public class EntityManagerTest {
 	public void testInsert_UnIndexedString_5K() {
 		UnindexedStringField entity = new UnindexedStringField();
 		final int length = 5 * 1024;
-		entity.setHugeString(TestUtils.getString(length));
+		entity.setHugeString(TestUtils.getRandomString(length));
 		UnindexedStringField insertedEntity = em.insert(entity);
 		UnindexedStringField loadedEntity = em.load(UnindexedStringField.class, insertedEntity.getId());
 		assertEquals(length, insertedEntity.getHugeString().length());
@@ -2246,6 +2257,36 @@ public class EntityManagerTest {
 		BigDecimalField entity2 = em.load(BigDecimalField.class, entity.getId());
 		assertTrue(entity.getId() != 0);
 		assertTrue(entity.equals(entity2) && entity2.getValue() == null);
+	}
+
+	@Test
+	public void testInsert_Item() {
+		Item entity = new Item();
+		entity.setName("Candy");
+		entity.setPrice(new BigDecimal("1"));
+		entity.setDiscount(BigDecimal.ZERO);
+		entity = em.insert(entity);
+		Item entity2 = em.load(Item.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test(expected = MappingException.class)
+	public void testInsert_Item_PrecisionLoss() {
+		Item entity = new Item();
+		entity.setName("Candy");
+		entity.setPrice(new BigDecimal("1.699"));
+		entity = em.insert(entity);
+		Item entity2 = em.load(Item.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+	}
+
+	@Test
+	public void testInsert_DeviceType() {
+		Visitor entity = new Visitor(DeviceType.TABLET);
+		entity = em.insert(entity);
+		Visitor entity2 = em.load(Visitor.class, entity.getId());
+		assertTrue(entity.equals(entity2));
+
 	}
 
 	private static Calendar getToday() {

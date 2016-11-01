@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -28,6 +30,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.jmethods.catatumbo.impl.Cache;
+import com.jmethods.catatumbo.impl.IntrospectionUtils;
 import com.jmethods.catatumbo.mappers.BigDecimalMapper;
 import com.jmethods.catatumbo.mappers.BooleanMapper;
 import com.jmethods.catatumbo.mappers.ByteArrayMapper;
@@ -91,6 +94,24 @@ public class MapperFactory {
 	}
 
 	/**
+	 * Returns the mapper for the given field. If the field has a custom mapper,
+	 * a new instance of the specified mapper will be created and returned.
+	 * Otherwise, one of the built-in mappers will be returned based on the
+	 * field type.
+	 * 
+	 * @param field
+	 *            the field
+	 * @return the mapper for the given field.
+	 */
+	public Mapper getMapper(Field field) {
+		PropertyMapper propertyMapperAnnotation = field.getAnnotation(PropertyMapper.class);
+		if (propertyMapperAnnotation == null) {
+			return getMapper(field.getGenericType());
+		}
+		return createCustomMapper(field, propertyMapperAnnotation);
+	}
+
+	/**
 	 * Returns a mapper for the given type. If a mapper that can handle given
 	 * type exists in the cache, it will be returned. Otherwise, a new mapper
 	 * will be created.
@@ -105,6 +126,29 @@ public class MapperFactory {
 			mapper = createMapper(type);
 		}
 		return mapper;
+	}
+
+	/**
+	 * Sets or registers the given mapper for the given type. This method must
+	 * be called before performing any persistence operations, preferrably,
+	 * during application startup. Entities that were introspected before
+	 * calling this method will NOT use the new mapper.
+	 * 
+	 * @param type
+	 *            the type
+	 * @param mapper
+	 *            the mapper to use for the given type
+	 */
+	public void setDefaultMapper(Type type, Mapper mapper) {
+		if (mapper == null) {
+			throw new NullPointerException("mapper cannot be null");
+		}
+		lock.lock();
+		try {
+			cache.put(type, mapper);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -220,6 +264,31 @@ public class MapperFactory {
 		cache.put(char[].class, new CharArrayMapper());
 		cache.put(GeoLocation.class, new GeoLocationMapper());
 		cache.put(DatastoreKey.class, new KeyMapper());
+	}
+
+	/**
+	 * Creates and returns a custom mapper for the given field.
+	 * 
+	 * @param field
+	 *            the field
+	 * @param propertyMapperAnnotation
+	 *            property mapper annotation that sepecifies the mapper class
+	 * @return custom mapper for the given field
+	 */
+	private Mapper createCustomMapper(Field field, PropertyMapper propertyMapperAnnotation) {
+		Class<? extends Mapper> mapperClass = propertyMapperAnnotation.value();
+		Constructor<? extends Mapper> constructor = IntrospectionUtils.getConstructor(mapperClass, Field.class);
+		if (constructor != null) {
+			try {
+				return constructor.newInstance(field);
+			} catch (Exception exp) {
+				throw new EntityManagerException(exp);
+			}
+		}
+		throw new EntityManagerException(
+				String.format("Mapper class %s must have a public constructor with a parameter type of %s",
+						mapperClass.getName(), Field.class.getName()));
+
 	}
 
 }

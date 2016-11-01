@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import java.util.Random;
+
 /**
  * @author Sai Pullabhotla
  *
@@ -39,17 +41,22 @@ public class TestUtils {
 
 	}
 
-	public static String getString(int length) {
-		final String word = "aaaa ";
-		int iterations = length / 5;
-		if (length % 5 > 0) {
-			iterations++;
+	public static String getRandomString(int length) {
+		Random random = new Random();
+		StringBuilder buffer = new StringBuilder(length);
+		for (int i = 0; i < length; i++) {
+			char c = (char) ('a' + random.nextInt(26));
+			buffer.append(c);
 		}
-		StringBuilder output = new StringBuilder(iterations * 5);
-		for (int i = 0; i < iterations; i++) {
-			output.append(word);
-		}
-		return output.subSequence(0, length).toString();
+		return buffer.toString();
+
+	}
+
+	public static byte[] getRandomBytes(int length) {
+		Random random = new Random();
+		byte[] output = new byte[length];
+		random.nextBytes(output);
+		return output;
 	}
 
 }
