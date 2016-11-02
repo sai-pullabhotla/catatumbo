@@ -13,6 +13,7 @@ instead of Relational Databases.
 ##Features
 * Automatic mapping of model classes (POJOs) to Cloud Datastore Entities and vice versa
 * Automatic generation of Identifiers (for both Numeric and String types)  
+* Ignore specific fields of your model object from persistence operations 
 * Support for a variety of Data Types: 
 	* boolean, Boolean 
 	* char, Character 
@@ -21,6 +22,7 @@ instead of Relational Databases.
 	* long, Long 
 	* float, Float 
 	* double, Double 
+	* BigDecimal 
 	* String 
 	* Enum 
 	* Byte Arrays 
@@ -31,6 +33,10 @@ instead of Relational Databases.
 	* Keys, Parent Keys and Key References
 	* List Values (List & Set) 
 	* Maps 
+* Support for "true" Decimal types, though the Cloud Datastore does not have native support for this. 
+* Ability to annotate which fields are indexed/not indexed 
+* Ability to attach custom mappers to a field to map its value to/from the Datastore. 
+* Ability to override default Mappers for a specified Type/Class. 
 * Support for embedded objects through the use of @Embedded and @Embeddable annotations. 
 * Persisting of inherited fields of an Entity through the use of @MappedSuperClass annotation. 
 * Optimistic Locking support through the use of @Version annotation. 
@@ -41,7 +47,8 @@ instead of Relational Databases.
 	* Projection queries 
 	* Key-only queries 
 * Support for Batch Write operations 
-* Transaction Support  
+* Transaction Support 
+* Ability to work with Local Datastore (Datastore Emulator) during development phase   
 
 ##Quick Start Guide 
 Please visit [http://www.jMethods.com/catatumbo/quick-start.html](http://www.jMethods.com/catatumbo/quick-start.html)
