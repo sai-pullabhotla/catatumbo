@@ -38,6 +38,7 @@ import com.jmethods.catatumbo.mappers.CalendarMapper;
 import com.jmethods.catatumbo.mappers.CharArrayMapper;
 import com.jmethods.catatumbo.mappers.CharMapper;
 import com.jmethods.catatumbo.mappers.DateMapper;
+import com.jmethods.catatumbo.mappers.DecimalMapper;
 import com.jmethods.catatumbo.mappers.DoubleMapper;
 import com.jmethods.catatumbo.mappers.EnumMapper;
 import com.jmethods.catatumbo.mappers.FloatMapper;
@@ -105,10 +106,16 @@ public class MapperFactory {
 	 */
 	public Mapper getMapper(Field field) {
 		PropertyMapper propertyMapperAnnotation = field.getAnnotation(PropertyMapper.class);
-		if (propertyMapperAnnotation == null) {
-			return getMapper(field.getGenericType());
+		if (propertyMapperAnnotation != null) {
+			return createCustomMapper(field, propertyMapperAnnotation);
 		}
-		return createCustomMapper(field, propertyMapperAnnotation);
+		if (field.getType().equals(BigDecimal.class)) {
+			Decimal decimalAnnotation = field.getAnnotation(Decimal.class);
+			if (decimalAnnotation != null) {
+				return new DecimalMapper(decimalAnnotation.precision(), decimalAnnotation.scale());
+			}
+		}
+		return getMapper(field.getGenericType());
 	}
 
 	/**
