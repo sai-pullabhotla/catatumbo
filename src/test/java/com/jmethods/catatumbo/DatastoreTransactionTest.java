@@ -43,7 +43,7 @@ public class DatastoreTransactionTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.deleteAll(Account.class);
 		em.deleteAll(LongId.class);
 		em.deleteAll(StringId.class);

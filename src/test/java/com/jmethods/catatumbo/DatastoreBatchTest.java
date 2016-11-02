@@ -40,7 +40,7 @@ public class DatastoreBatchTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.deleteAll(LongId.class);
 		em.deleteAll(StringId.class);
 		em.deleteAll(ParentEntity.class);

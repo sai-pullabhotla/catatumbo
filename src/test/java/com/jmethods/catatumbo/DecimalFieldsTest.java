@@ -35,7 +35,7 @@ public class DecimalFieldsTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.deleteAll(DecimalFields.class);
 	}
 
@@ -321,7 +321,6 @@ public class DecimalFieldsTest {
 	public void testQuery_1() {
 		// This test may fail at time, because of eventual consistency. Need to
 		// figure out a better way.
-		em.deleteAll(DecimalFields.class);
 		DecimalFields entity = new DecimalFields();
 		BigDecimal n = new BigDecimal("0.000000000000000001");
 		entity.setN1818(n);

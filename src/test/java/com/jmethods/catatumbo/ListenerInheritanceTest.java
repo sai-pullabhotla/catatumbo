@@ -41,7 +41,7 @@ public class ListenerInheritanceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.setDefaultListeners(AnimalListener.class);
 		em.deleteAll(Cat.class);
 		em.deleteAll(Dog.class);

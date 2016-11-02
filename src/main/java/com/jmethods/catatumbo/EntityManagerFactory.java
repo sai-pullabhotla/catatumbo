@@ -200,4 +200,72 @@ public class EntityManagerFactory {
 			Utility.close(jsonCredentialsStream);
 		}
 	}
+
+	/**
+	 * Creates and returns an {@link EntityManager} that allows working with the
+	 * local Datastore (a.k.a Datastore Emulator). The underlying API will
+	 * attempt to use the default project ID, if one exists.
+	 * 
+	 * @param hostAndPort
+	 *            host name or IP address and the port number on which the
+	 *            Datastore Emulator is running (e.g. localhost:9999)
+	 * @return an {@link EntityManager} that allows working with the local
+	 *         Datastore (a.k.a Datastore Emulator).
+	 */
+	public EntityManager createLocalEntityManager(String hostAndPort) {
+		return createLocalEntityManager(hostAndPort, null, null);
+	}
+
+	/**
+	 * Creates and returns an {@link EntityManager} that allows working with the
+	 * local Datastore (a.k.a Datastore Emulator). Specified project ID will be
+	 * used.
+	 * 
+	 * @param hostAndPort
+	 *            host name or IP address and the port number on which the
+	 *            Datastore Emulator is running (e.g. localhost:9999)
+	 * @param projectId
+	 *            the project ID. The specified project need not exist in Google
+	 *            Cloud.
+	 * @return an {@link EntityManager} that allows working with the local
+	 *         Datastore (a.k.a Datastore Emulator).
+	 */
+	public EntityManager createLocalEntityManager(String hostAndPort, String projectId) {
+		return createLocalEntityManager(hostAndPort, projectId, null);
+	}
+
+	/**
+	 * Creates and returns an {@link EntityManager} that allows working with the
+	 * local Datastore (a.k.a Datastore Emulator). Specified project ID will be
+	 * used.
+	 * 
+	 * @param hostAndPort
+	 *            host name or IP address and the port number on which the
+	 *            Datastore Emulator is running (e.g. localhost:9999)
+	 * @param projectId
+	 *            the project ID. The specified project need not exist in Google
+	 *            Cloud. If <code>null</code>, default project ID is used, if it
+	 *            can be determined.
+	 * @param namespace
+	 *            the namespace (for multi-tenant datastore) to use.
+	 * @return an {@link EntityManager} that allows working with the local
+	 *         Datastore (a.k.a Datastore Emulator). If <code>null</code>,
+	 *         default namespace is used.
+	 */
+	public EntityManager createLocalEntityManager(String hostAndPort, String projectId, String namespace) {
+		try {
+			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder();
+			datastoreOptionsBuilder.setHost(hostAndPort);
+			if (projectId != null) {
+				datastoreOptionsBuilder.setProjectId(projectId);
+			}
+			if (namespace != null) {
+				datastoreOptionsBuilder.namespace(namespace);
+			}
+			Datastore datastore = datastoreOptionsBuilder.build().getService();
+			return new DefaultEntityManager(datastore);
+		} catch (Exception exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
 }

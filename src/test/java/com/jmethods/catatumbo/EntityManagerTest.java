@@ -107,7 +107,7 @@ public class EntityManagerTest {
 		// Register a custom mapper
 		MapperFactory.getInstance().setDefaultMapper(DeviceType.class, new DeviceTypeMapper());
 
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.deleteAll(LongId.class);
 		em.deleteAll(StringId.class);
 		em.deleteAll(LongId2.class);

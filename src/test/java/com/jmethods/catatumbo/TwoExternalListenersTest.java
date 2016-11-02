@@ -36,7 +36,7 @@ public class TwoExternalListenersTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.deleteAll(ExternalCalculatorEntity2.class);
 	}
 

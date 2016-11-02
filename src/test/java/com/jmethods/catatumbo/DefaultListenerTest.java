@@ -37,7 +37,7 @@ public class DefaultListenerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.setupEntityManager();
+		em = TestUtils.getEntityManager();
 		em.setDefaultListeners(Adder.class);
 		em.deleteAll(GlobalCalculatorEntity.class);
 	}

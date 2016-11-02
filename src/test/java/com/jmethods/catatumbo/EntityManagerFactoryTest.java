@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
 import com.jmethods.catatumbo.impl.DefaultEntityManager;
 
 /**
@@ -124,6 +125,39 @@ public class EntityManagerFactoryTest {
 			System.out.println(exp);
 			throw exp;
 		}
+	}
+
+	@Test
+	public void testCreateLocalEntityManager1() {
+		EntityManagerFactory emf = EntityManagerFactory.getInstance();
+		EntityManager em = emf.createLocalEntityManager("localhost:9999");
+		DefaultEntityManager dem = (DefaultEntityManager) em;
+		DatastoreOptions options = dem.getDatastore().getOptions();
+		assertEquals("localhost:9999", options.getHost());
+		assertNotNull(options.getProjectId());
+		assertEquals("", options.getNamespace());
+	}
+
+	@Test
+	public void testCreateLocalEntityManager2() {
+		EntityManagerFactory emf = EntityManagerFactory.getInstance();
+		EntityManager em = emf.createLocalEntityManager("localhost:9999", "cool-project");
+		DefaultEntityManager dem = (DefaultEntityManager) em;
+		DatastoreOptions options = dem.getDatastore().getOptions();
+		assertEquals("localhost:9999", options.getHost());
+		assertEquals("cool-project", options.getProjectId());
+		assertEquals("", options.getNamespace());
+	}
+
+	@Test
+	public void testCreateLocalEntityManager3() {
+		EntityManagerFactory emf = EntityManagerFactory.getInstance();
+		EntityManager em = emf.createLocalEntityManager("localhost:9999", "cool-project", "scret-namespace");
+		DefaultEntityManager dem = (DefaultEntityManager) em;
+		DatastoreOptions options = dem.getDatastore().getOptions();
+		assertEquals("localhost:9999", options.getHost());
+		assertEquals("cool-project", options.getProjectId());
+		assertEquals("scret-namespace", options.getNamespace());
 	}
 
 }
