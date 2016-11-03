@@ -17,6 +17,7 @@
 package com.jmethods.catatumbo.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.cloud.datastore.Datastore;
@@ -64,6 +65,23 @@ class DatastoreUtils {
 			entities.add(entity);
 		}
 		return entities;
+	}
+
+	/**
+	 * Converts the given array of native entities to a list of model objects of
+	 * given type, <code>entityClass</code>.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @param nativeEntities
+	 *            native entities to convert
+	 * @return the list of model objects
+	 */
+	static <E> List<E> toEntities(Class<E> entityClass, Entity[] nativeEntities) {
+		if (nativeEntities == null || nativeEntities.length == 0) {
+			return new ArrayList<>();
+		}
+		return toEntities(entityClass, Arrays.asList(nativeEntities));
 	}
 
 	/**

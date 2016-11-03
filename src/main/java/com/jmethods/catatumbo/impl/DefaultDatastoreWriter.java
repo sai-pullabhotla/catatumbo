@@ -160,13 +160,15 @@ public class DefaultDatastoreWriter {
 	 * @throws EntityManagerException
 	 *             if any error occurs while updating.
 	 */
+	@SuppressWarnings("unchecked")
 	public <E> E update(E entity) {
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
 			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity, true);
 			nativeWriter.update(nativeEntity);
-			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, entity);
-			return entity;
+			E updatedEntity = (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
+			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntity);
+			return updatedEntity;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -241,16 +243,19 @@ public class DefaultDatastoreWriter {
 	 * @throws EntityManagerException
 	 *             if any error occurs while inserting.
 	 */
+	@SuppressWarnings("unchecked")
 	public <E> List<E> update(List<E> entities) {
 		if (entities == null || entities.isEmpty()) {
 			return new ArrayList<>();
 		}
 		try {
+			Class<E> entityClass = (Class<E>) entities.get(0).getClass();
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entities);
 			Entity[] nativeEntities = toNativeEntities(entities, datastore);
 			nativeWriter.update(nativeEntities);
-			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, entities);
-			return entities;
+			List<E> updatedEntities = toEntities(entityClass, nativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntities);
+			return updatedEntities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}

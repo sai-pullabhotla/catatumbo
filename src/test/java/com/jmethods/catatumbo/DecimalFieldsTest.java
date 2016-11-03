@@ -19,6 +19,7 @@ package com.jmethods.catatumbo;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -332,6 +333,53 @@ public class DecimalFieldsTest {
 		assertEquals(1, entities.size());
 		assertEquals(new BigDecimal("0.000000000000000001"), entity.getN1818());
 
+	}
+
+	@Test
+	public void testUpdate_n10_1() {
+		DecimalFields entity = new DecimalFields();
+		BigDecimal n = new BigDecimal("-5.0000");
+		entity.setN10(n);
+		entity = em.insert(entity);
+		entity = em.load(DecimalFields.class, entity.getId());
+		entity.setN10(new BigDecimal("9.000"));
+		entity = em.update(entity);
+		assertEquals(new BigDecimal("9"), entity.getN10());
+	}
+
+	@Test
+	public void testUpdate_n73_1() {
+		DecimalFields entity = new DecimalFields();
+		BigDecimal n = new BigDecimal("9.99");
+		entity.setN73(n);
+		entity = em.insert(entity);
+		entity = em.load(DecimalFields.class, entity.getId());
+		entity.setN73(new BigDecimal("99.99"));
+		entity = em.update(entity);
+		assertEquals(new BigDecimal("99.990"), entity.getN73());
+	}
+
+	@Test
+	public void testUpdate_n73_2() {
+		BigDecimal[] inputs = { new BigDecimal("0"), new BigDecimal("-1"), new BigDecimal("5"), new BigDecimal("6.1"),
+				new BigDecimal("7.55"), new BigDecimal("9.328") };
+		List<DecimalFields> entities = new ArrayList<>(inputs.length);
+		for (BigDecimal input : inputs) {
+			entities.add(new DecimalFields());
+		}
+		entities = em.insert(entities);
+		int i = 0;
+		for (DecimalFields entity : entities) {
+			entity.setN73(inputs[i++]);
+		}
+		List<DecimalFields> updatedEntities = em.update(entities);
+		assertFalse(entities.equals(updatedEntities));
+		assertEquals(new BigDecimal("0.000"), updatedEntities.get(0).getN73());
+		assertEquals(new BigDecimal("-1.000"), updatedEntities.get(1).getN73());
+		assertEquals(new BigDecimal("5.000"), updatedEntities.get(2).getN73());
+		assertEquals(new BigDecimal("6.100"), updatedEntities.get(3).getN73());
+		assertEquals(new BigDecimal("7.550"), updatedEntities.get(4).getN73());
+		assertEquals(new BigDecimal("9.328"), updatedEntities.get(5).getN73());
 	}
 
 }
