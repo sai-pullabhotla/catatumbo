@@ -29,6 +29,7 @@ import com.google.cloud.datastore.Transaction;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
  * Utility methods.

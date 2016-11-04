@@ -41,13 +41,11 @@ public class PropertyMetadata extends FieldMetadata {
 	 *            the field
 	 * @param mappedName
 	 *            the property name in the Cloud Datastore
-	 * @param dataType
-	 *            the data type.
 	 * @param indexed
 	 *            whether or not to index
 	 */
-	public PropertyMetadata(Field field, String mappedName, DataType dataType, boolean indexed) {
-		super(field, dataType);
+	public PropertyMetadata(Field field, String mappedName, boolean indexed) {
+		super(field);
 		this.mappedName = mappedName;
 		this.indexed = indexed;
 	}

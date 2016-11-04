@@ -197,11 +197,7 @@ public class MapperFactory {
 	 */
 	private Mapper createMapper(Class<?> clazz) {
 		Mapper mapper;
-		if (Date.class.isAssignableFrom(clazz)) {
-			mapper = new DateMapper();
-		} else if (Calendar.class.isAssignableFrom(clazz)) {
-			mapper = new CalendarMapper();
-		} else if (Enum.class.isAssignableFrom(clazz)) {
+		if (Enum.class.isAssignableFrom(clazz)) {
 			mapper = new EnumMapper(clazz);
 		} else if (List.class.isAssignableFrom(clazz)) {
 			mapper = new ListMapper(clazz);
@@ -269,6 +265,8 @@ public class MapperFactory {
 		cache.put(BigDecimal.class, new BigDecimalMapper());
 		cache.put(byte[].class, new ByteArrayMapper());
 		cache.put(char[].class, new CharArrayMapper());
+		cache.put(Date.class, new DateMapper());
+		cache.put(Calendar.class, new CalendarMapper());
 		cache.put(GeoLocation.class, new GeoLocationMapper());
 		cache.put(DatastoreKey.class, new KeyMapper());
 	}

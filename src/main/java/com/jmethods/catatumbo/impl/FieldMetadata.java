@@ -18,6 +18,7 @@ package com.jmethods.catatumbo.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MapperFactory;
 
@@ -33,11 +34,6 @@ public abstract class FieldMetadata {
 	 * Reference to the field
 	 */
 	protected Field field;
-
-	/**
-	 * Data type
-	 */
-	protected DataType dataType;
 
 	/**
 	 * Read method (or getter method) for this field
@@ -60,13 +56,10 @@ public abstract class FieldMetadata {
 	 * @param field
 	 *            the field
 	 *
-	 * @param dataType
-	 *            the data type
 	 */
-	public FieldMetadata(Field field, DataType dataType) {
+	public FieldMetadata(Field field) {
 		this.field = field;
-		this.dataType = dataType;
-		this.mapper = MapperFactory.getInstance().getMapper(field);
+		initializeMapper();
 	}
 
 	/**
@@ -85,25 +78,6 @@ public abstract class FieldMetadata {
 	 */
 	public String getName() {
 		return field.getName();
-	}
-
-	/**
-	 * Returns the data type of the field.
-	 *
-	 * @return the data type of the field.
-	 */
-	public DataType getDataType() {
-		return dataType;
-	}
-
-	/**
-	 * Sets the feild's data type.
-	 *
-	 * @param dataType
-	 *            the data type.
-	 */
-	public void setDataType(DataType dataType) {
-		this.dataType = dataType;
 	}
 
 	/**
@@ -145,15 +119,6 @@ public abstract class FieldMetadata {
 	}
 
 	/**
-	 * Returns the field's class (or type).
-	 *
-	 * @return the field's class (or type).
-	 */
-	public Class<?> getDataClass() {
-		return dataType.getDataClass();
-	}
-
-	/**
 	 * Returns the declared type of the field to which this metadata belongs.
 	 * 
 	 * @return the declared type of the field to which this metadata belongs.
@@ -172,6 +137,18 @@ public abstract class FieldMetadata {
 	 */
 	public Mapper getMapper() {
 		return mapper;
+	}
+
+	private void initializeMapper() {
+		try {
+			this.mapper = MapperFactory.getInstance().getMapper(field);
+		} catch (Exception exp) {
+			String message = String.format(
+					"No suitable mapper found or error occurred creating a mapper for field %s in class %s",
+					field.getName(), field.getDeclaringClass().getName());
+			throw new EntityManagerException(message, exp);
+
+		}
 	}
 
 }

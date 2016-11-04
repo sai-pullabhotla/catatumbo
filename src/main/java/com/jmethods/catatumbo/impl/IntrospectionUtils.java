@@ -57,14 +57,6 @@ public class IntrospectionUtils {
 		String fieldName = field.getName();
 		String mappedName = null;
 		boolean indexed = true;
-		Class<?> fieldType = field.getType();
-
-		DataType dataType = DataType.forClass(fieldType);
-		if (dataType == null) {
-			String message = String.format("Unknown or unsupported type, %s, for field %s in class %s. ", fieldType,
-					fieldName, field.getDeclaringClass().getName());
-			throw new EntityManagerException(message);
-		}
 
 		Property property = field.getAnnotation(Property.class);
 		if (property != null) {
@@ -75,7 +67,7 @@ public class IntrospectionUtils {
 			mappedName = fieldName;
 		}
 
-		PropertyMetadata propertyMetadata = new PropertyMetadata(field, mappedName, dataType, indexed);
+		PropertyMetadata propertyMetadata = new PropertyMetadata(field, mappedName, indexed);
 
 		// For fields that have @Property annotation, we expect both setter and
 		// getter methods. For all other fields, we only treat them as
@@ -102,20 +94,17 @@ public class IntrospectionUtils {
 	public static Method getReadMethod(PropertyMetadata propertyMetadata) {
 		Field field = propertyMetadata.getField();
 		Method readMethod;
-		switch (propertyMetadata.getDataType()) {
-		case BOOLEAN:
+		if (boolean.class.equals(propertyMetadata.getDeclaredType())) {
 			String booleanReadMethodName = getReadMethodNameForBoolean(field);
 			try {
 				readMethod = getReadMethod(propertyMetadata, booleanReadMethodName);
-				break;
+				return readMethod;
 			} catch (EntityManagerException exp) {
 				// Do nothing... try the default option - getXXX method.
 			}
-		default:
-			String readMethodName = getReadMethodName(field);
-			readMethod = getReadMethod(propertyMetadata, readMethodName);
-			break;
 		}
+		String readMethodName = getReadMethodName(field);
+		readMethod = getReadMethod(propertyMetadata, readMethodName);
 		return readMethod;
 	}
 

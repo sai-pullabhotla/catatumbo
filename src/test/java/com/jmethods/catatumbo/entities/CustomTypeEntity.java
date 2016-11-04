@@ -13,25 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Field;
+package com.jmethods.catatumbo.entities;
+
+import com.jmethods.catatumbo.Entity;
+import com.jmethods.catatumbo.Identifier;
 
 /**
- * Objects of this class contain the metadata about an entity's full key.
- * 
  * @author Sai Pullabhotla
+ *
  */
-public class KeyMetadata extends FieldMetadata {
+@Entity
+public class CustomTypeEntity {
+	@Identifier
+	private Long id;
+
+	private byte byteField;
 
 	/**
-	 * Creates a new instance of <code>KeyMeatadata</code>.
-	 * 
-	 * @param field
-	 *            the field.
+	 * @return the id
 	 */
-	public KeyMetadata(Field field) {
-		super(field);
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the byteField
+	 */
+	public byte getByteField() {
+		return byteField;
+	}
+
+	/**
+	 * @param byteField
+	 *            the byteField to set
+	 */
+	public void setByteField(byte byteField) {
+		this.byteField = byteField;
 	}
 
 }

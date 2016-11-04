@@ -31,6 +31,7 @@ import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
  * Converts application's entities (POJOs) to the format needed for the

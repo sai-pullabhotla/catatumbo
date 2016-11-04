@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.jmethods.catatumbo.impl.DataType;
-
 /**
  * Specifies that a class is an entity. Classes with this annotation can be
  * managed by the {@link EntityManager} to save objects to the Cloud Datastore
@@ -48,8 +46,13 @@ import com.jmethods.catatumbo.impl.DataType;
  * will hold the full key to the parent entity.</li>
  * <li>Field annotated with @{@link ParentKey} must have a data type of
  * {@link DatastoreKey}.</li>
- * <li>All other fields can be any of the types defined in the {@link DataType}
- * enum and may have @{@link Property} annotation.</li>
+ * <li>May have zero or more embedded objects with an annotation
+ * of @{@link Embedded}.
+ * <li>All other fields can be any of the types for which a {@link Mapper}
+ * exists. The framework provides Mappers for various commonly used types.
+ * CustomMappers can be specified using
+ * {@link MapperFactory#setDefaultMapper(java.lang.reflect.Type, Mapper)} or
+ * {@link PropertyMapper} annotation.</li>
  * </ul>
  *
  * @author Sai Pullabhotla
