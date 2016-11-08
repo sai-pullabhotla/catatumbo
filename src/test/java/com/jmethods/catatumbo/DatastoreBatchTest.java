@@ -85,6 +85,7 @@ public class DatastoreBatchTest {
 		entity.setField1("Batch Insert Test with Deferred ID Allocation");
 		batch.insertWithDeferredIdAllocation(entity);
 		DatastoreBatch.Response response = batch.submit();
+		// Leaving this call to the deprecated method
 		assertTrue(response.getGneratedKeys().size() == 1);
 	}
 
@@ -99,7 +100,7 @@ public class DatastoreBatchTest {
 		}
 		batch.insertWithDeferredIdAllocation(entities);
 		DatastoreBatch.Response response = batch.submit();
-		assertTrue(response.getGneratedKeys().size() == 5);
+		assertTrue(response.getGeneratedKeys().size() == 5);
 	}
 
 	@Test(expected = EntityManagerException.class)
@@ -207,7 +208,7 @@ public class DatastoreBatchTest {
 		entity.setField1("Batch Upsert Test with Deferred ID Allocation");
 		batch.upsertWithDeferredIdAllocation(entity);
 		DatastoreBatch.Response response = batch.submit();
-		assertTrue(response.getGneratedKeys().size() == 1);
+		assertTrue(response.getGeneratedKeys().size() == 1);
 	}
 
 	@Test
@@ -221,7 +222,7 @@ public class DatastoreBatchTest {
 		}
 		batch.upsertWithDeferredIdAllocation(entities);
 		DatastoreBatch.Response response = batch.submit();
-		assertTrue(response.getGneratedKeys().size() == 5);
+		assertTrue(response.getGeneratedKeys().size() == 5);
 	}
 
 	@Test(expected = EntityManagerException.class)

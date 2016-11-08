@@ -186,8 +186,14 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		}
 
 		@Override
-		public List<DatastoreKey> getGneratedKeys() {
+		public List<DatastoreKey> getGeneratedKeys() {
 			return DatastoreUtils.toDatastoreKeys(nativeResponse.getGeneratedKeys());
+		}
+
+		@Override
+		@Deprecated
+		public List<DatastoreKey> getGneratedKeys() {
+			return getGeneratedKeys();
 		}
 
 	}

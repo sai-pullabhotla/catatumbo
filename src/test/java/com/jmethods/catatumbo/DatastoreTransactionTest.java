@@ -168,7 +168,7 @@ public class DatastoreTransactionTest {
 			entity.setField1("Transaction Insert Test with Deferred ID Allocation");
 			transaction.insertWithDeferredIdAllocation(entity);
 			DatastoreTransaction.Response response = transaction.commit();
-			assertTrue(response.getGneratedKeys().size() == 1);
+			assertTrue(response.getGeneratedKeys().size() == 1);
 
 		} finally {
 			if (transaction.isActive()) {
@@ -189,6 +189,7 @@ public class DatastoreTransactionTest {
 			}
 			transaction.insertWithDeferredIdAllocation(entities);
 			DatastoreTransaction.Response response = transaction.commit();
+			// Leaving this call to the deprecated method
 			assertTrue(response.getGneratedKeys().size() == 5);
 		} finally {
 			if (transaction.isActive()) {
