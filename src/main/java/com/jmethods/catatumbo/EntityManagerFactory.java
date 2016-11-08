@@ -69,7 +69,7 @@ public class EntityManagerFactory {
 			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
 					.setAuthCredentials(authCredentials);
 			if (namespace != null) {
-				datastoreOptionsBuilder.namespace(namespace);
+				datastoreOptionsBuilder.setNamespace(namespace);
 			}
 			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
@@ -190,7 +190,7 @@ public class EntityManagerFactory {
 				datastoreOptionsBuilder.setProjectId(projectId);
 			}
 			if (namespace != null) {
-				datastoreOptionsBuilder.namespace(namespace);
+				datastoreOptionsBuilder.setNamespace(namespace);
 			}
 			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
@@ -260,7 +260,7 @@ public class EntityManagerFactory {
 				datastoreOptionsBuilder.setProjectId(projectId);
 			}
 			if (namespace != null) {
-				datastoreOptionsBuilder.namespace(namespace);
+				datastoreOptionsBuilder.setNamespace(namespace);
 			}
 			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
