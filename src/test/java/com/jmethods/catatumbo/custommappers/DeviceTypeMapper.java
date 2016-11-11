@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.mappers;
+package com.jmethods.catatumbo.custommappers;
 
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;

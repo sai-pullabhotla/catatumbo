@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.jmethods.catatumbo.custommappers.DeviceTypeMapper;
 import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.BigDecimalField;
 import com.jmethods.catatumbo.entities.BooleanField;
@@ -91,7 +92,6 @@ import com.jmethods.catatumbo.entities.TaskName;
 import com.jmethods.catatumbo.entities.UnindexedByteArrayField;
 import com.jmethods.catatumbo.entities.UnindexedStringField;
 import com.jmethods.catatumbo.entities.Visitor;
-import com.jmethods.catatumbo.mappers.DeviceTypeMapper;
 
 /**
  * @author Sai Pullabhotla
@@ -412,10 +412,19 @@ public class EntityManagerTest {
 	@Test
 	public void testInsertFloatField_Negative() {
 		FloatField entity = new FloatField();
-		entity.setArea(Float.MIN_VALUE);
+		entity.setArea(-Float.MIN_VALUE);
 		entity = em.insert(entity);
 		entity = em.load(FloatField.class, entity.getId());
-		assertTrue(entity.getId() > 0 && entity.getArea() == Float.MIN_VALUE);
+		assertTrue(entity.getId() > 0 && entity.getArea() == -Float.MIN_VALUE);
+	}
+
+	@Test
+	public void testInsertFloatField_PI() {
+		FloatField entity = new FloatField();
+		entity.setArea(3.1415927f);
+		entity = em.insert(entity);
+		entity = em.load(FloatField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getArea() == 3.1415927f);
 	}
 
 	@Test
@@ -430,10 +439,10 @@ public class EntityManagerTest {
 	@Test
 	public void testInsertFloatObject_Negative() {
 		FloatObject entity = new FloatObject();
-		entity.setArea(Float.valueOf(Float.MIN_VALUE));
+		entity.setArea(Float.valueOf(-Float.MIN_VALUE));
 		entity = em.insert(entity);
 		entity = em.load(FloatObject.class, entity.getId());
-		assertTrue(entity.getId() > 0 && entity.getArea() == Float.MIN_VALUE);
+		assertTrue(entity.getId() > 0 && entity.getArea() == -Float.MIN_VALUE);
 	}
 
 	@Test
@@ -456,10 +465,10 @@ public class EntityManagerTest {
 	@Test
 	public void testInsertDoubleField_Negative() {
 		DoubleField entity = new DoubleField();
-		entity.setArea(Double.MIN_VALUE);
+		entity.setArea(-Double.MIN_VALUE);
 		entity = em.insert(entity);
 		entity = em.load(DoubleField.class, entity.getId());
-		assertTrue(entity.getId() > 0 && entity.getArea() == Double.MIN_VALUE);
+		assertTrue(entity.getId() > 0 && entity.getArea() == -Double.MIN_VALUE);
 	}
 
 	@Test
@@ -474,10 +483,10 @@ public class EntityManagerTest {
 	@Test
 	public void testInsertDoubleObject_Negative() {
 		DoubleObject entity = new DoubleObject();
-		entity.setArea(Double.MIN_VALUE);
+		entity.setArea(-Double.MIN_VALUE);
 		entity = em.insert(entity);
 		entity = em.load(DoubleObject.class, entity.getId());
-		assertTrue(entity.getId() > 0 && entity.getArea() == Double.MIN_VALUE);
+		assertTrue(entity.getId() > 0 && entity.getArea() == -Double.MIN_VALUE);
 	}
 
 	@Test

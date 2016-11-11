@@ -47,8 +47,8 @@ public class FloatMapper implements Mapper {
 		}
 		DoubleValue value = (DoubleValue) input;
 		Double d = value.get();
-		if (d < Float.MIN_VALUE || d > Float.MAX_VALUE) {
-			throw new MappingException(String.format("Value %f is out of range for float type", d));
+		if (d < -Float.MAX_VALUE || d > Float.MAX_VALUE) {
+			throw new MappingException(String.format("Value %s is out of range for float type", d));
 		}
 		return d.floatValue();
 	}

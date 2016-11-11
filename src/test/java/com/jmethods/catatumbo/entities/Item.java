@@ -22,7 +22,7 @@ import java.util.Objects;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
 import com.jmethods.catatumbo.PropertyMapper;
-import com.jmethods.catatumbo.mappers.CurrencyMapper;
+import com.jmethods.catatumbo.custommappers.CurrencyMapper;
 
 /**
  * @author Sai Pullabhotla

@@ -21,8 +21,8 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.jmethods.catatumbo.custommappers.ByteMapper;
 import com.jmethods.catatumbo.entities.CustomTypeEntity;
-import com.jmethods.catatumbo.mappers.ByteMapper;
 
 /**
  * @author Sai Pullabhotla

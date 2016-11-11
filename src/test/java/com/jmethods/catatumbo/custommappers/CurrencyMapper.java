@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.mappers;
+package com.jmethods.catatumbo.custommappers;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
