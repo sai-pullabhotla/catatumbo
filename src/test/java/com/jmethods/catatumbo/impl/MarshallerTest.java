@@ -21,7 +21,8 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.cloud.AuthCredentials;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.FullEntity;
@@ -38,9 +39,8 @@ public class MarshallerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		AuthCredentials authCredentials = AuthCredentials.createApplicationDefaults();
-		DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
-				.setAuthCredentials(authCredentials);
+		Credentials credentials = ServiceAccountCredentials.getApplicationDefault();
+		DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder().setCredentials(credentials);
 		datastore = datastoreOptionsBuilder.build().getService();
 	}
 

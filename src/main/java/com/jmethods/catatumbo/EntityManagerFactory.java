@@ -20,7 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import com.google.cloud.AuthCredentials;
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.jmethods.catatumbo.impl.DefaultEntityManager;
@@ -65,9 +66,9 @@ public class EntityManagerFactory {
 	 */
 	public EntityManager createDefaultEntityManager(String namespace) {
 		try {
-			AuthCredentials authCredentials = AuthCredentials.createApplicationDefaults();
+			Credentials credentials = ServiceAccountCredentials.getApplicationDefault();
 			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
-					.setAuthCredentials(authCredentials);
+					.setCredentials(credentials);
 			if (namespace != null) {
 				datastoreOptionsBuilder.setNamespace(namespace);
 			}
@@ -183,9 +184,9 @@ public class EntityManagerFactory {
 	 */
 	public EntityManager createEntityManager(String projectId, InputStream jsonCredentialsStream, String namespace) {
 		try {
-			AuthCredentials authCredentials = AuthCredentials.createForJson(jsonCredentialsStream);
+			Credentials credentials = ServiceAccountCredentials.fromStream(jsonCredentialsStream);
 			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
-					.setAuthCredentials(authCredentials);
+					.setCredentials(credentials);
 			if (projectId != null) {
 				datastoreOptionsBuilder.setProjectId(projectId);
 			}
@@ -196,8 +197,6 @@ public class EntityManagerFactory {
 			return new DefaultEntityManager(datastore);
 		} catch (Exception exp) {
 			throw new EntityManagerFactoryException(exp);
-		} finally {
-			Utility.close(jsonCredentialsStream);
 		}
 	}
 
