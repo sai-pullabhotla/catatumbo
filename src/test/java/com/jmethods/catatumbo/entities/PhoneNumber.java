@@ -103,8 +103,45 @@ public class PhoneNumber {
 			return true;
 		}
 		PhoneNumber that = (PhoneNumber) obj;
-		return Objects.equals(this.areaCode, that.areaCode) && Objects.equals(this.areaCode, that.areaCode)
+		return Objects.equals(this.countryCode, that.countryCode) && Objects.equals(this.areaCode, that.areaCode)
 				&& Objects.equals(this.subscriberNumber, that.subscriberNumber);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(countryCode, areaCode, subscriberNumber);
+	}
+
+	public static PhoneNumber getSample1() {
+		PhoneNumber phone = new PhoneNumber();
+		phone.setCountryCode("1");
+		phone.setAreaCode("212");
+		phone.setSubscriberNumber("8889999");
+		return phone;
+	}
+
+	public static PhoneNumber getSample2() {
+		PhoneNumber phone = new PhoneNumber();
+		phone.setCountryCode("1");
+		phone.setAreaCode("402");
+		phone.setSubscriberNumber("5556666");
+		return phone;
+	}
+
+	public static PhoneNumber getSample3() {
+		PhoneNumber phone = new PhoneNumber();
+		phone.setCountryCode("91");
+		phone.setAreaCode("40");
+		phone.setSubscriberNumber("2722 5858");
+		return phone;
+	}
+
+	public static PhoneNumber getSample4() {
+		PhoneNumber phone = new PhoneNumber();
+		phone.setCountryCode("91");
+		phone.setAreaCode("80");
+		phone.setSubscriberNumber("6666 0000");
+		return phone;
 	}
 
 }

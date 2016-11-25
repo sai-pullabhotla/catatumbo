@@ -394,4 +394,17 @@ public class IntrospectionUtils {
 		}
 	}
 
+	/**
+	 * Checks to see if the given field is a static field.
+	 * 
+	 * @param field
+	 *            the field to test
+	 * @return <code>true</code>, if the given field is static;
+	 *         <code>false</code>, otherwise.
+	 */
+	public static boolean isStatic(Field field) {
+		int modifiers = field.getModifiers();
+		return Modifier.isStatic(modifiers);
+	}
+
 }

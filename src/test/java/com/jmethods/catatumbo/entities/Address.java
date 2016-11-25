@@ -154,4 +154,43 @@ public class Address {
 				&& Objects.equals(this.zipCode, that.zipCode);
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(street1, street2, city, state, zipCode);
+	}
+
+	public static Address getSample1() {
+		Address address = new Address();
+		address.setStreet1("1 Main St.");
+		address.setStreet2("Apt 1");
+		address.setCity("Omaha");
+		address.setState("NE");
+		ZipCode zip = new ZipCode();
+		zip.setFiveDigits("55555");
+		zip.setFourDigits("4444");
+		zip.setAnotherEmbeddable(new AnotherEmbeddable("Field 1", "Field 2"));
+		address.setZipCode(zip);
+		return address;
+	}
+
+	public static Address getSample2() {
+		Address address = new Address();
+		address.setStreet1("2 Secondary St.");
+		address.setCity("Lincoln");
+		address.setState("NE");
+		ZipCode workZipCode = new ZipCode();
+		workZipCode.setFiveDigits("99999");
+		workZipCode.setFourDigits("0000");
+		address.setZipCode(workZipCode);
+		return address;
+	}
+
+	public static Address getSample3() {
+		Address address = new Address();
+		address.setStreet1("3 Third St.");
+		address.setCity("San Jose");
+		address.setState("CA");
+		return address;
+	}
+
 }

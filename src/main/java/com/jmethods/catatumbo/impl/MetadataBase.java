@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jmethods.catatumbo.EntityManagerException;
-import com.jmethods.catatumbo.Property;
 
 /**
  * Base class for class metadata.
@@ -70,9 +69,9 @@ public abstract class MetadataBase {
 		String mappedName = propertyMetadata.getMappedName();
 		PropertyMetadata old = propertyMetadataMap.put(mappedName, propertyMetadata);
 		if (old != null) {
-			String format = "Class %s has two fields, %s and %s, marked with %s annotation and both are set to use the same name, %s";
+			String format = "Class %s has two fields, %s and %s, both mapped to the same property name, %s";
 			String message = String.format(format, clazz.getName(), old.getName(), propertyMetadata.getName(),
-					Property.class.getName(), mappedName);
+					mappedName);
 			throw new EntityManagerException(message);
 		}
 	}

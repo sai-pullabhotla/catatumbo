@@ -40,6 +40,7 @@ import com.jmethods.catatumbo.mappers.CharMapper;
 import com.jmethods.catatumbo.mappers.DateMapper;
 import com.jmethods.catatumbo.mappers.DecimalMapper;
 import com.jmethods.catatumbo.mappers.DoubleMapper;
+import com.jmethods.catatumbo.mappers.EmbeddedObjectMapper;
 import com.jmethods.catatumbo.mappers.EnumMapper;
 import com.jmethods.catatumbo.mappers.FloatMapper;
 import com.jmethods.catatumbo.mappers.GeoLocationMapper;
@@ -205,6 +206,8 @@ public class MapperFactory {
 			mapper = new SetMapper(clazz);
 		} else if (Map.class.isAssignableFrom(clazz)) {
 			mapper = new MapMapper(clazz);
+		} else if (clazz.isAnnotationPresent(Embeddable.class)) {
+			mapper = new EmbeddedObjectMapper(clazz);
 		} else {
 			throw new NoSuitableMapperException(String.format("No mapper found for class %s", clazz.getName()));
 		}
