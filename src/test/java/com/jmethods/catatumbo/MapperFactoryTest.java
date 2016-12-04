@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jmethods.catatumbo.impl;
+package com.jmethods.catatumbo;
 
 import static org.junit.Assert.*;
 
