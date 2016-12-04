@@ -17,12 +17,22 @@ package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
 
+import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.Indexer;
+import com.jmethods.catatumbo.IndexerFactory;
+import com.jmethods.catatumbo.SecondaryIndex;
+
 /**
  * Objects of this class contain metadata about a property of an entity.
  *
  * @author Sai Pullabhotla
  */
 public class PropertyMetadata extends FieldMetadata {
+
+	/**
+	 * Default prefix for secondary index name.
+	 */
+	private static final String DEFAULT_SECONDARY_INDEX_PREFIX = "$";
 
 	/**
 	 * The property name, in the Cloud Datastore, to which a field is mapped
@@ -33,6 +43,16 @@ public class PropertyMetadata extends FieldMetadata {
 	 * If the property is indexed or not
 	 */
 	private boolean indexed;
+
+	/**
+	 * Secondary indexer for this property
+	 */
+	private Indexer secondaryIndexer;
+
+	/**
+	 * Secondary index name
+	 */
+	private String secondaryIndexName;
 
 	/**
 	 * Creates an instance of <code>PropertyMetadata</code>.
@@ -48,6 +68,7 @@ public class PropertyMetadata extends FieldMetadata {
 		super(field);
 		this.mappedName = mappedName;
 		this.indexed = indexed;
+		initializeSecondaryIndexer();
 	}
 
 	/**
@@ -86,5 +107,45 @@ public class PropertyMetadata extends FieldMetadata {
 	 */
 	public void setIndexed(boolean indexed) {
 		this.indexed = indexed;
+	}
+
+	/**
+	 * Returns the secondary indexer associated with this property, if any.
+	 * 
+	 * @return the secondaryIndexer the secondary indexer associated with this
+	 *         property. May be <code>null</code>.
+	 */
+	public Indexer getSecondaryIndexer() {
+		return secondaryIndexer;
+	}
+
+	/**
+	 * Returns the secondary index name, if any.
+	 * 
+	 * @return the secondary index name. May be <code>null</code>.
+	 */
+	public String getSecondaryIndexName() {
+		return secondaryIndexName;
+	}
+
+	private void initializeSecondaryIndexer() {
+		SecondaryIndex secondaryIndexAnnotation = field.getAnnotation(SecondaryIndex.class);
+		if (secondaryIndexAnnotation == null) {
+			return;
+		}
+		String indexName = secondaryIndexAnnotation.name();
+		if (indexName == null || indexName.trim().length() == 0) {
+			indexName = DEFAULT_SECONDARY_INDEX_PREFIX + mappedName;
+		}
+		this.secondaryIndexName = indexName;
+		try {
+			secondaryIndexer = IndexerFactory.getInstance().getIndexer(field);
+		} catch (Exception exp) {
+			String message = String.format(
+					"No suitable Indexer found or error occurred while creating the indexer for field %s in class %s",
+					field.getName(), field.getDeclaringClass().getName());
+			throw new EntityManagerException(message, exp);
+		}
+
 	}
 }

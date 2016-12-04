@@ -31,6 +31,7 @@ import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
@@ -346,6 +347,10 @@ public class Marshaller {
 		valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
 		Value<?> datastoreValue = valueBuilder.build();
 		entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
+		Indexer indexer = propertyMetadata.getSecondaryIndexer();
+		if (indexer != null) {
+			entityBuilder.set(propertyMetadata.getSecondaryIndexName(), indexer.index(datastoreValue));
+		}
 	}
 
 	/**

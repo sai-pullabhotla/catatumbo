@@ -23,6 +23,7 @@ import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.google.cloud.datastore.ValueType;
+import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 import com.jmethods.catatumbo.impl.EmbeddableIntrospector;
@@ -70,7 +71,12 @@ public class EmbeddedObjectMapper implements Mapper {
 				Object propertyValue = propertyMetadata.getReadMethod().invoke(input);
 				ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(propertyValue);
 				valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
-				entityBuilder.set(propertyMetadata.getMappedName(), valueBuilder.build());
+				Value<?> value = valueBuilder.build();
+				entityBuilder.set(propertyMetadata.getMappedName(), value);
+				Indexer indexer = propertyMetadata.getSecondaryIndexer();
+				if (indexer != null) {
+					entityBuilder.set(propertyMetadata.getSecondaryIndexName(), indexer.index(value));
+				}
 			}
 			return EntityValue.newBuilder(entityBuilder.build());
 		} catch (Exception exp) {

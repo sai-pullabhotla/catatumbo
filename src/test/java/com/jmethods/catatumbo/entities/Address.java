@@ -22,6 +22,7 @@ import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.Ignore;
 import com.jmethods.catatumbo.Property;
+import com.jmethods.catatumbo.SecondaryIndex;
 
 /**
  * @author Sai Pullabhotla
@@ -38,6 +39,7 @@ public class Address {
 	@Property(name = "line2", indexed = false)
 	private String street2;
 
+	@SecondaryIndex
 	private String city;
 
 	private String state;
