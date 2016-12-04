@@ -49,7 +49,7 @@ public @interface SecondaryIndex {
 	 * -
 	 * 
 	 * <pre>
-	 * &#64;SecondaryIndex</code>
+	 * &#64;SecondaryIndex
 	 * private String lastName;
 	 * </pre>
 	 * 
@@ -58,8 +58,8 @@ public @interface SecondaryIndex {
 	 * support case insensitive searching/sorting.
 	 * 
 	 * <pre>
-	 * &#64;SecondaryIndex</code>
-	 * &#64;Property(name="lname")
+	 * &#64;SecondaryIndex
+	 * &#64;Property(name = "lname")
 	 * private String lastName;
 	 * </pre>
 	 * 
