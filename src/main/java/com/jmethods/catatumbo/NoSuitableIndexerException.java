@@ -23,7 +23,7 @@ package com.jmethods.catatumbo;
  * @author Sai Pullabhotla
  *
  */
-public class NoSuitableIndexerException extends RuntimeException {
+public class NoSuitableIndexerException extends EntityManagerException {
 
 	/**
 	 * Serial version UID

@@ -23,7 +23,7 @@ package com.jmethods.catatumbo;
  * @author Sai Pullabhotla
  *
  */
-public class IndexingException extends RuntimeException {
+public class IndexingException extends EntityManagerException {
 
 	/**
 	 * Serial version UID

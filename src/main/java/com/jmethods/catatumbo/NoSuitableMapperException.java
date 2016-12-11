@@ -23,7 +23,7 @@ package com.jmethods.catatumbo;
  * @author Sai Pullabhotla
  *
  */
-public class NoSuitableMapperException extends RuntimeException {
+public class NoSuitableMapperException extends EntityManagerException {
 
 	/**
 	 * Serial version UID

@@ -23,7 +23,7 @@ package com.jmethods.catatumbo;
  * @author Sai Pullabhotla
  *
  */
-public class MappingException extends RuntimeException {
+public class MappingException extends EntityManagerException {
 
 	/**
 	 * Serial version UID
