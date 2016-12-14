@@ -16,7 +16,11 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,6 +42,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.jmethods.catatumbo.custommappers.DeviceTypeMapper;
+import com.jmethods.catatumbo.entities.AccessorTestEntity;
 import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.BigDecimalField;
 import com.jmethods.catatumbo.entities.BooleanField;
@@ -158,6 +163,7 @@ public class EntityManagerTest {
 		em.deleteAll(BigDecimalField.class);
 		em.deleteAll(Item.class);
 		em.deleteAll(Visitor.class);
+		em.deleteAll(AccessorTestEntity.class);
 		populateTasks();
 	}
 
@@ -2296,6 +2302,15 @@ public class EntityManagerTest {
 		Visitor entity2 = em.load(Visitor.class, entity.getId());
 		assertTrue(entity.equals(entity2));
 
+	}
+
+	@Test
+	public void testInsert_AccessorTestEntity() {
+		AccessorTestEntity entity = AccessorTestEntity.getSample1();
+		AccessorTestEntity entity2 = em.insert(entity);
+		AccessorTestEntity entity3 = em.load(AccessorTestEntity.class, entity2.getId());
+		assertTrue(entity.equalsExceptId(entity2));
+		assertEquals(entity2, entity3);
 	}
 
 	private static Calendar getToday() {

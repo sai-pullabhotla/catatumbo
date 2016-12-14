@@ -256,6 +256,9 @@ public class IntrospectionUtils {
 	 * @return capitalized field name.
 	 */
 	public static String getCapitalizedName(String fieldName) {
+		if (fieldName.length() > 1 && Character.isUpperCase(fieldName.charAt(1))) {
+			return fieldName;
+		}
 		return Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
 	}
 
