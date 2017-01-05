@@ -1,14 +1,12 @@
-#Catatumbo - Object Mapping and Persistence Framework for Google Cloud Datastore 
-Catatumbo is an Open Source persistence framework for mapping Java objects (POJOs) to 
-[Google Cloud Datastore](https://cloud.google.com/datastore/) and vice versa. 
+#Catatumbo - JPA like Persistence Framework for Google Cloud Datastore 
+Catatumbo is an Open Source, JPA like persistence framework for mapping and persisting domain model to 
+[Google Cloud Datastore](https://cloud.google.com/datastore/). 
 
 Catatumbo framework is built on top of 
 [Google Cloud Java Client for Datastore](https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-datastore). 
 The framework provides a handful of annotations to make your model classes manageable by the framework. In other words, 
 Catatumbo is similar to JPA (Java Persistence API), but is specifically designed to work with Google Cloud Datastore 
 instead of Relational Databases.  
-
-> **Note: Catatumbo is a work-in-progress and future changes are not guaranteed to be backward compatible**
 
 ##Features
 * Automatic mapping of model classes (POJOs) to Cloud Datastore Entities and vice versa
@@ -51,8 +49,14 @@ instead of Relational Databases.
 * Transaction Support 
 * Ability to work with Local Datastore (Datastore Emulator) during development phase   
 
+##Project's Web Site
+[http://catatumbo.io](http://catatumbo.io) 
+
 ##Quick Start Guide 
-Please visit [http://www.jMethods.com/catatumbo/quick-start.html](http://www.jMethods.com/catatumbo/quick-start.html)
+Please visit [http://catatumbo.io/quick-start.html](http://catatumbo.io/quick-start.html)
+
+##Video Tutorials 
+Please visit [http://catatumbo.io/video-tutorials.html](http://catatumbo.io/video-tutorials.html)
 
 ##API Documentation 
-Online documentation (Javadocs) for Catatumbo API is available at [http://www.jmethods.com/catatumbo/api-documentation.html](http://www.jmethods.com/catatumbo/api-documentation.html). 
+Online documentation (Javadocs) for Catatumbo API is available at [http://catatumbo.io/api-docs.html](http://catatumbo.io/api-docs.html). 
