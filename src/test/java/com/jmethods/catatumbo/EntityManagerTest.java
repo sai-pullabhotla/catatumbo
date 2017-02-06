@@ -44,6 +44,7 @@ import org.junit.Test;
 import com.jmethods.catatumbo.custommappers.DeviceTypeMapper;
 import com.jmethods.catatumbo.entities.AccessorTestEntity;
 import com.jmethods.catatumbo.entities.Account;
+import com.jmethods.catatumbo.entities.ArrayIndex;
 import com.jmethods.catatumbo.entities.BigDecimalField;
 import com.jmethods.catatumbo.entities.BooleanField;
 import com.jmethods.catatumbo.entities.BooleanObject;
@@ -164,6 +165,7 @@ public class EntityManagerTest {
 		em.deleteAll(Item.class);
 		em.deleteAll(Visitor.class);
 		em.deleteAll(AccessorTestEntity.class);
+		em.deleteAll(ArrayIndex.class);
 		populateTasks();
 	}
 
@@ -2311,6 +2313,74 @@ public class EntityManagerTest {
 		AccessorTestEntity entity3 = em.load(AccessorTestEntity.class, entity2.getId());
 		assertTrue(entity.equalsExceptId(entity2));
 		assertEquals(entity2, entity3);
+	}
+
+	@Test
+	public void testArrayIndex1() {
+		ParentEntity parentEntity = new ParentEntity();
+		parentEntity.setField1("ArrayIndexTest");
+		parentEntity = em.insert(parentEntity);
+		ArrayIndex entity = ArrayIndex.getSampleEntity();
+		entity.setParentKey(parentEntity.getKey());
+		entity = em.insert(entity);
+		String gql = "SELECT * FROM ArrayIndex WHERE stringList=@1 AND __key__ HAS ANCESTOR @2";
+		EntityQueryRequest request = em.createEntityQueryRequest(gql);
+		request.addPositionalBinding("Two");
+		request.addPositionalBinding(parentEntity.getKey());
+		QueryResponse<ArrayIndex> response = em.executeEntityQueryRequest(ArrayIndex.class, request);
+		List<ArrayIndex> results = response.getResults();
+		assertEquals(1, results.size());
+	}
+
+	@Test
+	public void testArrayIndex2() {
+		ParentEntity parentEntity = new ParentEntity();
+		parentEntity.setField1("ArrayIndexTest");
+		parentEntity = em.insert(parentEntity);
+		ArrayIndex entity = ArrayIndex.getSampleEntity();
+		entity.setParentKey(parentEntity.getKey());
+		entity = em.insert(entity);
+		String gql = "SELECT * FROM ArrayIndex WHERE unindexedStringList=@1 AND __key__ HAS ANCESTOR @2";
+		EntityQueryRequest request = em.createEntityQueryRequest(gql);
+		request.addPositionalBinding("Two");
+		request.addPositionalBinding(parentEntity.getKey());
+		QueryResponse<ArrayIndex> response = em.executeEntityQueryRequest(ArrayIndex.class, request);
+		List<ArrayIndex> results = response.getResults();
+		assertEquals(0, results.size());
+	}
+
+	@Test
+	public void testArrayIndex3() {
+		ParentEntity parentEntity = new ParentEntity();
+		parentEntity.setField1("ArrayIndexTest");
+		parentEntity = em.insert(parentEntity);
+		ArrayIndex entity = ArrayIndex.getSampleEntity();
+		entity.setParentKey(parentEntity.getKey());
+		entity = em.insert(entity);
+		String gql = "SELECT * FROM ArrayIndex WHERE stringSet=@1 AND __key__ HAS ANCESTOR @2";
+		EntityQueryRequest request = em.createEntityQueryRequest(gql);
+		request.addPositionalBinding("Two");
+		request.addPositionalBinding(parentEntity.getKey());
+		QueryResponse<ArrayIndex> response = em.executeEntityQueryRequest(ArrayIndex.class, request);
+		List<ArrayIndex> results = response.getResults();
+		assertEquals(1, results.size());
+	}
+
+	@Test
+	public void testArrayIndex4() {
+		ParentEntity parentEntity = new ParentEntity();
+		parentEntity.setField1("ArrayIndexTest");
+		parentEntity = em.insert(parentEntity);
+		ArrayIndex entity = ArrayIndex.getSampleEntity();
+		entity.setParentKey(parentEntity.getKey());
+		entity = em.insert(entity);
+		String gql = "SELECT * FROM ArrayIndex WHERE unindexedStringSet=@1 AND __key__ HAS ANCESTOR @2";
+		EntityQueryRequest request = em.createEntityQueryRequest(gql);
+		request.addPositionalBinding("Two");
+		request.addPositionalBinding(parentEntity.getKey());
+		QueryResponse<ArrayIndex> response = em.executeEntityQueryRequest(ArrayIndex.class, request);
+		List<ArrayIndex> results = response.getResults();
+		assertEquals(0, results.size());
 	}
 
 	private static Calendar getToday() {

@@ -57,7 +57,13 @@ public class ListMapper implements Mapper {
 	/**
 	 * Mapper for mapping items in the list
 	 */
-	Mapper itemMapper;
+	private Mapper itemMapper;
+
+	/**
+	 * Whether or not the list property should be indexed. While this does not
+	 * affect the ListProperty itself, it is applied on the items in the list.
+	 */
+	private boolean indexed;
 
 	/**
 	 * Creates a new instance of <code>ListMapper</code>.
@@ -65,8 +71,9 @@ public class ListMapper implements Mapper {
 	 * @param type
 	 *            the list type
 	 */
-	public ListMapper(Type type) {
+	public ListMapper(Type type, boolean indexed) {
 		this.listType = type;
+		this.indexed = indexed;
 		Class<?>[] classArray = IntrospectionUtils.resolveCollectionType(listType);
 		listClass = classArray[0];
 		itemClass = classArray[1];
@@ -94,11 +101,11 @@ public class ListMapper implements Mapper {
 			return NullValue.newBuilder();
 		}
 		List<?> list = (List<?>) input;
-		ListValue.Builder listValurBuilder = ListValue.newBuilder();
+		ListValue.Builder listValueBuilder = ListValue.newBuilder();
 		for (Object item : list) {
-			listValurBuilder.addValue(itemMapper.toDatastore(item).build());
+			listValueBuilder.addValue(itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
 		}
-		return listValurBuilder;
+		return listValueBuilder;
 	}
 
 	@SuppressWarnings("unchecked")

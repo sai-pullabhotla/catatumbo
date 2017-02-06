@@ -29,6 +29,7 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
+import com.google.cloud.datastore.ValueType;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Indexer;
@@ -344,7 +345,11 @@ public class Marshaller {
 			BaseEntity.Builder<?, ?> entityBuilder) {
 		Object fieldValue = getFieldValue(propertyMetadata, target);
 		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
-		valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
+		// ListValues cannot have indexing turned off. Indexing is turned on by
+		// default, so we don't touch excludeFromIndexes for ListValues.
+		if (valueBuilder.getValueType() != ValueType.LIST) {
+			valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
+		}
 		Value<?> datastoreValue = valueBuilder.build();
 		entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
 		Indexer indexer = propertyMetadata.getSecondaryIndexer();

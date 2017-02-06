@@ -37,6 +37,7 @@ import com.jmethods.catatumbo.mappers.ByteArrayMapper;
 import com.jmethods.catatumbo.mappers.CalendarMapper;
 import com.jmethods.catatumbo.mappers.CharArrayMapper;
 import com.jmethods.catatumbo.mappers.CharMapper;
+import com.jmethods.catatumbo.mappers.CollectionMapperFactory;
 import com.jmethods.catatumbo.mappers.DateMapper;
 import com.jmethods.catatumbo.mappers.DecimalMapper;
 import com.jmethods.catatumbo.mappers.DoubleMapper;
@@ -46,10 +47,8 @@ import com.jmethods.catatumbo.mappers.FloatMapper;
 import com.jmethods.catatumbo.mappers.GeoLocationMapper;
 import com.jmethods.catatumbo.mappers.IntegerMapper;
 import com.jmethods.catatumbo.mappers.KeyMapper;
-import com.jmethods.catatumbo.mappers.ListMapper;
 import com.jmethods.catatumbo.mappers.LongMapper;
 import com.jmethods.catatumbo.mappers.MapMapper;
-import com.jmethods.catatumbo.mappers.SetMapper;
 import com.jmethods.catatumbo.mappers.ShortMapper;
 import com.jmethods.catatumbo.mappers.StringMapper;
 
@@ -110,11 +109,15 @@ public class MapperFactory {
 		if (propertyMapperAnnotation != null) {
 			return createCustomMapper(field, propertyMapperAnnotation);
 		}
-		if (field.getType().equals(BigDecimal.class)) {
+		Class<?> fieldType = field.getType();
+		if (fieldType.equals(BigDecimal.class)) {
 			Decimal decimalAnnotation = field.getAnnotation(Decimal.class);
 			if (decimalAnnotation != null) {
 				return new DecimalMapper(decimalAnnotation.precision(), decimalAnnotation.scale());
 			}
+		}
+		if (List.class.isAssignableFrom(fieldType) || Set.class.isAssignableFrom(fieldType)) {
+			return CollectionMapperFactory.getInstance().getMapper(field);
 		}
 		return getMapper(field.getGenericType());
 	}
@@ -200,10 +203,6 @@ public class MapperFactory {
 		Mapper mapper;
 		if (Enum.class.isAssignableFrom(clazz)) {
 			mapper = new EnumMapper(clazz);
-		} else if (List.class.isAssignableFrom(clazz)) {
-			mapper = new ListMapper(clazz);
-		} else if (Set.class.isAssignableFrom(clazz)) {
-			mapper = new SetMapper(clazz);
 		} else if (Map.class.isAssignableFrom(clazz)) {
 			mapper = new MapMapper(clazz);
 		} else if (clazz.isAnnotationPresent(Embeddable.class)) {
@@ -229,11 +228,7 @@ public class MapperFactory {
 		}
 		Class<?> rawClass = (Class<?>) rawType;
 		Mapper mapper;
-		if (List.class.isAssignableFrom(rawClass)) {
-			mapper = new ListMapper(type);
-		} else if (Set.class.isAssignableFrom(rawClass)) {
-			mapper = new SetMapper(type);
-		} else if (Map.class.isAssignableFrom(rawClass)) {
+		if (Map.class.isAssignableFrom(rawClass)) {
 			mapper = new MapMapper(type);
 		} else {
 			throw new NoSuitableMapperException(String.format("Unsupported type: %s", type));

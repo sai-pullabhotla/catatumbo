@@ -16,24 +16,15 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeMap;
 
 import org.junit.Test;
 
-import com.jmethods.catatumbo.DatastoreKey;
-import com.jmethods.catatumbo.GeoLocation;
-import com.jmethods.catatumbo.Mapper;
-import com.jmethods.catatumbo.MapperFactory;
-import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.entities.Color;
 import com.jmethods.catatumbo.entities.EnumField.Size;
 import com.jmethods.catatumbo.mappers.BooleanMapper;
@@ -48,10 +39,8 @@ import com.jmethods.catatumbo.mappers.FloatMapper;
 import com.jmethods.catatumbo.mappers.GeoLocationMapper;
 import com.jmethods.catatumbo.mappers.IntegerMapper;
 import com.jmethods.catatumbo.mappers.KeyMapper;
-import com.jmethods.catatumbo.mappers.ListMapper;
 import com.jmethods.catatumbo.mappers.LongMapper;
 import com.jmethods.catatumbo.mappers.MapMapper;
-import com.jmethods.catatumbo.mappers.SetMapper;
 import com.jmethods.catatumbo.mappers.ShortMapper;
 import com.jmethods.catatumbo.mappers.StringMapper;
 
@@ -257,42 +246,6 @@ public class MapperFactoryTest {
 	@Test(expected = NoSuitableMapperException.class)
 	public void testGetMapper_Object() {
 		Mapper mapper1 = MapperFactory.getInstance().getMapper(Object.class);
-	}
-
-	@Test
-	public void testGetMapper_List() {
-		Mapper mapper1 = MapperFactory.getInstance().getMapper(List.class);
-		Mapper mapper2 = MapperFactory.getInstance().getMapper(List.class);
-		assertTrue(mapper1 instanceof ListMapper);
-		assertTrue(mapper2 instanceof ListMapper);
-		assertTrue(mapper1 == mapper2);
-	}
-
-	@Test
-	public void testGetMapper_ArrayList() {
-		Mapper mapper1 = MapperFactory.getInstance().getMapper(ArrayList.class);
-		Mapper mapper2 = MapperFactory.getInstance().getMapper(ArrayList.class);
-		assertTrue(mapper1 instanceof ListMapper);
-		assertTrue(mapper2 instanceof ListMapper);
-		assertTrue(mapper1 == mapper2);
-	}
-
-	@Test
-	public void testGetMapper_Set() {
-		Mapper mapper1 = MapperFactory.getInstance().getMapper(Set.class);
-		Mapper mapper2 = MapperFactory.getInstance().getMapper(Set.class);
-		assertTrue(mapper1 instanceof SetMapper);
-		assertTrue(mapper2 instanceof SetMapper);
-		assertTrue(mapper1 == mapper2);
-	}
-
-	@Test
-	public void testGetMapper_SortedSet() {
-		Mapper mapper1 = MapperFactory.getInstance().getMapper(SortedSet.class);
-		Mapper mapper2 = MapperFactory.getInstance().getMapper(SortedSet.class);
-		assertTrue(mapper1 instanceof SetMapper);
-		assertTrue(mapper2 instanceof SetMapper);
-		assertTrue(mapper1 == mapper2);
 	}
 
 	@Test
