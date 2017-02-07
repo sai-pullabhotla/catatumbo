@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import java.io.Serializable;
+
 import com.google.cloud.datastore.Key;
 
 /**
@@ -24,7 +26,12 @@ import com.google.cloud.datastore.Key;
  * @author Sai Pullabhotla
  *
  */
-public class DefaultDatastoreKey implements DatastoreKey {
+public class DefaultDatastoreKey implements DatastoreKey, Serializable {
+
+	/**
+	 * Serial version UID
+	 */
+	private static final long serialVersionUID = -5298686524012987642L;
 
 	/**
 	 * Native key from gcloud API

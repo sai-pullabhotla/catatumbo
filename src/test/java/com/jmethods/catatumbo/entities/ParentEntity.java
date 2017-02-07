@@ -16,6 +16,9 @@
 
 package com.jmethods.catatumbo.entities;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
@@ -26,7 +29,12 @@ import com.jmethods.catatumbo.Key;
  *
  */
 @Entity
-public class ParentEntity {
+public class ParentEntity implements Serializable {
+
+	/**
+	 * Serial version UID
+	 */
+	private static final long serialVersionUID = 8794953055891942172L;
 
 	public static ParentEntity parent1 = new ParentEntity(9000, "Parent 9000");
 
@@ -88,6 +96,18 @@ public class ParentEntity {
 	 */
 	public void setKey(DatastoreKey key) {
 		this.key = key;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		ParentEntity that = (ParentEntity) obj;
+		return this.id == that.id && Objects.equals(this.field1, that.field1) && Objects.equals(this.key, that.key);
 	}
 
 }

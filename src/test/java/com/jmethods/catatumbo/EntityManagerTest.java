@@ -21,7 +21,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2381,6 +2386,34 @@ public class EntityManagerTest {
 		QueryResponse<ArrayIndex> response = em.executeEntityQueryRequest(ArrayIndex.class, request);
 		List<ArrayIndex> results = response.getResults();
 		assertEquals(0, results.size());
+	}
+
+	@Test
+	public void testEntitySerializationWithKey() {
+		ParentEntity entity = new ParentEntity();
+		entity.setField1("Serialization Test");
+		entity = em.insert(entity);
+		ObjectOutputStream out = null;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			out = new ObjectOutputStream(bos);
+			out.writeObject(entity);
+		} catch (Exception exp) {
+			fail(exp.toString());
+		} finally {
+			Utility.close(out);
+		}
+		ParentEntity entity2 = null;
+		ObjectInputStream in = null;
+		try {
+			in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+			entity2 = (ParentEntity) in.readObject();
+		} catch (Exception exp) {
+			fail(exp.toString());
+		} finally {
+			Utility.close(in);
+		}
+		assertEquals(entity, entity2);
 	}
 
 	private static Calendar getToday() {
