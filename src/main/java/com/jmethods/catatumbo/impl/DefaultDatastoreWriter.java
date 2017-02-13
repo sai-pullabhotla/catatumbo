@@ -16,7 +16,11 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static com.jmethods.catatumbo.impl.DatastoreUtils.*;
+import static com.jmethods.catatumbo.impl.DatastoreUtils.incrementVersion;
+import static com.jmethods.catatumbo.impl.DatastoreUtils.rollbackIfActive;
+import static com.jmethods.catatumbo.impl.DatastoreUtils.toEntities;
+import static com.jmethods.catatumbo.impl.DatastoreUtils.toNativeEntities;
+import static com.jmethods.catatumbo.impl.DatastoreUtils.toNativeFullEntities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +114,7 @@ public class DefaultDatastoreWriter {
 	public <E> E insert(E entity) {
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_INSERT, entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
 			Entity insertedNativeEntity = nativeWriter.add(nativeEntity);
 			@SuppressWarnings("unchecked")
 			E insertedEntity = (E) Unmarshaller.unmarshal(insertedNativeEntity, entity.getClass());
@@ -139,7 +143,7 @@ public class DefaultDatastoreWriter {
 		}
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_INSERT, entities);
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager);
 			Class<?> entityClass = entities.get(0).getClass();
 			List<Entity> insertedNativeEntities = nativeWriter.add(nativeEntities);
 			List<E> insertedEntities = (List<E>) toEntities(entityClass, insertedNativeEntities);
@@ -164,7 +168,7 @@ public class DefaultDatastoreWriter {
 	public <E> E update(E entity) {
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
-			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity, true);
+			Entity nativeEntity = (Entity) Marshaller.marshal(entityManager, entity, true);
 			nativeWriter.update(nativeEntity);
 			E updatedEntity = (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntity);
@@ -207,7 +211,7 @@ public class DefaultDatastoreWriter {
 		Transaction transaction = null;
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
-			Entity nativeEntity = (Entity) Marshaller.marshal(datastore, entity);
+			Entity nativeEntity = (Entity) Marshaller.marshal(entityManager, entity);
 			transaction = datastore.newTransaction();
 			Entity storedNativeEntity = transaction.get(nativeEntity.getKey());
 			if (storedNativeEntity == null) {
@@ -251,7 +255,7 @@ public class DefaultDatastoreWriter {
 		try {
 			Class<E> entityClass = (Class<E>) entities.get(0).getClass();
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entities);
-			Entity[] nativeEntities = toNativeEntities(entities, datastore);
+			Entity[] nativeEntities = toNativeEntities(entities, entityManager);
 			nativeWriter.update(nativeEntities);
 			List<E> updatedEntities = toEntities(entityClass, nativeEntities);
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntities);
@@ -274,7 +278,7 @@ public class DefaultDatastoreWriter {
 	public <E> E upsert(E entity) {
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPSERT, entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
 			Entity upsertedNativeEntity = nativeWriter.put(nativeEntity);
 			@SuppressWarnings("unchecked")
 			E upsertedEntity = (E) Unmarshaller.unmarshal(upsertedNativeEntity, entity.getClass());
@@ -302,7 +306,7 @@ public class DefaultDatastoreWriter {
 		}
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPSERT, entities);
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager);
 			Class<?> entityClass = entities.get(0).getClass();
 			List<Entity> upsertedNativeEntities = nativeWriter.put(nativeEntities);
 			List<E> upsertedEntities = (List<E>) toEntities(entityClass, upsertedNativeEntities);
@@ -325,7 +329,7 @@ public class DefaultDatastoreWriter {
 	public void delete(Object entity) {
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_DELETE, entity);
-			Key nativeKey = Marshaller.marshalKey(datastore, entity);
+			Key nativeKey = Marshaller.marshalKey(entityManager, entity);
 			nativeWriter.delete(nativeKey);
 			entityManager.executeEntityListeners(CallbackType.POST_DELETE, entity);
 		} catch (DatastoreException exp) {
@@ -347,7 +351,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.PRE_DELETE, entities);
 			Key[] nativeKeys = new Key[entities.size()];
 			for (int i = 0; i < entities.size(); i++) {
-				nativeKeys[i] = Marshaller.marshalKey(datastore, entities.get(i));
+				nativeKeys[i] = Marshaller.marshalKey(entityManager, entities.get(i));
 			}
 			nativeWriter.delete(nativeKeys);
 			entityManager.executeEntityListeners(CallbackType.POST_DELETE, entities);
@@ -407,7 +411,7 @@ public class DefaultDatastoreWriter {
 	public <E> void delete(Class<E> entityClass, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key nativeKey = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
+			Key nativeKey = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -429,7 +433,7 @@ public class DefaultDatastoreWriter {
 	public <E> void delete(Class<E> entityClass, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key nativeKey = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
+			Key nativeKey = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static com.jmethods.catatumbo.impl.DatastoreUtils.*;
+import static com.jmethods.catatumbo.impl.DatastoreUtils.toNativeFullEntities;
 
 import java.util.List;
 
@@ -101,7 +101,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	public <E> void insertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
 			nativeTransaction.addWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -116,7 +116,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager);
 			nativeTransaction.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -127,7 +127,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	public <E> void upsertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
 			nativeTransaction.putWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -142,7 +142,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager);
 			nativeTransaction.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

@@ -99,7 +99,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 	public <E> void insertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -113,7 +113,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, entityManager);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -145,7 +145,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 	public <E> void upsertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(datastore, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -160,7 +160,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, datastore);
+			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, entityManager);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

@@ -44,6 +44,11 @@ import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 public class Marshaller {
 
 	/**
+	 * Reference to the EntityManager
+	 */
+	private DefaultEntityManager entityManager;
+
+	/**
 	 * Reference to the Datastore object
 	 */
 	private final Datastore datastore;
@@ -76,13 +81,14 @@ public class Marshaller {
 	/**
 	 * Creates a new instance of <code>Marshaller</code>.
 	 *
-	 * @param datastore
-	 *            reference to the Datastore object
+	 * @param entityManager
+	 *            reference to the entity manager
 	 * @param entity
 	 *            the Entity to marshal
 	 */
-	private Marshaller(Datastore datastore, Object entity) {
-		this.datastore = datastore;
+	private Marshaller(DefaultEntityManager entityManager, Object entity) {
+		this.entityManager = entityManager;
+		this.datastore = entityManager.getDatastore();
 		this.entity = entity;
 		entityMetadata = EntityIntrospector.introspect(entity.getClass());
 
@@ -94,23 +100,23 @@ public class Marshaller {
 	 * the Identifier annotation is set to autoGenerate, the ID will be
 	 * generated.
 	 *
-	 * @param datastore
-	 *            the Datastore
+	 * @param entityManager
+	 *            the entity manager
 	 * @param entity
 	 *            the entity to marshal
 	 * @return the marshaled object.
 	 */
 	@SuppressWarnings("rawtypes")
-	public static BaseEntity marshal(Datastore datastore, Object entity) {
-		return marshal(datastore, entity, false);
+	public static BaseEntity marshal(DefaultEntityManager entityManager, Object entity) {
+		return marshal(entityManager, entity, false);
 	}
 
 	/**
 	 * Marshals the given entity (POJO) into the format needed for the low level
 	 * Cloud Datastore API.
 	 * 
-	 * @param datastore
-	 *            the Datastore
+	 * @param entityManager
+	 *            the entity manager
 	 * @param entity
 	 *            the entity to marshal
 	 * @param doNotGenerateId
@@ -121,8 +127,8 @@ public class Marshaller {
 	 * @return the marshaled object
 	 */
 	@SuppressWarnings("rawtypes")
-	public static BaseEntity marshal(Datastore datastore, Object entity, boolean doNotGenerateId) {
-		Marshaller marshaller = new Marshaller(datastore, entity);
+	public static BaseEntity marshal(DefaultEntityManager entityManager, Object entity, boolean doNotGenerateId) {
+		Marshaller marshaller = new Marshaller(entityManager, entity);
 		marshaller.doNotGenerateId = doNotGenerateId;
 		return marshaller.marshal();
 	}
@@ -131,14 +137,14 @@ public class Marshaller {
 	 * Extracts the key from the given object, entity, and returns it. Then
 	 * entity must have its ID set.
 	 *
-	 * @param datastore
-	 *            the Datastore.
+	 * @param entityManager
+	 *            the entity manager.
 	 * @param entity
 	 *            the entity from which key is to be extracted
 	 * @return extracted key.
 	 */
-	public static Key marshalKey(Datastore datastore, Object entity) {
-		Marshaller marshaller = new Marshaller(datastore, entity);
+	public static Key marshalKey(DefaultEntityManager entityManager, Object entity) {
+		Marshaller marshaller = new Marshaller(entityManager, entity);
 		marshaller.doNotGenerateId = true;
 		marshaller.marshalKey();
 		return (Key) marshaller.key;
@@ -254,7 +260,7 @@ public class Marshaller {
 	private void createCompleteKey(Key parent, long id) {
 		String kind = entityMetadata.getKind();
 		if (parent == null) {
-			key = datastore.newKeyFactory().setKind(kind).newKey(id);
+			key = entityManager.newNativeKeyFactory().setKind(kind).newKey(id);
 		} else {
 			key = Key.newBuilder(parent, kind, id).build();
 		}
@@ -271,7 +277,7 @@ public class Marshaller {
 	private void createCompleteKey(Key parent, String id) {
 		String kind = entityMetadata.getKind();
 		if (parent == null) {
-			key = datastore.newKeyFactory().setKind(kind).newKey(id);
+			key = entityManager.newNativeKeyFactory().setKind(kind).newKey(id);
 		} else {
 			key = Key.newBuilder(parent, kind, id).build();
 		}
@@ -288,7 +294,7 @@ public class Marshaller {
 		String kind = entityMetadata.getKind();
 		String id = UUID.randomUUID().toString();
 		if (parent == null) {
-			key = datastore.newKeyFactory().setKind(kind).newKey(id);
+			key = entityManager.newNativeKeyFactory().setKind(kind).newKey(id);
 		} else {
 			key = Key.newBuilder(parent, kind, id).build();
 		}
@@ -303,7 +309,7 @@ public class Marshaller {
 	private void createIncompleteKey(Key parent) {
 		String kind = entityMetadata.getKind();
 		if (parent == null) {
-			key = datastore.newKeyFactory().setKind(kind).newKey();
+			key = entityManager.newNativeKeyFactory().setKind(kind).newKey();
 		} else {
 			key = IncompleteKey.newBuilder(parent, kind).build();
 		}

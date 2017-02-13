@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
@@ -91,14 +90,14 @@ class DatastoreUtils {
 	 * 
 	 * @param entities
 	 *            the model objects to convert.
-	 * @param datastore
-	 *            the Datastore object
+	 * @param entityManager
+	 *            the entity manager
 	 * @return the equivalent FullEntity array
 	 */
-	static FullEntity<?>[] toNativeFullEntities(List<?> entities, Datastore datastore) {
+	static FullEntity<?>[] toNativeFullEntities(List<?> entities, DefaultEntityManager entityManager) {
 		FullEntity<?>[] nativeEntities = new FullEntity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			nativeEntities[i] = (FullEntity<?>) Marshaller.marshal(datastore, entities.get(i));
+			nativeEntities[i] = (FullEntity<?>) Marshaller.marshal(entityManager, entities.get(i));
 		}
 		return nativeEntities;
 	}
@@ -109,14 +108,14 @@ class DatastoreUtils {
 	 * 
 	 * @param entities
 	 *            the model objects to convert.
-	 * @param datastore
-	 *            the Datastore object
+	 * @param entityManager
+	 *            the entity manager
 	 * @return the equivalent Entity array
 	 */
-	static Entity[] toNativeEntities(List<?> entities, Datastore datastore) {
+	static Entity[] toNativeEntities(List<?> entities, DefaultEntityManager entityManager) {
 		Entity[] nativeEntities = new Entity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			nativeEntities[i] = (Entity) Marshaller.marshal(datastore, entities.get(i), true);
+			nativeEntities[i] = (Entity) Marshaller.marshal(entityManager, entities.get(i), true);
 		}
 		return nativeEntities;
 	}

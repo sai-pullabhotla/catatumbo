@@ -106,7 +106,7 @@ public class DefaultDatastoreReader {
 	public <E> E load(Class<E> entityClass, long id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
+			Key key = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
@@ -192,7 +192,7 @@ public class DefaultDatastoreReader {
 	public <E> E load(Class<E> entityClass, String id) {
 		try {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = datastore.newKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
+			Key key = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			Entity nativeEntity = nativeReader.get(key);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
@@ -318,6 +318,7 @@ public class DefaultDatastoreReader {
 	public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType, EntityQueryRequest request) {
 		try {
 			GqlQuery.Builder<Entity> queryBuilder = Query.newGqlQueryBuilder(ResultType.ENTITY, request.getQuery());
+			queryBuilder.setNamespace(entityManager.getEffectiveNamespace());
 			queryBuilder.setAllowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
@@ -355,6 +356,7 @@ public class DefaultDatastoreReader {
 		try {
 			GqlQuery.Builder<ProjectionEntity> queryBuilder = Query.newGqlQueryBuilder(ResultType.PROJECTION_ENTITY,
 					request.getQuery());
+			queryBuilder.setNamespace(entityManager.getEffectiveNamespace());
 			queryBuilder.setAllowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
@@ -387,6 +389,7 @@ public class DefaultDatastoreReader {
 	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
 		try {
 			GqlQuery.Builder<Key> queryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, request.getQuery());
+			queryBuilder.setNamespace(entityManager.getEffectiveNamespace());
 			queryBuilder.setAllowLiteral(request.isAllowLiterals());
 			QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
 			QueryUtils.applyPositionalBindings(queryBuilder, request.getPositionalBindings());
@@ -424,7 +427,7 @@ public class DefaultDatastoreReader {
 		}
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 		Key[] nativeKeys = new Key[identifiers.size()];
-		KeyFactory keyFactory = datastore.newKeyFactory();
+		KeyFactory keyFactory = entityManager.newNativeKeyFactory();
 		keyFactory.setKind(entityMetadata.getKind());
 		for (int i = 0; i < identifiers.size(); i++) {
 			long id = identifiers.get(i);
@@ -449,7 +452,7 @@ public class DefaultDatastoreReader {
 		}
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 		Key[] nativeKeys = new Key[identifiers.size()];
-		KeyFactory keyFactory = datastore.newKeyFactory();
+		KeyFactory keyFactory = entityManager.newNativeKeyFactory();
 		keyFactory.setKind(entityMetadata.getKind());
 		for (int i = 0; i < identifiers.size(); i++) {
 			String id = identifiers.get(i);

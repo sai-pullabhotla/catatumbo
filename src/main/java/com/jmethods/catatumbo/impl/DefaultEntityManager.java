@@ -26,6 +26,7 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.jmethods.catatumbo.DatastoreBatch;
@@ -37,6 +38,7 @@ import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
+import com.jmethods.catatumbo.Tenant;
 import com.jmethods.catatumbo.TransactionalTask;
 
 /**
@@ -101,7 +103,8 @@ public class DefaultEntityManager implements EntityManager {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
 		String query = "SELECT __key__ FROM " + entityMetadata.getKind();
 		try {
-			GqlQuery<Key> gqlQuery = Query.newGqlQueryBuilder(Query.ResultType.KEY, query).build();
+			GqlQuery<Key> gqlQuery = Query.newGqlQueryBuilder(Query.ResultType.KEY, query)
+					.setNamespace(getEffectiveNamespace()).build();
 			QueryResults<Key> keys = datastore.run(gqlQuery);
 			Key[] nativeKeys = new Key[DEFAULT_DELETE_ALL_BATCH_SIZE];
 			long deleteCount = 0;
@@ -435,6 +438,37 @@ public class DefaultEntityManager implements EntityManager {
 			throw new EntityManagerException(message, exp);
 		}
 
+	}
+
+	/**
+	 * Creates and returns a new native KeyFactory. If a namespace was specified
+	 * using {@link Tenant}, the returned KeyFactory will have the specified
+	 * namespace.
+	 * 
+	 * @return a {@link KeyFactory}
+	 */
+	KeyFactory newNativeKeyFactory() {
+		KeyFactory keyFactory = datastore.newKeyFactory();
+		String namespace = Tenant.getNamespace();
+		if (namespace != null) {
+			keyFactory.setNamespace(namespace);
+		}
+		return keyFactory;
+	}
+
+	/**
+	 * Returns the effective namespace. If a namespace was specified using
+	 * {@link Tenant}, it will be returned. Otherwise, the namespace of this
+	 * EntityManager is returned.
+	 * 
+	 * @return the effective namespace.
+	 */
+	String getEffectiveNamespace() {
+		String namespace = Tenant.getNamespace();
+		if (namespace == null) {
+			namespace = datastore.getOptions().getNamespace();
+		}
+		return namespace;
 	}
 
 }
