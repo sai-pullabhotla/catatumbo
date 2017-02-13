@@ -127,14 +127,6 @@ public interface DatastoreTransaction extends DatastoreAccess {
 		 * @return a list of generated keys.
 		 */
 		List<DatastoreKey> getGeneratedKeys();
-
-		/**
-		 * Returns a list of generated keys.
-		 * 
-		 * @return a list of generated keys.
-		 */
-		@Deprecated
-		List<DatastoreKey> getGneratedKeys();
 	}
 
 }

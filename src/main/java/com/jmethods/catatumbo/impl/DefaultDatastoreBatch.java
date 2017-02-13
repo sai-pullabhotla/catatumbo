@@ -246,13 +246,6 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		public List<DatastoreKey> getGeneratedKeys() {
 			return DatastoreUtils.toDatastoreKeys(nativeResponse.getGeneratedKeys());
 		}
-
-		@Override
-		@Deprecated
-		public List<DatastoreKey> getGneratedKeys() {
-			return getGeneratedKeys();
-		}
-
 	}
 
 }

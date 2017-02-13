@@ -16,7 +16,8 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +87,7 @@ public class DatastoreBatchTest {
 		batch.insertWithDeferredIdAllocation(entity);
 		DatastoreBatch.Response response = batch.submit();
 		// Leaving this call to the deprecated method
-		assertTrue(response.getGneratedKeys().size() == 1);
+		assertTrue(response.getGeneratedKeys().size() == 1);
 	}
 
 	@Test

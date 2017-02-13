@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +190,7 @@ public class DatastoreTransactionTest {
 			transaction.insertWithDeferredIdAllocation(entities);
 			DatastoreTransaction.Response response = transaction.commit();
 			// Leaving this call to the deprecated method
-			assertTrue(response.getGneratedKeys().size() == 5);
+			assertTrue(response.getGeneratedKeys().size() == 5);
 		} finally {
 			if (transaction.isActive()) {
 				transaction.rollback();
