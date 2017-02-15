@@ -17,6 +17,7 @@
 package com.jmethods.catatumbo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,6 +142,20 @@ public abstract class BaseQueryRequest implements QueryRequest {
 	 */
 	public void addPositionalBinding(Object bindingValue) {
 		positionalBindings.add(bindingValue);
+	}
+
+	/**
+	 * Adds the positional bindings that are needed for any positional
+	 * parameters in the GQL query.
+	 * 
+	 * @param first
+	 *            the first positional binding
+	 * @param others
+	 *            subsequent positional bindings, if any
+	 */
+	public void addPositionalBindings(Object first, Object... others) {
+		positionalBindings.add(first);
+		positionalBindings.addAll(Arrays.asList(others));
 	}
 
 	/**

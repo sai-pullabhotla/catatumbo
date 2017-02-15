@@ -1673,6 +1673,16 @@ public class EntityManagerTest {
 	}
 
 	@Test
+	public void testExecute_SelectPriorityAndCompleteFilter_Varargs() {
+		EntityQueryRequest request = em
+				.createEntityQueryRequest("SELECT * FROM Task WHERE priority = @1 AND complete = @2 order by __key__");
+		request.addPositionalBindings(0, true);
+		QueryResponse<Task> response = em.executeEntityQueryRequest(Task.class, request);
+		List<Task> tasks = response.getResults();
+		assertTrue(tasks.size() == 5 && tasks.get(0).getId() == 10 && tasks.get(tasks.size() - 1).getId() == 50);
+	}
+
+	@Test
 	public void executeTest_SelectTaskNameFilter() {
 		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM Task WHERE name = @1 order by __key__");
 		request.addPositionalBinding("My Task 13");
