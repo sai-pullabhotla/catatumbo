@@ -70,6 +70,8 @@ public class ListMapper implements Mapper {
 	 * 
 	 * @param type
 	 *            the list type
+	 * @param indexed
+	 *            whether or not the property should be indexed
 	 */
 	public ListMapper(Type type, boolean indexed) {
 		this.listType = type;

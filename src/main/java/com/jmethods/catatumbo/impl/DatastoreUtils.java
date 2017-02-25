@@ -29,6 +29,7 @@ import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
+import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
  * Utility methods.
@@ -92,12 +93,15 @@ class DatastoreUtils {
 	 *            the model objects to convert.
 	 * @param entityManager
 	 *            the entity manager
+	 * @param intent
+	 *            the intent of marshalling
 	 * @return the equivalent FullEntity array
 	 */
-	static FullEntity<?>[] toNativeFullEntities(List<?> entities, DefaultEntityManager entityManager) {
+	static FullEntity<?>[] toNativeFullEntities(List<?> entities, DefaultEntityManager entityManager,
+			Marshaller.Intent intent) {
 		FullEntity<?>[] nativeEntities = new FullEntity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			nativeEntities[i] = (FullEntity<?>) Marshaller.marshal(entityManager, entities.get(i));
+			nativeEntities[i] = (FullEntity<?>) Marshaller.marshal(entityManager, entities.get(i), intent);
 		}
 		return nativeEntities;
 	}
@@ -115,7 +119,7 @@ class DatastoreUtils {
 	static Entity[] toNativeEntities(List<?> entities, DefaultEntityManager entityManager) {
 		Entity[] nativeEntities = new Entity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			nativeEntities[i] = (Entity) Marshaller.marshal(entityManager, entities.get(i), true);
+			nativeEntities[i] = (Entity) Marshaller.marshal(entityManager, entities.get(i), Intent.UPDATE);
 		}
 		return nativeEntities;
 	}

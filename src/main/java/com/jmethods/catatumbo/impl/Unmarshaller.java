@@ -331,6 +331,21 @@ public class Unmarshaller {
 		unmarshalProperty(propertyMetadata, target, nativeEntity);
 	}
 
+	/**
+	 * Unmarshals the property with the given metadata and sets the unmarshalled
+	 * value on the given <code>target</code> object.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the property
+	 * @param target
+	 *            the target object to set the unmarshalled value on
+	 * @param nativeEntity
+	 *            the native entity containing the source property
+	 * @throws IllegalAccessException
+	 *             propagated
+	 * @throws InvocationTargetException
+	 *             propagated
+	 */
 	private static void unmarshalProperty(PropertyMetadata propertyMetadata, Object target, BaseEntity<?> nativeEntity)
 			throws IllegalAccessException, InvocationTargetException {
 		// The datastore may not have every property that the entity class has

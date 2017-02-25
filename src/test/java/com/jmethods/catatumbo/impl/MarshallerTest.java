@@ -26,6 +26,7 @@ import com.google.cloud.datastore.FullEntity;
 import com.jmethods.catatumbo.TestUtils;
 import com.jmethods.catatumbo.entities.Contact;
 import com.jmethods.catatumbo.entities.Customer;
+import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
  * @author Sai Pullabhotla
@@ -43,7 +44,7 @@ public class MarshallerTest {
 	@Test
 	public void testMarshal_Embedded() {
 		Customer customer = Customer.createSampleCustomer2();
-		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, customer);
+		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, customer, Intent.INSERT);
 		assertNull(entity.getString("ba_line1"));
 		assertNull(entity.getString("ba_line2"));
 		assertNull(entity.getString("ba_zip"));
@@ -54,7 +55,7 @@ public class MarshallerTest {
 	@Test
 	public void testMarshal_Embedded_Imploded() {
 		Contact contact = Contact.createContact1();
-		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact);
+		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
 		assertNull(entity.getValue("cellNumber").get());
 		assertNull(entity.getValue("homeAddress").get());
 	}
@@ -62,7 +63,7 @@ public class MarshallerTest {
 	@Test
 	public void testMarshal_Embedded_Imploded2() {
 		Contact contact = Contact.createContact2();
-		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact);
+		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
 		assertEquals("55555", entity.getEntity("homeAddress").getEntity("postal_code").getString("zip"));
 	}
 

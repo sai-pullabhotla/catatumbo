@@ -65,6 +65,9 @@ public class EmbeddableIntrospector {
 		return introspector.metadata;
 	}
 
+	/**
+	 * Introspects the Embeddable.
+	 */
 	private void introspect() {
 		// Make sure the class is Embeddable
 		if (!embeddableClass.isAnnotationPresent(Embeddable.class)) {

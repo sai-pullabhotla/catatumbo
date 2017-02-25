@@ -128,6 +128,9 @@ public class PropertyMetadata extends FieldMetadata {
 		return secondaryIndexName;
 	}
 
+	/**
+	 * Initializes the secondary indexer for this property, if any.
+	 */
 	private void initializeSecondaryIndexer() {
 		SecondaryIndex secondaryIndexAnnotation = field.getAnnotation(SecondaryIndex.class);
 		if (secondaryIndexAnnotation == null) {

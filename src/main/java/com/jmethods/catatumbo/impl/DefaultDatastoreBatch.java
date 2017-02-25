@@ -25,6 +25,7 @@ import com.google.cloud.datastore.FullEntity;
 import com.jmethods.catatumbo.DatastoreBatch;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
  * Default implementation of {@link DatastoreBatch} to execute batch updates.
@@ -99,7 +100,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 	public <E> void insertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.INSERT);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -113,7 +114,8 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, entityManager);
+			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, entityManager,
+					Intent.INSERT);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -145,7 +147,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 	public <E> void upsertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.UPSERT);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -160,7 +162,8 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, entityManager);
+			FullEntity<?>[] nativeEntities = DatastoreUtils.toNativeFullEntities(entities, entityManager,
+					Intent.UPSERT);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);

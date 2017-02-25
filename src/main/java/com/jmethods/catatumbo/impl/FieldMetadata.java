@@ -139,6 +139,9 @@ public abstract class FieldMetadata {
 		return mapper;
 	}
 
+	/**
+	 * Initializes the {@link Mapper} for this field.
+	 */
 	private void initializeMapper() {
 		try {
 			this.mapper = MapperFactory.getInstance().getMapper(field);

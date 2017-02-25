@@ -15,15 +15,18 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jmethods.catatumbo.CreatedTimestamp;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Identifier;
 import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.ParentKey;
 import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
+import com.jmethods.catatumbo.UpdatedTimestamp;
 import com.jmethods.catatumbo.Version;
 
 /**
@@ -66,6 +69,18 @@ public class EntityMetadata extends MetadataBase {
 	 * versioning
 	 */
 	private PropertyMetadata versionMetadata;
+
+	/**
+	 * Metadata of the field that is used to store the creation timestamp of an
+	 * entity.
+	 */
+	private PropertyMetadata createdTimestampMetadata;
+
+	/**
+	 * Metadata of the field that is used to store the modification timestamp of
+	 * an entity.
+	 */
+	private PropertyMetadata updatedTimestampMetadata;
 
 	/**
 	 * Property overrides for embeeded fields of the entity. The key is the
@@ -219,13 +234,61 @@ public class EntityMetadata extends MetadataBase {
 	 */
 	public void setVersionMetadata(PropertyMetadata versionMetadata) {
 		if (this.versionMetadata != null) {
-			String format = "Class %s has at least two fields, %s and %s, with an annotation of %s. A given entity "
-					+ "can have atmost one field with this annotation. ";
-			String message = String.format(format, entityClass.getName(), this.versionMetadata.getName(),
-					versionMetadata.getName(), Version.class.getName());
-			throw new EntityManagerException(message);
+			throwDuplicateAnnotationException(entityClass, Version.class, this.versionMetadata, versionMetadata);
 		}
 		this.versionMetadata = versionMetadata;
+	}
+
+	/**
+	 * Returns the metadata of the field that was marked with
+	 * {@link CreatedTimestamp} annotation.
+	 * 
+	 * @return the metadata of the field that was marked with
+	 *         {@link CreatedTimestamp} annotation. The returned value may be
+	 *         <code>null</code>, if the entity does not have a field with
+	 *         {@link CreatedTimestamp} annotation.
+	 */
+	public PropertyMetadata getCreatedTimestampMetadata() {
+		return createdTimestampMetadata;
+	}
+
+	/**
+	 * Sets the created timestamp metadata to the given value.
+	 * 
+	 * @param createdTimestampMetadata
+	 *            the created timestamp metadata
+	 */
+	public void setCreatedTimestampMetadata(PropertyMetadata createdTimestampMetadata) {
+		if (this.createdTimestampMetadata != null) {
+			throwDuplicateAnnotationException(entityClass, CreatedTimestamp.class, this.createdTimestampMetadata,
+					createdTimestampMetadata);
+		}
+		this.createdTimestampMetadata = createdTimestampMetadata;
+	}
+
+	/**
+	 * Returns the metadata of the field that was marked with
+	 * {@link UpdatedTimestamp} annotation.
+	 * 
+	 * @return the metadata of the field that was marked with
+	 *         {@link UpdatedTimestamp} annotation. The returned value may be
+	 *         <code>null</code>, if the entity does not have a field with
+	 *         {@link UpdatedTimestamp} annotation.
+	 */
+	public PropertyMetadata getUpdatedTimestampMetadata() {
+		return updatedTimestampMetadata;
+	}
+
+	/**
+	 * @param updatedTimestampMetadata
+	 *            the updatedTimestampMetadata to set
+	 */
+	public void setUpdatedTimestampMetadata(PropertyMetadata updatedTimestampMetadata) {
+		if (this.updatedTimestampMetadata != null) {
+			throwDuplicateAnnotationException(entityClass, UpdatedTimestamp.class, this.updatedTimestampMetadata,
+					updatedTimestampMetadata);
+		}
+		this.updatedTimestampMetadata = updatedTimestampMetadata;
 	}
 
 	/**
@@ -340,6 +403,28 @@ public class EntityMetadata extends MetadataBase {
 			updateMasterPropertyMetadataMap(embeddedMetadata.getMappedName(),
 					embeddedMetadata.getField().getQualifiedName());
 		}
+	}
+
+	/**
+	 * Raises an exception with a detailed message reporting that the entity has
+	 * more than one field that has a specific annotation.
+	 * 
+	 * @param entityClass
+	 *            the entity class
+	 * @param annotationClass
+	 *            the annotation class
+	 * @param metadata1
+	 *            the metadata of the first field
+	 * @param metadata2
+	 *            the metadata of the second field that conflicts with the first
+	 */
+	private static void throwDuplicateAnnotationException(Class<?> entityClass,
+			Class<? extends Annotation> annotationClass, PropertyMetadata metadata1, PropertyMetadata metadata2) {
+		String format = "Class %s has at least two fields, %s and %s, with an annotation of %s. A given entity "
+				+ "can have at most one field with this annotation. ";
+		String message = String.format(format, entityClass.getName(), metadata1.getName(), metadata2.getName(),
+				annotationClass.getName());
+		throw new EntityManagerException(message);
 	}
 
 }

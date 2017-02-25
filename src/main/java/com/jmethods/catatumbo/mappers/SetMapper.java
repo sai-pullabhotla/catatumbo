@@ -73,6 +73,8 @@ public class SetMapper implements Mapper {
 	 * 
 	 * @param type
 	 *            the type of Set
+	 * @param indexed
+	 *            whether or not the property should be indexed
 	 */
 	public SetMapper(Type type, boolean indexed) {
 		this.setType = type;

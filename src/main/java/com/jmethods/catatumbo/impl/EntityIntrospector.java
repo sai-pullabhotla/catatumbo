@@ -18,8 +18,13 @@ package com.jmethods.catatumbo.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import com.jmethods.catatumbo.CreatedTimestamp;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.Entity;
@@ -32,6 +37,7 @@ import com.jmethods.catatumbo.ParentKey;
 import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
 import com.jmethods.catatumbo.PropertyOverrides;
+import com.jmethods.catatumbo.UpdatedTimestamp;
 import com.jmethods.catatumbo.Version;
 
 /**
@@ -45,6 +51,18 @@ import com.jmethods.catatumbo.Version;
  * @author Sai Pullabhotla
  */
 public class EntityIntrospector {
+
+	/**
+	 * Valid data types for fields that are marked with either
+	 * {@link CreatedTimestamp} or {@link UpdatedTimestamp}.
+	 */
+	private static final List<String> VALID_TIMESTAMP_TYPES = Arrays.asList(new String[] { long.class.getName(),
+			Long.class.getName(), Date.class.getName(), Calendar.class.getName() });
+
+	static {
+		// Sort the valid types so we can do a binary search.
+		Collections.sort(VALID_TIMESTAMP_TYPES);
+	}
 
 	/**
 	 * Cache of introspected classes
@@ -298,6 +316,10 @@ public class EntityIntrospector {
 			entityMetadata.putPropertyMetadata(propertyMetadata);
 			if (field.isAnnotationPresent(Version.class)) {
 				processVersionField(propertyMetadata);
+			} else if (field.isAnnotationPresent(CreatedTimestamp.class)) {
+				processCreatedTimestampField(propertyMetadata);
+			} else if (field.isAnnotationPresent(UpdatedTimestamp.class)) {
+				processUpdatedTimestampField(propertyMetadata);
 			}
 		}
 	}
@@ -316,6 +338,48 @@ public class EntityIntrospector {
 					String.format(messageFormat, propertyMetadata.getField().getName(), entityClass, long.class));
 		}
 		entityMetadata.setVersionMetadata(propertyMetadata);
+	}
+
+	/**
+	 * Processes the field that is marked with {@link CreatedTimestamp}
+	 * annotation.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the field that was annotated with
+	 *            {@link CreatedTimestamp}.
+	 */
+	private void processCreatedTimestampField(PropertyMetadata propertyMetadata) {
+		validateAutoTimestampField(propertyMetadata);
+		entityMetadata.setCreatedTimestampMetadata(propertyMetadata);
+	}
+
+	/**
+	 * Processes the field that is marked with {@link UpdatedTimestamp}
+	 * annotation.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata of the field that was annotated with
+	 *            {@link UpdatedTimestamp}.
+	 */
+	private void processUpdatedTimestampField(PropertyMetadata propertyMetadata) {
+		validateAutoTimestampField(propertyMetadata);
+		entityMetadata.setUpdatedTimestampMetadata(propertyMetadata);
+	}
+
+	/**
+	 * Validates the given property metadata to ensure it is valid for an
+	 * automatic timestamp field.
+	 * 
+	 * @param propertyMetadata
+	 *            the metadata to validate
+	 */
+	private void validateAutoTimestampField(PropertyMetadata propertyMetadata) {
+		Class<?> dataClass = propertyMetadata.getDeclaredType();
+		if (Collections.binarySearch(VALID_TIMESTAMP_TYPES, dataClass.getName()) < 0) {
+			String messageFormat = "Field %s in class %s must be one of the following types - %s";
+			throw new EntityManagerException(String.format(messageFormat, propertyMetadata.getField().getName(),
+					entityClass, VALID_TIMESTAMP_TYPES));
+		}
 	}
 
 	/**

@@ -31,6 +31,7 @@ import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
+import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
  * Default implementation of the {@link DatastoreTransaction} interface.
@@ -101,7 +102,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	public <E> void insertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.INSERT);
 			nativeTransaction.addWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -116,7 +117,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager);
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager, Intent.INSERT);
 			nativeTransaction.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -127,7 +128,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	public <E> void upsertWithDeferredIdAllocation(E entity) {
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entity);
-			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity);
+			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.UPSERT);
 			nativeTransaction.putWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -142,7 +143,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		}
 		try {
 			DatastoreUtils.validateDeferredIdAllocation(entities.get(0));
-			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager);
+			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager, Intent.UPSERT);
 			nativeTransaction.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
@@ -177,10 +178,25 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		}
 	}
 
+	/**
+	 * Transaction Response containing the results of a transaction commit.
+	 * 
+	 * @author Sai Pullabhotla
+	 *
+	 */
 	static class DefaultResponse implements Response {
 
+		/**
+		 * Native response
+		 */
 		private final Transaction.Response nativeResponse;
 
+		/**
+		 * Creates a new instance of <code>DefaultResponse</code>.
+		 * 
+		 * @param nativeResponse
+		 *            the native transaction response
+		 */
 		public DefaultResponse(Transaction.Response nativeResponse) {
 			this.nativeResponse = nativeResponse;
 		}

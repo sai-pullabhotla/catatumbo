@@ -50,6 +50,9 @@ import com.jmethods.catatumbo.custommappers.DeviceTypeMapper;
 import com.jmethods.catatumbo.entities.AccessorTestEntity;
 import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.ArrayIndex;
+import com.jmethods.catatumbo.entities.AutoTimestampCalendar;
+import com.jmethods.catatumbo.entities.AutoTimestampDate;
+import com.jmethods.catatumbo.entities.AutoTimestampLong;
 import com.jmethods.catatumbo.entities.BigDecimalField;
 import com.jmethods.catatumbo.entities.BooleanField;
 import com.jmethods.catatumbo.entities.BooleanObject;
@@ -171,6 +174,9 @@ public class EntityManagerTest {
 		em.deleteAll(Visitor.class);
 		em.deleteAll(AccessorTestEntity.class);
 		em.deleteAll(ArrayIndex.class);
+		em.deleteAll(AutoTimestampDate.class);
+		em.deleteAll(AutoTimestampCalendar.class);
+		em.deleteAll(AutoTimestampLong.class);
 		populateTasks();
 	}
 
@@ -2424,6 +2430,170 @@ public class EntityManagerTest {
 			Utility.close(in);
 		}
 		assertEquals(entity, entity2);
+	}
+
+	@Test
+	public void testInsertTimestamp_Calendar() {
+		AutoTimestampCalendar entity = new AutoTimestampCalendar();
+		entity.setName("Insert");
+		AutoTimestampCalendar entity2 = em.insert(entity);
+		assertNotNull(entity2.getCreatedOn());
+		assertNotNull(entity2.getModifiedOn());
+		assertEquals(entity2.getCreatedOn(), entity2.getModifiedOn());
+	}
+
+	@Test
+	public void testUpsertTimestamp_Calendar() {
+		AutoTimestampCalendar entity = new AutoTimestampCalendar();
+		entity.setName("Upsert");
+		AutoTimestampCalendar entity2 = em.upsert(entity);
+		assertNull(entity2.getCreatedOn());
+		assertNotNull(entity2.getModifiedOn());
+	}
+
+	@Test
+	public void testUpsertTimestamp_Calendar_2() {
+		AutoTimestampCalendar entity = new AutoTimestampCalendar();
+		entity.setName("Upsert with created date set on entity");
+		entity.setCreatedOn(Calendar.getInstance());
+		AutoTimestampCalendar entity2 = em.upsert(entity);
+		assertNotNull(entity2.getCreatedOn());
+		assertNotNull(entity2.getModifiedOn());
+	}
+
+	@Test
+	public void testUpdateTimestamp_Calendar() {
+		AutoTimestampCalendar entity = new AutoTimestampCalendar();
+		entity.setName("Insert");
+		AutoTimestampCalendar entity2 = em.insert(entity);
+		AutoTimestampCalendar entity3 = em.load(AutoTimestampCalendar.class, entity2.getId());
+		entity3.setName("Update");
+		AutoTimestampCalendar entity4 = em.update(entity3);
+		assertEquals(entity2.getCreatedOn(), entity3.getCreatedOn());
+		assertEquals(entity3.getCreatedOn(), entity4.getCreatedOn());
+		assertNotEquals(entity3.getCreatedOn(), entity4.getModifiedOn());
+	}
+
+	@Test
+	public void testInsertTimestamp_Calendar_Multiple() {
+		List<AutoTimestampCalendar> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			AutoTimestampCalendar entity = new AutoTimestampCalendar();
+			entity.setName("Insert " + i);
+			entities.add(entity);
+		}
+		List<AutoTimestampCalendar> entities2 = em.insert(entities);
+		assertNotNull(entities2.get(0).getCreatedOn());
+		assertNotNull(entities2.get(1).getCreatedOn());
+		assertNotNull(entities2.get(0).getModifiedOn());
+		assertNotNull(entities2.get(1).getModifiedOn());
+	}
+
+	@Test
+	public void testUpsertTimestamp_Calendar_Multiple() {
+		List<AutoTimestampCalendar> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			AutoTimestampCalendar entity = new AutoTimestampCalendar();
+			entity.setName("Upsert " + i);
+			entities.add(entity);
+		}
+		List<AutoTimestampCalendar> entities2 = em.upsert(entities);
+		assertNull(entities2.get(0).getCreatedOn());
+		assertNull(entities2.get(1).getCreatedOn());
+		assertNotNull(entities2.get(0).getModifiedOn());
+		assertNotNull(entities2.get(1).getModifiedOn());
+	}
+
+	@Test
+	public void testUpdateTimestamp_Calendar_Multiple() {
+		List<AutoTimestampCalendar> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			AutoTimestampCalendar entity = new AutoTimestampCalendar();
+			entity.setName("Insert Multiple " + i);
+			entities.add(entity);
+		}
+		List<AutoTimestampCalendar> entities2 = em.insert(entities);
+		List<Long> keys = new ArrayList<>(entities2.size());
+		for (int i = 0; i < entities2.size(); i++) {
+			keys.add(entities2.get(i).getId());
+		}
+		List<AutoTimestampCalendar> entities3 = em.loadById(AutoTimestampCalendar.class, keys);
+		for (int i = 0; i < entities3.size(); i++) {
+			entities3.get(i).setName("Update Multiple " + i);
+			keys.add(entities.get(i).getId());
+		}
+		List<AutoTimestampCalendar> entities4 = em.update(entities3);
+
+		assertNotNull(entities4.get(0).getCreatedOn());
+		assertNotNull(entities4.get(1).getCreatedOn());
+		assertNotNull(entities4.get(0).getModifiedOn());
+		assertNotNull(entities4.get(1).getModifiedOn());
+		assertNotEquals(entities4.get(0).getCreatedOn(), entities4.get(0).getModifiedOn());
+		assertNotEquals(entities4.get(1).getCreatedOn(), entities4.get(1).getModifiedOn());
+	}
+
+	@Test
+	public void testInsertTimestamp_Date() {
+		AutoTimestampDate entity = new AutoTimestampDate();
+		entity.setName("Insert");
+		AutoTimestampDate entity2 = em.insert(entity);
+		assertNotNull(entity2.getCreatedDate());
+		assertNotNull(entity2.getModifiedDate());
+		assertEquals(entity2.getCreatedDate(), entity2.getModifiedDate());
+	}
+
+	@Test
+	public void testUpsertTimestamp_Date() {
+		AutoTimestampDate entity = new AutoTimestampDate();
+		entity.setName("Upsert");
+		AutoTimestampDate entity2 = em.upsert(entity);
+		assertNull(entity2.getCreatedDate());
+		assertNotNull(entity2.getModifiedDate());
+	}
+
+	@Test
+	public void testUpdateTimestamp_Date() {
+		AutoTimestampDate entity = new AutoTimestampDate();
+		entity.setName("Insert");
+		AutoTimestampDate entity2 = em.insert(entity);
+		AutoTimestampDate entity3 = em.load(AutoTimestampDate.class, entity2.getId());
+		entity3.setName("Update");
+		AutoTimestampDate entity4 = em.update(entity3);
+		assertEquals(entity2.getCreatedDate(), entity3.getCreatedDate());
+		assertEquals(entity3.getCreatedDate(), entity4.getCreatedDate());
+		assertNotEquals(entity3.getCreatedDate(), entity4.getModifiedDate());
+	}
+
+	@Test
+	public void testInsertTimestamp_Long() {
+		AutoTimestampLong entity = new AutoTimestampLong();
+		entity.setName("Insert");
+		AutoTimestampLong entity2 = em.insert(entity);
+		assertNotNull(entity2.getCreatedDate());
+		assertNotNull(entity2.getModifiedDate());
+		assertEquals(entity2.getCreatedDate(), entity2.getModifiedDate());
+	}
+
+	@Test
+	public void testUpsertTimestamp_Long() {
+		AutoTimestampLong entity = new AutoTimestampLong();
+		entity.setName("Upsert");
+		AutoTimestampLong entity2 = em.upsert(entity);
+		assertNull(entity2.getCreatedDate());
+		assertNotNull(entity2.getModifiedDate());
+	}
+
+	@Test
+	public void testUpdateTimestamp_Long() {
+		AutoTimestampLong entity = new AutoTimestampLong();
+		entity.setName("Insert");
+		AutoTimestampLong entity2 = em.insert(entity);
+		AutoTimestampLong entity3 = em.load(AutoTimestampLong.class, entity2.getId());
+		entity3.setName("Update");
+		AutoTimestampLong entity4 = em.update(entity3);
+		assertEquals(entity2.getCreatedDate(), entity3.getCreatedDate());
+		assertEquals(entity3.getCreatedDate(), entity4.getCreatedDate());
+		assertNotEquals(entity3.getCreatedDate(), entity4.getModifiedDate());
 	}
 
 	private static Calendar getToday() {
