@@ -80,4 +80,9 @@ public class OptimisticLock1 {
 		this.version = version;
 	}
 
+	@Override
+	public String toString() {
+		return "OptimisticLock1 [id=" + id + ", name=" + name + ", version=" + version + "]";
+	}
+
 }

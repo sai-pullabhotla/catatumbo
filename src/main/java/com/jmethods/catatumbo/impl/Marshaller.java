@@ -67,7 +67,12 @@ public class Marshaller {
 		/**
 		 * Upsert (Update or Insert)
 		 */
-		UPSERT;
+		UPSERT,
+
+		/**
+		 * Batch Update
+		 */
+		BATCH_UPDATE;
 	}
 
 	/**
@@ -172,6 +177,9 @@ public class Marshaller {
 		}
 		marshalFields();
 		marshalAutoTimestampFields();
+		if (intent == Intent.UPDATE) {
+			marshalVersionField();
+		}
 		marshalEmbeddedFields();
 		return entityBuilder.build();
 	}
@@ -481,6 +489,7 @@ public class Marshaller {
 		switch (intent) {
 		case UPDATE:
 		case UPSERT:
+		case BATCH_UPDATE:
 			marshalUpdatedTimestamp();
 			break;
 		case INSERT:
@@ -540,6 +549,20 @@ public class Marshaller {
 		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(timestamp);
 		valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
 		entityBuilder.set(propertyMetadata.getMappedName(), valueBuilder.build());
+	}
+
+	/**
+	 * Marshals the version field, if it exists. The version will be set to one
+	 * more than the previous value.
+	 */
+	private void marshalVersionField() {
+		PropertyMetadata versionMetadata = entityMetadata.getVersionMetadata();
+		if (versionMetadata != null) {
+			long version = (long) getFieldValue(versionMetadata, entity);
+			ValueBuilder<?, ?, ?> valueBuilder = versionMetadata.getMapper().toDatastore(version + 1);
+			valueBuilder.setExcludeFromIndexes(!versionMetadata.isIndexed());
+			entityBuilder.set(versionMetadata.getMappedName(), valueBuilder.build());
+		}
 	}
 
 }

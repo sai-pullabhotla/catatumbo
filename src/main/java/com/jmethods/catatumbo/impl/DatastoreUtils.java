@@ -29,7 +29,6 @@ import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
-import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
  * Utility methods.
@@ -116,10 +115,10 @@ class DatastoreUtils {
 	 *            the entity manager
 	 * @return the equivalent Entity array
 	 */
-	static Entity[] toNativeEntities(List<?> entities, DefaultEntityManager entityManager) {
+	static Entity[] toNativeEntities(List<?> entities, DefaultEntityManager entityManager, Marshaller.Intent intent) {
 		Entity[] nativeEntities = new Entity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			nativeEntities[i] = (Entity) Marshaller.marshal(entityManager, entities.get(i), Intent.UPDATE);
+			nativeEntities[i] = (Entity) Marshaller.marshal(entityManager, entities.get(i), intent);
 		}
 		return nativeEntities;
 	}

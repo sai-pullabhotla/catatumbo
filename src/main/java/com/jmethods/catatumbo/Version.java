@@ -16,8 +16,8 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -55,11 +55,10 @@ import java.lang.annotation.Target;
  * 
  * <p style="color: red">
  * <strong>Note that the optimistic lock check and version increment only
- * happens when the {@link DatastoreAccess#update(Object)} is called. Other
- * methods that update the entities; e.g.
- * {@link DatastoreAccess#update(java.util.List)},
- * {@link DatastoreAccess#upsert(Object)}, etc. will NOT perform the optimistic
- * lock check or increment the version</strong>.
+ * happens when the {@link DatastoreAccess#update(Object)} and
+ * {@link DatastoreAccess#update(java.util.List)} is called. Other methods that
+ * may potentially update the entities (e.g. UPSERT) will NOT perform the
+ * optimistic lock check or increment the version</strong>.
  * </p>
  * 
  * @author Sai Pullabhotla

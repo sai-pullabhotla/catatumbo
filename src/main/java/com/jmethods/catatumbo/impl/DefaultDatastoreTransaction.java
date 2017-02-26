@@ -224,7 +224,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 
 	@Override
 	public <E> List<E> update(List<E> entities) {
-		return writer.update(entities);
+		return writer.updateWithOptimisticLock(entities);
 	}
 
 	@Override

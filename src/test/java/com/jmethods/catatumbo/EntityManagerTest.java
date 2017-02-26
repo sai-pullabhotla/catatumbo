@@ -48,7 +48,6 @@ import org.junit.Test;
 
 import com.jmethods.catatumbo.custommappers.DeviceTypeMapper;
 import com.jmethods.catatumbo.entities.AccessorTestEntity;
-import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.ArrayIndex;
 import com.jmethods.catatumbo.entities.AutoTimestampCalendar;
 import com.jmethods.catatumbo.entities.AutoTimestampDate;
@@ -152,7 +151,6 @@ public class EntityManagerTest {
 		em.deleteAll(Task.class);
 		em.deleteAll(IgnoreField.class);
 		em.deleteAll(Country.class);
-		em.deleteAll(Account.class);
 		em.deleteAll(Department.class);
 		em.deleteAll(Employee.class);
 		em.deleteAll(Tag.class);
@@ -2155,6 +2153,56 @@ public class EntityManagerTest {
 		entity2 = em.update(entity2);
 		em.delete(entity);
 		entity2 = em.update(entity2);
+	}
+
+	@Test
+	public void testUpdate_OptimisticLock4() {
+		List<OptimisticLock1> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			OptimisticLock1 entity = new OptimisticLock1();
+			entity.setName("Test Update Multiple " + i);
+			entities.add(entity);
+		}
+		List<OptimisticLock1> entities2 = em.insert(entities);
+		List<Long> ids = Arrays.asList(entities2.get(0).getId(), entities2.get(1).getId());
+		List<OptimisticLock1> entities3 = em.loadById(OptimisticLock1.class, ids);
+		List<OptimisticLock1> entities4 = em.update(entities3);
+		assertEquals(1, entities2.get(0).getVersion());
+		assertEquals(1, entities2.get(1).getVersion());
+		assertEquals(1, entities3.get(0).getVersion());
+		assertEquals(1, entities3.get(1).getVersion());
+		assertEquals(2, entities4.get(0).getVersion());
+		assertEquals(2, entities4.get(1).getVersion());
+	}
+
+	@Test(expected = OptimisticLockException.class)
+	public void testUpdate_OptimisticLock5() {
+		List<OptimisticLock1> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			OptimisticLock1 entity = new OptimisticLock1();
+			entity.setName("Test Update Multiple " + i);
+			entities.add(entity);
+		}
+		List<OptimisticLock1> entities2 = em.insert(entities);
+		List<Long> ids = Arrays.asList(entities2.get(0).getId(), entities2.get(1).getId());
+		List<OptimisticLock1> entities3 = em.loadById(OptimisticLock1.class, ids);
+		em.delete(entities3);
+		List<OptimisticLock1> entities4 = em.update(entities3);
+	}
+
+	@Test(expected = OptimisticLockException.class)
+	public void testUpdate_OptimisticLock6() {
+		List<OptimisticLock1> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			OptimisticLock1 entity = new OptimisticLock1();
+			entity.setName("Test Update Multiple " + i);
+			entities.add(entity);
+		}
+		List<OptimisticLock1> entities2 = em.insert(entities);
+		List<Long> ids = Arrays.asList(entities2.get(0).getId(), entities2.get(1).getId());
+		List<OptimisticLock1> entities3 = em.loadById(OptimisticLock1.class, ids);
+		List<OptimisticLock1> entities4 = em.update(entities3);
+		List<OptimisticLock1> entities5 = em.update(entities3);
 	}
 
 	@Test

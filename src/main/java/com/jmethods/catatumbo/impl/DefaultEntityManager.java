@@ -174,7 +174,7 @@ public class DefaultEntityManager implements EntityManager {
 
 	@Override
 	public <E> List<E> update(List<E> entities) {
-		return writer.update(entities);
+		return writer.updateWithOptimisticLock(entities);
 	}
 
 	@Override

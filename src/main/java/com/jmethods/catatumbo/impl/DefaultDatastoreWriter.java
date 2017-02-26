@@ -16,7 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static com.jmethods.catatumbo.impl.DatastoreUtils.incrementVersion;
 import static com.jmethods.catatumbo.impl.DatastoreUtils.rollbackIfActive;
 import static com.jmethods.catatumbo.impl.DatastoreUtils.toEntities;
 import static com.jmethods.catatumbo.impl.DatastoreUtils.toNativeEntities;
@@ -169,7 +168,8 @@ public class DefaultDatastoreWriter {
 	public <E> E update(E entity) {
 		try {
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
-			Entity nativeEntity = (Entity) Marshaller.marshal(entityManager, entity, Intent.UPDATE);
+			Intent intent = (nativeWriter instanceof Batch) ? Intent.BATCH_UPDATE : Intent.UPDATE;
+			Entity nativeEntity = (Entity) Marshaller.marshal(entityManager, entity, intent);
 			nativeWriter.update(nativeEntity);
 			E updatedEntity = (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntity);
@@ -219,13 +219,12 @@ public class DefaultDatastoreWriter {
 				throw new OptimisticLockException(String.format("Entity does not exist: %s", nativeEntity.getKey()));
 			}
 			String versionPropertyName = versionMetadata.getMappedName();
-			long version = nativeEntity.getLong(versionPropertyName);
+			long version = nativeEntity.getLong(versionPropertyName) - 1;
 			long storedVersion = storedNativeEntity.getLong(versionPropertyName);
 			if (version != storedVersion) {
 				throw new OptimisticLockException(
 						String.format("Expecting version %d, but found %d", version, storedVersion));
 			}
-			nativeEntity = incrementVersion(nativeEntity, versionMetadata);
 			transaction.update(nativeEntity);
 			transaction.commit();
 			E updatedEntity = (E) Unmarshaller.unmarshal(nativeEntity, entity.getClass());
@@ -256,7 +255,8 @@ public class DefaultDatastoreWriter {
 		try {
 			Class<E> entityClass = (Class<E>) entities.get(0).getClass();
 			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entities);
-			Entity[] nativeEntities = toNativeEntities(entities, entityManager);
+			Intent intent = (nativeWriter instanceof Batch) ? Intent.BATCH_UPDATE : Intent.UPDATE;
+			Entity[] nativeEntities = toNativeEntities(entities, entityManager, intent);
 			nativeWriter.update(nativeEntities);
 			List<E> updatedEntities = toEntities(entityClass, nativeEntities);
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntities);
@@ -264,6 +264,80 @@ public class DefaultDatastoreWriter {
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}
+	}
+
+	/**
+	 * Updates the given list of entities using optimistic locking feature, if
+	 * the entities are set up to support optimistic locking. Otherwise, a
+	 * normal update is performed.
+	 * 
+	 * @param entities
+	 *            the entities to update
+	 * @return the updated entities
+	 */
+	public <E> List<E> updateWithOptimisticLock(List<E> entities) {
+		if (entities == null || entities.isEmpty()) {
+			return new ArrayList<>();
+		}
+		Class<?> entityClass = entities.get(0).getClass();
+		PropertyMetadata versionMetadata = EntityIntrospector.getVersionMetadata(entityClass);
+		if (versionMetadata == null) {
+			return update(entities);
+		} else {
+			return updateWithOptimisticLockInternal(entities, versionMetadata);
+		}
+	}
+
+	/**
+	 * Internal worker method for updating the entities using optimistic
+	 * locking.
+	 * 
+	 * @param entities
+	 *            the entities to update
+	 * @param versionMetadata
+	 *            the mnetadata of the version property
+	 * @return the updated entities
+	 */
+	@SuppressWarnings("unchecked")
+	private <E> List<E> updateWithOptimisticLockInternal(List<E> entities, PropertyMetadata versionMetadata) {
+		Transaction transaction = null;
+		try {
+			entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entities);
+			Entity[] nativeEntities = toNativeEntities(entities, entityManager, Intent.UPDATE);
+			// The above native entities already have the version incremented by
+			// the marshalling process
+			Key[] nativeKeys = new Key[nativeEntities.length];
+			for (int i = 0; i < nativeEntities.length; i++) {
+				nativeKeys[i] = nativeEntities[i].getKey();
+			}
+			transaction = datastore.newTransaction();
+			List<Entity> storedNativeEntities = transaction.fetch(nativeKeys);
+			String versionPropertyName = versionMetadata.getMappedName();
+
+			for (int i = 0; i < nativeEntities.length; i++) {
+				long version = nativeEntities[i].getLong(versionPropertyName) - 1;
+				Entity storedNativeEntity = storedNativeEntities.get(i);
+				if (storedNativeEntity == null) {
+					throw new OptimisticLockException(String.format("Entity does not exist: %s", nativeKeys[i]));
+				}
+				long storedVersion = storedNativeEntities.get(i).getLong(versionPropertyName);
+				if (version != storedVersion) {
+					throw new OptimisticLockException(
+							String.format("Expecting version %d, but found %d", version, storedVersion));
+				}
+			}
+			transaction.update(nativeEntities);
+			transaction.commit();
+			List<E> updatedEntities = (List<E>) toEntities(entities.get(0).getClass(), nativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntities);
+			return updatedEntities;
+
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		} finally {
+			rollbackIfActive(transaction);
+		}
+
 	}
 
 	/**

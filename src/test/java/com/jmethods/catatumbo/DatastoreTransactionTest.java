@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -153,6 +154,51 @@ public class DatastoreTransactionTest {
 			entity2 = transaction.update(entity2);
 			entity = transaction.update(entity);
 			transaction.commit();
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	@Test
+	public void testUpdate_OptimisticLock3() {
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			List<Account> entities = new ArrayList<>();
+			for (int i = 0; i < 2; i++) {
+				Account entity = new Account();
+				entity.setName("Test Insert from Transaction " + i);
+				entities.add(entity);
+			}
+			List<Account> entities2 = transaction.insert(entities);
+			transaction.commit();
+			assertEquals(1, entities2.get(0).getVersion());
+			assertEquals(1, entities2.get(1).getVersion());
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	@Test
+	public void testUpdate_OptimisticLock4() {
+		List<Account> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			Account entity = new Account();
+			entity.setName("Test Update from Transaction " + i);
+			entities.add(entity);
+		}
+		List<Account> entities2 = em.insert(entities);
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			List<Account> entities3 = transaction.update(entities2);
+			transaction.commit();
+			assertEquals(1, entities2.get(0).getVersion());
+			assertEquals(1, entities2.get(1).getVersion());
+			assertEquals(2, entities3.get(0).getVersion());
+			assertEquals(2, entities3.get(1).getVersion());
 		} finally {
 			if (transaction.isActive()) {
 				transaction.rollback();
