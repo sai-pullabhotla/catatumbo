@@ -96,10 +96,11 @@ public class Tenant {
 
 	/**
 	 * Sets the namespace to the given value. Set to <code>null</code> to use
-	 * the namespace with which the {@link EntityManager} was created.
+	 * the namespace with which the {@link EntityManager} was created. An empty
+	 * string sets the namespace to the default namespace.
 	 * 
 	 * @param namespace
-	 *            the namespace
+	 *            the namespace to set.
 	 */
 	public static void setNamespace(String namespace) {
 		threadNamespace.set(namespace);

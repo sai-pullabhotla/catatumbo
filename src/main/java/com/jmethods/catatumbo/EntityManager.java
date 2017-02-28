@@ -82,4 +82,13 @@ public interface EntityManager extends DatastoreAccess {
 	 */
 	void setDefaultListeners(Class<?>... classes);
 
+	/**
+	 * Returns the {@link DatastoreMetadata} object that can be used to retrieve
+	 * metadata information.
+	 * 
+	 * @return the {@link DatastoreMetadata} object that can be used to retrieve
+	 *         metadata information.
+	 */
+	DatastoreMetadata getDatastoreMetadata();
+
 }

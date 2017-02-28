@@ -31,6 +31,7 @@ import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.jmethods.catatumbo.DatastoreBatch;
 import com.jmethods.catatumbo.DatastoreKey;
+import com.jmethods.catatumbo.DatastoreMetadata;
 import com.jmethods.catatumbo.DatastoreTransaction;
 import com.jmethods.catatumbo.EntityManager;
 import com.jmethods.catatumbo.EntityManagerException;
@@ -286,6 +287,11 @@ public class DefaultEntityManager implements EntityManager {
 	@Override
 	public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
 		return reader.executeKeyQueryRequest(request);
+	}
+
+	@Override
+	public DatastoreMetadata getDatastoreMetadata() {
+		return new DefaultDatastoreMetadata(this);
 	}
 
 	@Override
