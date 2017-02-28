@@ -31,16 +31,19 @@ import java.util.Date;
  * 
  * <p>
  * Valid data types for the field include -
+ * </p>
  * <ul>
  * <li>{@link Date} - Value will be set to new Date()</li>
  * <li>{@link Calendar} - Value will be set to Calendar.getInstance()</li>
  * <li>{@link Long} - Value will be set to System.currentTimeMillis()</li>
  * <li>long - Value will be set to System.currentTimeMillis()</li>
- * </p>
+ * </ul>
  * 
  * <p>
  * The framework sets the field with this annotation during the following
  * operations:
+ * </p>
+ * 
  * <ul>
  * <li>INSERT - Any variation of the insert methods automatically set the field
  * with this annotation to the current JVM's timestamp. Furthermore, if the

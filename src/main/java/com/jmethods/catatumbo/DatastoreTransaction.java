@@ -36,7 +36,7 @@ public interface DatastoreTransaction extends DatastoreAccess {
 	/**
 	 * Inserts the given entity. ID allocation is deferred to the submit time.
 	 * Generated key, if any, can be retrieved by calling
-	 * {@link DatastoreTransaction.Response#getGneratedKeys()}.
+	 * {@link DatastoreTransaction.Response#getGeneratedKeys()}.
 	 * 
 	 * @param entity
 	 *            the entity to insert.
@@ -49,7 +49,7 @@ public interface DatastoreTransaction extends DatastoreAccess {
 	/**
 	 * Inserts the given entities. ID allocation is deferred to the submit time.
 	 * Generated keys, if any, can be retrieved by calling
-	 * {@link DatastoreTransaction.Response#getGneratedKeys()}.
+	 * {@link DatastoreTransaction.Response#getGeneratedKeys()}.
 	 * 
 	 * @param entities
 	 *            the entities to insert
@@ -62,7 +62,7 @@ public interface DatastoreTransaction extends DatastoreAccess {
 	/**
 	 * Updates or inserts the given entity. ID allocation is deferred to the
 	 * submit time. Generated key, if any, can be retrieved by calling
-	 * {@link DatastoreTransaction.Response#getGneratedKeys()}.
+	 * {@link DatastoreTransaction.Response#getGeneratedKeys()}.
 	 * 
 	 * 
 	 * @param entity
@@ -76,7 +76,7 @@ public interface DatastoreTransaction extends DatastoreAccess {
 	/**
 	 * Updates or Inserts the given entities. ID allocation is deferred to the
 	 * submit time. Generated keys, if any, can be retrieved by calling
-	 * {@link DatastoreTransaction.Response#getGneratedKeys()}.
+	 * {@link DatastoreTransaction.Response#getGeneratedKeys()}.
 	 * 
 	 * 
 	 * @param entities

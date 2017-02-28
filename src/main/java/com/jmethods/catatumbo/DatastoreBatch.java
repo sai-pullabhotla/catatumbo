@@ -62,7 +62,7 @@ public interface DatastoreBatch {
 	/**
 	 * Adds the given entity to this batch for insertion. The ID allocation is
 	 * deferred to the submit time of this batch. Generated keys can be
-	 * retrieved using {@link DatastoreBatch.Response#getGneratedKeys()}.This
+	 * retrieved using {@link DatastoreBatch.Response#getGeneratedKeys()}.This
 	 * method throws {@link EntityManagerException} if the entity is using a
 	 * String identifier. String identifiers are allocated at add time, instead
 	 * of submit time. For entities with String identifiers, use the
@@ -78,7 +78,7 @@ public interface DatastoreBatch {
 	/**
 	 * Adds the given entities to this batch for insertion. The ID allocation is
 	 * deferred to the submit time of this batch. Generated keys can be
-	 * retrieved using {@link DatastoreBatch.Response#getGneratedKeys()}.This
+	 * retrieved using {@link DatastoreBatch.Response#getGeneratedKeys()}.This
 	 * method throws {@link EntityManagerException} if the entity is using a
 	 * String identifier. String identifiers are allocated at add time, instead
 	 * of submit time. For entities with String identifiers, use the

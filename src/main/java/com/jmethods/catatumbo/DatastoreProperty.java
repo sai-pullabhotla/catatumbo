@@ -146,7 +146,7 @@ public class DatastoreProperty implements Serializable {
 
 	/**
 	 * Returns a String representation of this DatastoreProperty. The returned
-	 * value will be of the form - <code>EntityName.PropertyName<code>.
+	 * value will be of the form - <code>EntityName.PropertyName</code>.
 	 */
 	@Override
 	public String toString() {
