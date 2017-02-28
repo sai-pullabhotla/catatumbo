@@ -39,6 +39,8 @@ instead of Relational Databases.
 * Support for embedded objects through the use of @Embedded and @Embeddable annotations. 
 * Persisting of inherited fields of an Entity through the use of @MappedSuperClass annotation. 
 * Optimistic Locking support through the use of @Version annotation. 
+* Automatic timestamping (creation and modification) of entities using the @CreatedTimestamp and @UpdatedTimestamp annotations. 
+* Support for multitenancy - ability to work with multiple namespaces. 
 * Support for entity life cycle listeners (e.g. PreInsert, PostInsert callbacks) 
 * Create, Retrieve, Update, Delete, Upsert (update or insert)  
 * Support for executing GQL Queries. This includes:  
@@ -47,6 +49,7 @@ instead of Relational Databases.
 	* Key-only queries 
 * Support for Batch Write operations 
 * Transaction Support 
+* Metadata API for retrieving the Datastore metadata 
 * Ability to work with Local Datastore (Datastore Emulator) during development phase   
 
 ##Project's Web Site
