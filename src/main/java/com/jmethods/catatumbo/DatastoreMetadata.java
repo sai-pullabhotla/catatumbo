@@ -40,6 +40,8 @@ public interface DatastoreMetadata {
 	 * @return the list of namespaces. The default namespace, if exists, would
 	 *         be returned as an empty string, typically the first namespace in
 	 *         the returned list.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
 	 */
 	List<String> getNamespaces();
 
@@ -52,6 +54,8 @@ public interface DatastoreMetadata {
 	 *            less is interpreted as no limit and returns all results.
 	 * @return the namespaces, up to the specified limit. The default namespace,
 	 *         if exists, would be returned as an empty string.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
 	 */
 	QueryResponse<String> getNamespaces(int limit);
 
@@ -65,6 +69,8 @@ public interface DatastoreMetadata {
 	 *            the maximum number of namespaces to return
 	 * @return the namespaces from the specified cursor location. The default
 	 *         namespace, if exists, would be returned as an empty string.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
 	 */
 	QueryResponse<String> getNamespaces(DatastoreCursor fromCursor, int limit);
 
@@ -75,6 +81,8 @@ public interface DatastoreMetadata {
 	 * 
 	 * @return the Kinds in the current namespace. The returned results will be
 	 *         order by Kind's name in ascending order.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
 	 */
 	List<String> getKinds();
 
@@ -88,6 +96,8 @@ public interface DatastoreMetadata {
 	 * @param kind
 	 *            the Kind
 	 * @return the indexed properties in the given Kind.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
 	 */
 	List<DatastoreProperty> getProperties(String kind);
 

@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.google.cloud.datastore.Cursor;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.GqlQuery;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Query;
@@ -32,6 +33,7 @@ import com.jmethods.catatumbo.DatastoreProperty;
 import com.jmethods.catatumbo.DefaultDatastoreCursor;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.DefaultQueryResponse;
+import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 
@@ -86,57 +88,69 @@ public class DefaultDatastoreMetadata implements DatastoreMetadata {
 
 	@Override
 	public QueryResponse<String> getNamespaces(DatastoreCursor fromCursor, int limit) {
-		Datastore datastore = entityManager.getDatastore();
-		String query = "SELECT __key__ FROM " + ENTITY_NAMESPACES + " ORDER BY __key__";
-		if (limit > 0) {
-			query += " LIMIT @Limit";
+		try {
+			Datastore datastore = entityManager.getDatastore();
+			String query = "SELECT __key__ FROM " + ENTITY_NAMESPACES + " ORDER BY __key__";
+			if (limit > 0) {
+				query += " LIMIT @Limit";
+			}
+			query += " OFFSET @Offset";
+			GqlQuery.Builder<Key> gqlQueryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, query);
+			if (limit > 0) {
+				gqlQueryBuilder.setBinding("Limit", limit);
+			}
+			gqlQueryBuilder.setBinding("Offset", Cursor.fromUrlSafe(fromCursor.getEncoded()));
+			GqlQuery<Key> gqlQuery = gqlQueryBuilder.build();
+			QueryResults<Key> results = datastore.run(gqlQuery);
+			DefaultQueryResponse<String> response = new DefaultQueryResponse<>();
+			List<String> namespaces = new ArrayList<>(Math.max(limit, 50));
+			response.setStartCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
+			while (results.hasNext()) {
+				Key key = results.next();
+				String name = key.getName();
+				namespaces.add(name == null ? "" : name);
+			}
+			response.setResults(namespaces);
+			response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
+			return response;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
 		}
-		query += " OFFSET @Offset";
-		GqlQuery.Builder<Key> gqlQueryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, query);
-		if (limit > 0) {
-			gqlQueryBuilder.setBinding("Limit", limit);
-		}
-		gqlQueryBuilder.setBinding("Offset", Cursor.fromUrlSafe(fromCursor.getEncoded()));
-		GqlQuery<Key> gqlQuery = gqlQueryBuilder.build();
-		QueryResults<Key> results = datastore.run(gqlQuery);
-		DefaultQueryResponse<String> response = new DefaultQueryResponse<>();
-		List<String> namespaces = new ArrayList<>(Math.max(limit, 50));
-		response.setStartCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
-		while (results.hasNext()) {
-			Key key = results.next();
-			String name = key.getName();
-			namespaces.add(name == null ? "" : name);
-		}
-		response.setResults(namespaces);
-		response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
-		return response;
 	}
 
 	@Override
 	public List<String> getKinds() {
-		String query = "SELECT __key__ FROM " + ENTITY_KINDS + " ORDER BY __key__";
-		GqlQuery.Builder<Key> gqlQueryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, query);
-		gqlQueryBuilder.setNamespace(entityManager.getEffectiveNamespace());
-		GqlQuery<Key> gqlQuery = gqlQueryBuilder.build();
-		QueryResults<Key> results = entityManager.getDatastore().run(gqlQuery);
-		List<String> kinds = new ArrayList<>(50);
-		while (results.hasNext()) {
-			Key key = results.next();
-			kinds.add(key.getName());
+		try {
+			String query = "SELECT __key__ FROM " + ENTITY_KINDS + " ORDER BY __key__";
+			GqlQuery.Builder<Key> gqlQueryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, query);
+			gqlQueryBuilder.setNamespace(entityManager.getEffectiveNamespace());
+			GqlQuery<Key> gqlQuery = gqlQueryBuilder.build();
+			QueryResults<Key> results = entityManager.getDatastore().run(gqlQuery);
+			List<String> kinds = new ArrayList<>(50);
+			while (results.hasNext()) {
+				Key key = results.next();
+				kinds.add(key.getName());
+			}
+			return kinds;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
 		}
-		return kinds;
 	}
 
 	@Override
 	public List<DatastoreProperty> getProperties(String kind) {
-		Key nativeKey = entityManager.newNativeKeyFactory().setKind(ENTITY_KINDS).newKey(kind);
-		DefaultDatastoreKey key = new DefaultDatastoreKey(nativeKey);
-		String query = "SELECT * FROM " + ENTITY_PROPERTIES + " WHERE __key__ HAS ANCESTOR @1 ORDER BY __key__";
-		EntityQueryRequest request = entityManager.createEntityQueryRequest(query);
-		request.addPositionalBinding(key);
-		QueryResponse<DatastoreProperty> response = entityManager.executeEntityQueryRequest(DatastoreProperty.class,
-				request);
-		return response.getResults();
+		try {
+			Key nativeKey = entityManager.newNativeKeyFactory().setKind(ENTITY_KINDS).newKey(kind);
+			DefaultDatastoreKey key = new DefaultDatastoreKey(nativeKey);
+			String query = "SELECT * FROM " + ENTITY_PROPERTIES + " WHERE __key__ HAS ANCESTOR @1 ORDER BY __key__";
+			EntityQueryRequest request = entityManager.createEntityQueryRequest(query);
+			request.addPositionalBinding(key);
+			QueryResponse<DatastoreProperty> response = entityManager.executeEntityQueryRequest(DatastoreProperty.class,
+					request);
+			return response.getResults();
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
 	}
 
 }
