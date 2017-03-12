@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo;
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 import com.google.cloud.datastore.Datastore;
@@ -29,20 +30,32 @@ import com.jmethods.catatumbo.impl.DefaultEntityManager;
 public class TestUtils {
 
 	private static final String ENV_PREFIX = "CATATUMBO_";
-	private static final String ENV_TARGET = ENV_PREFIX + "TARGET";
-	private static final String ENV_HOST = ENV_PREFIX + "HOST";
-	private static final String ENV_PROJECT_ID = ENV_PREFIX + "PROJECT_ID";
-	private static final String ENV_NAMESPACE = ENV_PREFIX + "NAMESPACE";
-	private static final String ENV_CREDENTIALS = ENV_PREFIX + "CREDENTIALS";
+	public static final String ENV_SERVICE_URL = ENV_PREFIX + "SERVICE_URL";
+	public static final String ENV_PROJECT_ID = ENV_PREFIX + "PROJECT_ID";
+	public static final String ENV_NAMESPACE = ENV_PREFIX + "NAMESPACE";
+	public static final String ENV_CREDENTIALS = ENV_PREFIX + "CREDENTIALS";
+	public static final String ENV_CONNECTION_TIMEOUT = ENV_PREFIX + "CONNECTION_TIMEOUT";
+	public static final String ENV_READ_TIMEOUT = ENV_PREFIX + "READ_TIMEOUT";
 
-	public static EntityManager getEntityManager() {
-		String target = System.getenv(ENV_TARGET);
-		EntityManager em;
-		if ("remote".equals(target)) {
-			em = setupRemoteEntityManager();
-		} else {
-			em = setupLocalEntityManager();
+	public static EntityManager getEntityManager() throws FileNotFoundException {
+		ConnectionParameters parameters = new ConnectionParameters();
+		parameters.setServiceURL(System.getenv(ENV_SERVICE_URL));
+		parameters.setProjectId(System.getenv(ENV_PROJECT_ID));
+		parameters.setNamespace(System.getenv(ENV_NAMESPACE));
+		String jsonCredentialsPath = System.getenv(ENV_CREDENTIALS);
+		if (!Utility.isNullOrEmpty(jsonCredentialsPath)) {
+			parameters.setJsonCredentialsFile(jsonCredentialsPath);
 		}
+		String connectionTimeout = System.getenv(ENV_CONNECTION_TIMEOUT);
+		if (!Utility.isNullOrEmpty(connectionTimeout)) {
+			parameters.setConnectionTimeout(Integer.parseInt(connectionTimeout));
+		}
+		String readTimeout = System.getenv(ENV_READ_TIMEOUT);
+		if (!Utility.isNullOrEmpty(readTimeout)) {
+			parameters.setReadTimeout(Integer.parseInt(readTimeout));
+		}
+		System.out.println(parameters);
+		EntityManager em = EntityManagerFactory.getInstance().createEntityManager(parameters);
 		Datastore ds = ((DefaultEntityManager) em).getDatastore();
 		DatastoreOptions options = ds.getOptions();
 		System.out.println("***************************");
@@ -50,31 +63,10 @@ public class TestUtils {
 		System.out.printf("Host: %s%n", options.getHost());
 		System.out.printf("Project Id: %s%n", options.getProjectId());
 		System.out.printf("Namespace: %s%n", options.getNamespace());
+		System.out.printf("Credentials: %s%n", options.getCredentials());
+		System.out.printf("Connection Timeout: %d%n", options.getConnectTimeout());
+		System.out.printf("Read Timeout: %d%n", options.getReadTimeout());
 		System.out.println("***************************");
-		return em;
-
-	}
-
-	public static EntityManager setupLocalEntityManager() {
-		String host = System.getenv(ENV_HOST);
-		String projectId = System.getenv(ENV_PROJECT_ID);
-		String namespace = System.getenv(ENV_NAMESPACE);
-		if (host == null) {
-			host = "localhost:9999";
-		}
-		return EntityManagerFactory.getInstance().createLocalEntityManager(host, projectId, namespace);
-	}
-
-	public static EntityManager setupRemoteEntityManager() {
-		EntityManager em = null;
-		String jsonCredentialsFile = System.getenv(ENV_CREDENTIALS);
-		String projectId = System.getenv(ENV_PROJECT_ID);
-		String namespace = System.getenv(ENV_NAMESPACE);
-		if (jsonCredentialsFile == null) {
-			em = EntityManagerFactory.getInstance().createDefaultEntityManager(namespace);
-		} else {
-			em = EntityManagerFactory.getInstance().createEntityManager(projectId, jsonCredentialsFile, namespace);
-		}
 		return em;
 
 	}

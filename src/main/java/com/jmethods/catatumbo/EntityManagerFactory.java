@@ -18,10 +18,13 @@ package com.jmethods.catatumbo;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import com.google.auth.Credentials;
+import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.google.cloud.NoCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.jmethods.catatumbo.impl.DefaultEntityManager;
@@ -34,6 +37,9 @@ import com.jmethods.catatumbo.impl.DefaultEntityManager;
  */
 public class EntityManagerFactory {
 
+	/**
+	 * Singleton instance
+	 */
 	private static final EntityManagerFactory INSTANCE = new EntityManagerFactory();
 
 	/**
@@ -65,18 +71,9 @@ public class EntityManagerFactory {
 	 * @return a new {@link EntityManager} using the default options.
 	 */
 	public EntityManager createDefaultEntityManager(String namespace) {
-		try {
-			Credentials credentials = ServiceAccountCredentials.getApplicationDefault();
-			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
-					.setCredentials(credentials);
-			if (namespace != null) {
-				datastoreOptionsBuilder.setNamespace(namespace);
-			}
-			Datastore datastore = datastoreOptionsBuilder.build().getService();
-			return new DefaultEntityManager(datastore);
-		} catch (Exception exp) {
-			throw new EntityManagerFactoryException(exp);
-		}
+		ConnectionParameters parameters = new ConnectionParameters();
+		parameters.setNamespace(namespace);
+		return createEntityManager(parameters);
 	}
 
 	/**
@@ -183,21 +180,11 @@ public class EntityManagerFactory {
 	 * @return a new {@link EntityManager}
 	 */
 	public EntityManager createEntityManager(String projectId, InputStream jsonCredentialsStream, String namespace) {
-		try {
-			Credentials credentials = ServiceAccountCredentials.fromStream(jsonCredentialsStream);
-			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder()
-					.setCredentials(credentials);
-			if (projectId != null) {
-				datastoreOptionsBuilder.setProjectId(projectId);
-			}
-			if (namespace != null) {
-				datastoreOptionsBuilder.setNamespace(namespace);
-			}
-			Datastore datastore = datastoreOptionsBuilder.build().getService();
-			return new DefaultEntityManager(datastore);
-		} catch (Exception exp) {
-			throw new EntityManagerFactoryException(exp);
-		}
+		ConnectionParameters parameters = new ConnectionParameters();
+		parameters.setProjectId(projectId);
+		parameters.setNamespace(namespace);
+		parameters.setJsonCredentialsStream(jsonCredentialsStream);
+		return createEntityManager(parameters);
 	}
 
 	/**
@@ -205,14 +192,14 @@ public class EntityManagerFactory {
 	 * local Datastore (a.k.a Datastore Emulator). The underlying API will
 	 * attempt to use the default project ID, if one exists.
 	 * 
-	 * @param hostAndPort
-	 *            host name or IP address and the port number on which the
-	 *            Datastore Emulator is running (e.g. localhost:9999)
+	 * @param serviceURL
+	 *            Service URL for the Datastore Emulator. (e.g.
+	 *            http://localhost:9999)
 	 * @return an {@link EntityManager} that allows working with the local
 	 *         Datastore (a.k.a Datastore Emulator).
 	 */
-	public EntityManager createLocalEntityManager(String hostAndPort) {
-		return createLocalEntityManager(hostAndPort, null, null);
+	public EntityManager createLocalEntityManager(String serviceURL) {
+		return createLocalEntityManager(serviceURL, null, null);
 	}
 
 	/**
@@ -220,17 +207,17 @@ public class EntityManagerFactory {
 	 * local Datastore (a.k.a Datastore Emulator). Specified project ID will be
 	 * used.
 	 * 
-	 * @param hostAndPort
-	 *            host name or IP address and the port number on which the
-	 *            Datastore Emulator is running (e.g. localhost:9999)
+	 * @param serviceURL
+	 *            Service URL for the Datastore Emulator. (e.g.
+	 *            http://localhost:9999)
 	 * @param projectId
 	 *            the project ID. The specified project need not exist in Google
 	 *            Cloud.
 	 * @return an {@link EntityManager} that allows working with the local
 	 *         Datastore (a.k.a Datastore Emulator).
 	 */
-	public EntityManager createLocalEntityManager(String hostAndPort, String projectId) {
-		return createLocalEntityManager(hostAndPort, projectId, null);
+	public EntityManager createLocalEntityManager(String serviceURL, String projectId) {
+		return createLocalEntityManager(serviceURL, projectId, null);
 	}
 
 	/**
@@ -238,9 +225,9 @@ public class EntityManagerFactory {
 	 * local Datastore (a.k.a Datastore Emulator). Specified project ID will be
 	 * used.
 	 * 
-	 * @param hostAndPort
-	 *            host name or IP address and the port number on which the
-	 *            Datastore Emulator is running (e.g. localhost:9999)
+	 * @param serviceURL
+	 *            Service URL for the Datastore Emulator. (e.g.
+	 *            http://localhost:9999)
 	 * @param projectId
 	 *            the project ID. The specified project need not exist in Google
 	 *            Cloud. If <code>null</code>, default project ID is used, if it
@@ -251,20 +238,79 @@ public class EntityManagerFactory {
 	 *         Datastore (a.k.a Datastore Emulator). If <code>null</code>,
 	 *         default namespace is used.
 	 */
-	public EntityManager createLocalEntityManager(String hostAndPort, String projectId, String namespace) {
+	public EntityManager createLocalEntityManager(String serviceURL, String projectId, String namespace) {
+		ConnectionParameters parameters = new ConnectionParameters();
+		parameters.setServiceURL(serviceURL);
+		parameters.setProjectId(projectId);
+		parameters.setNamespace(namespace);
+		return createEntityManager(parameters);
+	}
+
+	/**
+	 * Creates and returns an {@link EntityManager} using the specified
+	 * connection parameters.
+	 * 
+	 * @param parameters
+	 *            the connection parameters
+	 * @return a new {@link EntityManager} created using the specified
+	 *         connection parameters.
+	 * @throws EntityManagerException
+	 *             if any error occurs while creating the EntityManager.
+	 */
+	public EntityManager createEntityManager(ConnectionParameters parameters) {
 		try {
 			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder();
-			datastoreOptionsBuilder.setHost(hostAndPort);
-			if (projectId != null) {
+
+			datastoreOptionsBuilder.setHost(parameters.getServiceURL());
+			datastoreOptionsBuilder.setConnectTimeout(parameters.getConnectionTimeout());
+			datastoreOptionsBuilder.setReadTimeout(parameters.getReadTimeout());
+
+			HttpTransportFactory httpTransportFactory = parameters.getHttpTransportFactory();
+			if (httpTransportFactory != null) {
+				datastoreOptionsBuilder.setHttpTransportFactory(httpTransportFactory);
+			}
+
+			String projectId = parameters.getProjectId();
+			if (!Utility.isNullOrEmpty(projectId)) {
 				datastoreOptionsBuilder.setProjectId(projectId);
 			}
+
+			String namespace = parameters.getNamespace();
 			if (namespace != null) {
 				datastoreOptionsBuilder.setNamespace(namespace);
 			}
+
+			datastoreOptionsBuilder.setCredentials(getCredentials(parameters));
+
 			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
 		} catch (Exception exp) {
-			throw new EntityManagerException(exp);
+			throw new EntityManagerFactoryException(exp);
 		}
+	}
+
+	/**
+	 * Creates and returns the credentials from the given connection parameters.
+	 * 
+	 * @param parameters
+	 *            the connection parameters
+	 * @return the credentials for authenticating with the Datastore service.
+	 * @throws IOException
+	 *             if any error occurs such as not able to read the credentials
+	 *             file.
+	 */
+	private static Credentials getCredentials(ConnectionParameters parameters) throws IOException {
+		if (parameters.isEmulator()) {
+			return NoCredentials.getInstance();
+		}
+		InputStream jsonCredentialsStream = parameters.getJsonCredentialsStream();
+		if (jsonCredentialsStream != null) {
+			return ServiceAccountCredentials.fromStream(jsonCredentialsStream);
+		}
+		File jsonCredentialsFile = parameters.getJsonCredentialsFile();
+		if (jsonCredentialsFile != null) {
+			return ServiceAccountCredentials.fromStream(new FileInputStream(jsonCredentialsFile));
+		}
+		return ServiceAccountCredentials.getApplicationDefault();
 	}
 }
