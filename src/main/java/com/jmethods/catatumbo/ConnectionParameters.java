@@ -28,7 +28,7 @@ import com.google.datastore.v1.client.DatastoreFactory;
  * {@link EntityManagerFactory} to create an {@link EntityManager}.
  * 
  * <p>
- * <strong>Note: </strong> <br/>
+ * <strong>Note: </strong> <br>
  * Credentials can be specified using one of the
  * <code>setJsonCredentials*</code> methods. If credentials are set using both
  * an <code>InputStream</code> and <code>File</code> or <code>Path</code>, the
@@ -36,7 +36,7 @@ import com.google.datastore.v1.client.DatastoreFactory;
  * </p>
  * 
  * <p>
- * <strong>Connecting to the Datastore Emulator: </strong><br/>
+ * <strong>Connecting to the Datastore Emulator: </strong><br>
  * Call the {@link ConnectionParameters#setServiceURL(String)} method to connect
  * to the Datastore Emulator. For example, to connect to the Datastore Emulator
  * running on port 9999 on <code>localhost</code>, call
