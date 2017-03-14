@@ -57,22 +57,71 @@ public class Marshaller {
 		/**
 		 * Insert
 		 */
-		INSERT,
+		INSERT(false, false),
 
 		/**
 		 * Update
 		 */
-		UPDATE,
+		UPDATE(true, false),
 
 		/**
 		 * Upsert (Update or Insert)
 		 */
-		UPSERT,
+		UPSERT(false, false),
+
+		/**
+		 * Delete
+		 */
+		DELETE(true, true),
 
 		/**
 		 * Batch Update
 		 */
-		BATCH_UPDATE;
+		BATCH_UPDATE(true, false);
+
+		/**
+		 * If a complete key is required for this Intent
+		 */
+		private boolean keyRequired;
+
+		/**
+		 * If this Intent (or operation) is valid on projected entities
+		 */
+		private boolean validOnProjectedEntities;
+
+		/**
+		 * Creates a new instance of <code>Intent</code>.
+		 * 
+		 * @param keyRequired
+		 *            whether or not a complete key is required.
+		 * @param validOnProjectedEntities
+		 *            whether or not this intent is valid on projected entities
+		 */
+		private Intent(boolean keyRequired, boolean validOnProjectedEntities) {
+			this.keyRequired = keyRequired;
+			this.validOnProjectedEntities = validOnProjectedEntities;
+		}
+
+		/**
+		 * Tells whether or not a complete key is required for this Intent.
+		 * 
+		 * @return <code>true</code>, if a complete key is required;
+		 *         <code>false</code>, otherwise.
+		 */
+		public boolean isKeyRequired() {
+			return keyRequired;
+		}
+
+		/**
+		 * Tells whether or not this intent is valid on projected entities.
+		 * 
+		 * @return <code>true</code>, if this intent is valid/supported on
+		 *         projected entities; <code>false</code>, otherwise.
+		 */
+		public boolean isValidOnProjectedEntities() {
+			return validOnProjectedEntities;
+		}
+
 	}
 
 	/**
@@ -120,7 +169,21 @@ public class Marshaller {
 		this.entity = entity;
 		this.intent = intent;
 		entityMetadata = EntityIntrospector.introspect(entity.getClass());
+		validateIntent();
+	}
 
+	/**
+	 * Validates if the Intent is legal for the entity being marshalled.
+	 * 
+	 * @throws EntityManagerException
+	 *             if the Intent is not valid for the entity being marshalled
+	 */
+	private void validateIntent() {
+		if (entityMetadata.isProjectedEntity() && !intent.isValidOnProjectedEntities()) {
+			String message = String.format("Operation %s is not allowed for ProjectedEntity %s", intent,
+					entity.getClass().getName());
+			throw new EntityManagerException(message);
+		}
 	}
 
 	/**
@@ -156,7 +219,7 @@ public class Marshaller {
 	 * @return extracted key.
 	 */
 	public static Key marshalKey(DefaultEntityManager entityManager, Object entity) {
-		Marshaller marshaller = new Marshaller(entityManager, entity, Intent.UPDATE);
+		Marshaller marshaller = new Marshaller(entityManager, entity, Intent.DELETE);
 		marshaller.marshalKey();
 		return (Key) marshaller.key;
 	}
@@ -213,7 +276,7 @@ public class Marshaller {
 				createCompleteKey(parent, (long) idValue);
 			}
 		} else {
-			if (intent == Intent.UPDATE) {
+			if (intent.isKeyRequired()) {
 				throw new EntityManagerException(
 						String.format("Identifier is not set or vlaid for entity of type %s", entity.getClass()));
 			}

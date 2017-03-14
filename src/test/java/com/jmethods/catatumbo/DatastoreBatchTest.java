@@ -26,6 +26,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.jmethods.catatumbo.entities.ChildEntity;
+import com.jmethods.catatumbo.entities.Contact;
+import com.jmethods.catatumbo.entities.ContactProjection;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
@@ -345,6 +347,58 @@ public class DatastoreBatchTest {
 		LongId entity2 = batch.insert(entity);
 		batch.submit();
 		batch.delete(entity2);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsertWithDeferredIdAllocation_ProjectedEntity() {
+		DatastoreBatch batch = em.newBatch();
+		ContactProjection entity = new ContactProjection();
+		entity.setLastName("Doe");
+		batch.insertWithDeferredIdAllocation(entity);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsertWithDeferredIdAllocation_ProjectedEntityList() {
+		List<ContactProjection> contacts = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			ContactProjection contact = new ContactProjection();
+			contact.setLastName("Doe " + i);
+			contacts.add(contact);
+		}
+		DatastoreBatch batch = em.newBatch();
+		batch.insertWithDeferredIdAllocation(contacts);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpsertWithDeferredIdAllocation_ProjectedEntity() {
+		DatastoreBatch batch = em.newBatch();
+		ContactProjection entity = new ContactProjection();
+		entity.setLastName("Doe");
+		batch.upsertWithDeferredIdAllocation(entity);
+		DatastoreBatch.Response response = batch.submit();
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpsertWithDeferredIdAllocation_ProjectedEntityList() {
+		List<ContactProjection> contacts = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			ContactProjection contact = new ContactProjection();
+			contact.setLastName("Doe " + i);
+			contacts.add(contact);
+		}
+		DatastoreBatch batch = em.newBatch();
+		batch.upsertWithDeferredIdAllocation(contacts);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdate_ProjectedEntity() {
+		Contact entity = Contact.createContact1();
+		entity = em.insert(entity);
+		ContactProjection projectedEntity = em.load(ContactProjection.class, entity.getId());
+		entity.setLastName("Doe Updated");
+		DatastoreBatch batch = em.newBatch();
+		projectedEntity = batch.update(projectedEntity);
+		batch.submit();
 	}
 
 }

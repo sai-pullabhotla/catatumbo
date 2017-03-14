@@ -16,8 +16,11 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.awt.Button;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,6 +35,8 @@ import com.jmethods.catatumbo.entities.OptimisticLockBad1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad2;
 import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
+import com.jmethods.catatumbo.entities.Task;
+import com.jmethods.catatumbo.entities.TaskName;
 
 /**
  * @author Sai Pullabhotla
@@ -115,6 +120,30 @@ public class EntityIntrospectorTest {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(Contact.class);
 		Map<EmbeddedField, EmbeddedMetadata> embeddedMetadataMap = entityMetadata.getEmbeddedMetadataMap();
 		assertEquals(3, embeddedMetadataMap.size());
+	}
+
+	@Test
+	public void testIntrospect_Task() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(Task.class);
+		assertEquals("Task", entityMetadata.getKind());
+		assertEquals(4, entityMetadata.getPropertyMetadataCollection().size());
+	}
+
+	@Test
+	public void testIntrospect_TaskName() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(TaskName.class);
+		assertEquals("Task", entityMetadata.getKind());
+		assertEquals(1, entityMetadata.getPropertyMetadataCollection().size());
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testIntrospect_Button() {
+		try {
+			EntityMetadata entityMetadata = EntityIntrospector.introspect(Button.class);
+		} catch (EntityManagerException exp) {
+			System.err.println(exp.getMessage());
+			throw exp;
+		}
 	}
 
 }

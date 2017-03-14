@@ -34,6 +34,7 @@ import com.jmethods.catatumbo.Ignore;
 import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.MappedSuperClass;
 import com.jmethods.catatumbo.ParentKey;
+import com.jmethods.catatumbo.ProjectedEntity;
 import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
 import com.jmethods.catatumbo.PropertyOverrides;
@@ -41,8 +42,9 @@ import com.jmethods.catatumbo.UpdatedTimestamp;
 import com.jmethods.catatumbo.Version;
 
 /**
- * Introspector for entity classes. The introspect method gathers metadata about
- * the given entity class. This metadata is needed for performing the object to
+ * Introspector for model classes with the annotation of {@link Entity} or
+ * {@link ProjectedEntity}. The introspect method gathers metadata about the
+ * given entity class. This metadata is needed for performing the object to
  * Datastore mapping and vice versa. The first time an entity class is
  * introspected, the metadata is cached and reused for better performance. The
  * introspector traverses through the entire entity graph to process simple (or
@@ -142,18 +144,17 @@ public class EntityIntrospector {
 	 * Processes the entity class using reflection and builds the metadata.
 	 */
 	private void process() {
-		// If the class does not have the Entity annotation, throw an exception.
 		Entity entity = entityClass.getAnnotation(Entity.class);
-		if (entity == null) {
-			String message = String.format("Class %s must have %s annotation", entityClass.getName(),
-					Entity.class.getName());
+		ProjectedEntity projectedEntity = entityClass.getAnnotation(ProjectedEntity.class);
+		if (entity != null) {
+			initEntityMetadata(entity);
+		} else if (projectedEntity != null) {
+			initEntityMetadata(projectedEntity);
+		} else {
+			String message = String.format("Class %s must either have %s or %s annotation", entityClass.getName(),
+					Entity.class.getName(), ProjectedEntity.class.getName());
 			throw new EntityManagerException(message);
 		}
-		String kind = entity.kind();
-		if (kind.trim().length() == 0) {
-			kind = entityClass.getSimpleName();
-		}
-		entityMetadata = new EntityMetadata(entityClass, kind);
 
 		processPropertyOverrides();
 
@@ -166,6 +167,36 @@ public class EntityIntrospector {
 		entityMetadata.setEntityListenersMetadata(EntityListenersIntrospector.introspect(entityClass));
 		entityMetadata.ensureUniqueProperties();
 		entityMetadata.cleanup();
+	}
+
+	/**
+	 * Initializes the metadata using the given {@link Entity} annotation.
+	 * 
+	 * @param entity
+	 *            the {@link Entity} annotation.
+	 */
+	private void initEntityMetadata(Entity entity) {
+		String kind = entity.kind();
+		if (kind.trim().length() == 0) {
+			kind = entityClass.getSimpleName();
+		}
+		entityMetadata = new EntityMetadata(entityClass, kind);
+	}
+
+	/**
+	 * Initializes the metadata using the given {@link ProjectedEntity}
+	 * annotation.
+	 * 
+	 * @param projectedEntity
+	 *            the {@link ProjectedEntity} annotation.
+	 */
+	private void initEntityMetadata(ProjectedEntity projectedEntity) {
+		String kind = projectedEntity.kind();
+		if (kind.trim().length() == 0) {
+			String message = String.format("Class %s requires a non-blank Kind", entityClass.getName());
+			throw new EntityManagerException(message);
+		}
+		entityMetadata = new EntityMetadata(entityClass, kind, true);
 	}
 
 	/**

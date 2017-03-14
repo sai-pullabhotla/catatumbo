@@ -62,6 +62,7 @@ import com.jmethods.catatumbo.entities.CharField;
 import com.jmethods.catatumbo.entities.CharObject;
 import com.jmethods.catatumbo.entities.ChildEntity;
 import com.jmethods.catatumbo.entities.Contact;
+import com.jmethods.catatumbo.entities.ContactProjection;
 import com.jmethods.catatumbo.entities.Country;
 import com.jmethods.catatumbo.entities.Customer;
 import com.jmethods.catatumbo.entities.DateField;
@@ -2642,6 +2643,99 @@ public class EntityManagerTest {
 		assertEquals(entity2.getCreatedDate(), entity3.getCreatedDate());
 		assertEquals(entity3.getCreatedDate(), entity4.getCreatedDate());
 		assertNotEquals(entity3.getCreatedDate(), entity4.getModifiedDate());
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsertProjectedEntity() {
+		ContactProjection entity = new ContactProjection();
+		entity.setLastName("Doe");
+		em.insert(entity);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testInsertProjectedEntity_List() {
+		List<ContactProjection> entities = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			ContactProjection entity = new ContactProjection();
+			entity.setLastName("Doe " + i);
+			entities.add(entity);
+		}
+		entities = em.insert(entities);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdateProjectedEntity() {
+		Contact contact = Contact.createContact1();
+		contact = em.insert(contact);
+		ContactProjection entity = em.load(ContactProjection.class, contact.getId());
+		entity.setLastName("Doe Updated");
+		em.update(entity);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpdateProjectedEntity_List() {
+		List<Contact> contacts = new ArrayList<>(5);
+		List<Long> ids = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			contacts.add(Contact.createContact1());
+		}
+		contacts = em.insert(contacts);
+		for (Contact contact : contacts) {
+			ids.add(contact.getId());
+		}
+
+		List<ContactProjection> entities = em.loadById(ContactProjection.class, ids);
+		em.update(entities);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpsertProjectedEntity() {
+		ContactProjection entity = new ContactProjection();
+		entity.setLastName("Doe");
+		em.upsert(entity);
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testUpsertProjectedEntity_List() {
+		List<ContactProjection> entities = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			ContactProjection entity = new ContactProjection();
+			entity.setLastName("Doe " + i);
+			entities.add(entity);
+		}
+		entities = em.upsert(entities);
+	}
+
+	@Test
+	public void testDeleteProjectedEntity() {
+		Contact entity = Contact.createContact1();
+		entity = em.insert(entity);
+		ContactProjection projectedEntity = em.load(ContactProjection.class, entity.getId());
+		em.delete(projectedEntity);
+		entity = em.load(Contact.class, entity.getId());
+		assertNull(entity);
+		assertNotNull(projectedEntity);
+	}
+
+	@Test
+	public void testDeleteProjectedEntity_List() {
+		List<Contact> entities = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			entities.add(Contact.createContact1());
+		}
+		entities = em.insert(entities);
+		List<Long> ids = new ArrayList<>(5);
+		for (Contact entity : entities) {
+			ids.add(entity.getId());
+		}
+		List<ContactProjection> projectedEntities = em.loadById(ContactProjection.class, ids);
+		em.delete(projectedEntities);
+		entities = em.loadById(Contact.class, ids);
+		assertNull(entities.get(0));
+		assertNull(entities.get(1));
+		assertNull(entities.get(2));
+		assertNull(entities.get(3));
+		assertNull(entities.get(4));
 	}
 
 	private static Calendar getToday() {

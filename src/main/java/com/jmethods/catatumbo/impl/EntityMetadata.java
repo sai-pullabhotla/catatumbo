@@ -24,6 +24,7 @@ import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Identifier;
 import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.ParentKey;
+import com.jmethods.catatumbo.ProjectedEntity;
 import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.PropertyOverride;
 import com.jmethods.catatumbo.UpdatedTimestamp;
@@ -43,6 +44,11 @@ public class EntityMetadata extends MetadataBase {
 	 * Entity class to which this metadata belongs
 	 */
 	private Class<?> entityClass;
+
+	/**
+	 * Whether or not this metadata belongs to a ProjectedEntity
+	 */
+	private boolean projectedEntity;
 
 	/**
 	 * Entity kind
@@ -110,12 +116,26 @@ public class EntityMetadata extends MetadataBase {
 	 *            the entity kind
 	 */
 	public EntityMetadata(Class<?> entityClass, String kind) {
+		this(entityClass, kind, false);
+	}
+
+	/**
+	 * Creates a new instance of <code>EntityMetadata</code>.
+	 *
+	 * @param entityClass
+	 *            the entity class
+	 * @param kind
+	 *            the entity kind
+	 * @param projectedEntity
+	 *            whether or not the entity is a projected entity
+	 */
+	public EntityMetadata(Class<?> entityClass, String kind, boolean projectedEntity) {
 		super(entityClass);
 		this.entityClass = entityClass;
 		this.kind = kind;
+		this.projectedEntity = projectedEntity;
 		propertyOverrideMap = new HashMap<>();
 		masterPropertyMetadataMap = new HashMap<>();
-
 	}
 
 	/**
@@ -125,6 +145,16 @@ public class EntityMetadata extends MetadataBase {
 	 */
 	public Class<?> getEntityClass() {
 		return entityClass;
+	}
+
+	/**
+	 * Tells whether or not this metadata belongs to a {@link ProjectedEntity}.
+	 * 
+	 * @return <code>true</code>, if this metadata belongs to a
+	 *         {@link ProjectedEntity}; <code>false</code>, otherwise.
+	 */
+	public boolean isProjectedEntity() {
+		return projectedEntity;
 	}
 
 	/**
