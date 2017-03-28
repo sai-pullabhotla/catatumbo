@@ -1,6 +1,8 @@
-#Releasing Catatumbo
+Releasing Catatumbo
+===================
 
-##Maven Settings
+Maven Settings
+--------------
 
 Update the ~/.m2/settings.xml to have the following settings. 
 
@@ -38,7 +40,8 @@ Update the ~/.m2/settings.xml to have the following settings.
 
 ```
 
-##Procedure
+Procedure
+---------
 
 1. Make sure all changes are checked into SCM. 
 2. Run all JUnit tests and make sure there are no failures 
