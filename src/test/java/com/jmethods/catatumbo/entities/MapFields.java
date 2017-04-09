@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo.entities;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,6 +63,7 @@ public class MapFields {
 	private SortedMap<String, Integer> sortedMap;
 	private LinkedHashMap<String, Long> linkedHashMap;
 	private TreeMap<String, Double> treeMap;
+	private Map<String, LocalDate> localDateMap;
 
 	/**
 	 * @return the id
@@ -423,6 +425,21 @@ public class MapFields {
 		this.treeMap = treeMap;
 	}
 
+	/**
+	 * @return the localDateMap
+	 */
+	public Map<String, LocalDate> getLocalDateMap() {
+		return localDateMap;
+	}
+
+	/**
+	 * @param localDateMap
+	 *            the localDateMap to set
+	 */
+	public void setLocalDateMap(Map<String, LocalDate> localDateMap) {
+		this.localDateMap = localDateMap;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof MapFields)) {
@@ -443,7 +460,8 @@ public class MapFields {
 				&& Objects.equals(this.wildcardValueMap, that.wildcardValueMap)
 				&& Objects.equals(this.wildcardMap, that.wildcardMap) && Objects.equals(this.hashMap, that.hashMap)
 				&& Objects.equals(this.sortedMap, that.sortedMap)
-				&& Objects.equals(this.linkedHashMap, that.linkedHashMap) && Objects.equals(this.treeMap, that.treeMap);
+				&& Objects.equals(this.linkedHashMap, that.linkedHashMap) && Objects.equals(this.treeMap, that.treeMap)
+				&& Objects.equals(this.localDateMap, that.localDateMap);
 	}
 
 	public static MapFields getSampleEntity1() {
@@ -601,6 +619,16 @@ public class MapFields {
 		treeMap.put("Thousand", 1000d);
 		treeMap.put("Million", 1000000d);
 		entity.setTreeMap(treeMap);
+
+		Map<String, LocalDate> localDateMap = new HashMap<>();
+		LocalDate todayLocalDate = LocalDate.now();
+		LocalDate yesterdayLocalDate = todayLocalDate.minusDays(1);
+		LocalDate nextYearLocalDate = todayLocalDate.plusYears(1);
+		localDateMap.put("today", todayLocalDate);
+		localDateMap.put("yesterday", yesterdayLocalDate);
+		localDateMap.put("nextYear", nextYearLocalDate);
+		localDateMap.put("earthFormedOn", null);
+		entity.setLocalDateMap(localDateMap);
 
 		return entity;
 	}

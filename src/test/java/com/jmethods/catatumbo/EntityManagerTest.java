@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -82,6 +83,7 @@ import com.jmethods.catatumbo.entities.IntegerField;
 import com.jmethods.catatumbo.entities.IntegerObject;
 import com.jmethods.catatumbo.entities.Item;
 import com.jmethods.catatumbo.entities.ListFields;
+import com.jmethods.catatumbo.entities.LocalDateField;
 import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
@@ -143,6 +145,7 @@ public class EntityManagerTest {
 		em.deleteAll(StringField.class);
 		em.deleteAll(CalendarField.class);
 		em.deleteAll(DateField.class);
+		em.deleteAll(LocalDateField.class);
 		em.deleteAll(ByteArrayField.class);
 		em.deleteAll(CharArrayField.class);
 		em.deleteAll(ParentEntity.class);
@@ -611,6 +614,24 @@ public class EntityManagerTest {
 		entity = em.insert(entity);
 		entity = em.load(DateField.class, entity.getId());
 		assertTrue(entity.getId() > 0 && entity.getCreationDate() == null);
+	}
+
+	@Test
+	public void testInsertLocalDateField() {
+		LocalDateField entity = new LocalDateField();
+		LocalDate now = LocalDate.now();
+		entity.setBirthDate(now);
+		entity = em.insert(entity);
+		entity = em.load(LocalDateField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getBirthDate().equals(now));
+	}
+
+	@Test
+	public void testInsertLocalDateField_Null() {
+		LocalDateField entity = new LocalDateField();
+		entity = em.insert(entity);
+		entity = em.load(LocalDateField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getBirthDate() == null);
 	}
 
 	@Test
@@ -1104,6 +1125,31 @@ public class EntityManagerTest {
 		entity = em.update(entity);
 		entity = em.load(DateField.class, entity.getId());
 		assertTrue(entity.getCreationDate() == null);
+	}
+
+	@Test
+	public void testUpdateLocalDateField() {
+		LocalDateField entity = new LocalDateField();
+		LocalDate today = LocalDate.now();
+		entity.setBirthDate(today);
+		entity = em.insert(entity);
+		LocalDate tomorrow = today.plusDays(1);
+		entity.setBirthDate(tomorrow);
+		entity = em.update(entity);
+		entity = em.load(LocalDateField.class, entity.getId());
+		assertTrue(entity.getBirthDate().equals(tomorrow));
+	}
+
+	@Test
+	public void testUpdateLocalDateField_Null() {
+		LocalDateField entity = new LocalDateField();
+		LocalDate today = LocalDate.now();
+		entity.setBirthDate(today);
+		entity = em.insert(entity);
+		entity.setBirthDate(null);
+		entity = em.update(entity);
+		entity = em.load(LocalDateField.class, entity.getId());
+		assertNull(entity.getBirthDate());
 	}
 
 	@Test

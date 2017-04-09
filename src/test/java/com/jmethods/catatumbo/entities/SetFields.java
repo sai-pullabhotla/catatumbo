@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo.entities;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +63,7 @@ public class SetFields {
 	private LinkedHashSet<Double> linkedHashSet;
 	private TreeSet<Boolean> treeSet;
 	private Set<?> wildcardSet;
+	private Set<LocalDate> localDateSet;
 
 	/**
 	 * @return the id
@@ -393,6 +395,21 @@ public class SetFields {
 		this.wildcardSet = wildcardSet;
 	}
 
+	/**
+	 * @return the localDateSet
+	 */
+	public Set<LocalDate> getLocalDateSet() {
+		return localDateSet;
+	}
+
+	/**
+	 * @param localDateSet
+	 *            the localDateSet to set
+	 */
+	public void setLocalDateSet(Set<LocalDate> localDateSet) {
+		this.localDateSet = localDateSet;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof SetFields)) {
@@ -412,7 +429,8 @@ public class SetFields {
 				&& Objects.equals(this.objectSet, that.objectSet) && Objects.equals(this.hashSet, that.hashSet)
 				&& Objects.equals(this.sortedSet, that.sortedSet)
 				&& Objects.equals(this.linkedHashSet, that.linkedHashSet) && Objects.equals(this.treeSet, that.treeSet)
-				&& Objects.equals(this.wildcardSet, that.wildcardSet);
+				&& Objects.equals(this.wildcardSet, that.wildcardSet)
+				&& Objects.equals(this.localDateSet, that.localDateSet);
 	}
 
 	public static SetFields getSampleEntity1() {
@@ -438,6 +456,9 @@ public class SetFields {
 		entity.setLinkedHashSet(new LinkedHashSet<>(Arrays.asList(Double.MIN_VALUE, 0.0, Double.MAX_VALUE)));
 		entity.setTreeSet(new TreeSet<>(Arrays.asList(false, true, false, true)));
 		entity.setWildcardSet(new HashSet<>(Arrays.asList("One", 1L, true, 1.0d)));
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = today.plusDays(1);
+		entity.setLocalDateSet(new HashSet<>(Arrays.asList(today, tomorrow)));
 		return entity;
 	}
 

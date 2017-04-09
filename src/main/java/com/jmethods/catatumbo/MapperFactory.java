@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +48,7 @@ import com.jmethods.catatumbo.mappers.FloatMapper;
 import com.jmethods.catatumbo.mappers.GeoLocationMapper;
 import com.jmethods.catatumbo.mappers.IntegerMapper;
 import com.jmethods.catatumbo.mappers.KeyMapper;
+import com.jmethods.catatumbo.mappers.LocalDateMapper;
 import com.jmethods.catatumbo.mappers.LongMapper;
 import com.jmethods.catatumbo.mappers.MapMapper;
 import com.jmethods.catatumbo.mappers.ShortMapper;
@@ -236,6 +238,9 @@ public class MapperFactory {
 		return mapper;
 	}
 
+	/**
+	 * Creates and assigns default Mappers various common types.
+	 */
 	private void createDefaultMappers() {
 		BooleanMapper booleanMapper = new BooleanMapper();
 		CharMapper charMapper = new CharMapper();
@@ -267,6 +272,7 @@ public class MapperFactory {
 		cache.put(Calendar.class, new CalendarMapper());
 		cache.put(GeoLocation.class, new GeoLocationMapper());
 		cache.put(DatastoreKey.class, new KeyMapper());
+		cache.put(LocalDate.class, new LocalDateMapper());
 	}
 
 	/**

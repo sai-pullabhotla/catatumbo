@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo.entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -82,6 +83,8 @@ public class ListFields {
 	private List<DatastoreKey> keyList;
 
 	private List<GeoLocation> geoLocationList;
+
+	private List<LocalDate> localDateList;
 
 	/**
 	 * @return the id
@@ -413,6 +416,21 @@ public class ListFields {
 		this.geoLocationList = geoLocationList;
 	}
 
+	/**
+	 * @return the localDateList
+	 */
+	public List<LocalDate> getLocalDateList() {
+		return localDateList;
+	}
+
+	/**
+	 * @param localDateList
+	 *            the localDateList to set
+	 */
+	public void setLocalDateList(List<LocalDate> localDateList) {
+		this.localDateList = localDateList;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof ListFields)) {
@@ -435,7 +453,8 @@ public class ListFields {
 				&& Objects.equals(this.arrayList, that.arrayList) && Objects.equals(this.linkedList, that.linkedList)
 				&& Objects.equals(this.stack, that.stack) && Objects.equals(this.vector, that.vector)
 				&& Objects.equals(this.keyList, that.keyList)
-				&& Objects.equals(this.geoLocationList, that.geoLocationList);
+				&& Objects.equals(this.geoLocationList, that.geoLocationList)
+				&& Objects.equals(this.localDateList, that.localDateList);
 	}
 
 	public static ListFields getSampleEntity1() {
@@ -476,6 +495,9 @@ public class ListFields {
 		List<GeoLocation> geoLocationList = Arrays.asList(new GeoLocation(40.7142700, -74.0059700),
 				new GeoLocation(48.8534100, 2.3488000));
 		entity.setGeoLocationList(geoLocationList);
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = today.plusDays(1);
+		entity.setLocalDateList(Arrays.asList(today, tomorrow));
 		return entity;
 	}
 
