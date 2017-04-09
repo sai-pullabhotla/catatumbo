@@ -19,6 +19,7 @@ package com.jmethods.catatumbo;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
+import com.google.cloud.HttpTransportOptions;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.jmethods.catatumbo.impl.DefaultEntityManager;
@@ -58,14 +59,15 @@ public class TestUtils {
 		EntityManager em = EntityManagerFactory.getInstance().createEntityManager(parameters);
 		Datastore ds = ((DefaultEntityManager) em).getDatastore();
 		DatastoreOptions options = ds.getOptions();
+		HttpTransportOptions httpTransportOptions = (HttpTransportOptions) options.getTransportOptions();
 		System.out.println("***************************");
 		System.out.println("DATASTORE INFORMATION");
 		System.out.printf("Host: %s%n", options.getHost());
 		System.out.printf("Project Id: %s%n", options.getProjectId());
 		System.out.printf("Namespace: %s%n", options.getNamespace());
 		System.out.printf("Credentials: %s%n", options.getCredentials());
-		System.out.printf("Connection Timeout: %d%n", options.getConnectTimeout());
-		System.out.printf("Read Timeout: %d%n", options.getReadTimeout());
+		System.out.printf("Connection Timeout: %d%n", httpTransportOptions.getConnectTimeout());
+		System.out.printf("Read Timeout: %d%n", httpTransportOptions.getReadTimeout());
 		System.out.println("***************************");
 		return em;
 

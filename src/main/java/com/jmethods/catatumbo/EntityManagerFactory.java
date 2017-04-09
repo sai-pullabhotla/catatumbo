@@ -24,6 +24,7 @@ import java.io.InputStream;
 import com.google.auth.Credentials;
 import com.google.auth.http.HttpTransportFactory;
 import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.google.cloud.HttpTransportOptions;
 import com.google.cloud.NoCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
@@ -260,28 +261,17 @@ public class EntityManagerFactory {
 	public EntityManager createEntityManager(ConnectionParameters parameters) {
 		try {
 			DatastoreOptions.Builder datastoreOptionsBuilder = DatastoreOptions.newBuilder();
-
 			datastoreOptionsBuilder.setHost(parameters.getServiceURL());
-			datastoreOptionsBuilder.setConnectTimeout(parameters.getConnectionTimeout());
-			datastoreOptionsBuilder.setReadTimeout(parameters.getReadTimeout());
-
-			HttpTransportFactory httpTransportFactory = parameters.getHttpTransportFactory();
-			if (httpTransportFactory != null) {
-				datastoreOptionsBuilder.setHttpTransportFactory(httpTransportFactory);
-			}
-
+			datastoreOptionsBuilder.setTransportOptions(getHttpTransportOptions(parameters));
 			String projectId = parameters.getProjectId();
 			if (!Utility.isNullOrEmpty(projectId)) {
 				datastoreOptionsBuilder.setProjectId(projectId);
 			}
-
 			String namespace = parameters.getNamespace();
 			if (namespace != null) {
 				datastoreOptionsBuilder.setNamespace(namespace);
 			}
-
 			datastoreOptionsBuilder.setCredentials(getCredentials(parameters));
-
 			Datastore datastore = datastoreOptionsBuilder.build().getService();
 			return new DefaultEntityManager(datastore);
 		} catch (Exception exp) {
@@ -312,5 +302,25 @@ public class EntityManagerFactory {
 			return ServiceAccountCredentials.fromStream(new FileInputStream(jsonCredentialsFile));
 		}
 		return ServiceAccountCredentials.getApplicationDefault();
+	}
+
+	/**
+	 * Creates and returns HttpTransportOptions from the given connection
+	 * parameters.
+	 * 
+	 * @param parameters
+	 *            the connection parameters
+	 * @return the HttpTransportOptions
+	 */
+	private static HttpTransportOptions getHttpTransportOptions(ConnectionParameters parameters) {
+		HttpTransportOptions.Builder httpOptionsBuilder = HttpTransportOptions.newBuilder();
+		httpOptionsBuilder.setConnectTimeout(parameters.getConnectionTimeout());
+		httpOptionsBuilder.setReadTimeout(parameters.getReadTimeout());
+
+		HttpTransportFactory httpTransportFactory = parameters.getHttpTransportFactory();
+		if (httpTransportFactory != null) {
+			httpOptionsBuilder.setHttpTransportFactory(httpTransportFactory);
+		}
+		return httpOptionsBuilder.build();
 	}
 }
