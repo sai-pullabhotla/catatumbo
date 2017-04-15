@@ -35,7 +35,7 @@ public class EmbeddableIntrospector {
 	/**
 	 * Embeddable class.
 	 */
-	private Class<?> embeddableClass;
+	private final Class<?> embeddableClass;
 
 	/**
 	 * Output - the metadata of the Embeddable class.
@@ -126,8 +126,6 @@ public class EmbeddableIntrospector {
 		}
 		boolean indexed = embeddedAnnotation.indexed();
 		PropertyMetadata propertyMetadata = new PropertyMetadata(field, name, indexed);
-		propertyMetadata.setReadMethod(IntrospectionUtils.getReadMethod(propertyMetadata));
-		propertyMetadata.setWriteMethod(IntrospectionUtils.getWriteMethod(propertyMetadata));
 		metadata.putPropertyMetadata(propertyMetadata);
 	}
 

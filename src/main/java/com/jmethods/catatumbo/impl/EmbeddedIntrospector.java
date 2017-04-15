@@ -17,7 +17,6 @@
 package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
@@ -38,7 +37,7 @@ public class EmbeddedIntrospector {
 	/**
 	 * Embedded field that is being introspected
 	 */
-	private EmbeddedField field;
+	private final EmbeddedField field;
 
 	/**
 	 * The meatadata of the embedded field
@@ -48,7 +47,7 @@ public class EmbeddedIntrospector {
 	/**
 	 * The type of the embedded field
 	 */
-	private Class<?> clazz;
+	private final Class<?> clazz;
 
 	/**
 	 * Metadata of the owning entity
@@ -111,17 +110,6 @@ public class EmbeddedIntrospector {
 		if (field.getField().isAnnotationPresent(Imploded.class)) {
 			metadata.setStorageStrategy(StorageStrategy.IMPLODED);
 		}
-
-		// Find and set the accessor method for this embedded field.
-		Class<?> declaringClass = field.getDeclaringClass();
-
-		String readMethodName = IntrospectionUtils.getReadMethodName(field.getField());
-		String writeMethodName = IntrospectionUtils.getWriteMethodName(field.getField());
-		Method readMethod = IntrospectionUtils.getReadMethod(declaringClass, readMethodName, field.getType());
-		Method writeMethod = IntrospectionUtils.getWriteMethod(declaringClass, writeMethodName, field.getType());
-		metadata.setReadMethod(readMethod);
-		metadata.setWriteMethod(writeMethod);
-
 		processFields();
 	}
 

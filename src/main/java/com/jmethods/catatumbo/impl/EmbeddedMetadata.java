@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
 
 /**
  * Objects of this class hold the metadata of an embedded field.
@@ -29,17 +29,17 @@ public class EmbeddedMetadata extends MetadataBase {
 	/**
 	 * The embedded field to which this metadata belongs.
 	 */
-	private EmbeddedField field;
+	private final EmbeddedField field;
 
 	/**
 	 * Read method for this embedded field
 	 */
-	private Method readMethod;
+	private final MethodHandle readMethod;
 
 	/**
 	 * Write method for this embedded field
 	 */
-	private Method writeMethod;
+	private final MethodHandle writeMethod;
 
 	/**
 	 * Storage strategy to use for the embedded field
@@ -67,6 +67,28 @@ public class EmbeddedMetadata extends MetadataBase {
 		this.field = field;
 		// Default storage strategy is EXPLODED
 		this.storageStrategy = StorageStrategy.EXPLODED;
+		this.readMethod = findReadMethod();
+		this.writeMethod = findWriteMethod();
+	}
+
+	/**
+	 * Finds and returns the read method for the embedded field.
+	 * 
+	 * @return the read method for the embedded field.
+	 */
+	private MethodHandle findReadMethod() {
+		return IntrospectionUtils.findReadMethodHandle(field.getDeclaringClass(),
+				IntrospectionUtils.getReadMethodName(field.getField()), field.getType());
+	}
+
+	/**
+	 * Finds and returns the write method for the embedded field.
+	 * 
+	 * @return the write method for the embedded field.
+	 */
+	private MethodHandle findWriteMethod() {
+		return IntrospectionUtils.findWriteMethodHandle(field.getDeclaringClass(),
+				IntrospectionUtils.getWriteMethodName(field.getField()), field.getType());
 	}
 
 	/**
@@ -85,7 +107,7 @@ public class EmbeddedMetadata extends MetadataBase {
 	 * @return the read method of the embedded field to which this metadata
 	 *         belongs.
 	 */
-	public Method getReadMethod() {
+	public MethodHandle getReadMethod() {
 		return readMethod;
 	}
 
@@ -109,38 +131,14 @@ public class EmbeddedMetadata extends MetadataBase {
 	}
 
 	/**
-	 * Sets the read method of the embedded field to which this metadata
-	 * belongs.
-	 * 
-	 * @param readMethod
-	 *            the read method of the embedded field to which this metadata
-	 *            belongs.
-	 */
-	public void setReadMethod(Method readMethod) {
-		this.readMethod = readMethod;
-	}
-
-	/**
 	 * Returns the write method of the embedded field to which this metadata
 	 * belongs.
 	 * 
 	 * @return the write method of the embedded field to which this metadata
 	 *         belongs.
 	 */
-	public Method getWriteMethod() {
+	public MethodHandle getWriteMethod() {
 		return writeMethod;
-	}
-
-	/**
-	 * Sets the write method of the embedded field to which this metadata
-	 * belongs.
-	 * 
-	 * @param writeMethod
-	 *            the write method of the embedded field to which this metadata
-	 *            belongs.
-	 */
-	public void setWriteMethod(Method writeMethod) {
-		this.writeMethod = writeMethod;
 	}
 
 	/**

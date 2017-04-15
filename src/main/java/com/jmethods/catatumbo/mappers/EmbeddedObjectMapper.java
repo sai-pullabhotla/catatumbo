@@ -28,7 +28,6 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 import com.jmethods.catatumbo.impl.EmbeddableIntrospector;
 import com.jmethods.catatumbo.impl.EmbeddableMetadata;
-import com.jmethods.catatumbo.impl.IntrospectionUtils;
 import com.jmethods.catatumbo.impl.PropertyMetadata;
 
 /**
@@ -42,12 +41,12 @@ public class EmbeddedObjectMapper implements Mapper {
 	/**
 	 * The Embeddable class.
 	 */
-	private Class<?> clazz;
+	private final Class<?> clazz;
 
 	/**
 	 * Metadata of the Emebeddable class.
 	 */
-	private EmbeddableMetadata metadata;
+	private final EmbeddableMetadata metadata;
 
 	/**
 	 * Creates a new instance of <code>EmbeddedObjectMapper</code>.
@@ -79,7 +78,7 @@ public class EmbeddedObjectMapper implements Mapper {
 				}
 			}
 			return EntityValue.newBuilder(entityBuilder.build());
-		} catch (Exception exp) {
+		} catch (Throwable exp) {
 			throw new MappingException(exp);
 		}
 	}
@@ -91,7 +90,9 @@ public class EmbeddedObjectMapper implements Mapper {
 		}
 		try {
 			FullEntity<?> entity = ((EntityValue) input).get();
-			Object embeddedObject = IntrospectionUtils.instantiateObject(clazz);
+			// Object embeddedObject =
+			// IntrospectionUtils.instantiateObject(clazz);
+			Object embeddedObject = metadata.getConstructor().invoke();
 			for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
 				String mappedName = propertyMetadata.getMappedName();
 				if (entity.contains(mappedName)) {
@@ -101,7 +102,7 @@ public class EmbeddedObjectMapper implements Mapper {
 				}
 			}
 			return embeddedObject;
-		} catch (Exception exp) {
+		} catch (Throwable exp) {
 			throw new MappingException(exp);
 		}
 	}

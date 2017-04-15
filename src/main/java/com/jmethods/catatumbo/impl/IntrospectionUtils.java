@@ -16,6 +16,9 @@
 
 package com.jmethods.catatumbo.impl;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,6 +42,44 @@ public class IntrospectionUtils {
 	 */
 	private IntrospectionUtils() {
 		// Do nothing
+	}
+
+	/**
+	 * Returns the default constructor for the class given its metadata.
+	 * 
+	 * @param metadata
+	 *            the metadata of the class
+	 * @return the default constructor
+	 * @throws EntityManagerException
+	 *             if no default constructor exists or any other error occurs.
+	 */
+	public static MethodHandle getDefaultConstructor(MetadataBase metadata) {
+		try {
+			return MethodHandles.publicLookup().findConstructor(metadata.getClazz(), MethodType.methodType(void.class));
+		} catch (NoSuchMethodException e) {
+			String pattern = "Class %s requires a public no-arg constructor";
+			throw new EntityManagerException(String.format(pattern, metadata.getClazz()), e);
+		} catch (IllegalAccessException e) {
+			throw new EntityManagerException(e);
+		}
+	}
+
+	/**
+	 * Creates and returns a new instance of the Class for the given metadata.
+	 * 
+	 * @param metadata
+	 *            the metadata of the class
+	 * @return a new instance of the of the Class to which the given metadata
+	 *         belongs.
+	 * @throws EntityManagerException
+	 *             if any error occurs during instantiation.
+	 */
+	public static Object instantiate(MetadataBase metadata) {
+		try {
+			return metadata.getConstructor().invoke();
+		} catch (Throwable t) {
+			throw new EntityManagerException(t);
+		}
 	}
 
 	/**
@@ -67,14 +108,11 @@ public class IntrospectionUtils {
 			mappedName = fieldName;
 		}
 
-		PropertyMetadata propertyMetadata = new PropertyMetadata(field, mappedName, indexed);
-
 		// For fields that have @Property annotation, we expect both setter and
 		// getter methods. For all other fields, we only treat them as
 		// persistable if we find valid getter and setter methods.
 		try {
-			propertyMetadata.setReadMethod(getReadMethod(propertyMetadata));
-			propertyMetadata.setWriteMethod(getWriteMethod(propertyMetadata));
+			PropertyMetadata propertyMetadata = new PropertyMetadata(field, mappedName, indexed);
 			return propertyMetadata;
 		} catch (EntityManagerException exp) {
 			if (property != null) {
@@ -82,6 +120,100 @@ public class IntrospectionUtils {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Finds and returns a {@link MethodHandle} that can be used to read the
+	 * field represented by the given metadata.
+	 * 
+	 * @param metadata
+	 *            the metadata of the field
+	 * @return the {@link MethodHandle} for reading the fieldd's value
+	 * @throws EntityManagerException
+	 *             if no read method exists
+	 */
+	public static MethodHandle findReadMethodHandle(FieldMetadata metadata) {
+		Field field = metadata.getField();
+		String readMethodName;
+		if (boolean.class.equals(field.getType())) {
+			try {
+				readMethodName = IntrospectionUtils.getReadMethodNameForBoolean(field);
+				return findReadMethodHandle(field.getDeclaringClass(), readMethodName, field.getType());
+			} catch (EntityManagerException e) {
+				// Do nothing... perhaps there is no isXXX method, so we will
+				// try the getXXX method.
+			}
+		}
+		readMethodName = getReadMethodName(field);
+		return findReadMethodHandle(field.getDeclaringClass(), readMethodName, field.getType());
+	}
+
+	/**
+	 * Finds and returns a {@link MethodHandle} that can be used to read a
+	 * field.
+	 * 
+	 * @param clazz
+	 *            the class name
+	 * @param methodName
+	 *            the method name
+	 * @param returnType
+	 *            the return type
+	 * @return a {@link MethodHandle} that can be used to read a field.
+	 * @throws EntityManagerException
+	 *             if no matching method exists
+	 */
+	public static MethodHandle findReadMethodHandle(Class<?> clazz, String methodName, Class<?> returnType) {
+		try {
+			return MethodHandles.publicLookup().findVirtual(clazz, methodName, MethodType.methodType(returnType));
+		} catch (NoSuchMethodException e) {
+			String pattern = "Class %s requires a public instance method %s with a return type of %s";
+			throw new EntityManagerException(String.format(pattern, clazz.getName(), methodName, returnType.getName()),
+					e);
+		} catch (IllegalAccessException e) {
+			throw new EntityManagerException(e);
+		}
+	}
+
+	/**
+	 * Finds and returns a {@link MethodHandle} that can be used to update a
+	 * field represented by the given metadata.
+	 * 
+	 * @param metadata
+	 *            the metadata of the field.
+	 * @return the {@link MethodHandle} to update the field
+	 * @throws EntityManagerException
+	 *             if no matching method exists
+	 */
+	public static MethodHandle findWriteMethodHandle(FieldMetadata metadata) {
+		Field field = metadata.getField();
+		String writeMethodName = getWriteMethodName(field);
+		return findWriteMethodHandle(field.getDeclaringClass(), writeMethodName, field.getType());
+	}
+
+	/**
+	 * Finds and returns a {@link MethodHandle} for updating a field.
+	 * 
+	 * @param clazz
+	 *            the class
+	 * @param methodName
+	 *            the write method name
+	 * @param parameterType
+	 *            the parameter type
+	 * @return the {@link MethodHandle}
+	 * @throws EntityManagerException
+	 *             if no matching method exists.
+	 */
+	public static MethodHandle findWriteMethodHandle(Class<?> clazz, String methodName, Class<?> parameterType) {
+		try {
+			return MethodHandles.publicLookup().findVirtual(clazz, methodName,
+					MethodType.methodType(void.class, parameterType));
+		} catch (NoSuchMethodException e) {
+			String pattern = "Class %s requires a public instance method %s with a parameter type of %s";
+			throw new EntityManagerException(
+					String.format(pattern, clazz.getName(), methodName, parameterType.getName()), e);
+		} catch (IllegalAccessException e) {
+			throw new EntityManagerException(e);
+		}
 	}
 
 	/**
@@ -299,12 +431,12 @@ public class IntrospectionUtils {
 		try {
 			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
 			if (embeddedObject == null) {
-				embeddedObject = IntrospectionUtils.instantiateObject(embeddedMetadata.getField().getType());
+				embeddedObject = instantiate(embeddedMetadata);
 				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
 			}
 			return embeddedObject;
-		} catch (Exception exp) {
-			throw new EntityManagerException(exp);
+		} catch (Throwable t) {
+			throw new EntityManagerException(t);
 		}
 	}
 

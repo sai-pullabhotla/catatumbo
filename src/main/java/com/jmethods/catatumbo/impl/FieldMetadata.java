@@ -15,8 +15,8 @@
  */
 package com.jmethods.catatumbo.impl;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Mapper;
@@ -33,22 +33,22 @@ public abstract class FieldMetadata {
 	/**
 	 * Reference to the field
 	 */
-	protected Field field;
+	protected final Field field;
 
 	/**
 	 * Read method (or getter method) for this field
 	 */
-	protected Method readMethod;
+	protected final MethodHandle readMethod;
 
 	/**
 	 * Write method (or setter method) for this field
 	 */
-	protected Method writeMethod;
+	protected final MethodHandle writeMethod;
 
 	/**
 	 * Mapper for the field represented by this metadata
 	 */
-	protected Mapper mapper;
+	protected final Mapper mapper;
 
 	/**
 	 * Creates a new instance of <code>FieldMetadata</code>.
@@ -59,7 +59,9 @@ public abstract class FieldMetadata {
 	 */
 	public FieldMetadata(Field field) {
 		this.field = field;
-		initializeMapper();
+		this.readMethod = IntrospectionUtils.findReadMethodHandle(this);
+		this.writeMethod = IntrospectionUtils.findWriteMethodHandle(this);
+		this.mapper = initializeMapper();
 	}
 
 	/**
@@ -85,18 +87,8 @@ public abstract class FieldMetadata {
 	 *
 	 * @return the read method (or getter method) for this field.
 	 */
-	public Method getReadMethod() {
+	public MethodHandle getReadMethod() {
 		return readMethod;
-	}
-
-	/**
-	 * Sets the read method (or getter method).
-	 *
-	 * @param readMethod
-	 *            the read method (or getter method).
-	 */
-	public void setReadMethod(Method readMethod) {
-		this.readMethod = readMethod;
 	}
 
 	/**
@@ -104,18 +96,8 @@ public abstract class FieldMetadata {
 	 *
 	 * @return the write method (or setter method).
 	 */
-	public Method getWriteMethod() {
+	public MethodHandle getWriteMethod() {
 		return writeMethod;
-	}
-
-	/**
-	 * Sets the write method (or setter method).
-	 *
-	 * @param writeMethod
-	 *            the write method (or setter method).
-	 */
-	public void setWriteMethod(Method writeMethod) {
-		this.writeMethod = writeMethod;
 	}
 
 	/**
@@ -142,9 +124,9 @@ public abstract class FieldMetadata {
 	/**
 	 * Initializes the {@link Mapper} for this field.
 	 */
-	private void initializeMapper() {
+	private Mapper initializeMapper() {
 		try {
-			this.mapper = MapperFactory.getInstance().getMapper(field);
+			return MapperFactory.getInstance().getMapper(field);
 		} catch (Exception exp) {
 			String message = String.format(
 					"No suitable mapper found or error occurred creating a mapper for field %s in class %s",

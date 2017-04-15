@@ -15,7 +15,7 @@
  */
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -152,7 +152,7 @@ public class Marshaller {
 	/**
 	 * The intent of marshalling
 	 */
-	private Intent intent;
+	private final Intent intent;
 
 	/**
 	 * Creates a new instance of <code>Marshaller</code>.
@@ -463,11 +463,11 @@ public class Marshaller {
 	 * @return the value of the field.
 	 */
 	private static Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
-		Method readMethod = fieldMetadata.getReadMethod();
+		MethodHandle readMethod = fieldMetadata.getReadMethod();
 		try {
 			return readMethod.invoke(target);
-		} catch (Exception exp) {
-			throw new EntityManagerException(exp.getMessage(), exp);
+		} catch (Throwable t) {
+			throw new EntityManagerException(t.getMessage(), t);
 		}
 	}
 
@@ -539,8 +539,8 @@ public class Marshaller {
 			valueBuilder.setExcludeFromIndexes(!embeddedMetadata.isIndexed());
 			return valueBuilder;
 
-		} catch (Exception exp) {
-			throw new EntityManagerException(exp);
+		} catch (Throwable t) {
+			throw new EntityManagerException(t);
 		}
 
 	}
