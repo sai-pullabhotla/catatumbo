@@ -25,8 +25,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.Ignore;
+import com.jmethods.catatumbo.NoAccessorMethodException;
+import com.jmethods.catatumbo.NoDefaultConstructorException;
 import com.jmethods.catatumbo.Property;
 
 /**
@@ -56,11 +61,9 @@ public class IntrospectionUtils {
 	public static MethodHandle getDefaultConstructor(MetadataBase metadata) {
 		try {
 			return MethodHandles.publicLookup().findConstructor(metadata.getClazz(), MethodType.methodType(void.class));
-		} catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException | IllegalAccessException e) {
 			String pattern = "Class %s requires a public no-arg constructor";
-			throw new EntityManagerException(String.format(pattern, metadata.getClazz()), e);
-		} catch (IllegalAccessException e) {
-			throw new EntityManagerException(e);
+			throw new NoDefaultConstructorException(String.format(pattern, metadata.getClazz()), e);
 		}
 	}
 
@@ -90,11 +93,6 @@ public class IntrospectionUtils {
 	 * @return metadata of the given field.
 	 */
 	public static PropertyMetadata getPropertyMetadata(Field field) {
-		int modifiers = field.getModifiers();
-		if (Modifier.isStatic(modifiers)) {
-			return null;
-		}
-
 		String fieldName = field.getName();
 		String mappedName = null;
 		boolean indexed = true;
@@ -114,7 +112,7 @@ public class IntrospectionUtils {
 		try {
 			PropertyMetadata propertyMetadata = new PropertyMetadata(field, mappedName, indexed);
 			return propertyMetadata;
-		} catch (EntityManagerException exp) {
+		} catch (NoAccessorMethodException exp) {
 			if (property != null) {
 				throw exp;
 			}
@@ -165,12 +163,10 @@ public class IntrospectionUtils {
 	public static MethodHandle findReadMethodHandle(Class<?> clazz, String methodName, Class<?> returnType) {
 		try {
 			return MethodHandles.publicLookup().findVirtual(clazz, methodName, MethodType.methodType(returnType));
-		} catch (NoSuchMethodException e) {
-			String pattern = "Class %s requires a public instance method %s with a return type of %s";
-			throw new EntityManagerException(String.format(pattern, clazz.getName(), methodName, returnType.getName()),
-					e);
-		} catch (IllegalAccessException e) {
-			throw new EntityManagerException(e);
+		} catch (NoSuchMethodException | IllegalAccessException e) {
+			String pattern = "Class %s requires public %s %s() method. ";
+			throw new NoAccessorMethodException(
+					String.format(pattern, clazz.getName(), returnType.getName(), methodName), e);
 		}
 	}
 
@@ -207,12 +203,10 @@ public class IntrospectionUtils {
 		try {
 			return MethodHandles.publicLookup().findVirtual(clazz, methodName,
 					MethodType.methodType(void.class, parameterType));
-		} catch (NoSuchMethodException e) {
-			String pattern = "Class %s requires a public instance method %s with a parameter type of %s";
-			throw new EntityManagerException(
+		} catch (NoSuchMethodException | IllegalAccessException e) {
+			String pattern = "Class %s requires public void %s(%s) method. ";
+			throw new NoAccessorMethodException(
 					String.format(pattern, clazz.getName(), methodName, parameterType.getName()), e);
-		} catch (IllegalAccessException e) {
-			throw new EntityManagerException(e);
 		}
 	}
 
@@ -340,6 +334,28 @@ public class IntrospectionUtils {
 					parameterType.getName(), clazz.getName()), exp);
 		}
 
+	}
+
+	/**
+	 * Returns all potentially persistable fields that were declared in the
+	 * specified class. This method filters out the static fields and any fields
+	 * that have an annotation of {@link Ignore}, and returns the rest of the
+	 * declared fields.
+	 * 
+	 * @param clazz
+	 *            the class
+	 * @return all potentially persistable fields that were declared in the
+	 *         specified class.
+	 */
+	public static List<Field> getPersistableFields(Class<?> clazz) {
+		Field[] fields = clazz.getDeclaredFields();
+		List<Field> output = new ArrayList<>(fields.length);
+		for (Field field : fields) {
+			if (!(field.isAnnotationPresent(Ignore.class) || isStatic(field))) {
+				output.add(field);
+			}
+		}
+		return output;
 	}
 
 	/**

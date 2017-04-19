@@ -18,9 +18,9 @@ package com.jmethods.catatumbo.impl;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 
-import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MapperFactory;
+import com.jmethods.catatumbo.NoSuitableMapperException;
 
 /**
  * Base class for holding the metadata about an entity's or embedded object's
@@ -127,12 +127,11 @@ public abstract class FieldMetadata {
 	private Mapper initializeMapper() {
 		try {
 			return MapperFactory.getInstance().getMapper(field);
-		} catch (Exception exp) {
+		} catch (NoSuitableMapperException exp) {
 			String message = String.format(
 					"No suitable mapper found or error occurred creating a mapper for field %s in class %s",
 					field.getName(), field.getDeclaringClass().getName());
-			throw new EntityManagerException(message, exp);
-
+			throw new NoSuitableMapperException(message, exp);
 		}
 	}
 

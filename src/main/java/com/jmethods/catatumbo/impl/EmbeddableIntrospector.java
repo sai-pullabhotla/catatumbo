@@ -17,11 +17,11 @@
 package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.EntityManagerException;
-import com.jmethods.catatumbo.Ignore;
 
 /**
  * Introspects an {@link Embeddable} class and prepares the metadata for the
@@ -83,11 +83,9 @@ public class EmbeddableIntrospector {
 	 * Processes each field in this Embeddable and updates the metadata.
 	 */
 	private void processFields() {
-		Field[] fields = embeddableClass.getDeclaredFields();
+		List<Field> fields = IntrospectionUtils.getPersistableFields(embeddableClass);
 		for (Field field : fields) {
-			if (field.isAnnotationPresent(Ignore.class) || IntrospectionUtils.isStatic(field)) {
-				continue;
-			} else if (field.isAnnotationPresent(Embedded.class)) {
+			if (field.isAnnotationPresent(Embedded.class)) {
 				processEmbeddedField(field);
 			} else {
 				processSimpleField(field);

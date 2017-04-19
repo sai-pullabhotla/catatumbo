@@ -27,9 +27,17 @@ import java.util.Objects;
 import org.junit.Test;
 
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.NoAccessorMethodException;
+import com.jmethods.catatumbo.NoDefaultConstructorException;
+import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.entities.Cat;
 import com.jmethods.catatumbo.entities.Contact;
 import com.jmethods.catatumbo.entities.Customer;
+import com.jmethods.catatumbo.entities.NoDefaultConstrctorEntity;
+import com.jmethods.catatumbo.entities.NoGetterMethodEntity;
+import com.jmethods.catatumbo.entities.NoSetterMethodEntity;
+import com.jmethods.catatumbo.entities.NoSetterMethodEntity2;
+import com.jmethods.catatumbo.entities.NoSuitableMapperEntity;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad2;
@@ -142,6 +150,56 @@ public class EntityIntrospectorTest {
 			EntityMetadata entityMetadata = EntityIntrospector.introspect(Button.class);
 		} catch (EntityManagerException exp) {
 			System.err.println(exp.getMessage());
+			throw exp;
+		}
+	}
+
+	@Test(expected = NoSuitableMapperException.class)
+	public void testNoSuitableMapper() {
+		try {
+			EntityIntrospector.introspect(NoSuitableMapperEntity.class);
+		} catch (NoSuitableMapperException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+	}
+
+	@Test(expected = NoAccessorMethodException.class)
+	public void testNoGetterMethod() {
+		try {
+			EntityIntrospector.introspect(NoGetterMethodEntity.class);
+		} catch (NoAccessorMethodException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+	}
+
+	@Test(expected = NoAccessorMethodException.class)
+	public void testNoSetterMethod() {
+		try {
+			EntityIntrospector.introspect(NoSetterMethodEntity.class);
+		} catch (NoAccessorMethodException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+	}
+
+	@Test(expected = NoAccessorMethodException.class)
+	public void testNoSetterMethod_2() {
+		try {
+			EntityIntrospector.introspect(NoSetterMethodEntity2.class);
+		} catch (NoAccessorMethodException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+	}
+
+	@Test(expected = NoDefaultConstructorException.class)
+	public void testNoDefaultConstructor() {
+		try {
+			EntityIntrospector.introspect(NoDefaultConstrctorEntity.class);
+		} catch (NoDefaultConstructorException exp) {
+			System.err.println(exp);
 			throw exp;
 		}
 	}

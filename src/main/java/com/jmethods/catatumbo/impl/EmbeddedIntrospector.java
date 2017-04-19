@@ -17,11 +17,11 @@
 package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.EntityManagerException;
-import com.jmethods.catatumbo.Ignore;
 import com.jmethods.catatumbo.Imploded;
 import com.jmethods.catatumbo.Property;
 
@@ -117,11 +117,9 @@ public class EmbeddedIntrospector {
 	 * Processes each field in this embedded object and updates the metadata.
 	 */
 	private void processFields() {
-		Field[] children = clazz.getDeclaredFields();
+		List<Field> children = IntrospectionUtils.getPersistableFields(clazz);
 		for (Field child : children) {
-			if (child.isAnnotationPresent(Ignore.class)) {
-				continue;
-			} else if (child.isAnnotationPresent(Embedded.class)) {
+			if (child.isAnnotationPresent(Embedded.class)) {
 				processEmbeddedField(child);
 			} else {
 				processSimpleField(child);

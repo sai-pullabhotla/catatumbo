@@ -29,7 +29,6 @@ import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Identifier;
-import com.jmethods.catatumbo.Ignore;
 import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.MappedSuperClass;
 import com.jmethods.catatumbo.ParentKey;
@@ -218,9 +217,7 @@ public class EntityIntrospector {
 	private void processFields() {
 		List<Field> fields = getAllFields();
 		for (Field field : fields) {
-			if (field.isAnnotationPresent(Ignore.class)) {
-				continue;
-			} else if (field.isAnnotationPresent(Identifier.class)) {
+			if (field.isAnnotationPresent(Identifier.class)) {
 				processIdentifierField(field);
 			} else if (field.isAnnotationPresent(Key.class)) {
 				processKeyField(field);
@@ -245,10 +242,8 @@ public class EntityIntrospector {
 		Class<?> clazz = entityClass;
 		boolean stop;
 		do {
-			Field[] fields = clazz.getDeclaredFields();
-			for (Field field : fields) {
-				allFields.add(field);
-			}
+			List<Field> fields = IntrospectionUtils.getPersistableFields(clazz);
+			allFields.addAll(fields);
 			clazz = clazz.getSuperclass();
 			stop = clazz == null || !clazz.isAnnotationPresent(MappedSuperClass.class);
 		} while (!stop);
