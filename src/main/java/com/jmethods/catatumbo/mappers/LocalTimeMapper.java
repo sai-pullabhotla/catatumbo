@@ -16,7 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -61,7 +60,7 @@ public class LocalTimeMapper implements Mapper {
 			return LocalTime.parse(((StringValue) input).get(), FORMATTER);
 		} catch (ClassCastException exp) {
 			String pattern = "Mapping of type %s to %s is not supported";
-			throw new MappingException(String.format(pattern, input.getClass().getName(), LocalDate.class.getName()),
+			throw new MappingException(String.format(pattern, input.getClass().getName(), LocalTime.class.getName()),
 					exp);
 		} catch (DateTimeParseException exp) {
 			throw new MappingException(exp);
