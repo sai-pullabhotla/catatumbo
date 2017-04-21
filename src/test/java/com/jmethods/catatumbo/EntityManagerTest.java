@@ -29,6 +29,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,6 +86,7 @@ import com.jmethods.catatumbo.entities.IntegerObject;
 import com.jmethods.catatumbo.entities.Item;
 import com.jmethods.catatumbo.entities.ListFields;
 import com.jmethods.catatumbo.entities.LocalDateField;
+import com.jmethods.catatumbo.entities.LocalDateTimeField;
 import com.jmethods.catatumbo.entities.LocalTimeField;
 import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
@@ -149,6 +151,7 @@ public class EntityManagerTest {
 		em.deleteAll(DateField.class);
 		em.deleteAll(LocalDateField.class);
 		em.deleteAll(LocalTimeField.class);
+		em.deleteAll(LocalDateTimeField.class);
 		em.deleteAll(ByteArrayField.class);
 		em.deleteAll(CharArrayField.class);
 		em.deleteAll(ParentEntity.class);
@@ -653,6 +656,24 @@ public class EntityManagerTest {
 		entity = em.insert(entity);
 		entity = em.load(LocalTimeField.class, entity.getId());
 		assertTrue(entity.getId() > 0 && entity.getStartTime() == null);
+	}
+
+	@Test
+	public void testInsertLocalDateTimeField_Now() {
+		LocalDateTimeField entity = new LocalDateTimeField();
+		LocalDateTime now = LocalDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		entity = em.load(LocalDateTimeField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getTimestamp().equals(now));
+	}
+
+	@Test
+	public void testInsertLocalDateTimeField_Null() {
+		LocalDateTimeField entity = new LocalDateTimeField();
+		entity = em.insert(entity);
+		entity = em.load(LocalDateTimeField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getTimestamp() == null);
 	}
 
 	@Test
@@ -1196,6 +1217,44 @@ public class EntityManagerTest {
 		entity = em.update(entity);
 		entity = em.load(LocalTimeField.class, entity.getId());
 		assertNull(entity.getStartTime());
+	}
+
+	@Test
+	public void testUpdateLocalDateTimeField() {
+		LocalDateTimeField entity = new LocalDateTimeField();
+		LocalDateTime now = LocalDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		LocalDateTime nextDay = now.plusDays(1);
+		entity.setTimestamp(nextDay);
+		entity = em.update(entity);
+		entity = em.load(LocalDateTimeField.class, entity.getId());
+		assertEquals(nextDay, entity.getTimestamp());
+	}
+
+	@Test
+	public void testUpdateLocalDateTimeField_Nano() {
+		LocalDateTimeField entity = new LocalDateTimeField();
+		LocalDateTime now = LocalDateTime.now().withNano(999999999);
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		LocalDateTime nextDay = now.plusDays(1);
+		entity.setTimestamp(nextDay);
+		entity = em.update(entity);
+		entity = em.load(LocalDateTimeField.class, entity.getId());
+		assertEquals(nextDay, entity.getTimestamp());
+	}
+
+	@Test
+	public void testUpdateLocalDateTimeField_Null() {
+		LocalDateTimeField entity = new LocalDateTimeField();
+		LocalDateTime now = LocalDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		entity.setTimestamp(null);
+		entity = em.update(entity);
+		entity = em.load(LocalDateTimeField.class, entity.getId());
+		assertNull(entity.getTimestamp());
 	}
 
 	@Test
