@@ -22,6 +22,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,7 @@ import com.jmethods.catatumbo.mappers.GeoLocationMapper;
 import com.jmethods.catatumbo.mappers.IntegerMapper;
 import com.jmethods.catatumbo.mappers.KeyMapper;
 import com.jmethods.catatumbo.mappers.LocalDateMapper;
+import com.jmethods.catatumbo.mappers.LocalTimeMapper;
 import com.jmethods.catatumbo.mappers.LongMapper;
 import com.jmethods.catatumbo.mappers.MapMapper;
 import com.jmethods.catatumbo.mappers.ShortMapper;
@@ -273,6 +275,7 @@ public class MapperFactory {
 		cache.put(GeoLocation.class, new GeoLocationMapper());
 		cache.put(DatastoreKey.class, new KeyMapper());
 		cache.put(LocalDate.class, new LocalDateMapper());
+		cache.put(LocalTime.class, new LocalTimeMapper());
 	}
 
 	/**
