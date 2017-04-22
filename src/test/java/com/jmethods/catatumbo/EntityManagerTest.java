@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -93,6 +94,7 @@ import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
 import com.jmethods.catatumbo.entities.LongObject;
 import com.jmethods.catatumbo.entities.MapFields;
+import com.jmethods.catatumbo.entities.OffsetDateTimeField;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
 import com.jmethods.catatumbo.entities.PhoneNumber;
@@ -152,6 +154,7 @@ public class EntityManagerTest {
 		em.deleteAll(LocalDateField.class);
 		em.deleteAll(LocalTimeField.class);
 		em.deleteAll(LocalDateTimeField.class);
+		em.deleteAll(OffsetDateTimeField.class);
 		em.deleteAll(ByteArrayField.class);
 		em.deleteAll(CharArrayField.class);
 		em.deleteAll(ParentEntity.class);
@@ -674,6 +677,37 @@ public class EntityManagerTest {
 		entity = em.insert(entity);
 		entity = em.load(LocalDateTimeField.class, entity.getId());
 		assertTrue(entity.getId() > 0 && entity.getTimestamp() == null);
+	}
+
+	@Test
+	public void testInsertOffsetDateTimeField_Now() {
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		OffsetDateTime now = OffsetDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		entity = em.load(OffsetDateTimeField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getTimestamp().equals(now));
+	}
+
+	@Test
+	public void testInsertOffsetDateTimeField_Null() {
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		entity.setTimestamp(null);
+		entity = em.insert(entity);
+		entity = em.load(OffsetDateTimeField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getTimestamp() == null);
+	}
+
+	@Test
+	public void testInsertOffsetDateTimeField_Nano() {
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		OffsetDateTime now = OffsetDateTime.now().withNano(999999999);
+		entity.setTimestamp(now);
+		OffsetDateTimeField entity2 = em.insert(entity);
+		// Here we lose the nano precision and only have millis
+		OffsetDateTimeField entity3 = em.load(OffsetDateTimeField.class, entity2.getId());
+		assertEquals(entity2.getTimestamp(), entity3.getTimestamp());
+		assertNotEquals(entity.getTimestamp(), entity3.getTimestamp());
 	}
 
 	@Test
@@ -1254,6 +1288,31 @@ public class EntityManagerTest {
 		entity.setTimestamp(null);
 		entity = em.update(entity);
 		entity = em.load(LocalDateTimeField.class, entity.getId());
+		assertNull(entity.getTimestamp());
+	}
+
+	@Test
+	public void testUpdateOffsetDateTimeField() {
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		OffsetDateTime now = OffsetDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		OffsetDateTime nextDay = now.plusDays(2);
+		entity.setTimestamp(nextDay);
+		entity = em.update(entity);
+		entity = em.load(OffsetDateTimeField.class, entity.getId());
+		assertEquals(nextDay, entity.getTimestamp());
+	}
+
+	@Test
+	public void testUpdateOffsetDateTimeField_Null() {
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		OffsetDateTime now = OffsetDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		entity.setTimestamp(null);
+		entity = em.update(entity);
+		entity = em.load(OffsetDateTimeField.class, entity.getId());
 		assertNull(entity.getTimestamp());
 	}
 

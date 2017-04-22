@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +56,7 @@ import com.jmethods.catatumbo.mappers.LocalDateTimeMapper;
 import com.jmethods.catatumbo.mappers.LocalTimeMapper;
 import com.jmethods.catatumbo.mappers.LongMapper;
 import com.jmethods.catatumbo.mappers.MapMapper;
+import com.jmethods.catatumbo.mappers.OffsetDateTimeMapper;
 import com.jmethods.catatumbo.mappers.ShortMapper;
 import com.jmethods.catatumbo.mappers.StringMapper;
 
@@ -279,6 +281,7 @@ public class MapperFactory {
 		cache.put(LocalDate.class, new LocalDateMapper());
 		cache.put(LocalTime.class, new LocalTimeMapper());
 		cache.put(LocalDateTime.class, new LocalDateTimeMapper());
+		cache.put(OffsetDateTime.class, new OffsetDateTimeMapper());
 	}
 
 	/**
