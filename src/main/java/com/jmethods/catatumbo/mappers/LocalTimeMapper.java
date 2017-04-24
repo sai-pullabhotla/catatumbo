@@ -42,7 +42,7 @@ public class LocalTimeMapper implements Mapper {
 	/**
 	 * The formatter to use for converting LocalTime to String and vice versa.
 	 */
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss.nnnnnnnnn", Locale.ENGLISH);
+	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss.nnnnnnnnn", Locale.ENGLISH);
 
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {

@@ -16,10 +16,15 @@
 
 package com.jmethods.catatumbo.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Blob;
@@ -28,6 +33,8 @@ import com.google.cloud.datastore.GqlQuery;
 import com.jmethods.catatumbo.DatastoreCursor;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.GeoLocation;
+import com.jmethods.catatumbo.mappers.LocalDateTimeMapper;
+import com.jmethods.catatumbo.mappers.LocalTimeMapper;
 
 /**
  * Utility methods for GQL Queries.
@@ -109,6 +116,14 @@ public class QueryUtils {
 			queryBuilder.addBinding(toTimestamp((Calendar) binding));
 		} else if (binding instanceof Date) {
 			queryBuilder.addBinding(toTimestamp((Date) binding));
+		} else if (binding instanceof LocalDate) {
+			queryBuilder.addBinding(((LocalDate) binding).toString());
+		} else if (binding instanceof LocalTime) {
+			queryBuilder.addBinding(((LocalTime) binding).format(LocalTimeMapper.FORMATTER));
+		} else if (binding instanceof LocalDateTime) {
+			queryBuilder.addBinding(((LocalDateTime) binding).format(LocalDateTimeMapper.FORMATTER));
+		} else if (binding instanceof OffsetDateTime) {
+			queryBuilder.addBinding(toTimestamp((OffsetDateTime) binding));
 		} else if (binding instanceof byte[]) {
 			queryBuilder.addBinding(Blob.copyFrom((byte[]) binding));
 		} else if (binding instanceof DatastoreKey) {
@@ -151,6 +166,15 @@ public class QueryUtils {
 					queryBuilder.setBinding(bindingName, toTimestamp((Calendar) bindingValue));
 				} else if (bindingValue instanceof Date) {
 					queryBuilder.setBinding(bindingName, toTimestamp((Date) bindingValue));
+				} else if (bindingValue instanceof LocalDate) {
+					queryBuilder.setBinding(bindingName, ((LocalDate) bindingValue).toString());
+				} else if (bindingValue instanceof LocalTime) {
+					queryBuilder.setBinding(bindingName, ((LocalTime) bindingValue).format(LocalTimeMapper.FORMATTER));
+				} else if (bindingValue instanceof LocalDateTime) {
+					queryBuilder.setBinding(bindingName,
+							((LocalDateTime) bindingValue).format(LocalDateTimeMapper.FORMATTER));
+				} else if (bindingValue instanceof OffsetDateTime) {
+					queryBuilder.setBinding(bindingName, toTimestamp((OffsetDateTime) bindingValue));
 				} else if (bindingValue instanceof byte[]) {
 					queryBuilder.setBinding(bindingName, Blob.copyFrom((byte[]) bindingValue));
 				} else if (bindingValue instanceof DatastoreKey) {
@@ -185,6 +209,20 @@ public class QueryUtils {
 	 */
 	private static Timestamp toTimestamp(Date date) {
 		return Timestamp.of(date);
+	}
+
+	/**
+	 * Converts the given OffsetDateTime to a Timestamp.
+	 * 
+	 * @param offsetDateTime
+	 *            the OffsetDateTime to convert
+	 * @return Timestamp object that is equivalent to the given OffsetDateTime.
+	 */
+	private static Timestamp toTimestamp(OffsetDateTime offsetDateTime) {
+		long seconds = offsetDateTime.toEpochSecond();
+		int nanos = offsetDateTime.getNano();
+		long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
+		return Timestamp.ofTimeMicroseconds(microseconds);
 	}
 
 }

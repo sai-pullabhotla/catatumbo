@@ -43,7 +43,7 @@ public class LocalDateTimeMapper implements Mapper {
 	/**
 	 * The formatter to use for converting LocalTime to String and vice versa.
 	 */
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn",
+	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn",
 			Locale.ENGLISH);
 
 	@Override

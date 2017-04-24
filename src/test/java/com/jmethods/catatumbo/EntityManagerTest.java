@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -2949,6 +2950,134 @@ public class EntityManagerTest {
 		assertNull(entities.get(2));
 		assertNull(entities.get(3));
 		assertNull(entities.get(4));
+	}
+
+	@Test
+	public void testQueryByLocalDate_PositionalBinding() {
+		em.deleteAll(LocalDateField.class);
+		LocalDateField entity = new LocalDateField();
+		LocalDate birthDate = LocalDate.of(2007, 1, 12);
+		entity.setBirthDate(birthDate);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM LocalDateField WHERE birthDate=@1";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.addPositionalBindings(birthDate);
+		QueryResponse<LocalDateField> response = em.executeEntityQueryRequest(LocalDateField.class, request);
+		List<LocalDateField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByLocalDate_NamedBinding() {
+		em.deleteAll(LocalDateField.class);
+		LocalDateField entity = new LocalDateField();
+		LocalDate birthDate = LocalDate.of(2007, 1, 12);
+		entity.setBirthDate(birthDate);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM LocalDateField WHERE birthDate=@BirthDate";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.setNamedBinding("BirthDate", birthDate);
+		QueryResponse<LocalDateField> response = em.executeEntityQueryRequest(LocalDateField.class, request);
+		List<LocalDateField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByLocalTime_PositionalBinding() {
+		em.deleteAll(LocalTimeField.class);
+		LocalTimeField entity = new LocalTimeField();
+		LocalTime time = LocalTime.of(0, 0, 0, 1);
+		entity.setStartTime(time);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM LocalTimeField WHERE startTime=@1";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.addPositionalBindings(time);
+		QueryResponse<LocalTimeField> response = em.executeEntityQueryRequest(LocalTimeField.class, request);
+		List<LocalTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByLocalTime_NamedBinding() {
+		em.deleteAll(LocalTimeField.class);
+		LocalTimeField entity = new LocalTimeField();
+		LocalTime time = LocalTime.of(0, 0, 0, 1);
+		entity.setStartTime(time);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM LocalTimeField WHERE startTime=@Time";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.setNamedBinding("Time", time);
+		QueryResponse<LocalTimeField> response = em.executeEntityQueryRequest(LocalTimeField.class, request);
+		List<LocalTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByLocalDateTime_PositionalBinding() {
+		em.deleteAll(LocalDateTimeField.class);
+		LocalDateTimeField entity = new LocalDateTimeField();
+		LocalDateTime timestamp = LocalDateTime.of(2007, 1, 12, 10, 30, 3, 456789);
+		entity.setTimestamp(timestamp);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM LocalDateTimeField WHERE timestamp=@1";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.addPositionalBindings(timestamp);
+		QueryResponse<LocalDateTimeField> response = em.executeEntityQueryRequest(LocalDateTimeField.class, request);
+		List<LocalDateTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByLocalDateTime_NamedBinding() {
+		em.deleteAll(LocalDateTimeField.class);
+		LocalDateTimeField entity = new LocalDateTimeField();
+		LocalDateTime timestamp = LocalDateTime.of(1947, 8, 15, 0, 0, 0, 999999999);
+		entity.setTimestamp(timestamp);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM LocalDateTimeField WHERE timestamp=@ts";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.setNamedBinding("ts", timestamp);
+		QueryResponse<LocalDateTimeField> response = em.executeEntityQueryRequest(LocalDateTimeField.class, request);
+		List<LocalDateTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByOffsetDateTime_PositionalBinding() {
+		em.deleteAll(OffsetDateTimeField.class);
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		OffsetDateTime timestamp = OffsetDateTime.of(2007, 1, 12, 10, 30, 3, 456789012, ZoneOffset.of("Z"));
+		entity.setTimestamp(timestamp);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM OffsetDateTimeField WHERE timestamp=@1";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.addPositionalBindings(timestamp);
+		QueryResponse<OffsetDateTimeField> response = em.executeEntityQueryRequest(OffsetDateTimeField.class, request);
+		List<OffsetDateTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByOffsetDateTime_NamedBinding() {
+		em.deleteAll(OffsetDateTimeField.class);
+		OffsetDateTimeField entity = new OffsetDateTimeField();
+		OffsetDateTime timestamp = OffsetDateTime.of(2007, 1, 12, 10, 30, 3, 456789012, ZoneOffset.of("Z"));
+		entity.setTimestamp(timestamp);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM OffsetDateTimeField WHERE timestamp=@Search";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.setNamedBinding("Search", timestamp);
+		QueryResponse<OffsetDateTimeField> response = em.executeEntityQueryRequest(OffsetDateTimeField.class, request);
+		List<OffsetDateTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
 	}
 
 	private static Calendar getToday() {
