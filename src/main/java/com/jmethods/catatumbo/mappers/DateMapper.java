@@ -17,17 +17,20 @@
 package com.jmethods.catatumbo.mappers;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.DateTimeValue;
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.NullValue;
+import com.google.cloud.datastore.TimestampValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
+import com.jmethods.catatumbo.MappingException;
 
 /**
  * An implementation of {@link Mapper} for mapping Dates to/from Cloud
- * Datastore.
+ * Datastore. Date objects are mapped to DateTime type in the Cloud Datastore.
+ * The values are stored with a maximum precision of milliseconds.
  * 
  * @author Sai Pullabhotla
  *
@@ -39,7 +42,7 @@ public class DateMapper implements Mapper {
 		if (input == null) {
 			return NullValue.newBuilder();
 		}
-		return DateTimeValue.newBuilder(DateTime.copyFrom((Date) input));
+		return TimestampValue.newBuilder(Timestamp.of((Date) input));
 	}
 
 	@Override
@@ -47,7 +50,15 @@ public class DateMapper implements Mapper {
 		if (input instanceof NullValue) {
 			return null;
 		}
-		return ((DateTimeValue) input).get().toDate();
+		try {
+			Timestamp ts = ((TimestampValue) input).get();
+			long millis = TimeUnit.SECONDS.toMillis(ts.getSeconds()) + TimeUnit.NANOSECONDS.toMillis(ts.getNanos());
+			return new Date(millis);
+		} catch (ClassCastException exp) {
+			String pattern = "Expecting %s, but found %s";
+			throw new MappingException(
+					String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
+		}
 	}
 
 }

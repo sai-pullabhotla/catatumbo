@@ -16,13 +16,14 @@
 
 package com.jmethods.catatumbo.mappers;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.DateTimeValue;
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.NullValue;
+import com.google.cloud.datastore.TimestampValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
@@ -31,7 +32,8 @@ import com.jmethods.catatumbo.MappingException;
 /**
  * An implementation of {@link Mapper} for mapping {@link OffsetDateTime}
  * to/from Cloud Datastore. {@link OffsetDateTime} types are mapped to DateTime
- * type in the Cloud Datastore.
+ * type in the Cloud Datastore. This maximum precision is capped to Microseconds
+ * to match with what the Datastore supports.
  * 
  * @author Sai Pullabhotla
  *
@@ -44,8 +46,10 @@ public class OffsetDateTimeMapper implements Mapper {
 			return NullValue.newBuilder();
 		}
 		OffsetDateTime offsetDateTime = (OffsetDateTime) input;
-		Date date = Date.from(offsetDateTime.toInstant());
-		return DateTimeValue.newBuilder(DateTime.copyFrom(date));
+		long seconds = offsetDateTime.toEpochSecond();
+		int nanos = offsetDateTime.getNano();
+		long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
+		return TimestampValue.newBuilder(Timestamp.ofTimeMicroseconds(microseconds));
 	}
 
 	@Override
@@ -54,14 +58,14 @@ public class OffsetDateTimeMapper implements Mapper {
 			return null;
 		}
 		try {
-			DateTimeValue dateTimeValue = (DateTimeValue) input;
-			DateTime dateTime = dateTimeValue.get();
-			Date date = dateTime.toDate();
-			return OffsetDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+			Timestamp ts = ((TimestampValue) input).get();
+			long seconds = ts.getSeconds();
+			int nanos = ts.getNanos();
+			return OffsetDateTime.ofInstant(Instant.ofEpochSecond(seconds, nanos), ZoneId.systemDefault());
 		} catch (ClassCastException exp) {
 			String pattern = "Expecting %s, but found %s";
 			throw new MappingException(
-					String.format(pattern, DateTimeValue.class.getName(), input.getClass().getName()), exp);
+					String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
 		}
 	}
 

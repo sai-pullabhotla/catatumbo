@@ -21,9 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Blob;
 import com.google.cloud.datastore.Cursor;
-import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.GqlQuery;
 import com.jmethods.catatumbo.DatastoreCursor;
 import com.jmethods.catatumbo.DatastoreKey;
@@ -106,9 +106,9 @@ public class QueryUtils {
 		} else if (binding instanceof String) {
 			queryBuilder.addBinding((String) binding);
 		} else if (binding instanceof Calendar) {
-			queryBuilder.addBinding(DateTime.copyFrom((Calendar) binding));
+			queryBuilder.addBinding(toTimestamp((Calendar) binding));
 		} else if (binding instanceof Date) {
-			queryBuilder.addBinding(DateTime.copyFrom((Date) binding));
+			queryBuilder.addBinding(toTimestamp((Date) binding));
 		} else if (binding instanceof byte[]) {
 			queryBuilder.addBinding(Blob.copyFrom((byte[]) binding));
 		} else if (binding instanceof DatastoreKey) {
@@ -116,7 +116,7 @@ public class QueryUtils {
 		} else if (binding instanceof DatastoreCursor) {
 			queryBuilder.addBinding(Cursor.fromUrlSafe(((DatastoreCursor) binding).getEncoded()));
 		} else if (binding instanceof GeoLocation) {
-			// @ToDo no support for GeoLocation in the gcloud API
+			// TODO no support for GeoLocation in the gcloud API
 		}
 	}
 
@@ -148,9 +148,9 @@ public class QueryUtils {
 				} else if (bindingValue instanceof String) {
 					queryBuilder.setBinding(bindingName, (String) bindingValue);
 				} else if (bindingValue instanceof Calendar) {
-					queryBuilder.setBinding(bindingName, DateTime.copyFrom((Calendar) bindingValue));
+					queryBuilder.setBinding(bindingName, toTimestamp((Calendar) bindingValue));
 				} else if (bindingValue instanceof Date) {
-					queryBuilder.setBinding(bindingName, DateTime.copyFrom((Date) bindingValue));
+					queryBuilder.setBinding(bindingName, toTimestamp((Date) bindingValue));
 				} else if (bindingValue instanceof byte[]) {
 					queryBuilder.setBinding(bindingName, Blob.copyFrom((byte[]) bindingValue));
 				} else if (bindingValue instanceof DatastoreKey) {
@@ -159,10 +159,32 @@ public class QueryUtils {
 					queryBuilder.setBinding(bindingName,
 							Cursor.fromUrlSafe(((DatastoreCursor) bindingValue).getEncoded()));
 				} else if (bindingValue instanceof GeoLocation) {
-					// @ToDo no support for GeoLocation in the gcloud API
+					// TODO no support for GeoLocation in the gcloud API
 				}
 			}
 		}
+	}
+
+	/**
+	 * Converts the given Calendar to a Timestamp.
+	 * 
+	 * @param calendar
+	 *            the Calendar to convert
+	 * @return Timestamp object that is equivalent to the given Calendar.
+	 */
+	private static Timestamp toTimestamp(Calendar calendar) {
+		return Timestamp.of(calendar.getTime());
+	}
+
+	/**
+	 * Converts the given Date to a Timestamp.
+	 * 
+	 * @param date
+	 *            the Date to convert
+	 * @return Timestamp object that is equivalent to the given Date.
+	 */
+	private static Timestamp toTimestamp(Date date) {
+		return Timestamp.of(date);
 	}
 
 }

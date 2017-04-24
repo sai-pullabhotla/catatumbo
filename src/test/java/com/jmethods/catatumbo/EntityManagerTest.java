@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -704,10 +705,12 @@ public class EntityManagerTest {
 		OffsetDateTime now = OffsetDateTime.now().withNano(999999999);
 		entity.setTimestamp(now);
 		OffsetDateTimeField entity2 = em.insert(entity);
-		// Here we lose the nano precision and only have millis
+		// Here we lose the nano precision and only have micros
 		OffsetDateTimeField entity3 = em.load(OffsetDateTimeField.class, entity2.getId());
 		assertEquals(entity2.getTimestamp(), entity3.getTimestamp());
-		assertNotEquals(entity.getTimestamp(), entity3.getTimestamp());
+		assertEquals(entity.getTimestamp().toEpochSecond(), entity3.getTimestamp().toEpochSecond());
+		assertEquals(TimeUnit.NANOSECONDS.toMicros(entity.getTimestamp().getNano()),
+				TimeUnit.NANOSECONDS.toMicros(entity3.getTimestamp().getNano()));
 	}
 
 	@Test

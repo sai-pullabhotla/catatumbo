@@ -16,18 +16,20 @@
 
 package com.jmethods.catatumbo.mappers;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.OffsetDateTime;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.DateTimeValue;
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.TimestampValue;
 import com.jmethods.catatumbo.MappingException;
 
 /**
@@ -40,8 +42,18 @@ public class OffsetDateTimeMapperTest {
 	public void testToDatastore_Now() {
 		OffsetDateTimeMapper mapper = new OffsetDateTimeMapper();
 		OffsetDateTime now = OffsetDateTime.now();
-		DateTimeValue v = (DateTimeValue) mapper.toDatastore(now).build();
-		assertTrue(now.toInstant().toEpochMilli() == v.get().getTimestampMillis());
+		Timestamp ts = ((TimestampValue) mapper.toDatastore(now).build()).get();
+		assertEquals(now.toEpochSecond(), ts.getSeconds());
+		assertEquals(now.getNano(), ts.getNanos());
+	}
+
+	@Test
+	public void testToDatastorel_Nanos() {
+		OffsetDateTime input = OffsetDateTime.now().withNano(999999999);
+		OffsetDateTimeMapper mapper = new OffsetDateTimeMapper();
+		Timestamp ts = ((TimestampValue) mapper.toDatastore(input).build()).get();
+		assertEquals(ts.getSeconds(), input.toEpochSecond());
+		assertEquals(TimeUnit.NANOSECONDS.toMicros(input.getNano()), TimeUnit.NANOSECONDS.toMicros(ts.getNanos()));
 	}
 
 	@Test
@@ -54,7 +66,7 @@ public class OffsetDateTimeMapperTest {
 	@Test
 	public void testToModel_Now() {
 		Calendar now = Calendar.getInstance();
-		DateTimeValue v = DateTimeValue.newBuilder(DateTime.copyFrom(now)).build();
+		TimestampValue v = TimestampValue.newBuilder(Timestamp.of(now.getTime())).build();
 		OffsetDateTimeMapper mapper = new OffsetDateTimeMapper();
 		OffsetDateTime output = (OffsetDateTime) mapper.toModel(v);
 		assertTrue(now.getTimeInMillis() == output.toInstant().toEpochMilli());
