@@ -19,6 +19,7 @@ package com.jmethods.catatumbo.mappers;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
@@ -42,7 +43,8 @@ public class LocalDateTimeMapper implements Mapper {
 	/**
 	 * The formatter to use for converting LocalTime to String and vice versa.
 	 */
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn",
+			Locale.ENGLISH);
 
 	@Override
 	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
