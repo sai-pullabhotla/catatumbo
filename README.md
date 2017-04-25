@@ -27,8 +27,13 @@ Features
 	* Enum 
 	* Byte Arrays 
 	* Char Arrays 
-	* Date 
-	* Calendar 
+	* java.util.Date 
+	* java.util.Calendar 
+	* java.time.LocalDate 
+	* java.time.LocalTime 
+	* java.time.LocalDateTime 
+	* java.time.OffsetDateTime 
+	* java.time.ZonedDateTime  
 	* Geo Location 
 	* Keys, Parent Keys and Key References
 	* List Values (List & Set) 
