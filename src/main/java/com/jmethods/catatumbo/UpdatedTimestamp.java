@@ -20,6 +20,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -33,10 +35,12 @@ import java.util.Date;
  * Valid data types for the field include -
  * </p>
  * <ul>
- * <li>{@link Date} - Value will be set to new Date()</li>
- * <li>{@link Calendar} - Value will be set to Calendar.getInstance()</li>
- * <li>{@link Long} - Value will be set to System.currentTimeMillis()</li>
- * <li>long - Value will be set to System.currentTimeMillis()</li>
+ * <li>{@link Date}</li>
+ * <li>{@link Calendar}</li>
+ * <li>{@link Long}</li>
+ * <li>long</li>
+ * <li>{@link OffsetDateTime}}</li>
+ * <li>{@link ZonedDateTime}}</li>
  * </ul>
  * 
  * <p>
