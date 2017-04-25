@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -116,6 +117,7 @@ import com.jmethods.catatumbo.entities.TaskName;
 import com.jmethods.catatumbo.entities.UnindexedByteArrayField;
 import com.jmethods.catatumbo.entities.UnindexedStringField;
 import com.jmethods.catatumbo.entities.Visitor;
+import com.jmethods.catatumbo.entities.ZonedDateTimeField;
 
 /**
  * @author Sai Pullabhotla
@@ -157,6 +159,7 @@ public class EntityManagerTest {
 		em.deleteAll(LocalTimeField.class);
 		em.deleteAll(LocalDateTimeField.class);
 		em.deleteAll(OffsetDateTimeField.class);
+		em.deleteAll(ZonedDateTimeField.class);
 		em.deleteAll(ByteArrayField.class);
 		em.deleteAll(CharArrayField.class);
 		em.deleteAll(ParentEntity.class);
@@ -708,6 +711,38 @@ public class EntityManagerTest {
 		OffsetDateTimeField entity2 = em.insert(entity);
 		// Here we lose the nano precision and only have micros
 		OffsetDateTimeField entity3 = em.load(OffsetDateTimeField.class, entity2.getId());
+		assertEquals(entity2.getTimestamp(), entity3.getTimestamp());
+		assertEquals(entity.getTimestamp().toEpochSecond(), entity3.getTimestamp().toEpochSecond());
+		assertEquals(TimeUnit.NANOSECONDS.toMicros(entity.getTimestamp().getNano()),
+				TimeUnit.NANOSECONDS.toMicros(entity3.getTimestamp().getNano()));
+	}
+
+	@Test
+	public void testInsertZonedDateTimeField_Now() {
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		ZonedDateTime now = ZonedDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		entity = em.load(ZonedDateTimeField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getTimestamp().equals(now));
+	}
+
+	@Test
+	public void testInsertZonedDateTimeField_Null() {
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		entity = em.insert(entity);
+		entity = em.load(ZonedDateTimeField.class, entity.getId());
+		assertTrue(entity.getId() > 0 && entity.getTimestamp() == null);
+	}
+
+	@Test
+	public void testInsertZonedDateTimeField_Nano() {
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		ZonedDateTime now = ZonedDateTime.now().withNano(999999999);
+		entity.setTimestamp(now);
+		ZonedDateTimeField entity2 = em.insert(entity);
+		// Here we lose the nano precision and only have micros
+		ZonedDateTimeField entity3 = em.load(ZonedDateTimeField.class, entity2.getId());
 		assertEquals(entity2.getTimestamp(), entity3.getTimestamp());
 		assertEquals(entity.getTimestamp().toEpochSecond(), entity3.getTimestamp().toEpochSecond());
 		assertEquals(TimeUnit.NANOSECONDS.toMicros(entity.getTimestamp().getNano()),
@@ -1317,6 +1352,31 @@ public class EntityManagerTest {
 		entity.setTimestamp(null);
 		entity = em.update(entity);
 		entity = em.load(OffsetDateTimeField.class, entity.getId());
+		assertNull(entity.getTimestamp());
+	}
+
+	@Test
+	public void testUpdateZonedDateTimeField() {
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		ZonedDateTime now = ZonedDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		ZonedDateTime nextDay = now.plusDays(2);
+		entity.setTimestamp(nextDay);
+		entity = em.update(entity);
+		entity = em.load(ZonedDateTimeField.class, entity.getId());
+		assertEquals(nextDay, entity.getTimestamp());
+	}
+
+	@Test
+	public void testUpdateZonedDateTimeField_Null() {
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		ZonedDateTime now = ZonedDateTime.now();
+		entity.setTimestamp(now);
+		entity = em.insert(entity);
+		entity.setTimestamp(null);
+		entity = em.update(entity);
+		entity = em.load(ZonedDateTimeField.class, entity.getId());
 		assertNull(entity.getTimestamp());
 	}
 
@@ -3076,6 +3136,38 @@ public class EntityManagerTest {
 		request.setNamedBinding("Search", timestamp);
 		QueryResponse<OffsetDateTimeField> response = em.executeEntityQueryRequest(OffsetDateTimeField.class, request);
 		List<OffsetDateTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByZonedDateTime_PositionalBinding() {
+		em.deleteAll(ZonedDateTimeField.class);
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		ZonedDateTime timestamp = ZonedDateTime.of(2007, 1, 12, 10, 30, 3, 456789012, ZoneOffset.of("Z"));
+		entity.setTimestamp(timestamp);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM ZonedDateTimeField WHERE timestamp=@1";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.addPositionalBindings(timestamp);
+		QueryResponse<ZonedDateTimeField> response = em.executeEntityQueryRequest(ZonedDateTimeField.class, request);
+		List<ZonedDateTimeField> entities = response.getResults();
+		System.out.println(entities);
+		assertTrue(entities.size() == 1);
+	}
+
+	@Test
+	public void testQueryByZonedDateTime_NamedBinding() {
+		em.deleteAll(ZonedDateTimeField.class);
+		ZonedDateTimeField entity = new ZonedDateTimeField();
+		ZonedDateTime timestamp = ZonedDateTime.of(2007, 1, 12, 10, 30, 3, 456789012, ZoneOffset.of("Z"));
+		entity.setTimestamp(timestamp);
+		entity = em.insert(entity);
+		String query = "SELECT * FROM ZonedDateTimeField WHERE timestamp=@Timestamp";
+		EntityQueryRequest request = em.createEntityQueryRequest(query);
+		request.setNamedBinding("Timestamp", timestamp);
+		QueryResponse<ZonedDateTimeField> response = em.executeEntityQueryRequest(ZonedDateTimeField.class, request);
+		List<ZonedDateTimeField> entities = response.getResults();
 		System.out.println(entities);
 		assertTrue(entities.size() == 1);
 	}

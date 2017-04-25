@@ -17,6 +17,11 @@
 package com.jmethods.catatumbo.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -85,6 +90,14 @@ public class ListFields {
 	private List<GeoLocation> geoLocationList;
 
 	private List<LocalDate> localDateList;
+
+	private List<LocalTime> localTimeList;
+
+	private List<LocalDateTime> localDateTimeList;
+
+	private List<OffsetDateTime> offsetDateTimeList;
+
+	private List<ZonedDateTime> zonedDateTimeList;
 
 	/**
 	 * @return the id
@@ -431,6 +444,66 @@ public class ListFields {
 		this.localDateList = localDateList;
 	}
 
+	/**
+	 * @return the localTimeList
+	 */
+	public List<LocalTime> getLocalTimeList() {
+		return localTimeList;
+	}
+
+	/**
+	 * @param localTimeList
+	 *            the localTimeList to set
+	 */
+	public void setLocalTimeList(List<LocalTime> localTimeList) {
+		this.localTimeList = localTimeList;
+	}
+
+	/**
+	 * @return the localDateTimeList
+	 */
+	public List<LocalDateTime> getLocalDateTimeList() {
+		return localDateTimeList;
+	}
+
+	/**
+	 * @param localDateTimeList
+	 *            the localDateTimeList to set
+	 */
+	public void setLocalDateTimeList(List<LocalDateTime> localDateTimeList) {
+		this.localDateTimeList = localDateTimeList;
+	}
+
+	/**
+	 * @return the offsetDateTimeList
+	 */
+	public List<OffsetDateTime> getOffsetDateTimeList() {
+		return offsetDateTimeList;
+	}
+
+	/**
+	 * @param offsetDateTimeList
+	 *            the offsetDateTimeList to set
+	 */
+	public void setOffsetDateTimeList(List<OffsetDateTime> offsetDateTimeList) {
+		this.offsetDateTimeList = offsetDateTimeList;
+	}
+
+	/**
+	 * @return the zonedDateTimeList
+	 */
+	public List<ZonedDateTime> getZonedDateTimeList() {
+		return zonedDateTimeList;
+	}
+
+	/**
+	 * @param zonedDateTimeList
+	 *            the zonedDateTimeList to set
+	 */
+	public void setZonedDateTimeList(List<ZonedDateTime> zonedDateTimeList) {
+		this.zonedDateTimeList = zonedDateTimeList;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof ListFields)) {
@@ -454,7 +527,11 @@ public class ListFields {
 				&& Objects.equals(this.stack, that.stack) && Objects.equals(this.vector, that.vector)
 				&& Objects.equals(this.keyList, that.keyList)
 				&& Objects.equals(this.geoLocationList, that.geoLocationList)
-				&& Objects.equals(this.localDateList, that.localDateList);
+				&& Objects.equals(this.localDateList, that.localDateList)
+				&& Objects.equals(this.localTimeList, that.localTimeList)
+				&& Objects.equals(this.localDateTimeList, that.localDateTimeList)
+				&& Objects.equals(this.offsetDateTimeList, that.offsetDateTimeList)
+				&& Objects.equals(this.zonedDateTimeList, that.zonedDateTimeList);
 	}
 
 	public static ListFields getSampleEntity1() {
@@ -498,6 +575,24 @@ public class ListFields {
 		LocalDate today = LocalDate.now();
 		LocalDate tomorrow = today.plusDays(1);
 		entity.setLocalDateList(Arrays.asList(today, tomorrow));
+
+		LocalTime now = LocalTime.now();
+		LocalTime anHourFromNow = now.plusHours(1);
+		entity.setLocalTimeList(Arrays.asList(null, now, anHourFromNow));
+
+		LocalDateTime ldt1 = LocalDateTime.now();
+		LocalDateTime ldt2 = ldt1.plusDays(1);
+		entity.setLocalDateTimeList(Arrays.asList(null, ldt1, ldt2, LocalDateTime.MIN, LocalDateTime.MIN));
+
+		OffsetDateTime odt1 = OffsetDateTime.now();
+		OffsetDateTime odt2 = odt1.plusYears(1);
+		OffsetDateTime odtLow = OffsetDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.of("Z"));
+		OffsetDateTime odtHigh = OffsetDateTime.of(9999, 12, 31, 23, 59, 59, 999999999, ZoneOffset.of("Z"));
+		entity.setOffsetDateTimeList(Arrays.asList(null, odt1, odt2, odtLow, odtHigh));
+
+		ZonedDateTime zdt1 = ZonedDateTime.now();
+		ZonedDateTime zdt2 = zdt1.plusMonths(1);
+		entity.setZonedDateTimeList(Arrays.asList(null, zdt1, zdt2));
 		return entity;
 	}
 

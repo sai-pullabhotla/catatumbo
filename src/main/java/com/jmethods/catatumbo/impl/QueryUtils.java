@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -124,6 +125,8 @@ public class QueryUtils {
 			queryBuilder.addBinding(((LocalDateTime) binding).format(LocalDateTimeMapper.FORMATTER));
 		} else if (binding instanceof OffsetDateTime) {
 			queryBuilder.addBinding(toTimestamp((OffsetDateTime) binding));
+		} else if (binding instanceof ZonedDateTime) {
+			queryBuilder.addBinding(toTimestamp((ZonedDateTime) binding));
 		} else if (binding instanceof byte[]) {
 			queryBuilder.addBinding(Blob.copyFrom((byte[]) binding));
 		} else if (binding instanceof DatastoreKey) {
@@ -175,6 +178,8 @@ public class QueryUtils {
 							((LocalDateTime) bindingValue).format(LocalDateTimeMapper.FORMATTER));
 				} else if (bindingValue instanceof OffsetDateTime) {
 					queryBuilder.setBinding(bindingName, toTimestamp((OffsetDateTime) bindingValue));
+				} else if (bindingValue instanceof ZonedDateTime) {
+					queryBuilder.setBinding(bindingName, toTimestamp((ZonedDateTime) bindingValue));
 				} else if (bindingValue instanceof byte[]) {
 					queryBuilder.setBinding(bindingName, Blob.copyFrom((byte[]) bindingValue));
 				} else if (bindingValue instanceof DatastoreKey) {
@@ -221,6 +226,20 @@ public class QueryUtils {
 	private static Timestamp toTimestamp(OffsetDateTime offsetDateTime) {
 		long seconds = offsetDateTime.toEpochSecond();
 		int nanos = offsetDateTime.getNano();
+		long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
+		return Timestamp.ofTimeMicroseconds(microseconds);
+	}
+
+	/**
+	 * Converts the given OffsetDateTime to a Timestamp.
+	 * 
+	 * @param zonedDateTime
+	 *            the {@link ZonedDateTime} to convert
+	 * @return Timestamp object that is equivalent to the given OffsetDateTime.
+	 */
+	private static Timestamp toTimestamp(ZonedDateTime zonedDateTime) {
+		long seconds = zonedDateTime.toEpochSecond();
+		int nanos = zonedDateTime.getNano();
 		long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
 		return Timestamp.ofTimeMicroseconds(microseconds);
 	}
