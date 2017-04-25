@@ -16,6 +16,10 @@
 package com.jmethods.catatumbo.impl;
 
 import java.lang.invoke.MethodHandle;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -603,11 +607,14 @@ public class Marshaller {
 		if (Date.class.equals(fieldType)) {
 			timestamp = new Date(millis);
 		} else if (Calendar.class.equals(fieldType)) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(millis);
+			Calendar calendar = new Calendar.Builder().setInstant(millis).build();
 			timestamp = calendar;
 		} else if (Long.class.equals(fieldType) || long.class.equals(fieldType)) {
 			timestamp = millis;
+		} else if (OffsetDateTime.class.equals(fieldType)) {
+			timestamp = OffsetDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault());
+		} else if (ZonedDateTime.class.equals(fieldType)) {
+			timestamp = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault());
 		}
 		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(timestamp);
 		valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());

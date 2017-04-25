@@ -59,6 +59,8 @@ import com.jmethods.catatumbo.entities.ArrayIndex;
 import com.jmethods.catatumbo.entities.AutoTimestampCalendar;
 import com.jmethods.catatumbo.entities.AutoTimestampDate;
 import com.jmethods.catatumbo.entities.AutoTimestampLong;
+import com.jmethods.catatumbo.entities.AutoTimestampOffsetDateTime;
+import com.jmethods.catatumbo.entities.AutoTimestampZonedDateTime;
 import com.jmethods.catatumbo.entities.BigDecimalField;
 import com.jmethods.catatumbo.entities.BooleanField;
 import com.jmethods.catatumbo.entities.BooleanObject;
@@ -193,6 +195,8 @@ public class EntityManagerTest {
 		em.deleteAll(AutoTimestampDate.class);
 		em.deleteAll(AutoTimestampCalendar.class);
 		em.deleteAll(AutoTimestampLong.class);
+		em.deleteAll(AutoTimestampOffsetDateTime.class);
+		em.deleteAll(AutoTimestampZonedDateTime.class);
 		populateTasks();
 	}
 
@@ -2917,6 +2921,52 @@ public class EntityManagerTest {
 		assertEquals(entity2.getCreatedDate(), entity3.getCreatedDate());
 		assertEquals(entity3.getCreatedDate(), entity4.getCreatedDate());
 		assertNotEquals(entity3.getCreatedDate(), entity4.getModifiedDate());
+	}
+
+	@Test
+	public void testInsertTimestamp_OffsetDateTime() {
+		AutoTimestampOffsetDateTime entity = new AutoTimestampOffsetDateTime();
+		entity.setName("Insert");
+		AutoTimestampOffsetDateTime entity2 = em.insert(entity);
+		assertNotNull(entity2.getCreatedOn());
+		assertNotNull(entity2.getModifiedOn());
+		assertEquals(entity2.getCreatedOn(), entity2.getModifiedOn());
+	}
+
+	@Test
+	public void testUpdateTimestamp_OffsetDateTime() {
+		AutoTimestampOffsetDateTime entity = new AutoTimestampOffsetDateTime();
+		entity.setName("Insert");
+		AutoTimestampOffsetDateTime entity2 = em.insert(entity);
+		AutoTimestampOffsetDateTime entity3 = em.load(AutoTimestampOffsetDateTime.class, entity2.getId());
+		entity3.setName("Update");
+		AutoTimestampOffsetDateTime entity4 = em.update(entity3);
+		assertEquals(entity2.getCreatedOn(), entity3.getCreatedOn());
+		assertEquals(entity3.getCreatedOn(), entity4.getCreatedOn());
+		assertNotEquals(entity3.getCreatedOn(), entity4.getModifiedOn());
+	}
+
+	@Test
+	public void testInsertTimestamp_ZonedDateTime() {
+		AutoTimestampZonedDateTime entity = new AutoTimestampZonedDateTime();
+		entity.setName("Insert");
+		AutoTimestampZonedDateTime entity2 = em.insert(entity);
+		assertNotNull(entity2.getCreatedOn());
+		assertNotNull(entity2.getModifiedOn());
+		assertEquals(entity2.getCreatedOn(), entity2.getModifiedOn());
+	}
+
+	@Test
+	public void testUpdateTimestamp_ZonedDateTime() {
+		AutoTimestampZonedDateTime entity = new AutoTimestampZonedDateTime();
+		entity.setName("Insert");
+		AutoTimestampZonedDateTime entity2 = em.insert(entity);
+		AutoTimestampZonedDateTime entity3 = em.load(AutoTimestampZonedDateTime.class, entity2.getId());
+		entity3.setName("Update");
+		AutoTimestampZonedDateTime entity4 = em.update(entity3);
+		assertEquals(entity2.getCreatedOn(), entity3.getCreatedOn());
+		assertEquals(entity3.getCreatedOn(), entity4.getCreatedOn());
+		assertNotEquals(entity3.getCreatedOn(), entity4.getModifiedOn());
 	}
 
 	@Test(expected = EntityManagerException.class)

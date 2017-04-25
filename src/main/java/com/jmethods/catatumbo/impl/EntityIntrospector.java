@@ -16,6 +16,8 @@
 package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -56,8 +58,9 @@ public class EntityIntrospector {
 	 * Valid data types for fields that are marked with either
 	 * {@link CreatedTimestamp} or {@link UpdatedTimestamp}.
 	 */
-	private static final List<String> VALID_TIMESTAMP_TYPES = Arrays.asList(new String[] { long.class.getName(),
-			Long.class.getName(), Date.class.getName(), Calendar.class.getName() });
+	private static final List<String> VALID_TIMESTAMP_TYPES = Arrays
+			.asList(new String[] { long.class.getName(), Long.class.getName(), Date.class.getName(),
+					Calendar.class.getName(), OffsetDateTime.class.getName(), ZonedDateTime.class.getName() });
 
 	static {
 		// Sort the valid types so we can do a binary search.
