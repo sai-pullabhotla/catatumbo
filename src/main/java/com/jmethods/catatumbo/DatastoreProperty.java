@@ -158,7 +158,7 @@ public class DatastoreProperty implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (obj == null || !(obj instanceof DatastoreProperty)) {
 			return false;
 		}
 		DatastoreProperty that = (DatastoreProperty) obj;
@@ -167,7 +167,7 @@ public class DatastoreProperty implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return key.hashCode();
+		return Objects.hashCode(key);
 	}
 
 }
