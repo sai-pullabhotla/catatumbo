@@ -91,4 +91,13 @@ public interface EntityManager extends DatastoreAccess {
 	 */
 	DatastoreMetadata getDatastoreMetadata();
 
+	/**
+	 * Returns the {@link DatastoreStats} object that can be used to retrieve
+	 * various statistics on the data stored in the Datastore.
+	 * 
+	 * @return the {@link DatastoreStats} object that can be used to retrieve
+	 *         various statistics on the data stored in the Datastore.
+	 */
+	DatastoreStats getDatastoreStats();
+
 }

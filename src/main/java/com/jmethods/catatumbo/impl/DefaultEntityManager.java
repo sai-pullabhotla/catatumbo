@@ -32,6 +32,7 @@ import com.google.cloud.datastore.QueryResults;
 import com.jmethods.catatumbo.DatastoreBatch;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DatastoreMetadata;
+import com.jmethods.catatumbo.DatastoreStats;
 import com.jmethods.catatumbo.DatastoreTransaction;
 import com.jmethods.catatumbo.EntityManager;
 import com.jmethods.catatumbo.EntityManagerException;
@@ -292,6 +293,11 @@ public class DefaultEntityManager implements EntityManager {
 	@Override
 	public DatastoreMetadata getDatastoreMetadata() {
 		return new DefaultDatastoreMetadata(this);
+	}
+
+	@Override
+	public DatastoreStats getDatastoreStats() {
+		return new DefaultDatastoreStats(this);
 	}
 
 	@Override
