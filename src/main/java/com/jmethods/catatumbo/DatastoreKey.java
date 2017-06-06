@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import java.io.Serializable;
+
 /**
  * Objects of this class represent Keys in the Cloud Datastore. Keys contain the
  * kind and identifier (long or String) as well as any ancestor keys.The primary
@@ -26,7 +28,7 @@ package com.jmethods.catatumbo;
  * @author Sai Pullabhotla
  *
  */
-public interface DatastoreKey {
+public interface DatastoreKey extends Serializable {
 
 	/**
 	 * Returns the kind.
