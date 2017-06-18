@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import java.util.List;
+
 /**
  * Manages mapping and persistence of entities. EntityManager objects are
  * created using the {@link EntityManagerFactory}.
@@ -99,5 +101,36 @@ public interface EntityManager extends DatastoreAccess {
 	 *         various statistics on the data stored in the Datastore.
 	 */
 	DatastoreStats getDatastoreStats();
+
+	/**
+	 * Allocates IDs for the given entities and returns the allocated IDs. Each
+	 * entity in the list must have a its identifier of type numeric
+	 * (long/Long).
+	 * 
+	 * @param entities
+	 *            the entities
+	 * @return a list of {@link DatastoreKey}s.
+	 * @throws IllegalArgumentException
+	 *             if any of the entities in the list do not have a numeric ID
+	 *             type or a valid ID is already set.
+	 * @throws EntityManagerException
+	 *             if any error occurs during key allocation
+	 */
+	List<DatastoreKey> allocateId(List<Object> entities);
+
+	/**
+	 * Allocates ID for the given entity and returns the allocated ID. The
+	 * entity must have its identifier of type numeric (long/Long).
+	 * 
+	 * @param entity
+	 *            the the entity.
+	 * @return the allocated ID {@link DatastoreKey}.
+	 * @throws IllegalArgumentException
+	 *             if the ID type of the entity is not numeric, or if the entity
+	 *             has a valid ID (non-null and non-zero).
+	 * @throws EntityManagerException
+	 *             if any error occurs during ID allocation
+	 */
+	DatastoreKey allocateId(Object entity);
 
 }

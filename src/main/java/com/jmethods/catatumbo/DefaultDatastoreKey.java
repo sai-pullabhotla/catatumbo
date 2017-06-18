@@ -59,6 +59,16 @@ public class DefaultDatastoreKey implements DatastoreKey, Serializable {
 	}
 
 	@Override
+	public String namespace() {
+		return key.getNamespace();
+	}
+
+	@Override
+	public String projectId() {
+		return key.getProjectId();
+	}
+
+	@Override
 	public String kind() {
 		return key.getKind();
 	}

@@ -558,4 +558,22 @@ public class IntrospectionUtils {
 		return Modifier.isStatic(modifiers);
 	}
 
+	/**
+	 * Returns the value of the field represented by the given metadata.
+	 * 
+	 * @param fieldMetadata
+	 *            the metadata of the field
+	 * @param target
+	 *            the target object to which the field belongs.
+	 * @return the value of the field.
+	 */
+	public static Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
+		MethodHandle readMethod = fieldMetadata.getReadMethod();
+		try {
+			return readMethod.invoke(target);
+		} catch (Throwable t) {
+			throw new EntityManagerException(t.getMessage(), t);
+		}
+	}
+
 }

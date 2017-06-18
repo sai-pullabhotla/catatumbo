@@ -15,7 +15,6 @@
  */
 package com.jmethods.catatumbo.impl;
 
-import java.lang.invoke.MethodHandle;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -431,7 +430,7 @@ public class Marshaller {
 	 */
 	private static void marshalField(PropertyMetadata propertyMetadata, Object target,
 			BaseEntity.Builder<?, ?> entityBuilder) {
-		Object fieldValue = getFieldValue(propertyMetadata, target);
+		Object fieldValue = IntrospectionUtils.getFieldValue(propertyMetadata, target);
 		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
 		// ListValues cannot have indexing turned off. Indexing is turned on by
 		// default, so we don't touch excludeFromIndexes for ListValues.
@@ -454,25 +453,7 @@ public class Marshaller {
 	 * @return the field's value
 	 */
 	private Object getFieldValue(FieldMetadata fieldMetadata) {
-		return getFieldValue(fieldMetadata, entity);
-	}
-
-	/**
-	 * Returns the value of the field represented by the given metadata.
-	 * 
-	 * @param fieldMetadata
-	 *            the metadata of the field
-	 * @param target
-	 *            the target object to which the field belongs.
-	 * @return the value of the field.
-	 */
-	private static Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
-		MethodHandle readMethod = fieldMetadata.getReadMethod();
-		try {
-			return readMethod.invoke(target);
-		} catch (Throwable t) {
-			throw new EntityManagerException(t.getMessage(), t);
-		}
+		return IntrospectionUtils.getFieldValue(fieldMetadata, entity);
 	}
 
 	/**
@@ -628,7 +609,7 @@ public class Marshaller {
 	private void marshalVersionField() {
 		PropertyMetadata versionMetadata = entityMetadata.getVersionMetadata();
 		if (versionMetadata != null) {
-			long version = (long) getFieldValue(versionMetadata, entity);
+			long version = (long) IntrospectionUtils.getFieldValue(versionMetadata, entity);
 			ValueBuilder<?, ?, ?> valueBuilder = versionMetadata.getMapper().toDatastore(version + 1);
 			valueBuilder.setExcludeFromIndexes(!versionMetadata.isIndexed());
 			entityBuilder.set(versionMetadata.getMappedName(), valueBuilder.build());

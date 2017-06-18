@@ -25,6 +25,7 @@ import java.util.Map;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.GqlQuery;
+import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
@@ -42,6 +43,7 @@ import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 import com.jmethods.catatumbo.Tenant;
 import com.jmethods.catatumbo.TransactionalTask;
+import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
  * Default implementation of {@link EntityManager} interface. Manages entities
@@ -298,6 +300,58 @@ public class DefaultEntityManager implements EntityManager {
 	@Override
 	public DatastoreStats getDatastoreStats() {
 		return new DefaultDatastoreStats(this);
+	}
+
+	@Override
+	public DatastoreKey allocateId(Object entity) {
+		List<DatastoreKey> keys = allocateId(Arrays.asList(new Object[] { entity }));
+		return keys.get(0);
+	}
+
+	@Override
+	public List<DatastoreKey> allocateId(List<Object> entities) {
+		for (Object entity : entities) {
+			IdentifierMetadata identifierMetadata = EntityIntrospector.getIdentifierMetadata(entity);
+			if (DataType.STRING == identifierMetadata.getDataType()) {
+				throw new IllegalArgumentException("ID allocation is only valid for entities with numeric identifiers");
+			}
+			Object id = IntrospectionUtils.getFieldValue(identifierMetadata, entity);
+			if (!(id == null || ((long) id) == 0)) {
+				throw new IllegalArgumentException("ID allocation is only valid for entities with a null or zero ID");
+			}
+		}
+		IncompleteKey[] incompleteKeys = new IncompleteKey[entities.size()];
+		int i = 0;
+		for (Object entity : entities) {
+			incompleteKeys[i++] = getIncompleteKey(entity);
+		}
+		List<Key> nativeKeys = datastore.allocateId(incompleteKeys);
+		return DatastoreUtils.toDatastoreKeys(nativeKeys);
+	}
+
+	/**
+	 * Returns an IncompleteKey of the given entity.
+	 * 
+	 * @param entity
+	 *            the entity
+	 * @return the incomplete key
+	 */
+	private IncompleteKey getIncompleteKey(Object entity) {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(entity.getClass());
+		String kind = entityMetadata.getKind();
+		ParentKeyMetadata parentKeyMetadata = entityMetadata.getParentKeyMetadata();
+		DatastoreKey parentKey = null;
+		IncompleteKey incompleteKey = null;
+		if (parentKeyMetadata != null) {
+			parentKey = (DatastoreKey) IntrospectionUtils.getFieldValue(parentKeyMetadata, entity);
+		}
+		if (parentKey != null) {
+			incompleteKey = IncompleteKey.newBuilder(parentKey.nativeKey(), kind).build();
+		} else {
+			incompleteKey = IncompleteKey.newBuilder(datastore.getOptions().getProjectId(), kind)
+					.setNamespace(getEffectiveNamespace()).build();
+		}
+		return incompleteKey;
 	}
 
 	@Override

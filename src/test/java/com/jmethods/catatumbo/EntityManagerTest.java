@@ -98,6 +98,7 @@ import com.jmethods.catatumbo.entities.LongField;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.LongId2;
 import com.jmethods.catatumbo.entities.LongObject;
+import com.jmethods.catatumbo.entities.LongObjectId;
 import com.jmethods.catatumbo.entities.MapFields;
 import com.jmethods.catatumbo.entities.OffsetDateTimeField;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
@@ -137,6 +138,7 @@ public class EntityManagerTest {
 
 		em = TestUtils.getEntityManager();
 		em.deleteAll(LongId.class);
+		em.deleteAll(LongObjectId.class);
 		em.deleteAll(StringId.class);
 		em.deleteAll(LongId2.class);
 		em.deleteAll(StringId2.class);
@@ -3220,6 +3222,81 @@ public class EntityManagerTest {
 		List<ZonedDateTimeField> entities = response.getResults();
 		System.out.println(entities);
 		assertTrue(entities.size() == 1);
+	}
+
+	// Test for a single entity
+	@Test
+	public void testAllocateId_1() {
+		StringField entity = new StringField();
+		DatastoreKey key = em.allocateId(entity);
+		assertEquals(StringField.class.getSimpleName(), key.kind());
+		assertTrue(key.id() > 0);
+	}
+
+	// Test for single entity with a parent
+	@Test
+	public void testAllocateId_2() {
+		ParentEntity parentEntity = new ParentEntity();
+		parentEntity.setField1("Test for allocate Id");
+		parentEntity = em.insert(parentEntity);
+		ChildEntity childEntity = new ChildEntity();
+		childEntity.setParentKey(parentEntity.getKey());
+		DatastoreKey key = em.allocateId(childEntity);
+		assertEquals(ChildEntity.class.getSimpleName(), key.kind());
+		assertEquals(key.parent(), parentEntity.getKey());
+		assertTrue(key.id() > 0);
+	}
+
+	// Test for multiple entities of different types
+	@Test
+	public void testAllocateId_3() {
+		StringField stringField = new StringField();
+		LongField longField = new LongField();
+		BooleanField booleanField = new BooleanField();
+		List<Object> entities = new ArrayList<>();
+		entities.add(stringField);
+		entities.add(longField);
+		entities.add(booleanField);
+		List<DatastoreKey> keys = em.allocateId(entities);
+		assertEquals(StringField.class.getSimpleName(), keys.get(0).kind());
+		assertTrue(keys.get(0).id() > 0);
+		assertEquals(LongField.class.getSimpleName(), keys.get(1).kind());
+		assertTrue(keys.get(1).id() > 0);
+		assertEquals(BooleanField.class.getSimpleName(), keys.get(2).kind());
+		assertTrue(keys.get(2).id() > 0);
+	}
+
+	// Test with a String ID
+	@Test(expected = IllegalArgumentException.class)
+	public void testAllocateId_4() {
+		StringId entity = new StringId();
+		DatastoreKey key = em.allocateId(entity);
+	}
+
+	// Test with a non-zero ID
+	@Test(expected = IllegalArgumentException.class)
+	public void testAllocateId_5() {
+		StringField entity = new StringField();
+		entity.setId(12345);
+		DatastoreKey key = em.allocateId(entity);
+	}
+
+	// Test with a non-null ID
+	@Test(expected = IllegalArgumentException.class)
+	public void testAllocateId_6() {
+		LongObjectId entity = new LongObjectId();
+		entity.setId(12345L);
+		DatastoreKey key = em.allocateId(entity);
+	}
+
+	// Test with a non-null, but zero ID
+	@Test
+	public void testAllocateId_7() {
+		LongObjectId entity = new LongObjectId();
+		entity.setId(0L);
+		DatastoreKey key = em.allocateId(entity);
+		assertEquals(LongObjectId.class.getSimpleName(), key.kind());
+		assertTrue(key.id() > 0);
 	}
 
 	private static Calendar getToday() {

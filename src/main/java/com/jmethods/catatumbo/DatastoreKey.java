@@ -31,6 +31,20 @@ import java.io.Serializable;
 public interface DatastoreKey extends Serializable {
 
 	/**
+	 * Returns the project ID.
+	 * 
+	 * @return the project ID.
+	 */
+	String projectId();
+
+	/**
+	 * Returns the namespace.
+	 * 
+	 * @return the namespace.
+	 */
+	String namespace();
+
+	/**
 	 * Returns the kind.
 	 * 
 	 * @return the kind.
