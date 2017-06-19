@@ -29,6 +29,14 @@ import java.lang.annotation.Target;
  * <li>Primitive long (long)</li>
  * <li>Long Wrapper (java.lang.Long)</li>
  * <li>String (java.lang.String)</li>
+ * <li>Any other type that satisfies the following criteria:
+ * <ul>
+ * <li>Has a public <code>getValue</code> method with no parameters and a return
+ * type of long, Long or String</li>
+ * <li>Has a public constructor with a single parameter whose type is same as
+ * the return type of <code>getValue</code> method.</li>
+ * </ul>
+ * </li>
  * </ul>
  * 
  * <p>

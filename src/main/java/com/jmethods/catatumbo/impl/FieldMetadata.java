@@ -18,10 +18,6 @@ package com.jmethods.catatumbo.impl;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 
-import com.jmethods.catatumbo.Mapper;
-import com.jmethods.catatumbo.MapperFactory;
-import com.jmethods.catatumbo.NoSuitableMapperException;
-
 /**
  * Base class for holding the metadata about an entity's or embedded object's
  * field (e.g. identifier, key or property).
@@ -46,11 +42,6 @@ public abstract class FieldMetadata {
 	protected final MethodHandle writeMethod;
 
 	/**
-	 * Mapper for the field represented by this metadata
-	 */
-	protected final Mapper mapper;
-
-	/**
 	 * Creates a new instance of <code>FieldMetadata</code>.
 	 * 
 	 * @param field
@@ -61,7 +52,6 @@ public abstract class FieldMetadata {
 		this.field = field;
 		this.readMethod = IntrospectionUtils.findReadMethodHandle(this);
 		this.writeMethod = IntrospectionUtils.findWriteMethodHandle(this);
-		this.mapper = initializeMapper();
 	}
 
 	/**
@@ -108,31 +98,6 @@ public abstract class FieldMetadata {
 	@SuppressWarnings("rawtypes")
 	public Class getDeclaredType() {
 		return field.getType();
-	}
-
-	/**
-	 * Returns the {@link Mapper} associated with the field to which this
-	 * metadata belongs.
-	 * 
-	 * @return he {@link Mapper} associated with the field to which this
-	 *         metadata belongs.
-	 */
-	public Mapper getMapper() {
-		return mapper;
-	}
-
-	/**
-	 * Initializes the {@link Mapper} for this field.
-	 */
-	private Mapper initializeMapper() {
-		try {
-			return MapperFactory.getInstance().getMapper(field);
-		} catch (NoSuitableMapperException exp) {
-			String message = String.format(
-					"No suitable mapper found or error occurred creating a mapper for field %s in class %s",
-					field.getName(), field.getDeclaringClass().getName());
-			throw new NoSuitableMapperException(message, exp);
-		}
 	}
 
 }

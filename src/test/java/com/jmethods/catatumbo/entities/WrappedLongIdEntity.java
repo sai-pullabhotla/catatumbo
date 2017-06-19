@@ -26,17 +26,17 @@ import com.jmethods.catatumbo.Identifier;
  *
  */
 @Entity
-public class LongObjectId {
+public class WrappedLongIdEntity {
 
 	@Identifier
-	private Long id;
+	private WrappedLongId id;
 
-	private String comment;
+	private String name;
 
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public WrappedLongId getId() {
 		return id;
 	}
 
@@ -44,30 +44,50 @@ public class LongObjectId {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(WrappedLongId id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the comment
+	 * @return the name
 	 */
-	public String getComment() {
-		return comment;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param comment
-	 *            the comment to set
+	 * @param name
+	 *            the name to set
 	 */
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("LongObjectId [id=").append(id).append(", comment=").append(comment).append("]");
+		builder.append("User [id=").append(id).append(", name=").append(name).append("]");
 		return builder.toString();
+	}
+
+	public static WrappedLongIdEntity getSample1() {
+		WrappedLongIdEntity user = new WrappedLongIdEntity();
+		user.setName("johndoe");
+		return user;
+	}
+
+	public static WrappedLongIdEntity getSample2() {
+		WrappedLongIdEntity user = new WrappedLongIdEntity();
+		user.setId(new WrappedLongId(0L));
+		user.setName("johndoe");
+		return user;
+	}
+
+	public static WrappedLongIdEntity getSample3() {
+		WrappedLongIdEntity user = new WrappedLongIdEntity();
+		user.setId(new WrappedLongId(50000L));
+		user.setName("johndoe");
+		return user;
 	}
 
 	@Override
@@ -78,8 +98,8 @@ public class LongObjectId {
 		if (obj == null || !this.getClass().equals(obj.getClass())) {
 			return false;
 		}
-		LongObjectId that = (LongObjectId) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.comment, that.comment);
+		WrappedLongIdEntity that = (WrappedLongIdEntity) obj;
+		return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
 	}
 
 }

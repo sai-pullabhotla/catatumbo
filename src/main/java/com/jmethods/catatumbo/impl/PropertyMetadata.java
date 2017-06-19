@@ -20,6 +20,9 @@ import java.lang.reflect.Field;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.IndexerFactory;
+import com.jmethods.catatumbo.Mapper;
+import com.jmethods.catatumbo.MapperFactory;
+import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.SecondaryIndex;
 
 /**
@@ -55,6 +58,11 @@ public class PropertyMetadata extends FieldMetadata {
 	private String secondaryIndexName;
 
 	/**
+	 * Mapper for the field represented by this metadata
+	 */
+	protected final Mapper mapper;
+
+	/**
 	 * Creates an instance of <code>PropertyMetadata</code>.
 	 *
 	 * @param field
@@ -69,6 +77,7 @@ public class PropertyMetadata extends FieldMetadata {
 		this.mappedName = mappedName;
 		this.indexed = indexed;
 		initializeSecondaryIndexer();
+		this.mapper = initializeMapper();
 	}
 
 	/**
@@ -151,4 +160,30 @@ public class PropertyMetadata extends FieldMetadata {
 		}
 
 	}
+
+	/**
+	 * Returns the {@link Mapper} associated with the field to which this
+	 * metadata belongs.
+	 * 
+	 * @return he {@link Mapper} associated with the field to which this
+	 *         metadata belongs.
+	 */
+	public Mapper getMapper() {
+		return mapper;
+	}
+
+	/**
+	 * Initializes the {@link Mapper} for this field.
+	 */
+	private Mapper initializeMapper() {
+		try {
+			return MapperFactory.getInstance().getMapper(field);
+		} catch (NoSuitableMapperException exp) {
+			String message = String.format(
+					"No suitable mapper found or error occurred creating a mapper for field %s in class %s",
+					field.getName(), field.getDeclaringClass().getName());
+			throw new NoSuitableMapperException(message, exp);
+		}
+	}
+
 }

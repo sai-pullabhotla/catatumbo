@@ -159,8 +159,16 @@ public class Unmarshaller {
 	 */
 	private void unmarshalIdentifier() throws Throwable {
 		IdentifierMetadata identifierMetadata = entityMetadata.getIdentifierMetadata();
+		Object id = ((Key) nativeEntity.getKey()).getNameOrId();
+		// If the ID is not a simple type...
+		IdClassMetadata idClassMetadata = identifierMetadata.getIdClassMetadata();
+		if (idClassMetadata != null) {
+			Object wrappedId = idClassMetadata.getConstructor().invoke(id);
+			id = wrappedId;
+		}
+		// Now set the ID (either simple or complex) on the Entity
 		MethodHandle writeMethod = identifierMetadata.getWriteMethod();
-		writeMethod.invoke(entity, ((Key) nativeEntity.getKey()).getNameOrId());
+		writeMethod.invoke(entity, id);
 	}
 
 	/**

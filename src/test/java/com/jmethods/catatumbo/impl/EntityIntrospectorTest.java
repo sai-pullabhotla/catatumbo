@@ -17,6 +17,7 @@
 package com.jmethods.catatumbo.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -45,6 +46,9 @@ import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
 import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
+import com.jmethods.catatumbo.entities.WrappedIntegerIdEntity;
+import com.jmethods.catatumbo.entities.WrappedLongIdEntity;
+import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
  * @author Sai Pullabhotla
@@ -201,6 +205,27 @@ public class EntityIntrospectorTest {
 		} catch (NoDefaultConstructorException exp) {
 			System.err.println(exp);
 			throw exp;
+		}
+	}
+
+	@Test
+	public void testIntrospectWrappedLongId() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(WrappedLongIdEntity.class);
+		IdentifierMetadata identifierMetadata = entityMetadata.getIdentifierMetadata();
+		IdClassMetadata idClassMetadata = identifierMetadata.getIdClassMetadata();
+		assertEquals(DataType.LONG, identifierMetadata.getDataType());
+		assertNotNull(idClassMetadata);
+		assertNotNull(idClassMetadata.getReadMethod());
+		assertNotNull(idClassMetadata.getConstructor());
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testIntrospectWrappedIntegerId() {
+		try {
+			EntityMetadata entityMetadata = EntityIntrospector.introspect(WrappedIntegerIdEntity.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 

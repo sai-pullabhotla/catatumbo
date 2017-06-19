@@ -119,7 +119,12 @@ import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
 import com.jmethods.catatumbo.entities.UnindexedByteArrayField;
 import com.jmethods.catatumbo.entities.UnindexedStringField;
+import com.jmethods.catatumbo.entities.User;
+import com.jmethods.catatumbo.entities.UserContact;
 import com.jmethods.catatumbo.entities.Visitor;
+import com.jmethods.catatumbo.entities.WrappedLongIdEntity;
+import com.jmethods.catatumbo.entities.WrappedLongObjectIdEntity;
+import com.jmethods.catatumbo.entities.WrappedStringIdEntity;
 import com.jmethods.catatumbo.entities.ZonedDateTimeField;
 
 /**
@@ -199,6 +204,11 @@ public class EntityManagerTest {
 		em.deleteAll(AutoTimestampLong.class);
 		em.deleteAll(AutoTimestampOffsetDateTime.class);
 		em.deleteAll(AutoTimestampZonedDateTime.class);
+		em.deleteAll(WrappedLongIdEntity.class);
+		em.deleteAll(WrappedLongObjectIdEntity.class);
+		em.deleteAll(WrappedStringIdEntity.class);
+		em.deleteAll(User.class);
+		em.deleteAll(UserContact.class);
 		populateTasks();
 	}
 
@@ -3253,10 +3263,12 @@ public class EntityManagerTest {
 		StringField stringField = new StringField();
 		LongField longField = new LongField();
 		BooleanField booleanField = new BooleanField();
+		User user = User.getSample1();
 		List<Object> entities = new ArrayList<>();
 		entities.add(stringField);
 		entities.add(longField);
 		entities.add(booleanField);
+		entities.add(user);
 		List<DatastoreKey> keys = em.allocateId(entities);
 		assertEquals(StringField.class.getSimpleName(), keys.get(0).kind());
 		assertTrue(keys.get(0).id() > 0);
@@ -3264,6 +3276,8 @@ public class EntityManagerTest {
 		assertTrue(keys.get(1).id() > 0);
 		assertEquals(BooleanField.class.getSimpleName(), keys.get(2).kind());
 		assertTrue(keys.get(2).id() > 0);
+		assertEquals(User.class.getSimpleName(), keys.get(3).kind());
+		assertTrue(keys.get(3).id() > 0);
 	}
 
 	// Test with a String ID
@@ -3297,6 +3311,85 @@ public class EntityManagerTest {
 		DatastoreKey key = em.allocateId(entity);
 		assertEquals(LongObjectId.class.getSimpleName(), key.kind());
 		assertTrue(key.id() > 0);
+	}
+
+	@Test
+	public void testInsert_WrappedLongIdEntity() {
+		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample1();
+		WrappedLongIdEntity entity2 = em.insert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+	}
+
+	@Test
+	public void testUpsert_WrappedLongIdEntity() {
+		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample2();
+		WrappedLongIdEntity entity2 = em.upsert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+	}
+
+	@Test
+	public void testUpdate_WrappedLongIdEntity() {
+		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample3();
+		WrappedLongIdEntity entity2 = em.insert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+		entity2.setName(entity2.getName() + " - updated");
+		WrappedLongIdEntity entity3 = em.update(entity2);
+		WrappedLongIdEntity entity4 = em.load(WrappedLongIdEntity.class, entity2.getId().getValue());
+		assertEquals(entity3, entity4);
+	}
+
+	@Test
+	public void testInsert_WrappedLongObjectIdEntity() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample1();
+		WrappedLongObjectIdEntity entity2 = em.insert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+	}
+
+	@Test
+	public void testUpsert_WrappedLongObjectIdEntity() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample2();
+		WrappedLongObjectIdEntity entity2 = em.upsert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+	}
+
+	@Test
+	public void testUpdate_WrappedLongObjectIdEntity() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample3();
+		WrappedLongObjectIdEntity entity2 = em.upsert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+		entity2.setName(entity2.getName() + " - updated");
+		WrappedLongObjectIdEntity entity3 = em.update(entity2);
+		WrappedLongObjectIdEntity entity4 = em.load(WrappedLongObjectIdEntity.class, entity3.getId().getValue());
+		assertEquals(entity3, entity4);
+	}
+
+	@Test
+	public void testInsert_User() {
+		User entity = User.getSample1();
+		User entity2 = em.insert(entity);
+		assertTrue(entity2.getId().getValue() > 0);
+		assertEquals(entity.getName(), entity.getName());
+	}
+
+	@Test
+	public void testUpsert_User() {
+		User entity = User.getSample2();
+		User entity2 = em.insert(entity);
+		assertEquals(0, entity.getId().getValue());
+		assertTrue(entity2.getId().getValue() > 0);
+		assertEquals(entity.getName(), entity.getName());
+	}
+
+	@Test
+	public void testInsertUserContact() {
+		User user = User.getSample2();
+		User user2 = em.insert(user);
+		UserContact uc = new UserContact();
+		uc.setUserKey(user2.getKey());
+		uc.setContactName("John Doe");
+		UserContact uc2 = em.insert(uc);
+		assertTrue(uc2.getId() > 0);
+		assertEquals(uc2.getUserKey(), user2.getKey());
 	}
 
 	private static Calendar getToday() {

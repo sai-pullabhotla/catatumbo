@@ -18,25 +18,31 @@ package com.jmethods.catatumbo.entities;
 
 import java.util.Objects;
 
+import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
+import com.jmethods.catatumbo.Key;
 
 /**
  * @author Sai Pullabhotla
  *
  */
+
 @Entity
-public class LongObjectId {
+public class User {
 
 	@Identifier
-	private Long id;
+	private UserId id;
 
-	private String comment;
+	@Key
+	private DatastoreKey key;
+
+	private String name;
 
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public UserId getId() {
 		return id;
 	}
 
@@ -44,30 +50,38 @@ public class LongObjectId {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(UserId id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the comment
+	 * @return the key
 	 */
-	public String getComment() {
-		return comment;
+	public DatastoreKey getKey() {
+		return key;
 	}
 
 	/**
-	 * @param comment
-	 *            the comment to set
+	 * @param key
+	 *            the key to set
 	 */
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setKey(DatastoreKey key) {
+		this.key = key;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("LongObjectId [id=").append(id).append(", comment=").append(comment).append("]");
-		return builder.toString();
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -78,8 +92,22 @@ public class LongObjectId {
 		if (obj == null || !this.getClass().equals(obj.getClass())) {
 			return false;
 		}
-		LongObjectId that = (LongObjectId) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.comment, that.comment);
+		User that = (User) obj;
+		return Objects.equals(this.id, that.id) && Objects.equals(this.key, that.key)
+				&& Objects.equals(this.name, that.name);
+	}
+
+	public static User getSample1() {
+		User entity = new User();
+		entity.setName("John Doe");
+		return entity;
+	}
+
+	public static User getSample2() {
+		User entity = new User();
+		entity.setId(new UserId(0));
+		entity.setName("John Doe");
+		return entity;
 	}
 
 }

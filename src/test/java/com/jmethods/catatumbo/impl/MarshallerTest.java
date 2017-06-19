@@ -17,15 +17,23 @@
 package com.jmethods.catatumbo.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
 import com.jmethods.catatumbo.TestUtils;
 import com.jmethods.catatumbo.entities.Contact;
 import com.jmethods.catatumbo.entities.Customer;
+import com.jmethods.catatumbo.entities.WrappedLongIdEntity;
+import com.jmethods.catatumbo.entities.WrappedLongObjectIdEntity;
+import com.jmethods.catatumbo.entities.WrappedStringIdEntity;
 import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
@@ -65,6 +73,101 @@ public class MarshallerTest {
 		Contact contact = Contact.createContact2();
 		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
 		assertEquals("55555", entity.getEntity("homeAddress").getEntity("postal_code").getString("zip"));
+	}
+
+	@Test
+	public void testMarshal_WrappedLongId1() {
+		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample1();
+		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+		IncompleteKey incompleteKey = nativeEntity.getKey();
+		assertNotNull(incompleteKey);
+	}
+
+	@Test
+	public void testMarshal_WrappedLongId2() {
+		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample2();
+		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+		IncompleteKey incompleteKey = nativeEntity.getKey();
+		assertNotNull(incompleteKey);
+	}
+
+	@Test
+	public void testMarshal_WrappedLongId3() {
+		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample3();
+		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+		Key key = (Key) nativeEntity.getKey();
+		assertNotNull(key);
+		assertEquals(50000L, (long) key.getId());
+	}
+
+	@Test
+	public void testMarshal_WrappedLongObjectId1() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample1();
+		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+		IncompleteKey incompleteKey = nativeEntity.getKey();
+		assertNotNull(incompleteKey);
+	}
+
+	@Test
+	public void testMarshal_WrappedLongObjectId2() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample2();
+		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+		IncompleteKey incompleteKey = nativeEntity.getKey();
+		assertNotNull(incompleteKey);
+	}
+
+	@Test
+	public void testMarshal_WrappedLongObjectId3() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample3();
+		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+		IncompleteKey incompleteKey = nativeEntity.getKey();
+		assertNotNull(incompleteKey);
+	}
+
+	@Test
+	public void testMarshal_WrappedLongObjectId4() {
+		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample4();
+		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+		Key key = nativeEntity.getKey();
+		assertNotNull(key);
+		assertEquals(entity.getId().getValue(), key.getId());
+	}
+
+	@Test
+	public void testMarshal_WrappedStringId1() {
+		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample1();
+		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+		Key key = nativeEntity.getKey();
+		assertNotNull(key);
+		assertTrue(key.hasName());
+	}
+
+	@Test
+	public void testMarshal_WrappedStringId2() {
+		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample2();
+		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+		Key key = nativeEntity.getKey();
+		assertNotNull(key);
+		assertTrue(key.hasName());
+	}
+
+	@Test
+	public void testMarshal_WrappedStringId3() {
+		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample3();
+		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+		Key key = nativeEntity.getKey();
+		assertNotNull(key);
+		assertTrue(key.hasName());
+	}
+
+	@Test
+	public void testMarshal_WrappedStringId4() {
+		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample4();
+		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+		Key key = nativeEntity.getKey();
+		assertNotNull(key);
+		assertTrue(key.hasName());
+		assertEquals(entity.getId().getValue(), key.getName());
 	}
 
 }

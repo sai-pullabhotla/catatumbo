@@ -16,8 +16,6 @@
 
 package com.jmethods.catatumbo.entities;
 
-import java.util.Objects;
-
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
 
@@ -26,17 +24,17 @@ import com.jmethods.catatumbo.Identifier;
  *
  */
 @Entity
-public class LongObjectId {
+public class WrappedIntegerIdEntity {
 
 	@Identifier
-	private Long id;
+	private WrappedIntegerId id;
 
-	private String comment;
+	private String name;
 
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public WrappedIntegerId getId() {
 		return id;
 	}
 
@@ -44,42 +42,23 @@ public class LongObjectId {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(WrappedIntegerId id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the comment
+	 * @return the name
 	 */
-	public String getComment() {
-		return comment;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param comment
-	 *            the comment to set
+	 * @param name
+	 *            the name to set
 	 */
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("LongObjectId [id=").append(id).append(", comment=").append(comment).append("]");
-		return builder.toString();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		LongObjectId that = (LongObjectId) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.comment, that.comment);
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
