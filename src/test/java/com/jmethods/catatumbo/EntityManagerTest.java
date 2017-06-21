@@ -3392,6 +3392,32 @@ public class EntityManagerTest {
 		assertEquals(uc2.getUserKey(), user2.getKey());
 	}
 
+	@Test
+	public void testLoad_ByKey() {
+		ParentEntity entity = new ParentEntity();
+		entity.setField1("test for load by key");
+		entity = em.insert(entity);
+		ParentEntity entity2 = em.load(ParentEntity.class, entity.getKey());
+		assertEquals(entity, entity2);
+	}
+
+	@Test
+	public void testLoad_ByKeys() {
+		List<ParentEntity> entities = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			ParentEntity entity = new ParentEntity();
+			entity.setField1("test for load by key " + i);
+			entities.add(entity);
+		}
+		entities = em.insert(entities);
+		List<DatastoreKey> keys = new ArrayList<>(entities.size());
+		for (ParentEntity entity : entities) {
+			keys.add(entity.getKey());
+		}
+		List<ParentEntity> loadedEntities = em.loadByKey(ParentEntity.class, keys);
+		assertEquals(entities, loadedEntities);
+	}
+
 	private static Calendar getToday() {
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR_OF_DAY, 0);

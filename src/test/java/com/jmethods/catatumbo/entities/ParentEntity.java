@@ -103,11 +103,19 @@ public class ParentEntity implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (obj == null || !this.getClass().equals(obj.getClass())) {
 			return false;
 		}
 		ParentEntity that = (ParentEntity) obj;
 		return this.id == that.id && Objects.equals(this.field1, that.field1) && Objects.equals(this.key, that.key);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ParentEntity [id=").append(id).append(", field1=").append(field1).append(", key=").append(key)
+				.append("]");
+		return builder.toString();
 	}
 
 }

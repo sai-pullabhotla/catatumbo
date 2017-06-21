@@ -301,6 +301,36 @@ public interface DatastoreAccess {
 	<E> E load(Class<E> entityClass, DatastoreKey parentKey, String id);
 
 	/**
+	 * Loads and returns the entity with the given key.
+	 * 
+	 * @param entityClass
+	 *            the entity class (expected result type)
+	 * @param key
+	 *            full key of the entity
+	 * @return the Entity object or <code>null</code>, if the the entity with
+	 *         the given key does not exist in the Cloud Datastore.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Cloud Datastore.
+	 */
+	<E> E load(Class<E> entityClass, DatastoreKey key);
+
+	/**
+	 * Loads and returns the entities for the given keys.
+	 * 
+	 * @param entityClass
+	 *            the entity class (expected result type)
+	 * @param keys
+	 *            entity keys to load
+	 * @return the Entity objects for the given keys. If one or more requested
+	 *         keys do not exist in the Cloud Datastore, the corresponding item
+	 *         in the returned list be <code>null</code>.
+	 * 
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Cloud Datastore.
+	 */
+	<E> List<E> loadByKey(Class<E> entityClass, List<DatastoreKey> keys);
+
+	/**
 	 * Creates and returns a new {@link EntityQueryRequest} for the given GQL
 	 * query string. The returned {@link EntityQueryRequest} can be further
 	 * customized to set any bindings (positional or named), and then be

@@ -104,16 +104,7 @@ public class DefaultDatastoreReader {
 	 *             if any error occurs while inserting.
 	 */
 	public <E> E load(Class<E> entityClass, long id) {
-		try {
-			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
-			Entity nativeEntity = nativeReader.get(key);
-			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
-			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
-			return entity;
-		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
-		}
+		return load(entityClass, null, id);
 	}
 
 	/**
@@ -133,15 +124,8 @@ public class DefaultDatastoreReader {
 	 *             if any error occurs while inserting.
 	 */
 	public <E> List<E> loadById(Class<E> entityClass, List<Long> identifiers) {
-		try {
-			Key[] nativeKeys = longListToNativeKeys(entityClass, identifiers);
-			List<Entity> nativeEntities = nativeReader.fetch(nativeKeys);
-			List<E> entities = DatastoreUtils.toEntities(entityClass, nativeEntities);
-			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
-			return entities;
-		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
-		}
+		Key[] nativeKeys = longListToNativeKeys(entityClass, identifiers);
+		return fetch(entityClass, nativeKeys);
 	}
 
 	/**
@@ -160,19 +144,14 @@ public class DefaultDatastoreReader {
 	 *             if any error occurs while inserting.
 	 */
 	public <E> E load(Class<E> entityClass, DatastoreKey parentKey, long id) {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
+		Key nativeKey;
 		if (parentKey == null) {
-			return load(entityClass, id);
+			nativeKey = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
+		} else {
+			nativeKey = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 		}
-		try {
-			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			Entity nativeEntity = nativeReader.get(key);
-			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
-			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
-			return entity;
-		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
-		}
+		return fetch(entityClass, nativeKey);
 	}
 
 	/**
@@ -190,16 +169,7 @@ public class DefaultDatastoreReader {
 	 *             if any error occurs while inserting.
 	 */
 	public <E> E load(Class<E> entityClass, String id) {
-		try {
-			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
-			Entity nativeEntity = nativeReader.get(key);
-			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
-			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
-			return entity;
-		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
-		}
+		return load(entityClass, null, id);
 	}
 
 	/**
@@ -219,15 +189,8 @@ public class DefaultDatastoreReader {
 	 *             if any error occurs while inserting.
 	 */
 	public <E> List<E> loadByName(Class<E> entityClass, List<String> identifiers) {
-		try {
-			Key[] nativeKeys = stringListToNativeKeys(entityClass, identifiers);
-			List<Entity> nativeEntities = nativeReader.fetch(nativeKeys);
-			List<E> entities = DatastoreUtils.toEntities(entityClass, nativeEntities);
-			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
-			return entities;
-		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
-		}
+		Key[] nativeKeys = stringListToNativeKeys(entityClass, identifiers);
+		return fetch(entityClass, nativeKeys);
 	}
 
 	/**
@@ -246,16 +209,89 @@ public class DefaultDatastoreReader {
 	 *             if any error occurs while inserting.
 	 */
 	public <E> E load(Class<E> entityClass, DatastoreKey parentKey, String id) {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
+		Key nativeKey;
 		if (parentKey == null) {
-			return load(entityClass, id);
+			nativeKey = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
+		} else {
+			nativeKey = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 		}
+		return fetch(entityClass, nativeKey);
+	}
+
+	/**
+	 * Retrieves and returns the entity with the given key.
+	 * 
+	 * @param entityClass
+	 *            the expected result type
+	 * @param key
+	 *            the entity key
+	 * @return the entity with the given key, or <code>null</code>, if no entity
+	 *         exists with the given key.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
+	 */
+	public <E> E load(Class<E> entityClass, DatastoreKey key) {
+		return fetch(entityClass, key.nativeKey());
+	}
+
+	/**
+	 * Retrieves and returns the entities for the given keys.
+	 * 
+	 * @param entityClass
+	 *            the expected result type
+	 * @param keys
+	 *            the entity keys
+	 * @return the entities for the given keys. If one or more requested keys do
+	 *         not exist in the Cloud Datastore, the corresponding item in the
+	 *         returned list be <code>null</code>.
+	 * 
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
+	 */
+	public <E> List<E> loadByKey(Class<E> entityClass, List<DatastoreKey> keys) {
+		Key[] nativeKeys = DatastoreUtils.toNativeKeys(keys);
+		return fetch(entityClass, nativeKeys);
+	}
+
+	/**
+	 * Fetches the entity given the native key.
+	 * 
+	 * @param entityClass
+	 *            the expected result type
+	 * @param nativeKey
+	 *            the native key
+	 * @return the entity with the given key, or <code>null</code>, if no entity
+	 *         exists with the given key.
+	 */
+	private <E> E fetch(Class<E> entityClass, Key nativeKey) {
 		try {
-			EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-			Key key = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
-			Entity nativeEntity = nativeReader.get(key);
+			Entity nativeEntity = nativeReader.get(nativeKey);
 			E entity = Unmarshaller.unmarshal(nativeEntity, entityClass);
 			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entity);
 			return entity;
+		} catch (DatastoreException exp) {
+			throw new EntityManagerException(exp);
+		}
+	}
+
+	/**
+	 * Fetches a list of entities for the given native keys.
+	 * 
+	 * @param entityClass
+	 *            the expected result type
+	 * @param nativeKeys
+	 *            the native keys of the entities
+	 * @return the list of entities. If one or more keys do not exist, the
+	 *         corresponding item in the returned list will be
+	 *         <code>null</code>.
+	 */
+	private <E> List<E> fetch(Class<E> entityClass, Key[] nativeKeys) {
+		try {
+			List<Entity> nativeEntities = nativeReader.fetch(nativeKeys);
+			List<E> entities = DatastoreUtils.toEntities(entityClass, nativeEntities);
+			entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
+			return entities;
 		} catch (DatastoreException exp) {
 			throw new EntityManagerException(exp);
 		}

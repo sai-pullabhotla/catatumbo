@@ -262,6 +262,16 @@ public class DefaultEntityManager implements EntityManager {
 	}
 
 	@Override
+	public <E> E load(Class<E> entityClass, DatastoreKey key) {
+		return reader.load(entityClass, key);
+	}
+
+	@Override
+	public <E> List<E> loadByKey(Class<E> entityClass, List<DatastoreKey> keys) {
+		return reader.loadByKey(entityClass, keys);
+	}
+
+	@Override
 	public EntityQueryRequest createEntityQueryRequest(String query) {
 		return reader.createEntityQueryRequest(query);
 	}

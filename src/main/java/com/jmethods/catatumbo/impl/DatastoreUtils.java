@@ -175,6 +175,22 @@ class DatastoreUtils {
 	}
 
 	/**
+	 * Converts/Unwraps the given list of {@link DatastoreKey} objects into an
+	 * array of native {@link Key}s.
+	 * 
+	 * @param keys
+	 *            the list of {@link DatastoreKey} objects
+	 * @return the native keys
+	 */
+	static Key[] toNativeKeys(List<DatastoreKey> keys) {
+		Key[] nativeKeys = new Key[keys.size()];
+		for (int i = 0; i < keys.size(); i++) {
+			nativeKeys[i] = keys.get(i).nativeKey();
+		}
+		return nativeKeys;
+	}
+
+	/**
 	 * Validates if the given entity is valid for deferred ID allocation.
 	 * Deferred ID allocation is valid for entities using a numeric ID.
 	 * 
