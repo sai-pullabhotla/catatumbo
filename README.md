@@ -13,6 +13,7 @@ Features
 --------
 * Automatic mapping of model classes (POJOs) to Cloud Datastore Entities and vice versa
 * Automatic generation of Identifiers (for both Numeric and String types)  
+* Support for strongly typed Identifiers (e.g. a custom class UserId that wraps a numeric/string ID) 
 * Ignore specific fields of your model object from persistence operations 
 * Support for a variety of Data Types: 
 	* boolean, Boolean 
@@ -57,6 +58,7 @@ Features
 * Support for Batch Write operations 
 * Transaction Support 
 * Metadata API for retrieving the Datastore metadata 
+* Programmatic access to Datastore Statistics 
 * Ability to work with Local Datastore (Datastore Emulator) during development phase   
 
 Project's Web Site
