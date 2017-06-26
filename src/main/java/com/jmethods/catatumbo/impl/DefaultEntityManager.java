@@ -105,7 +105,12 @@ public class DefaultEntityManager implements EntityManager {
 	@Override
 	public <E> long deleteAll(Class<E> entityClass) {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
-		String query = "SELECT __key__ FROM " + entityMetadata.getKind();
+		return deleteAll(entityMetadata.getKind());
+	}
+
+	@Override
+	public long deleteAll(String kind) {
+		String query = "SELECT __key__ FROM " + kind;
 		try {
 			GqlQuery<Key> gqlQuery = Query.newGqlQueryBuilder(Query.ResultType.KEY, query)
 					.setNamespace(getEffectiveNamespace()).build();
