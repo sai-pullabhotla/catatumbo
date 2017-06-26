@@ -35,9 +35,20 @@ public interface EntityManager extends DatastoreAccess {
 	 *            this class.
 	 * @return the number of entities that were deleted
 	 * @throws EntityManagerException
-	 *             if any error occurs while inserting.
+	 *             if any error occurs while deleting.
 	 */
 	<E> long deleteAll(Class<E> entityClass);
+
+	/**
+	 * Deletes all entities of given Kind.
+	 *
+	 * @param kind
+	 *            the entity Kind.
+	 * @return the number of entities that were deleted
+	 * @throws EntityManagerException
+	 *             if any error occurs while deleting.
+	 */
+	long deleteAll(String kind);
 
 	/**
 	 * Returns a new Transaction that can be used to perform a set of
