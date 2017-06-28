@@ -120,6 +120,11 @@ public class DefaultDatastoreMetadata implements DatastoreMetadata {
 
 	@Override
 	public List<String> getKinds() {
+		return getKinds(false);
+	}
+
+	@Override
+	public List<String> getKinds(boolean excludeSystemKinds) {
 		try {
 			String query = "SELECT __key__ FROM " + ENTITY_KINDS + " ORDER BY __key__";
 			GqlQuery.Builder<Key> gqlQueryBuilder = Query.newGqlQueryBuilder(ResultType.KEY, query);
@@ -129,6 +134,10 @@ public class DefaultDatastoreMetadata implements DatastoreMetadata {
 			List<String> kinds = new ArrayList<>(50);
 			while (results.hasNext()) {
 				Key key = results.next();
+				String kind = key.getName();
+				if (excludeSystemKinds && kind.startsWith("__")) {
+					continue;
+				}
 				kinds.add(key.getName());
 			}
 			return kinds;

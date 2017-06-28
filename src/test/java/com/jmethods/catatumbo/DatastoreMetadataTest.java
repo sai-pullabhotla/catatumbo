@@ -125,7 +125,21 @@ public class DatastoreMetadataTest {
 		DatastoreMetadata dmd = em.getDatastoreMetadata();
 		List<String> kinds = dmd.getKinds();
 		assertTrue(kinds.contains(EntityIntrospector.introspect(StringField.class).getKind()));
+	}
 
+	@Test
+	public void testGetKinds_ExcludeSystemKinds() {
+		StringField entity = new StringField();
+		entity.setName("Test for getKinds()");
+		entity = em.insert(entity);
+		DatastoreMetadata dmd = em.getDatastoreMetadata();
+		List<String> kinds = dmd.getKinds(true);
+		assertTrue(kinds.contains(EntityIntrospector.introspect(StringField.class).getKind()));
+		// This may give false positive (e.g. no Stat entities are yet available
+		// or testing with Emulator.
+		for (String kind : kinds) {
+			assertTrue(!kind.startsWith("__"));
+		}
 	}
 
 	@Test

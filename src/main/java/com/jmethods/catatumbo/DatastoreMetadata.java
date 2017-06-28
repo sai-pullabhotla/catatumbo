@@ -87,6 +87,22 @@ public interface DatastoreMetadata {
 	List<String> getKinds();
 
 	/**
+	 * Returns the available Kinds from the current namespace, where current
+	 * namespace is the the namespace set using {@link Tenant} or the namespace
+	 * with which the {@link EntityManager} was created.
+	 * 
+	 * @param excludeSystemKinds
+	 *            whether or not to exclude System Kinds (e.g. Kinds begin with
+	 *            two underscores).
+	 * 
+	 * @return the Kinds in the current namespace. The returned results will be
+	 *         order by Kind's name in ascending order.
+	 * @throws EntityManagerException
+	 *             if any error occurs while accessing the Datastore.
+	 */
+	List<String> getKinds(boolean excludeSystemKinds);
+
+	/**
 	 * Returns the list of Properties in the specified Kind. The returned list
 	 * only contains indexed properties. If the {@link Tenant} has a namespace
 	 * set, it will be used. Otherwise, the namespace with which the
