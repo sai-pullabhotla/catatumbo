@@ -16,8 +16,14 @@
 
 package com.jmethods.catatumbo.mappers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.DoubleValue;
+import com.google.cloud.datastore.EntityValue;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.KeyValue;
 import com.google.cloud.datastore.LatLng;
 import com.google.cloud.datastore.LatLngValue;
@@ -82,6 +88,15 @@ public class CatchAllMapper implements Mapper {
 		} else if (input instanceof GeoLocation) {
 			GeoLocation geoLocation = (GeoLocation) input;
 			builder = LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
+		} else if (input instanceof Map) {
+			@SuppressWarnings("unchecked")
+			Map<String, ?> map = (Map<String, ?>) input;
+			FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
+			for (Map.Entry<String, ?> entry : map.entrySet()) {
+				String key = entry.getKey();
+				entityBuilder.set(key, toDatastore(entry.getValue()).build());
+			}
+			builder = EntityValue.newBuilder(entityBuilder.build());
 		} else {
 			throw new MappingException(String.format("Unsupported type: %s", input.getClass().getName()));
 		}
@@ -106,6 +121,14 @@ public class CatchAllMapper implements Mapper {
 		} else if (input instanceof LatLngValue) {
 			LatLng latLong = ((LatLngValue) input).get();
 			javaValue = new GeoLocation(latLong.getLatitude(), latLong.getLongitude());
+		} else if (input instanceof EntityValue) {
+			EntityValue entityValue = (EntityValue) input;
+			FullEntity<?> entity = entityValue.get();
+			Map<String, Object> map = new HashMap<>();
+			for (String property : entity.getNames()) {
+				map.put(property, toModel(entity.getValue(property)));
+			}
+			javaValue = map;
 		} else {
 			throw new MappingException(String.format("Unsupported type %s", input.getClass().getName()));
 		}

@@ -100,6 +100,7 @@ import com.jmethods.catatumbo.entities.LongId2;
 import com.jmethods.catatumbo.entities.LongObject;
 import com.jmethods.catatumbo.entities.LongObjectId;
 import com.jmethods.catatumbo.entities.MapFields;
+import com.jmethods.catatumbo.entities.NestedMapEntity;
 import com.jmethods.catatumbo.entities.OffsetDateTimeField;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
@@ -209,6 +210,7 @@ public class EntityManagerTest {
 		em.deleteAll(WrappedStringIdEntity.class);
 		em.deleteAll(User.class);
 		em.deleteAll(UserContact.class);
+		em.deleteAll(NestedMapEntity.class);
 		populateTasks();
 	}
 
@@ -3416,6 +3418,29 @@ public class EntityManagerTest {
 		}
 		List<ParentEntity> loadedEntities = em.loadByKey(ParentEntity.class, keys);
 		assertEquals(entities, loadedEntities);
+	}
+
+	@Test
+	public void testInsert_NestedMapEntity() {
+		NestedMapEntity entity = NestedMapEntity.getSample1();
+		NestedMapEntity entity2 = em.insert(entity);
+		NestedMapEntity entity3 = em.load(NestedMapEntity.class, entity2.getId());
+		assertEquals(entity.getNestedMap(), entity2.getNestedMap());
+		assertEquals(entity2, entity3);
+	}
+
+	@Test
+	public void testUpdate_NestedMapEntity() {
+		NestedMapEntity entity = NestedMapEntity.getSample1();
+		NestedMapEntity entity2 = em.insert(entity);
+		NestedMapEntity entity3 = em.load(NestedMapEntity.class, entity2.getId());
+		assertEquals(entity.getNestedMap(), entity2.getNestedMap());
+		assertEquals(entity2, entity3);
+		entity3.getNestedMap().put("double", 1.0);
+		NestedMapEntity entity4 = em.update(entity3);
+		NestedMapEntity entity5 = em.load(NestedMapEntity.class, entity4.getId());
+		assertEquals(entity3, entity4);
+		assertEquals(entity4, entity5);
 	}
 
 	private static Calendar getToday() {
