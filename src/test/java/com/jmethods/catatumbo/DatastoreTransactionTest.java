@@ -29,9 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.jmethods.catatumbo.entities.Account;
-import com.jmethods.catatumbo.entities.ChildEntity;
 import com.jmethods.catatumbo.entities.LongId;
-import com.jmethods.catatumbo.entities.ParentEntity;
 import com.jmethods.catatumbo.entities.StringId;
 
 /**
@@ -45,12 +43,6 @@ public class DatastoreTransactionTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
-		em.deleteAll(Account.class);
-		em.deleteAll(LongId.class);
-		em.deleteAll(StringId.class);
-		em.deleteAll(ParentEntity.class);
-		em.deleteAll(ChildEntity.class);
-
 	}
 
 	@AfterClass

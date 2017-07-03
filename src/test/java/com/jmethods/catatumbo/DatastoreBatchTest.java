@@ -44,11 +44,6 @@ public class DatastoreBatchTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
-		em.deleteAll(LongId.class);
-		em.deleteAll(StringId.class);
-		em.deleteAll(ParentEntity.class);
-		em.deleteAll(ChildEntity.class);
-
 	}
 
 	@Test

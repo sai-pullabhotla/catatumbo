@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,11 +43,6 @@ public class ListenerInheritanceTest {
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
 		em.setDefaultListeners(AnimalListener.class);
-		em.deleteAll(Cat.class);
-		em.deleteAll(Dog.class);
-		em.deleteAll(Lion.class);
-		em.deleteAll(Cow.class);
-
 	}
 
 	@Test

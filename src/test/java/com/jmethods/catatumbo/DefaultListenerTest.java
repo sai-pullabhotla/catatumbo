@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
@@ -39,7 +39,6 @@ public class DefaultListenerTest {
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
 		em.setDefaultListeners(Adder.class);
-		em.deleteAll(GlobalCalculatorEntity.class);
 	}
 
 	@Test

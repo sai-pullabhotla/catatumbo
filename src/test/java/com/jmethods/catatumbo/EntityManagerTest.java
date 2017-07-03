@@ -118,14 +118,12 @@ import com.jmethods.catatumbo.entities.SubClass4;
 import com.jmethods.catatumbo.entities.Tag;
 import com.jmethods.catatumbo.entities.Task;
 import com.jmethods.catatumbo.entities.TaskName;
-import com.jmethods.catatumbo.entities.UnindexedByteArrayField;
 import com.jmethods.catatumbo.entities.UnindexedStringField;
 import com.jmethods.catatumbo.entities.User;
 import com.jmethods.catatumbo.entities.UserContact;
 import com.jmethods.catatumbo.entities.Visitor;
 import com.jmethods.catatumbo.entities.WrappedLongIdEntity;
 import com.jmethods.catatumbo.entities.WrappedLongObjectIdEntity;
-import com.jmethods.catatumbo.entities.WrappedStringIdEntity;
 import com.jmethods.catatumbo.entities.ZonedDateTimeField;
 
 /**
@@ -141,98 +139,7 @@ public class EntityManagerTest {
 	public static void setUpBeforeClass() throws Exception {
 		// Register a custom mapper
 		MapperFactory.getInstance().setDefaultMapper(DeviceType.class, new DeviceTypeMapper());
-
 		em = TestUtils.getEntityManager();
-		em.deleteAll(LongId.class);
-		em.deleteAll(LongObjectId.class);
-		em.deleteAll(StringId.class);
-		em.deleteAll(LongId2.class);
-		em.deleteAll(StringId2.class);
-		em.deleteAll(BooleanField.class);
-		em.deleteAll(BooleanObject.class);
-		em.deleteAll(CharField.class);
-		em.deleteAll(CharObject.class);
-		em.deleteAll(ShortField.class);
-		em.deleteAll(ShortObject.class);
-		em.deleteAll(IntegerField.class);
-		em.deleteAll(IntegerObject.class);
-		em.deleteAll(LongField.class);
-		em.deleteAll(LongObject.class);
-		em.deleteAll(FloatField.class);
-		em.deleteAll(FloatObject.class);
-		em.deleteAll(DoubleField.class);
-		em.deleteAll(DoubleObject.class);
-		em.deleteAll(StringField.class);
-		em.deleteAll(CalendarField.class);
-		em.deleteAll(DateField.class);
-		em.deleteAll(LocalDateField.class);
-		em.deleteAll(LocalTimeField.class);
-		em.deleteAll(LocalDateTimeField.class);
-		em.deleteAll(OffsetDateTimeField.class);
-		em.deleteAll(ZonedDateTimeField.class);
-		em.deleteAll(ByteArrayField.class);
-		em.deleteAll(CharArrayField.class);
-		em.deleteAll(ParentEntity.class);
-		em.deleteAll(ChildEntity.class);
-		em.deleteAll(GrandchildEntity.class);
-		em.deleteAll(GeoLocationField.class);
-		em.deleteAll(Task.class);
-		em.deleteAll(IgnoreField.class);
-		em.deleteAll(Country.class);
-		em.deleteAll(Department.class);
-		em.deleteAll(Employee.class);
-		em.deleteAll(Tag.class);
-		em.deleteAll(Customer.class);
-		em.deleteAll(SubClass1.class);
-		em.deleteAll(SubClass2.class);
-		em.deleteAll(SubClass3.class);
-		em.deleteAll(SubClass4.class);
-		em.deleteAll(OptimisticLock1.class);
-		em.deleteAll(EnumField.class);
-		em.deleteAll(ListFields.class);
-		em.deleteAll(SetFields.class);
-		em.deleteAll(MapFields.class);
-		em.deleteAll(Contact.class);
-		em.deleteAll(UnindexedStringField.class);
-		em.deleteAll(UnindexedByteArrayField.class);
-		em.deleteAll(BigDecimalField.class);
-		em.deleteAll(Item.class);
-		em.deleteAll(Visitor.class);
-		em.deleteAll(AccessorTestEntity.class);
-		em.deleteAll(ArrayIndex.class);
-		em.deleteAll(AutoTimestampDate.class);
-		em.deleteAll(AutoTimestampCalendar.class);
-		em.deleteAll(AutoTimestampLong.class);
-		em.deleteAll(AutoTimestampOffsetDateTime.class);
-		em.deleteAll(AutoTimestampZonedDateTime.class);
-		em.deleteAll(WrappedLongIdEntity.class);
-		em.deleteAll(WrappedLongObjectIdEntity.class);
-		em.deleteAll(WrappedStringIdEntity.class);
-		em.deleteAll(User.class);
-		em.deleteAll(UserContact.class);
-		em.deleteAll(NestedMapEntity.class);
-		populateTasks();
-	}
-
-	private static void populateTasks() {
-		List<Task> tasks = new ArrayList<>(50);
-		Calendar today = Calendar.getInstance();
-		today.set(Calendar.HOUR_OF_DAY, 0);
-		today.set(Calendar.MINUTE, 0);
-		today.set(Calendar.SECOND, 0);
-		today.set(Calendar.MILLISECOND, 0);
-		for (int i = 1; i <= 50; i++) {
-			Task task = new Task();
-			task.setId(i);
-			task.setName("My Task " + i);
-			task.setPriority(i % 5);
-			task.setComplete(i % 10 == 0);
-			Calendar cal = (Calendar) today.clone();
-			cal.add(Calendar.DATE, i % 5);
-			task.setCompletionDate(cal.getTime());
-			tasks.add(task);
-		}
-		em.insert(tasks);
 	}
 
 	@AfterClass

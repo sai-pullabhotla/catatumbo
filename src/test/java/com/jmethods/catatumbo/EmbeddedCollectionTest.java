@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +39,6 @@ public class EmbeddedCollectionTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
-		em.deleteAll(PhoneList.class);
-		em.deleteAll(AddressMap.class);
 	}
 
 	@Test

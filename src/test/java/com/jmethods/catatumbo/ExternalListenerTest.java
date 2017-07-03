@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,7 +34,6 @@ public class ExternalListenerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
-		em.deleteAll(ExternalCalculatorEntity.class);
 	}
 
 	@Test

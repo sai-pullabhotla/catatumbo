@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,7 +37,6 @@ public class CustomTypeTest {
 	public static void setUpBeforeClass() throws Exception {
 		MapperFactory.getInstance().setDefaultMapper(byte.class, new ByteMapper());
 		em = TestUtils.getEntityManager();
-		em.deleteAll(CustomTypeEntity.class);
 	}
 
 	@Test

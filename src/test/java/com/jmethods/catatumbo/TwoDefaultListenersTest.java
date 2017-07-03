@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,6 @@ public class TwoDefaultListenersTest {
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
 		em.setDefaultListeners(Adder.class, Multiplier.class);
-		em.deleteAll(GlobalCalculatorEntity.class);
 	}
 
 	@Test

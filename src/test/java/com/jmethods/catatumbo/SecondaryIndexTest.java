@@ -48,10 +48,6 @@ public class SecondaryIndexTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		em = TestUtils.getEntityManager();
-		em.deleteAll(StringIndex.class);
-		em.deleteAll(StringListIndex.class);
-		em.deleteAll(StringSetIndex.class);
-		em.deleteAll(EmbeddedListIndex.class);
 	}
 
 	@Test
