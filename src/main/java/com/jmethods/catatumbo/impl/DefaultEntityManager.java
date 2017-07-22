@@ -43,6 +43,7 @@ import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 import com.jmethods.catatumbo.Tenant;
 import com.jmethods.catatumbo.TransactionalTask;
+import com.jmethods.catatumbo.Utility;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
@@ -110,6 +111,9 @@ public class DefaultEntityManager implements EntityManager {
 
 	@Override
 	public long deleteAll(String kind) {
+		if (Utility.isNullOrEmpty(kind)) {
+			throw new IllegalArgumentException("kind cannot be null or blank");
+		}
 		String query = "SELECT __key__ FROM " + kind;
 		try {
 			GqlQuery<Key> gqlQuery = Query.newGqlQueryBuilder(Query.ResultType.KEY, query)
