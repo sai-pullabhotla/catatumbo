@@ -39,6 +39,7 @@ Features
 	* Keys, Parent Keys and Key References
 	* List Values (List & Set) 
 	* Maps 
+	* Map of Maps 
 * Support for "true" Decimal types, though the Cloud Datastore does not have native support for this. 
 * Ability to annotate which fields are indexed/not indexed 
 * Ability to annotate optional fields. Optional fields are omitted from persistence when their value is null. 
