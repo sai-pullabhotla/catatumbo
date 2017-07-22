@@ -57,6 +57,11 @@ public class EmbeddedMetadata extends MetadataBase {
 	private boolean indexed;
 
 	/**
+	 * Whether or not this embedded field is optional
+	 */
+	private boolean optional = false;
+
+	/**
 	 * Creates a new instance of <code>EmbeddedMetadata</code>.
 	 * 
 	 * @param field
@@ -181,4 +186,26 @@ public class EmbeddedMetadata extends MetadataBase {
 	public void setIndexed(boolean indexed) {
 		this.indexed = indexed;
 	}
+
+	/**
+	 * Tells whether or not the field represented by this metadata is optional.
+	 * 
+	 * @return <code>true</code>, if the field represented by this metadata is
+	 *         optional; <code>false</code>, otherwise.
+	 */
+	public boolean isOptional() {
+		return optional;
+	}
+
+	/**
+	 * Sets whether or not the field represented by this metadata is optional.
+	 * 
+	 * @param optional
+	 *            whether or not the field represented by this metadata is
+	 *            optional.
+	 */
+	public void setOptional(boolean optional) {
+		this.optional = optional;
+	}
+
 }

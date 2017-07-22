@@ -68,6 +68,9 @@ public class EmbeddedObjectMapper implements Mapper {
 			FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
 			for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
 				Object propertyValue = propertyMetadata.getReadMethod().invoke(input);
+				if (propertyValue == null && propertyMetadata.isOptional()) {
+					continue;
+				}
 				ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(propertyValue);
 				valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
 				Value<?> value = valueBuilder.build();
@@ -90,8 +93,6 @@ public class EmbeddedObjectMapper implements Mapper {
 		}
 		try {
 			FullEntity<?> entity = ((EntityValue) input).get();
-			// Object embeddedObject =
-			// IntrospectionUtils.instantiateObject(clazz);
 			Object embeddedObject = metadata.getConstructor().invoke();
 			for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
 				String mappedName = propertyMetadata.getMappedName();

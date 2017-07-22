@@ -36,8 +36,9 @@ import com.jmethods.catatumbo.entities.Task;
 		DatastoreTransactionTest.class, DecimalFieldsTest.class, DefaultAndExternalListenersTest.class,
 		DefaultListenerTest.class, EmbeddedCollectionTest.class, EntityManagerFactoryTest.class,
 		EntityManagerTest.class, ExcludeDefaultListenerTest.class, ExternalListenerTest.class, IndexerFactoryTest.class,
-		InternalListenerTest.class, ListenerInheritanceTest.class, MapperFactoryTest.class, SecondaryIndexTest.class,
-		TenantTest.class, TwoDefaultListenersTest.class, TwoExternalListenersTest.class })
+		InternalListenerTest.class, ListenerInheritanceTest.class, MapperFactoryTest.class, OptionalFieldsTest.class,
+		SecondaryIndexTest.class, TenantTest.class, TwoDefaultListenersTest.class, TwoExternalListenersTest.class })
+
 public class AllTests {
 
 	private static EntityManager em;

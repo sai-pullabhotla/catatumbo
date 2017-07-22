@@ -401,6 +401,7 @@ public class EntityIntrospector {
 				propertyMetadata.setMappedName(mappedName);
 			}
 			propertyMetadata.setIndexed(override.indexed());
+			propertyMetadata.setOptional(override.optional());
 		}
 
 	}

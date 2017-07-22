@@ -17,13 +17,18 @@ package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
 
+import com.jmethods.catatumbo.CreatedTimestamp;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.IndexerFactory;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MapperFactory;
 import com.jmethods.catatumbo.NoSuitableMapperException;
+import com.jmethods.catatumbo.Property;
 import com.jmethods.catatumbo.SecondaryIndex;
+import com.jmethods.catatumbo.UpdatedTimestamp;
+import com.jmethods.catatumbo.Utility;
+import com.jmethods.catatumbo.Version;
 
 /**
  * Objects of this class contain metadata about a property of an entity.
@@ -48,6 +53,11 @@ public class PropertyMetadata extends FieldMetadata {
 	private boolean indexed;
 
 	/**
+	 * If this property is optional
+	 */
+	protected boolean optional;
+
+	/**
 	 * Secondary indexer for this property
 	 */
 	private Indexer secondaryIndexer;
@@ -67,15 +77,45 @@ public class PropertyMetadata extends FieldMetadata {
 	 *
 	 * @param field
 	 *            the field
-	 * @param mappedName
-	 *            the property name in the Cloud Datastore
-	 * @param indexed
-	 *            whether or not to index
 	 */
-	public PropertyMetadata(Field field, String mappedName, boolean indexed) {
+	public PropertyMetadata(Field field) {
+		super(field);
+		String mappedName = field.getName();
+		boolean indexed = true;
+		boolean optional = false;
+		Property propertyAnnotation = field.getAnnotation(Property.class);
+		if (propertyAnnotation != null) {
+			String temp = propertyAnnotation.name();
+			if (!Utility.isNullOrEmpty(temp)) {
+				mappedName = temp;
+			}
+			indexed = propertyAnnotation.indexed();
+			optional = propertyAnnotation.optional();
+		}
+		this.mappedName = mappedName;
+		this.indexed = indexed;
+		setOptional(optional);
+		initializeSecondaryIndexer();
+		this.mapper = initializeMapper();
+	}
+
+	/**
+	 * Creates a new instance of <code>PropertyMetadata</code>.
+	 * 
+	 * @param field
+	 *            the field
+	 * @param mappedName
+	 *            name of the property in the Datastore
+	 * @param indexed
+	 *            whether or not the property is indexed
+	 * @param optional
+	 *            whether or not the property is optional
+	 */
+	public PropertyMetadata(Field field, String mappedName, boolean indexed, boolean optional) {
 		super(field);
 		this.mappedName = mappedName;
 		this.indexed = indexed;
+		setOptional(optional);
 		initializeSecondaryIndexer();
 		this.mapper = initializeMapper();
 	}
@@ -135,6 +175,34 @@ public class PropertyMetadata extends FieldMetadata {
 	 */
 	public String getSecondaryIndexName() {
 		return secondaryIndexName;
+	}
+
+	/**
+	 * Tells whether or not the field represented by this metadata is optional.
+	 * 
+	 * @return <code>true</code>, if the field represented by this metadata is
+	 *         optional; <code>false</code>, otherwise.
+	 */
+	public boolean isOptional() {
+		return optional;
+	}
+
+	/**
+	 * Sets whether or not the field represented by this metadata is optional.
+	 * 
+	 * @param optional
+	 *            whether or not the field represented by this metadata is
+	 *            optional.
+	 */
+	public void setOptional(boolean optional) {
+		if (optional) {
+			if (field.getType().isPrimitive() || field.isAnnotationPresent(Version.class)
+					|| field.isAnnotationPresent(CreatedTimestamp.class)
+					|| field.isAnnotationPresent(UpdatedTimestamp.class)) {
+				optional = false;
+			}
+		}
+		this.optional = optional;
 	}
 
 	/**

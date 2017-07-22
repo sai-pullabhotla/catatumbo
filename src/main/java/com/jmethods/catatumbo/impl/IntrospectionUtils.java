@@ -93,24 +93,12 @@ public class IntrospectionUtils {
 	 * @return metadata of the given field.
 	 */
 	public static PropertyMetadata getPropertyMetadata(Field field) {
-		String fieldName = field.getName();
-		String mappedName = null;
-		boolean indexed = true;
-
 		Property property = field.getAnnotation(Property.class);
-		if (property != null) {
-			mappedName = property.name();
-			indexed = property.indexed();
-		}
-		if (mappedName == null || mappedName.trim().length() == 0) {
-			mappedName = fieldName;
-		}
-
 		// For fields that have @Property annotation, we expect both setter and
 		// getter methods. For all other fields, we only treat them as
 		// persistable if we find valid getter and setter methods.
 		try {
-			PropertyMetadata propertyMetadata = new PropertyMetadata(field, mappedName, indexed);
+			PropertyMetadata propertyMetadata = new PropertyMetadata(field);
 			return propertyMetadata;
 		} catch (NoAccessorMethodException exp) {
 			if (property != null) {

@@ -104,6 +104,7 @@ public class EmbeddedIntrospector {
 		}
 		metadata.setMappedName(mappedName);
 		metadata.setIndexed(embeddedAnnotation.indexed());
+		metadata.setOptional(embeddedAnnotation.optional());
 
 		// If there is an annotation for storing the embedded with Imploded
 		// strategy...
@@ -154,11 +155,11 @@ public class EmbeddedIntrospector {
 		Property override = entityMetadata.getPropertyOverride(qualifiedName);
 		if (override != null) {
 			String mappedName = override.name();
-			boolean indexed = override.indexed();
 			if (mappedName != null && mappedName.trim().length() > 0) {
 				propertyMetadata.setMappedName(mappedName);
 			}
-			propertyMetadata.setIndexed(indexed);
+			propertyMetadata.setIndexed(override.indexed());
+			propertyMetadata.setOptional(override.optional());
 		}
 	}
 

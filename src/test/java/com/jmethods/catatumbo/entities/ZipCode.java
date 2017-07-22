@@ -32,7 +32,7 @@ public class ZipCode {
 	@Property(name = "zip")
 	private String fiveDigits;
 
-	@Property(name = "zipx", indexed = false)
+	@Property(name = "zipx", indexed = false, optional = true)
 	private String fourDigits;
 
 	@Embedded(name = "useless", indexed = true)

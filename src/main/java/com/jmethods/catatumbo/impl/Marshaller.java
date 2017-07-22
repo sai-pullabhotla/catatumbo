@@ -443,6 +443,9 @@ public class Marshaller {
 	private static void marshalField(PropertyMetadata propertyMetadata, Object target,
 			BaseEntity.Builder<?, ?> entityBuilder) {
 		Object fieldValue = IntrospectionUtils.getFieldValue(propertyMetadata, target);
+		if (fieldValue == null && propertyMetadata.isOptional()) {
+			return;
+		}
 		ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
 		// ListValues cannot have indexing turned off. Indexing is turned on by
 		// default, so we don't touch excludeFromIndexes for ListValues.
@@ -477,7 +480,9 @@ public class Marshaller {
 				marshalWithExplodedStrategy(embeddedMetadata, entity);
 			} else {
 				ValueBuilder<?, ?, ?> embeddedEntityBuilder = marshalWithImplodedStrategy(embeddedMetadata, entity);
-				entityBuilder.set(embeddedMetadata.getMappedName(), embeddedEntityBuilder.build());
+				if (embeddedEntityBuilder != null) {
+					entityBuilder.set(embeddedMetadata.getMappedName(), embeddedEntityBuilder.build());
+				}
 			}
 		}
 
@@ -500,8 +505,8 @@ public class Marshaller {
 			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
 				marshalWithExplodedStrategy(embeddedMetadata2, embeddedObject);
 			}
-		} catch (Exception exp) {
-			throw new EntityManagerException(exp);
+		} catch (Throwable t) {
+			throw new EntityManagerException(t);
 		}
 	}
 
@@ -519,6 +524,9 @@ public class Marshaller {
 		try {
 			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
 			if (embeddedObject == null) {
+				if (embeddedMetadata.isOptional()) {
+					return null;
+				}
 				NullValue.Builder nullValueBuilder = NullValue.newBuilder();
 				nullValueBuilder.setExcludeFromIndexes(!embeddedMetadata.isIndexed());
 				return nullValueBuilder;
@@ -530,7 +538,9 @@ public class Marshaller {
 			for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
 				ValueBuilder<?, ?, ?> embeddedEntityBuilder2 = marshalWithImplodedStrategy(embeddedMetadata2,
 						embeddedObject);
-				embeddedEntityBuilder.set(embeddedMetadata2.getMappedName(), embeddedEntityBuilder2.build());
+				if (embeddedEntityBuilder2 != null) {
+					embeddedEntityBuilder.set(embeddedMetadata2.getMappedName(), embeddedEntityBuilder2.build());
+				}
 			}
 			EntityValue.Builder valueBuilder = EntityValue.newBuilder(embeddedEntityBuilder.build());
 			valueBuilder.setExcludeFromIndexes(!embeddedMetadata.isIndexed());

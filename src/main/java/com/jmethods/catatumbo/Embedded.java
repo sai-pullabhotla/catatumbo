@@ -16,8 +16,8 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -78,4 +78,14 @@ public @interface Embedded {
 	 * @return Whether or not to index this property.
 	 */
 	boolean indexed() default true;
+
+	/**
+	 * Whether or not the corresponding field is optional. For fields declared
+	 * as optional, the property will be omitted when the field has a
+	 * <code>null</code> value. This is only valid/used if the embedded object
+	 * is stored using {@link Imploded} strategy.
+	 * 
+	 * @return whether or not the corresponding embedded field is optional.
+	 */
+	boolean optional() default false;
 }

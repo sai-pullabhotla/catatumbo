@@ -17,6 +17,7 @@
 package com.jmethods.catatumbo.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -42,6 +43,10 @@ import com.jmethods.catatumbo.entities.NoSuitableMapperEntity;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad1;
 import com.jmethods.catatumbo.entities.OptimisticLockBad2;
+import com.jmethods.catatumbo.entities.OptionalCreatedTimestamp;
+import com.jmethods.catatumbo.entities.OptionalPrimitive;
+import com.jmethods.catatumbo.entities.OptionalUpdatedTimestamp;
+import com.jmethods.catatumbo.entities.OptionalVersion;
 import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
 import com.jmethods.catatumbo.entities.Task;
@@ -227,6 +232,34 @@ public class EntityIntrospectorTest {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	@Test
+	public void testIntrospectOptionalPrimitive() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(OptionalPrimitive.class);
+		PropertyMetadata propertyMetadata = entityMetadata.getPropertyMetadata("optionalInt");
+		assertFalse(propertyMetadata.isOptional());
+	}
+
+	@Test
+	public void testIntrospectOptionalVersion() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(OptionalVersion.class);
+		PropertyMetadata propertyMetadata = entityMetadata.getVersionMetadata();
+		assertFalse(propertyMetadata.isOptional());
+	}
+
+	@Test
+	public void testIntrospectOptionalCreatedTimestamp() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(OptionalCreatedTimestamp.class);
+		PropertyMetadata propertyMetadata = entityMetadata.getCreatedTimestampMetadata();
+		assertFalse(propertyMetadata.isOptional());
+	}
+
+	@Test
+	public void testIntrospectOptionalUpdatedTimestamp() {
+		EntityMetadata entityMetadata = EntityIntrospector.introspect(OptionalUpdatedTimestamp.class);
+		PropertyMetadata propertyMetadata = entityMetadata.getUpdatedTimestampMetadata();
+		assertFalse(propertyMetadata.isOptional());
 	}
 
 }

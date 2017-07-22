@@ -19,6 +19,7 @@ package com.jmethods.catatumbo.entities;
 import java.util.Objects;
 
 import com.jmethods.catatumbo.Embeddable;
+import com.jmethods.catatumbo.Property;
 
 /**
  * @author Sai Pullabhotla
@@ -27,6 +28,7 @@ import com.jmethods.catatumbo.Embeddable;
 @Embeddable
 public class PhoneNumber {
 
+	@Property(optional = true)
 	private String countryCode;
 
 	private String areaCode;
@@ -139,6 +141,13 @@ public class PhoneNumber {
 	public static PhoneNumber getSample4() {
 		PhoneNumber phone = new PhoneNumber();
 		phone.setCountryCode("91");
+		phone.setAreaCode("80");
+		phone.setSubscriberNumber("6666 0000");
+		return phone;
+	}
+
+	public static PhoneNumber getSample5() {
+		PhoneNumber phone = new PhoneNumber();
 		phone.setAreaCode("80");
 		phone.setSubscriberNumber("6666 0000");
 		return phone;

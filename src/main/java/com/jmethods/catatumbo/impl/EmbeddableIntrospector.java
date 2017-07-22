@@ -123,7 +123,8 @@ public class EmbeddableIntrospector {
 			name = field.getName();
 		}
 		boolean indexed = embeddedAnnotation.indexed();
-		PropertyMetadata propertyMetadata = new PropertyMetadata(field, name, indexed);
+		boolean optional = embeddedAnnotation.optional();
+		PropertyMetadata propertyMetadata = new PropertyMetadata(field, name, indexed, optional);
 		metadata.putPropertyMetadata(propertyMetadata);
 	}
 
