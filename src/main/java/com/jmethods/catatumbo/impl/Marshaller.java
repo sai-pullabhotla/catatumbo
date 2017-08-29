@@ -293,11 +293,11 @@ public class Marshaller {
 		} else {
 			if (intent.isKeyRequired()) {
 				throw new EntityManagerException(
-						String.format("Identifier is not set or vlaid for entity of type %s", entity.getClass()));
+						String.format("Identifier is not set or valid for entity of type %s", entity.getClass()));
 			}
 			if (!autoGenerateId) {
 				throw new EntityManagerException(String.format(
-						"Identifier is not set or vlaid for entity of type %s. Auto generation of ID is explicity turned off. ",
+						"Identifier is not set or valid for entity of type %s. Auto generation of ID is explicity turned off. ",
 						entity.getClass()));
 			} else {
 				if (identifierType == DataType.STRING) {
