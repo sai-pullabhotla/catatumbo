@@ -297,7 +297,7 @@ public class Marshaller {
 			}
 			if (!autoGenerateId) {
 				throw new EntityManagerException(String.format(
-						"Identifier is not set or valid for entity of type %s. Auto generation of ID is explicity turned off. ",
+						"Identifier is not set or valid for entity of type %s. Auto generation of ID is explicitly turned off. ",
 						entity.getClass()));
 			} else {
 				if (identifierType == DataType.STRING) {
