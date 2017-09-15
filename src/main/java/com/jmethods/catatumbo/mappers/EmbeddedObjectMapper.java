@@ -26,6 +26,7 @@ import com.google.cloud.datastore.ValueType;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import com.jmethods.catatumbo.impl.ConstructorMetadata;
 import com.jmethods.catatumbo.impl.EmbeddableIntrospector;
 import com.jmethods.catatumbo.impl.EmbeddableMetadata;
 import com.jmethods.catatumbo.impl.PropertyMetadata;
@@ -93,7 +94,8 @@ public class EmbeddedObjectMapper implements Mapper {
 		}
 		try {
 			FullEntity<?> entity = ((EntityValue) input).get();
-			Object embeddedObject = metadata.getConstructor().invoke();
+			ConstructorMetadata constructorMetadata = metadata.getConstructorMetadata();
+			Object embeddedObject = constructorMetadata.getConstructorMethodHandle().invoke();
 			for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
 				String mappedName = propertyMetadata.getMappedName();
 				if (entity.contains(mappedName)) {
@@ -101,6 +103,9 @@ public class EmbeddedObjectMapper implements Mapper {
 					Object fieldValue = propertyMetadata.getMapper().toModel(propertyValue);
 					propertyMetadata.getWriteMethod().invoke(embeddedObject, fieldValue);
 				}
+			}
+			if (constructorMetadata.isBuilderConstructionStrategy()) {
+				embeddedObject = metadata.getConstructorMetadata().getBuildMethodHandle().invoke(embeddedObject);
 			}
 			return embeddedObject;
 		} catch (Throwable exp) {

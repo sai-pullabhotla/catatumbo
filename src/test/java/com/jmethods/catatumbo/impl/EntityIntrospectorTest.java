@@ -30,8 +30,13 @@ import org.junit.Test;
 
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.NoAccessorMethodException;
-import com.jmethods.catatumbo.NoDefaultConstructorException;
+import com.jmethods.catatumbo.NoMutatorMethodException;
 import com.jmethods.catatumbo.NoSuitableMapperException;
+import com.jmethods.catatumbo.UnsupportedConstructionStrategyException;
+import com.jmethods.catatumbo.entities.BadBuilderEntity1;
+import com.jmethods.catatumbo.entities.BadBuilderEntity2;
+import com.jmethods.catatumbo.entities.BadBuilderEntity3;
+import com.jmethods.catatumbo.entities.BadBuilderEntity4;
 import com.jmethods.catatumbo.entities.Cat;
 import com.jmethods.catatumbo.entities.Contact;
 import com.jmethods.catatumbo.entities.Customer;
@@ -183,31 +188,31 @@ public class EntityIntrospectorTest {
 		}
 	}
 
-	@Test(expected = NoAccessorMethodException.class)
+	@Test(expected = NoMutatorMethodException.class)
 	public void testNoSetterMethod() {
 		try {
 			EntityIntrospector.introspect(NoSetterMethodEntity.class);
-		} catch (NoAccessorMethodException exp) {
+		} catch (NoMutatorMethodException exp) {
 			System.err.println(exp);
 			throw exp;
 		}
 	}
 
-	@Test(expected = NoAccessorMethodException.class)
+	@Test(expected = NoMutatorMethodException.class)
 	public void testNoSetterMethod_2() {
 		try {
 			EntityIntrospector.introspect(NoSetterMethodEntity2.class);
-		} catch (NoAccessorMethodException exp) {
+		} catch (NoMutatorMethodException exp) {
 			System.err.println(exp);
 			throw exp;
 		}
 	}
 
-	@Test(expected = NoDefaultConstructorException.class)
-	public void testNoDefaultConstructor() {
+	@Test(expected = EntityManagerException.class)
+	public void testInvalidConstructionStrategy() {
 		try {
 			EntityIntrospector.introspect(NoDefaultConstrctorEntity.class);
-		} catch (NoDefaultConstructorException exp) {
+		} catch (EntityManagerException exp) {
 			System.err.println(exp);
 			throw exp;
 		}
@@ -260,6 +265,50 @@ public class EntityIntrospectorTest {
 		EntityMetadata entityMetadata = EntityIntrospector.introspect(OptionalUpdatedTimestamp.class);
 		PropertyMetadata propertyMetadata = entityMetadata.getUpdatedTimestampMetadata();
 		assertFalse(propertyMetadata.isOptional());
+	}
+
+	@Test(expected = UnsupportedConstructionStrategyException.class)
+	public void testBadBuilderEntity1() {
+		try {
+			EntityMetadata metadata = EntityIntrospector.introspect(BadBuilderEntity1.class);
+		} catch (UnsupportedConstructionStrategyException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+
+	}
+
+	@Test(expected = UnsupportedConstructionStrategyException.class)
+	public void testBadBuilderEntity2() {
+		try {
+			EntityMetadata metadata = EntityIntrospector.introspect(BadBuilderEntity2.class);
+		} catch (UnsupportedConstructionStrategyException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+
+	}
+
+	@Test(expected = EntityManagerException.class)
+	public void testBadBuilderEntity3() {
+		try {
+			EntityMetadata metadata = EntityIntrospector.introspect(BadBuilderEntity3.class);
+		} catch (EntityManagerException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+
+	}
+
+	@Test(expected = NoMutatorMethodException.class)
+	public void testBadBuilderEntity4() {
+		try {
+			EntityMetadata metadata = EntityIntrospector.introspect(BadBuilderEntity4.class);
+		} catch (NoMutatorMethodException exp) {
+			System.err.println(exp);
+			throw exp;
+		}
+
 	}
 
 }

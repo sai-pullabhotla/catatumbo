@@ -18,7 +18,6 @@ package com.jmethods.catatumbo.impl;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -31,7 +30,7 @@ import java.util.List;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Ignore;
 import com.jmethods.catatumbo.NoAccessorMethodException;
-import com.jmethods.catatumbo.NoDefaultConstructorException;
+import com.jmethods.catatumbo.NoMutatorMethodException;
 import com.jmethods.catatumbo.Property;
 
 /**
@@ -50,25 +49,15 @@ public class IntrospectionUtils {
 	}
 
 	/**
-	 * Returns the default constructor for the class given its metadata.
-	 * 
-	 * @param metadata
-	 *            the metadata of the class
-	 * @return the default constructor
-	 * @throws EntityManagerException
-	 *             if no default constructor exists or any other error occurs.
+	 * Valid/Supported prefixes for mutator methods of a Builder class. Methods
+	 * will be searched in the order.
 	 */
-	public static MethodHandle getDefaultConstructor(MetadataBase metadata) {
-		try {
-			return MethodHandles.publicLookup().findConstructor(metadata.getClazz(), MethodType.methodType(void.class));
-		} catch (NoSuchMethodException | IllegalAccessException e) {
-			String pattern = "Class %s requires a public no-arg constructor";
-			throw new NoDefaultConstructorException(String.format(pattern, metadata.getClazz()), e);
-		}
-	}
+	private static final String[] WRITE_METHOD_PREFIXES = { "set", "with", null };
 
 	/**
-	 * Creates and returns a new instance of the Class for the given metadata.
+	 * Creates and returns a new instance of a persistence class for the given
+	 * metadata. The returned object will be an instance of the primary
+	 * persistence class or its Builder.
 	 * 
 	 * @param metadata
 	 *            the metadata of the class
@@ -79,7 +68,7 @@ public class IntrospectionUtils {
 	 */
 	public static Object instantiate(MetadataBase metadata) {
 		try {
-			return metadata.getConstructor().invoke();
+			return metadata.getConstructorMetadata().getConstructorMethodHandle().invoke();
 		} catch (Throwable t) {
 			throw new EntityManagerException(t);
 		}
@@ -100,7 +89,7 @@ public class IntrospectionUtils {
 		try {
 			PropertyMetadata propertyMetadata = new PropertyMetadata(field);
 			return propertyMetadata;
-		} catch (NoAccessorMethodException exp) {
+		} catch (NoAccessorMethodException | NoMutatorMethodException exp) {
 			if (property != null) {
 				throw exp;
 			}
@@ -112,216 +101,64 @@ public class IntrospectionUtils {
 	 * Finds and returns a {@link MethodHandle} that can be used to read the
 	 * field represented by the given metadata.
 	 * 
-	 * @param metadata
-	 *            the metadata of the field
+	 * @param field
+	 *            the field
+	 * 
 	 * @return the {@link MethodHandle} for reading the fieldd's value
 	 * @throws EntityManagerException
 	 *             if no read method exists
 	 */
-	public static MethodHandle findReadMethodHandle(FieldMetadata metadata) {
-		Field field = metadata.getField();
+	public static MethodHandle findReadMethodHandle(Field field) {
 		String readMethodName;
+		MethodHandle mh = null;
 		if (boolean.class.equals(field.getType())) {
-			try {
-				readMethodName = IntrospectionUtils.getReadMethodNameForBoolean(field);
-				return findReadMethodHandle(field.getDeclaringClass(), readMethodName, field.getType());
-			} catch (EntityManagerException e) {
-				// Do nothing... perhaps there is no isXXX method, so we will
-				// try the getXXX method.
-			}
+			readMethodName = IntrospectionUtils.getReadMethodNameForBoolean(field);
+			mh = findInstanceMethod(field.getDeclaringClass(), readMethodName, field.getType());
 		}
-		readMethodName = getReadMethodName(field);
-		return findReadMethodHandle(field.getDeclaringClass(), readMethodName, field.getType());
-	}
-
-	/**
-	 * Finds and returns a {@link MethodHandle} that can be used to read a
-	 * field.
-	 * 
-	 * @param clazz
-	 *            the class name
-	 * @param methodName
-	 *            the method name
-	 * @param returnType
-	 *            the return type
-	 * @return a {@link MethodHandle} that can be used to read a field.
-	 * @throws EntityManagerException
-	 *             if no matching method exists
-	 */
-	public static MethodHandle findReadMethodHandle(Class<?> clazz, String methodName, Class<?> returnType) {
-		try {
-			return MethodHandles.publicLookup().findVirtual(clazz, methodName, MethodType.methodType(returnType));
-		} catch (NoSuchMethodException | IllegalAccessException e) {
-			String pattern = "Class %s requires public %s %s() method. ";
+		if (mh == null) {
+			readMethodName = getReadMethodName(field);
+			mh = findInstanceMethod(field.getDeclaringClass(), readMethodName, field.getType());
+		}
+		if (mh == null) {
+			String pattern = "Class %s requires a public accessor method for field %s";
 			throw new NoAccessorMethodException(
-					String.format(pattern, clazz.getName(), returnType.getName(), methodName), e);
+					String.format(pattern, field.getDeclaringClass().getName(), field.getName()));
 		}
+		return mh;
 	}
 
 	/**
 	 * Finds and returns a {@link MethodHandle} that can be used to update a
 	 * field represented by the given metadata.
 	 * 
-	 * @param metadata
-	 *            the metadata of the field.
+	 * @param field
+	 *            the field
+	 * 
 	 * @return the {@link MethodHandle} to update the field
-	 * @throws EntityManagerException
+	 * @throws NoMutatorMethodException
 	 *             if no matching method exists
 	 */
-	public static MethodHandle findWriteMethodHandle(FieldMetadata metadata) {
-		Field field = metadata.getField();
-		String writeMethodName = getWriteMethodName(field);
-		return findWriteMethodHandle(field.getDeclaringClass(), writeMethodName, field.getType());
-	}
-
-	/**
-	 * Finds and returns a {@link MethodHandle} for updating a field.
-	 * 
-	 * @param clazz
-	 *            the class
-	 * @param methodName
-	 *            the write method name
-	 * @param parameterType
-	 *            the parameter type
-	 * @return the {@link MethodHandle}
-	 * @throws EntityManagerException
-	 *             if no matching method exists.
-	 */
-	public static MethodHandle findWriteMethodHandle(Class<?> clazz, String methodName, Class<?> parameterType) {
-		try {
-			return MethodHandles.publicLookup().findVirtual(clazz, methodName,
-					MethodType.methodType(void.class, parameterType));
-		} catch (NoSuchMethodException | IllegalAccessException e) {
-			String pattern = "Class %s requires public void %s(%s) method. ";
-			throw new NoAccessorMethodException(
-					String.format(pattern, clazz.getName(), methodName, parameterType.getName()), e);
+	public static MethodHandle findWriteMethodHandle(Field field) {
+		ConstructorMetadata constructorMetadata = ConstructorIntrospector.introspect(field.getDeclaringClass());
+		Class<?> containerClass;
+		MethodHandle mh = null;
+		if (constructorMetadata.isBuilderConstructionStrategy()) {
+			containerClass = constructorMetadata.getBuilderClass();
+			for (String prefix : WRITE_METHOD_PREFIXES) {
+				mh = findInstanceMethod(containerClass, getWriteMethodName(field, prefix), null, field.getType());
+				if (mh != null) {
+					break;
+				}
+			}
+		} else {
+			containerClass = field.getDeclaringClass();
+			mh = findInstanceMethod(containerClass, getWriteMethodName(field), null, field.getType());
 		}
-	}
-
-	/**
-	 * Returns the read method for the given property.
-	 *
-	 * @param propertyMetadata
-	 *            the property metadata.
-	 * @return the read method for the given property.
-	 */
-	public static Method getReadMethod(PropertyMetadata propertyMetadata) {
-		Field field = propertyMetadata.getField();
-		Method readMethod;
-		if (boolean.class.equals(propertyMetadata.getDeclaredType())) {
-			String booleanReadMethodName = getReadMethodNameForBoolean(field);
-			try {
-				readMethod = getReadMethod(propertyMetadata, booleanReadMethodName);
-				return readMethod;
-			} catch (EntityManagerException exp) {
-				// Do nothing... try the default option - getXXX method.
-			}
+		if (mh == null) {
+			String pattern = "Class %s requires a public mutator method for field %s";
+			throw new NoMutatorMethodException(String.format(pattern, containerClass.getName(), field.getName()));
 		}
-		String readMethodName = getReadMethodName(field);
-		readMethod = getReadMethod(propertyMetadata, readMethodName);
-		return readMethod;
-	}
-
-	/**
-	 * Gets the method object with the given name and return type.
-	 * 
-	 * @param clazz
-	 *            the class that is supposed to have the specified method
-	 *
-	 * @param readMethodName
-	 *            the method name
-	 * @param expectedReturnType
-	 *            the return type
-	 * @return the Method object with the given name and return type.
-	 */
-	public static Method getReadMethod(Class<?> clazz, String readMethodName, Class<?> expectedReturnType) {
-		try {
-			Method readMethod = clazz.getMethod(readMethodName);
-			int modifier = readMethod.getModifiers();
-			if (Modifier.isStatic(modifier)) {
-				throw new EntityManagerException(
-						String.format("Method %s in class %s must not be static", readMethodName, clazz.getName()));
-			}
-			if (Modifier.isAbstract(modifier)) {
-				throw new EntityManagerException(
-						String.format("Method %s in class %s must not be abstract", readMethodName, clazz.getName()));
-			}
-			if (!Modifier.isPublic(modifier)) {
-				throw new EntityManagerException(
-						String.format("Method %s in class %s must  be public", readMethodName, clazz.getName()));
-			}
-
-			if (!expectedReturnType.isAssignableFrom(readMethod.getReturnType())) {
-				throw new EntityManagerException(String.format("Method %s in class %s must have a return type of %s",
-						readMethodName, clazz.getName(), expectedReturnType));
-			}
-			return readMethod;
-		} catch (NoSuchMethodException exp) {
-			throw new EntityManagerException(String.format("Method %s %s() is required in class %s",
-					expectedReturnType.getName(), readMethodName, clazz.getName()), exp);
-		} catch (SecurityException exp) {
-			throw new EntityManagerException(exp.getMessage(), exp);
-		}
-
-	}
-
-	/**
-	 * Returns the Method object that allows reading of the given property.
-	 *
-	 * @param propertyMetadata
-	 *            the property metadata
-	 * @param readMethodName
-	 *            the method name (e.g. getXXX or isXXX).
-	 * @return the read Method.
-	 */
-	public static Method getReadMethod(PropertyMetadata propertyMetadata, String readMethodName) {
-		return getReadMethod(propertyMetadata.getField().getDeclaringClass(), readMethodName,
-				propertyMetadata.getDeclaredType());
-	}
-
-	/**
-	 * Returns the write method(setter method) for the given property.
-	 *
-	 * @param propertyMetadata
-	 *            the property
-	 * @return the write Method
-	 */
-	public static Method getWriteMethod(PropertyMetadata propertyMetadata) {
-		String writeMethodName = getWriteMethodName(propertyMetadata.getField());
-		return getWriteMethod(propertyMetadata.getField().getDeclaringClass(), writeMethodName,
-				propertyMetadata.getField().getType());
-	}
-
-	/**
-	 * Returns the write method with the given name and parameter type.
-	 * 
-	 * @param clazz
-	 *            The class that is supposed to have the specified method.
-	 *
-	 * @param writeMethodName
-	 *            the method name
-	 * @param parameterType
-	 *            the parameter type.
-	 * @return the write Method.
-	 */
-	public static Method getWriteMethod(Class<?> clazz, String writeMethodName, Class<?> parameterType) {
-		try {
-			Method writeMethod = clazz.getMethod(writeMethodName, parameterType);
-			int modifier = writeMethod.getModifiers();
-			if (Modifier.isStatic(modifier)) {
-				throw new EntityManagerException(
-						String.format("Method %s in class %s must not be static", writeMethodName, clazz.getName()));
-			}
-			if (Modifier.isAbstract(modifier)) {
-				throw new EntityManagerException(
-						String.format("Method %s in class %s must not be abstract", writeMethodName, clazz.getName()));
-			}
-			return writeMethod;
-		} catch (NoSuchMethodException exp) {
-			throw new EntityManagerException(String.format("Method %s(%s) is required in class %s", writeMethodName,
-					parameterType.getName(), clazz.getName()), exp);
-		}
-
+		return mh;
 	}
 
 	/**
@@ -385,6 +222,21 @@ public class IntrospectionUtils {
 	}
 
 	/**
+	 * Returns the name of the method that can be used to write (or set) the
+	 * given field.
+	 *
+	 * @param field
+	 *            the name of the field
+	 * @param prefix
+	 *            the prefix for the write method (e.g. set, with, etc.).
+	 * @return the name of the write method.
+	 */
+	public static String getWriteMethodName(Field field, String prefix) {
+		return prefix == null ? field.getName() : (prefix + getCapitalizedName(field.getName()));
+
+	}
+
+	/**
 	 * Capitalizes the given field name.
 	 *
 	 * @param fieldName
@@ -416,32 +268,6 @@ public class IntrospectionUtils {
 			throw new EntityManagerException(exp);
 		}
 
-	}
-
-	/**
-	 * Initializes the Embedded object represented by the given metadata.
-	 * 
-	 * @param embeddedMetadata
-	 *            the metadata of the embedded field
-	 * @param target
-	 *            the object in which the embedded field is declared/accessible
-	 *            from
-	 * @return the initialized object
-	 * @throws EntityManagerException
-	 *             if any error occurs during initialization of the embedded
-	 *             object
-	 */
-	public static Object initializeEmbedded(EmbeddedMetadata embeddedMetadata, Object target) {
-		try {
-			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
-			if (embeddedObject == null) {
-				embeddedObject = instantiate(embeddedMetadata);
-				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
-			}
-			return embeddedObject;
-		} catch (Throwable t) {
-			throw new EntityManagerException(t);
-		}
 	}
 
 	/**
@@ -562,6 +388,103 @@ public class IntrospectionUtils {
 		} catch (Throwable t) {
 			throw new EntityManagerException(t.getMessage(), t);
 		}
+	}
+
+	/**
+	 * Finds and returns a MethodHandle for the default constructor of the given
+	 * class, {@code clazz}.
+	 * 
+	 * @param clazz
+	 *            the class
+	 * @return a MethodHandle for the default constructor. Returns {@code null}
+	 *         if the class does not have a public no-argument constructor.
+	 */
+	public static MethodHandle findDefaultConstructor(Class<?> clazz) {
+		MethodHandle methodHandle = null;
+		try {
+			Constructor<?> constructor = clazz.getConstructor();
+			methodHandle = MethodHandles.publicLookup().unreflectConstructor(constructor);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException e) {
+			// No default constructor
+		}
+		return methodHandle;
+	}
+
+	/**
+	 * Finds and returns a MethodHandle for a public static method.
+	 * 
+	 * @param clazz
+	 *            the class to search
+	 * @param methodName
+	 *            the name of the method
+	 * @param expectedReturnType
+	 *            the expected return type. If {@code null}, any return type is
+	 *            treated as valid.
+	 * @param expectedParameterTypes
+	 *            expected parameter types
+	 * @return a MethodHandle for the specified criteria. Returns {@code null}
+	 *         if no method exists with the specified criteria.
+	 */
+	public static MethodHandle findStaticMethod(Class<?> clazz, String methodName, Class<?> expectedReturnType,
+			Class<?>... expectedParameterTypes) {
+		return findMethod(clazz, methodName, true, expectedReturnType, expectedParameterTypes);
+	}
+
+	/**
+	 * Finds and returns a MethodHandle for a public instance method.
+	 * 
+	 * @param clazz
+	 *            the class to search
+	 * @param methodName
+	 *            the name of the method
+	 * @param expectedReturnType
+	 *            the expected return type. If {@code null}, any return type is
+	 *            treated as valid.
+	 * @param expectedParameterTypes
+	 *            expected parameter types
+	 * @return a MethodHandle for the specified criteria. Returns {@code null}
+	 *         if no method exists with the specified criteria.
+	 */
+	public static MethodHandle findInstanceMethod(Class<?> clazz, String methodName, Class<?> expectedReturnType,
+			Class<?>... expectedParameterTypes) {
+		return findMethod(clazz, methodName, false, expectedReturnType, expectedParameterTypes);
+	}
+
+	/**
+	 * Finds and returns a method handle for the given criteria.
+	 * 
+	 * @param clazz
+	 *            the class to search
+	 * @param methodName
+	 *            the name of the method
+	 * @param staticMethod
+	 *            whether the method is static or not
+	 * @param expectedReturnType
+	 *            expected return type
+	 * @param expectedParameterTypes
+	 *            expected parameter types
+	 * @return a methodHandle for the specified criteria. Returns {@code null}
+	 *         if no method exists with the specified criteria.
+	 */
+	private static MethodHandle findMethod(Class<?> clazz, String methodName, boolean staticMethod,
+			Class<?> expectedReturnType, Class<?>... expectedParameterTypes) {
+		MethodHandle methodHandle = null;
+		try {
+			Method method = clazz.getMethod(methodName, expectedParameterTypes);
+			int modifiers = method.getModifiers();
+			Class<?> returnType = method.getReturnType();
+			if (Modifier.isStatic(modifiers) != staticMethod) {
+				throw new NoSuchMethodException();
+			}
+			if (expectedReturnType != null && !expectedReturnType.isAssignableFrom(returnType)) {
+				throw new NoSuchMethodException();
+			}
+			methodHandle = MethodHandles.publicLookup().unreflect(method);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException e) {
+			// Method not found
+		}
+		return methodHandle;
+
 	}
 
 }

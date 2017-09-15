@@ -498,7 +498,7 @@ public class Marshaller {
 	 */
 	private void marshalWithExplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target) {
 		try {
-			Object embeddedObject = IntrospectionUtils.initializeEmbedded(embeddedMetadata, target);
+			Object embeddedObject = initializeEmbedded(embeddedMetadata, target);
 			for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
 				marshalField(propertyMetadata, embeddedObject);
 			}
@@ -635,6 +635,44 @@ public class Marshaller {
 			ValueBuilder<?, ?, ?> valueBuilder = versionMetadata.getMapper().toDatastore(version + 1);
 			valueBuilder.setExcludeFromIndexes(!versionMetadata.isIndexed());
 			entityBuilder.set(versionMetadata.getMappedName(), valueBuilder.build());
+		}
+	}
+
+	/**
+	 * Initializes the Embedded object represented by the given metadata.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the embedded field
+	 * @param target
+	 *            the object in which the embedded field is declared/accessible
+	 *            from
+	 * @return the initialized object
+	 * @throws EntityManagerException
+	 *             if any error occurs during initialization of the embedded
+	 *             object
+	 */
+	private static Object initializeEmbedded(EmbeddedMetadata embeddedMetadata, Object target) {
+		try {
+			// If instantiation of Entity instantiated the embeddable, we will
+			// use the pre-initialized embedded object.
+			Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+			if (embeddedObject == null) {
+				// Otherwise, we will instantiate the embedded object, which
+				// could be a Builder
+				embeddedObject = IntrospectionUtils.instantiate(embeddedMetadata);
+				ConstructorMetadata constructorMetadata = embeddedMetadata.getConstructorMetadata();
+				if (constructorMetadata.isBuilderConstructionStrategy()) {
+					// Build the Builder
+					embeddedObject = constructorMetadata.getBuildMethodHandle().invoke(embeddedObject);
+				} else {
+					// TODO we should not be doing this?? There is no equivalent
+					// of this for builder pattern
+					embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+				}
+			}
+			return embeddedObject;
+		} catch (Throwable t) {
+			throw new EntityManagerException(t);
 		}
 	}
 

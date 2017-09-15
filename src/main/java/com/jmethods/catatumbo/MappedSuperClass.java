@@ -16,8 +16,8 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -36,6 +36,12 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * It is legal for a MappedSuperClass extend from another MappedSuperClass.
+ * </p>
+ * 
+ * <p>
+ * Like {@link Entity entities}, the MappedSuperClass may also use either the
+ * classic Java Beans pattern or the Builder pattern. Subclasses of
+ * MappedSuperClass must use the same design pattern.
  * </p>
  * 
  * @author Sai Pullabhotla

@@ -16,7 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.invoke.MethodHandle;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,9 +47,9 @@ public abstract class MetadataBase {
 	protected Map<EmbeddedField, EmbeddedMetadata> embeddedMetadataMap = null;
 
 	/**
-	 * Constructor for the class
+	 * Constructor metadata
 	 */
-	private final MethodHandle constructor;
+	private final ConstructorMetadata constructorMetadata;
 
 	/**
 	 * Creates a new instance of <code>MetadataBase</code>.
@@ -63,7 +62,7 @@ public abstract class MetadataBase {
 		this.clazz = clazz;
 		propertyMetadataMap = new HashMap<>();
 		embeddedMetadataMap = new HashMap<>();
-		this.constructor = IntrospectionUtils.getDefaultConstructor(this);
+		this.constructorMetadata = ConstructorIntrospector.introspect(clazz);
 	}
 
 	/**
@@ -76,12 +75,14 @@ public abstract class MetadataBase {
 	}
 
 	/**
-	 * Returns the constructor for the class.
+	 * Returns the {@link ConstructorMetadata} of the persistence class to which
+	 * this metadata belongs.
 	 * 
-	 * @return the constructor for the class.
+	 * @return the constructorMetadata the {@link ConstructorMetadata} of the
+	 *         persistence class to which this metadata belongs.
 	 */
-	public final MethodHandle getConstructor() {
-		return constructor;
+	public ConstructorMetadata getConstructorMetadata() {
+		return constructorMetadata;
 	}
 
 	/**

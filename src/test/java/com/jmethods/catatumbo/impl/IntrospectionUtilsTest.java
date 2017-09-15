@@ -17,10 +17,14 @@
 package com.jmethods.catatumbo.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.lang.invoke.MethodHandle;
 import java.util.logging.Logger;
 
 import org.junit.Test;
+
+import com.jmethods.catatumbo.entities.ImmutablePhone;
 
 /**
  * @author Sai Pullabhotla
@@ -188,6 +192,25 @@ public class IntrospectionUtilsTest {
 		String output = IntrospectionUtils.getCapitalizedName(input);
 		LOGGER.info(input + "-->" + output);
 		assertEquals("iPhoneName", output);
+	}
+
+	@Test
+	public void testFindStaticMethod() {
+		MethodHandle mh = IntrospectionUtils.findStaticMethod(ImmutablePhone.class, "newBuilder", Object.class);
+		assertNotNull(mh);
+	}
+
+	@Test
+	public void testFindInstanceStaticMethod() {
+		MethodHandle mh = IntrospectionUtils.findInstanceMethod(ImmutablePhone.class, "getCountryCode", String.class);
+		assertNotNull(mh);
+	}
+
+	@Test
+	public void testFindInstanceStaticMethod2() {
+		MethodHandle mh = IntrospectionUtils.findInstanceMethod(ImmutablePhone.Builder.class, "setCountryCode", null,
+				String.class);
+		assertNotNull(mh);
 	}
 
 }

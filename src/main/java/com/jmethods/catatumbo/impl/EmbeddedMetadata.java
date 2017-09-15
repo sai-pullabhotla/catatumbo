@@ -72,28 +72,8 @@ public class EmbeddedMetadata extends MetadataBase {
 		this.field = field;
 		// Default storage strategy is EXPLODED
 		this.storageStrategy = StorageStrategy.EXPLODED;
-		this.readMethod = findReadMethod();
-		this.writeMethod = findWriteMethod();
-	}
-
-	/**
-	 * Finds and returns the read method for the embedded field.
-	 * 
-	 * @return the read method for the embedded field.
-	 */
-	private MethodHandle findReadMethod() {
-		return IntrospectionUtils.findReadMethodHandle(field.getDeclaringClass(),
-				IntrospectionUtils.getReadMethodName(field.getField()), field.getType());
-	}
-
-	/**
-	 * Finds and returns the write method for the embedded field.
-	 * 
-	 * @return the write method for the embedded field.
-	 */
-	private MethodHandle findWriteMethod() {
-		return IntrospectionUtils.findWriteMethodHandle(field.getDeclaringClass(),
-				IntrospectionUtils.getWriteMethodName(field.getField()), field.getType());
+		this.readMethod = IntrospectionUtils.findReadMethodHandle(field.getField());
+		this.writeMethod = IntrospectionUtils.findWriteMethodHandle(field.getField());
 	}
 
 	/**

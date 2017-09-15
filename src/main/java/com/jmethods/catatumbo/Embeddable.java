@@ -16,8 +16,8 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -31,12 +31,41 @@ import java.lang.annotation.Target;
  * can contain other {@link Embedded} objects.
  * 
  * <p>
+ * Like {@link Entity entities}, the Embeddable class may use either the classic
+ * Java Beans pattern or the Builder pattern.
+ * </p>
+ * 
+ * <p>
  * Embeddable classes must adhere to the following rules:
  * </p>
  * <ul>
- * <li>Must have a public no-arg constructor</li>
- * <li>For each persistable field, there must be corresponding accessor
- * methods</li>
+ * <li>When using the classic Java Beans pattern, the class must have a public
+ * no-argument constructor</li>
+ * <li>Absence of public no-argument constructor assumes the use of Builder
+ * pattern.</li>
+ * <li>If using the Builder pattern, the class must have a public static method
+ * that returns an instance of Builder. The name of this method must be one of
+ * the following:
+ * <ul>
+ * <li>{@code newBuilder}</li>
+ * <li>{@code builder}</li>
+ * </ul>
+ * </li>
+ * <li>The Builder class must have a public {@code build} method that returns an
+ * instance of Embeddable.</li>
+ * <li>For each persistable field, there must be corresponding accessor methods.
+ * </li>
+ * <li>When using the classic Java Beans pattern, each persistable field must
+ * have a corresponding mutator method.</li>
+ * <li>When using the Builder pattern, each persistable field must have a
+ * corresponding mutator method in the Builder class. The mutator methods must
+ * follow any of the below naming convention:
+ * <ul>
+ * <li>setXXX (e.g. {@code setFirstName})</li>
+ * <li>withXXX (e.g. {@code withFirstName})</li>
+ * <li>xxx (e.g. {@code firstName})</li>
+ * </ul>
+ * </li>
  * <li>Fields that should not be persisted, must be annotated
  * with @{@link Ignore} annotation.</li>
  * <li>Complex objects may be present in the Embeddable class, as long as they
@@ -47,7 +76,6 @@ import java.lang.annotation.Target;
  * <li>Embeddable objects must not have {@link Identifier}s, {@link Key}s or
  * {@link ParentKey}s. Even if they contain these annotations, they are ignored.
  * </li>
- * 
  * </ul>
  * 
  * @author Sai Pullabhotla

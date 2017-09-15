@@ -50,8 +50,8 @@ public abstract class FieldMetadata {
 	 */
 	public FieldMetadata(Field field) {
 		this.field = field;
-		this.readMethod = IntrospectionUtils.findReadMethodHandle(this);
-		this.writeMethod = IntrospectionUtils.findWriteMethodHandle(this);
+		this.readMethod = IntrospectionUtils.findReadMethodHandle(this.field);
+		this.writeMethod = IntrospectionUtils.findWriteMethodHandle(this.field);
 	}
 
 	/**

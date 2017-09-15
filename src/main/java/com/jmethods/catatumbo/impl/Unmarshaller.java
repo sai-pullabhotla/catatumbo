@@ -136,6 +136,12 @@ public class Unmarshaller {
 			unmarshalKeyAndParentKey();
 			unmarshalProperties();
 			unmarshalEmbeddedFields();
+			// If using Builder pattern, invoke build method on the Builder to
+			// get the final entity.
+			ConstructorMetadata constructorMetadata = entityMetadata.getConstructorMetadata();
+			if (constructorMetadata.isBuilderConstructionStrategy()) {
+				entity = constructorMetadata.getBuildMethodHandle().invoke(entity);
+			}
 			return (T) entity;
 		} catch (EntityManagerException exp) {
 			throw exp;
@@ -236,13 +242,18 @@ public class Unmarshaller {
 	 *             propagated
 	 */
 	private void unmarshalWithExplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target) throws Throwable {
-		Object embeddedObject = IntrospectionUtils.initializeEmbedded(embeddedMetadata, target);
+		Object embeddedObject = initializeEmbedded(embeddedMetadata, target);
 		for (PropertyMetadata propertyMetadata : embeddedMetadata.getPropertyMetadataCollection()) {
 			unmarshalProperty(propertyMetadata, embeddedObject);
 		}
 		for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
 			unmarshalWithExplodedStrategy(embeddedMetadata2, embeddedObject);
 		}
+		ConstructorMetadata constructorMetadata = embeddedMetadata.getConstructorMetadata();
+		if (constructorMetadata.isBuilderConstructionStrategy()) {
+			embeddedObject = constructorMetadata.getBuildMethodHandle().invoke(embeddedObject);
+		}
+		embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
 	}
 
 	/**
@@ -262,6 +273,7 @@ public class Unmarshaller {
 	private static void unmarshalWithImplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target,
 			BaseEntity<?> nativeEntity) throws Throwable {
 		Object embeddedObject = null;
+		ConstructorMetadata constructorMetadata = embeddedMetadata.getConstructorMetadata();
 		FullEntity<?> nativeEmbeddedEntity = null;
 		String propertyName = embeddedMetadata.getMappedName();
 		if (nativeEntity.contains(propertyName)) {
@@ -270,7 +282,7 @@ public class Unmarshaller {
 				embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
 			} else {
 				nativeEmbeddedEntity = ((EntityValue) nativeValue).get();
-				embeddedObject = IntrospectionUtils.initializeEmbedded(embeddedMetadata, target);
+				embeddedObject = constructorMetadata.getConstructorMethodHandle().invoke();
 			}
 		}
 		if (embeddedObject == null) {
@@ -282,7 +294,10 @@ public class Unmarshaller {
 		for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
 			unmarshalWithImplodedStrategy(embeddedMetadata2, embeddedObject, nativeEmbeddedEntity);
 		}
-
+		if (constructorMetadata.isBuilderConstructionStrategy()) {
+			embeddedObject = constructorMetadata.getBuildMethodHandle().invoke(embeddedObject);
+		}
+		embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
 	}
 
 	/**
@@ -325,6 +340,35 @@ public class Unmarshaller {
 			Object entityValue = propertyMetadata.getMapper().toModel(datastoreValue);
 			MethodHandle writeMethod = propertyMetadata.getWriteMethod();
 			writeMethod.invoke(target, entityValue);
+		}
+	}
+
+	/**
+	 * Initializes the Embedded object represented by the given metadata.
+	 * 
+	 * @param embeddedMetadata
+	 *            the metadata of the embedded field
+	 * @param target
+	 *            the object in which the embedded field is declared/accessible
+	 *            from
+	 * @return the initialized object
+	 * @throws EntityManagerException
+	 *             if any error occurs during initialization of the embedded
+	 *             object
+	 */
+	private static Object initializeEmbedded(EmbeddedMetadata embeddedMetadata, Object target) {
+		try {
+			ConstructorMetadata constructorMetadata = embeddedMetadata.getConstructorMetadata();
+			Object embeddedObject = null;
+			if (constructorMetadata.isClassicConstructionStrategy()) {
+				embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+			}
+			if (embeddedObject == null) {
+				embeddedObject = constructorMetadata.getConstructorMethodHandle().invoke();
+			}
+			return embeddedObject;
+		} catch (Throwable t) {
+			throw new EntityManagerException(t);
 		}
 	}
 
