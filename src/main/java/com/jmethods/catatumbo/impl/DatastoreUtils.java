@@ -27,7 +27,9 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Transaction;
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
+import com.jmethods.catatumbo.EntityAlreadyExistsException;
 import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.EntityNotFoundException;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 
 /**
@@ -37,6 +39,18 @@ import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
  *
  */
 class DatastoreUtils {
+
+	/**
+	 * Error code from the Datastore when an update operation fails because
+	 * entity with the specified key does not exist.
+	 */
+	private static final int ERROR_CODE_ENTITY_NOT_FOUND = 5;
+
+	/**
+	 * Error code from the Datastore when an insert or put operation fails
+	 * because another entity with the same key already exists.
+	 */
+	private static final int ERROR_CODE_ENTITY_ALREADY_EXISTS = 6;
 
 	/**
 	 * Hide the implicit constructor
@@ -206,6 +220,27 @@ class DatastoreUtils {
 					"Deferred ID allocation is not applicable for entities with String identifiers. ");
 		}
 
+	}
+
+	/**
+	 * Wraps the given DatastoreException into an {@link EntityManagerException}
+	 * or a subclass of {@link EntityManagerException}.
+	 * 
+	 * @param exp
+	 *            the DatastoreException
+	 * @return An {@link EntityManagerException} or a subclass of
+	 *         {@link EntityManagerException}.
+	 */
+	static EntityManagerException wrap(DatastoreException exp) {
+		switch (exp.getCode()) {
+		case ERROR_CODE_ENTITY_NOT_FOUND:
+			return new EntityNotFoundException(exp);
+		case ERROR_CODE_ENTITY_ALREADY_EXISTS:
+			return new EntityAlreadyExistsException(exp);
+		default:
+			return new EntityManagerException(exp);
+
+		}
 	}
 
 }

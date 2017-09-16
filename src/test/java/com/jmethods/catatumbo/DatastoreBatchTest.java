@@ -31,7 +31,9 @@ import com.jmethods.catatumbo.entities.ContactProjection;
 import com.jmethods.catatumbo.entities.LongId;
 import com.jmethods.catatumbo.entities.OptimisticLock1;
 import com.jmethods.catatumbo.entities.ParentEntity;
+import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
+import com.jmethods.catatumbo.impl.DefaultEntityManager;
 
 /**
  * @author Sai Pullabhotla
@@ -394,6 +396,26 @@ public class DatastoreBatchTest {
 		DatastoreBatch batch = em.newBatch();
 		projectedEntity = batch.update(projectedEntity);
 		batch.submit();
+	}
+
+	@Test(expected = EntityAlreadyExistsException.class)
+	public void testInsertDuplicateKey() {
+		StringField entity = new StringField();
+		entity.setName("Test for Duplicate Key from Transaction");
+		StringField entity2 = em.insert(entity);
+		DatastoreBatch batch = em.newBatch();
+		try {
+			batch.insertWithDeferredIdAllocation(entity2);
+			batch.submit();
+		} catch (EntityAlreadyExistsException exp) {
+			throw exp;
+		} catch (EntityManagerException exp) {
+			String host = ((DefaultEntityManager) em).getDatastore().getOptions().getHost();
+			if (!ConnectionParameters.DEFAULT_SERVICE_URL.equals(host)) {
+				// Running on emulator that has a bug.
+				throw new EntityAlreadyExistsException(exp);
+			}
+		}
 	}
 
 }

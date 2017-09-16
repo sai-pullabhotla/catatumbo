@@ -121,7 +121,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_INSERT, insertedEntity);
 			return insertedEntity;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -150,7 +150,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_INSERT, insertedEntities);
 			return insertedEntities;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntity);
 			return updatedEntity;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 
 	}
@@ -231,7 +231,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntity);
 			return updatedEntity;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		} finally {
 			rollbackIfActive(transaction);
 		}
@@ -262,7 +262,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntities);
 			return updatedEntities;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -333,7 +333,7 @@ public class DefaultDatastoreWriter {
 			return updatedEntities;
 
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		} finally {
 			rollbackIfActive(transaction);
 		}
@@ -360,7 +360,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_UPSERT, upsertedEntity);
 			return upsertedEntity;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -388,7 +388,7 @@ public class DefaultDatastoreWriter {
 			entityManager.executeEntityListeners(CallbackType.POST_UPSERT, upsertedEntities);
 			return upsertedEntities;
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -408,7 +408,7 @@ public class DefaultDatastoreWriter {
 			nativeWriter.delete(nativeKey);
 			entityManager.executeEntityListeners(CallbackType.POST_DELETE, entity);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -431,7 +431,7 @@ public class DefaultDatastoreWriter {
 			nativeWriter.delete(nativeKeys);
 			entityManager.executeEntityListeners(CallbackType.POST_DELETE, entities);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -447,7 +447,7 @@ public class DefaultDatastoreWriter {
 		try {
 			nativeWriter.delete(key.nativeKey());
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -467,7 +467,7 @@ public class DefaultDatastoreWriter {
 			}
 			nativeWriter.delete(nativeKeys);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -489,7 +489,7 @@ public class DefaultDatastoreWriter {
 			Key nativeKey = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -511,7 +511,7 @@ public class DefaultDatastoreWriter {
 			Key nativeKey = entityManager.newNativeKeyFactory().setKind(entityMetadata.getKind()).newKey(id);
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -533,7 +533,7 @@ public class DefaultDatastoreWriter {
 			Key nativeKey = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -555,7 +555,7 @@ public class DefaultDatastoreWriter {
 			Key nativeKey = Key.newBuilder(parentKey.nativeKey(), entityMetadata.getKind(), id).build();
 			nativeWriter.delete(nativeKey);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 

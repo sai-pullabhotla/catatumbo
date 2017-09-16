@@ -282,6 +282,8 @@ public interface DatastoreBatch {
 	 * Submits the batch operations to the Cloud Datastore.
 	 * 
 	 * @return the response of the batch operation.
+	 * @throws EntityManagerException
+	 *             if any error occurs
 	 */
 	Response submit();
 

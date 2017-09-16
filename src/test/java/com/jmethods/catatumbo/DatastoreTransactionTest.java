@@ -30,7 +30,9 @@ import org.junit.Test;
 
 import com.jmethods.catatumbo.entities.Account;
 import com.jmethods.catatumbo.entities.LongId;
+import com.jmethods.catatumbo.entities.StringField;
 import com.jmethods.catatumbo.entities.StringId;
+import com.jmethods.catatumbo.impl.DefaultEntityManager;
 
 /**
  * @author Sai Pullabhotla
@@ -262,6 +264,30 @@ public class DatastoreTransactionTest {
 			}
 			transaction.insertWithDeferredIdAllocation(entities);
 			transaction.commit();
+		} finally {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	@Test(expected = EntityAlreadyExistsException.class)
+	public void testInsertDuplicateKey() {
+		StringField entity = new StringField();
+		entity.setName("Test for Duplicate Key from Transaction");
+		StringField entity2 = em.insert(entity);
+		DatastoreTransaction transaction = em.newTransaction();
+		try {
+			transaction.insertWithDeferredIdAllocation(entity2);
+			transaction.commit();
+		} catch (EntityAlreadyExistsException exp) {
+			throw exp;
+		} catch (EntityManagerException exp) {
+			String host = ((DefaultEntityManager) em).getDatastore().getOptions().getHost();
+			if (!ConnectionParameters.DEFAULT_SERVICE_URL.equals(host)) {
+				// Running on emulator that has a bug.
+				throw new EntityAlreadyExistsException(exp);
+			}
 		} finally {
 			if (transaction.isActive()) {
 				transaction.rollback();

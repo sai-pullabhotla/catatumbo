@@ -24,7 +24,6 @@ import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.FullEntity;
 import com.jmethods.catatumbo.DatastoreBatch;
 import com.jmethods.catatumbo.DatastoreKey;
-import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
@@ -103,7 +102,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.INSERT);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -118,7 +117,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 					Intent.INSERT);
 			nativeBatch.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 
 	}
@@ -150,7 +149,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.UPSERT);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 
 	}
@@ -166,7 +165,7 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 					Intent.UPSERT);
 			nativeBatch.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 
 	}
@@ -218,8 +217,12 @@ public class DefaultDatastoreBatch implements DatastoreBatch {
 
 	@Override
 	public Response submit() {
-		Batch.Response nativeResponse = nativeBatch.submit();
-		return new DefaultResponse(nativeResponse);
+		try {
+			Batch.Response nativeResponse = nativeBatch.submit();
+			return new DefaultResponse(nativeResponse);
+		} catch (DatastoreException exp) {
+			throw DatastoreUtils.wrap(exp);
+		}
 	}
 
 	/**

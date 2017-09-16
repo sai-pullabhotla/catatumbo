@@ -105,7 +105,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.INSERT);
 			nativeTransaction.addWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 
 	}
@@ -120,7 +120,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager, Intent.INSERT);
 			nativeTransaction.addWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 			FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.UPSERT);
 			nativeTransaction.putWithDeferredIdAllocation(nativeEntity);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 
 	}
@@ -146,7 +146,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 			FullEntity<?>[] nativeEntities = toNativeFullEntities(entities, entityManager, Intent.UPSERT);
 			nativeTransaction.putWithDeferredIdAllocation(nativeEntities);
 		} catch (DatastoreException exp) {
-			throw new EntityManagerException(exp);
+			throw DatastoreUtils.wrap(exp);
 		}
 	}
 
@@ -154,6 +154,8 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	public boolean isActive() {
 		try {
 			return nativeTransaction.isActive();
+		} catch (DatastoreException exp) {
+			throw DatastoreUtils.wrap(exp);
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -164,6 +166,8 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 		try {
 			Transaction.Response nativeResponse = nativeTransaction.commit();
 			return new DefaultResponse(nativeResponse);
+		} catch (DatastoreException exp) {
+			throw DatastoreUtils.wrap(exp);
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp);
 		}
@@ -173,6 +177,8 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 	public void rollback() {
 		try {
 			nativeTransaction.rollback();
+		} catch (DatastoreException exp) {
+			throw DatastoreUtils.wrap(exp);
 		} catch (Exception exp) {
 			throw new EntityManagerException(exp);
 		}
