@@ -11,9 +11,9 @@ instead of Relational Databases.
 
 Features
 --------
-* Automatic mapping of model classes (POJOs) to Cloud Datastore Entities and vice versa. Model classes may follow the below design patterns: 
-	* Classic Java Beans Pattern - with a default constructor, accessor (getter) and mutator (setter) methods for each persistable field 
-	* Builder Pattern - for immutable objects or to ensure object's state is always valid 
+* Automatic mapping of model classes to Cloud Datastore Entities and vice versa. Model classes may follow the below design patterns: 
+	* Classic Java Beans Pattern (aka POJO) - with a default constructor, accessor (getter) and mutator (setter) methods for each persistable field 
+	* Builder Pattern - for immutable objects and/or to ensure object's state is always valid 
 * Automatic generation of Identifiers (for both Numeric and String types)  
 * Support for strongly typed Identifiers (e.g. a custom class UserId that wraps a numeric/string ID) 
 * Ignore specific fields of your model object from persistence operations 
