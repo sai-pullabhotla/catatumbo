@@ -28,7 +28,7 @@ import com.jmethods.catatumbo.MappingException;
 /**
  * An implementation of {@link Mapper} to map BigDecimal types to Integer fields
  * to/from the Cloud Datastore. The primary purpose of this Mapper is to
- * workaround the lack of Decimal (aka Numric) type in Cloud Datastore. Cloud
+ * workaround the lack of Decimal (aka Numeric) type in Cloud Datastore. Cloud
  * Datastore does support Integer and Floating Point numbers, but storing
  * decimal data (e.g. Currency) as floating point would result in loss of
  * precision. This Mapper takes care of this issue by mapping decimal data to an

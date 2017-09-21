@@ -151,7 +151,7 @@ public class MapperFactory {
 
 	/**
 	 * Sets or registers the given mapper for the given type. This method must
-	 * be called before performing any persistence operations, preferrably,
+	 * be called before performing any persistence operations, preferably,
 	 * during application startup. Entities that were introspected before
 	 * calling this method will NOT use the new mapper.
 	 * 
@@ -293,7 +293,7 @@ public class MapperFactory {
 	 * @param field
 	 *            the field
 	 * @param propertyMapperAnnotation
-	 *            property mapper annotation that sepecifies the mapper class
+	 *            property mapper annotation that specifies the mapper class
 	 * @return custom mapper for the given field
 	 */
 	private Mapper createCustomMapper(Field field, PropertyMapper propertyMapperAnnotation) {

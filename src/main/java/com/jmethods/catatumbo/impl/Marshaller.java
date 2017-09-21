@@ -377,7 +377,7 @@ public class Marshaller {
 	}
 
 	/**
-	 * Creates a ComplteKey using the given parameters. The actual ID is
+	 * Creates a CompleteKey using the given parameters. The actual ID is
 	 * generated using <code>UUID.randomUUID().toString()</code>.
 	 * 
 	 * @param parent

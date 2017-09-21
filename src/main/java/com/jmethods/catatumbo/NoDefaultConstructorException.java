@@ -17,8 +17,8 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception to indicate a model class (Entity, Emebeddable, etc.) does not
- * have the required public no-arg constructor.
+ * An exception to indicate a model class (Entity, Embeddable, etc.) does not
+ * have the required public no-argument constructor.
  * 
  * @author Sai Pullabhotla
  *

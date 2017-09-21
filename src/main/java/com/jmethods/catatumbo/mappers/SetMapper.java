@@ -82,13 +82,13 @@ public class SetMapper implements Mapper {
 		Class<?>[] classArray = IntrospectionUtils.resolveCollectionType(setType);
 		setClass = classArray[0];
 		itemClass = classArray[1];
-		initalizeMapper();
+		initializeMapper();
 	}
 
 	/**
 	 * Initializes the mapper for the items in the Set.
 	 */
-	private void initalizeMapper() {
+	private void initializeMapper() {
 		if (itemClass == null) {
 			itemMapper = CatchAllMapper.getInstance();
 		} else {

@@ -71,7 +71,7 @@ public class EntityMetadata extends MetadataBase {
 	private ParentKeyMetadata parentKeyMetadata;
 
 	/**
-	 * Meatdata of the field that is used for optimistic locking/entity
+	 * Metadata of the field that is used for optimistic locking/entity
 	 * versioning
 	 */
 	private PropertyMetadata versionMetadata;
@@ -89,7 +89,7 @@ public class EntityMetadata extends MetadataBase {
 	private PropertyMetadata updatedTimestampMetadata;
 
 	/**
-	 * Property overrides for embeeded fields of the entity. The key is the
+	 * Property overrides for embedded fields of the entity. The key is the
 	 * override name that uniquely identifies a primitive property in the entity
 	 * tree.
 	 */
@@ -139,9 +139,9 @@ public class EntityMetadata extends MetadataBase {
 	}
 
 	/**
-	 * Returns the enity class to which this metadata belongs.
+	 * Returns the entity class to which this metadata belongs.
 	 *
-	 * @return the enity class to which this metadata belongs.
+	 * @return the entity class to which this metadata belongs.
 	 */
 	public Class<?> getEntityClass() {
 		return entityClass;
@@ -177,7 +177,7 @@ public class EntityMetadata extends MetadataBase {
 
 	/**
 	 * Sets the metadata of the identifier. An exception will be thrown if there
-	 * is an IdentifierMeatadata already set.
+	 * is an IdentifierMetadata already set.
 	 *
 	 * @param identifierMetadata
 	 *            the metadata of the identifier.
@@ -207,7 +207,7 @@ public class EntityMetadata extends MetadataBase {
 	 * Sets the metadata of the Key field.
 	 * 
 	 * @param keyMetadata
-	 *            the key meatadata.
+	 *            the key metadata.
 	 */
 	public void setKeyMetadata(KeyMetadata keyMetadata) {
 		if (this.keyMetadata != null) {
@@ -230,10 +230,10 @@ public class EntityMetadata extends MetadataBase {
 	}
 
 	/**
-	 * Sets the meatadata about the parent key.
+	 * Sets the metadata about the parent key.
 	 * 
 	 * @param parentKeyMetadata
-	 *            the parent key meatdata.
+	 *            the parent key metadata.
 	 */
 	public void setParentKetMetadata(ParentKeyMetadata parentKeyMetadata) {
 		if (this.parentKeyMetadata != null) {
@@ -247,9 +247,9 @@ public class EntityMetadata extends MetadataBase {
 	}
 
 	/**
-	 * Returns the meatdata of the field that is used for optimistic locking.
+	 * Returns the metadata of the field that is used for optimistic locking.
 	 * 
-	 * @return the versionMetadata the meatdata of the field that is used for
+	 * @return the versionMetadata the metadata of the field that is used for
 	 *         optimistic locking.
 	 */
 	public PropertyMetadata getVersionMetadata() {

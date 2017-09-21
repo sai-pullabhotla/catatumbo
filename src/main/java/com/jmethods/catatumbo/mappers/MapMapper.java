@@ -85,14 +85,14 @@ public class MapMapper implements Mapper {
 					keyClass.getName(), String.class.getName()));
 		}
 		valueClass = classArray[2];
-		initalizeMapper();
+		initializeMapper();
 
 	}
 
 	/**
 	 * Initializes the mapper for values in the Map.
 	 */
-	private void initalizeMapper() {
+	private void initializeMapper() {
 		if (valueClass == null) {
 			valueMapper = CatchAllMapper.getInstance();
 		} else {

@@ -94,8 +94,7 @@ public class EmbeddableIntrospector {
 	}
 
 	/**
-	 * Processes the given simple (or primitive) field and updates the
-	 * meatadata.
+	 * Processes the given simple (or primitive) field and updates the metadata.
 	 * 
 	 * @param field
 	 *            the field to process

@@ -26,7 +26,7 @@ import com.jmethods.catatumbo.Imploded;
 import com.jmethods.catatumbo.Property;
 
 /**
- * Introspects and prepares the meatdata of an embedded field. An embedded field
+ * Introspects and prepares the metadata of an embedded field. An embedded field
  * is a complex object that is embedded in an entity or another embedded field.
  * 
  * @author Sai Pullabhotla
@@ -40,7 +40,7 @@ public class EmbeddedIntrospector {
 	private final EmbeddedField field;
 
 	/**
-	 * The meatadata of the embedded field
+	 * The metadata of the embedded field
 	 */
 	private EmbeddedMetadata metadata;
 
@@ -129,8 +129,7 @@ public class EmbeddedIntrospector {
 	}
 
 	/**
-	 * Processes the given simple (or primitive) field and updates the
-	 * meatadata.
+	 * Processes the given simple (or primitive) field and updates the metadata.
 	 * 
 	 * @param child
 	 *            the field to process
@@ -148,7 +147,7 @@ public class EmbeddedIntrospector {
 	 * Processes the override, if any, for the given property.
 	 * 
 	 * @param propertyMetadata
-	 *            the meatadata of the property
+	 *            the metadata of the property
 	 */
 	private void processPropertyOverride(PropertyMetadata propertyMetadata) {
 		String qualifiedName = field.getQualifiedName() + "." + propertyMetadata.getField().getName();

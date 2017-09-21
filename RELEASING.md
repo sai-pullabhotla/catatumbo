@@ -45,8 +45,8 @@ Procedure
 
 1. Make sure all changes are checked into SCM. 
 2. Run all JUnit tests and make sure there are no failures 
-3. Run `mvn release:clean release:prepare`. This will update the version in the POM, checks in the POM to SCM and created a tag.
-4. If any issues are encountered during the above step, undo any changes by running `mvn release:rollback`.   
+3. Run `mvn release:clean release:prepare`. This will update the version in the POM, checks in the POM to SCM and creates a tag.
+4. If any issues are encountered during the above step, undo the changes by running `mvn release:rollback`.   
 5. Assuming step 3 succeeded, run `mvn release:perform` to complete the release. This will create the artifacts from the previously tagged version and uploads them to staging repository. 
 6. Login to [https://oss.sonatype.org](https://oss.sonatype.org) and verify the artifacts. 
 7. If all looks good, release the artifacts to be published to Maven Central. 

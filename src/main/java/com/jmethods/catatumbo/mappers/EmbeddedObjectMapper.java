@@ -45,7 +45,7 @@ public class EmbeddedObjectMapper implements Mapper {
 	private final Class<?> clazz;
 
 	/**
-	 * Metadata of the Emebeddable class.
+	 * Metadata of the Embeddable class.
 	 */
 	private final EmbeddableMetadata metadata;
 

@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * <li><strong>EXPLODED</strong> - Each primitive field (processed recursively,
  * if the embedded object contains nested embedded objects) in the embedded
  * object is created as a separate property in the Cloud Datastore.</li>
- * <li><strong>IMPLODED</strong> - The embdded object and any nested embedded
+ * <li><strong>IMPLODED</strong> - The embedded object and any nested embedded
  * objects will be stored as a single property in the Cloud Datastore. The type
  * of the property in the Datastore will be Embedded Entity.</li>
  * </ul>

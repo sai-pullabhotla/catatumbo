@@ -79,13 +79,13 @@ public class ListMapper implements Mapper {
 		Class<?>[] classArray = IntrospectionUtils.resolveCollectionType(listType);
 		listClass = classArray[0];
 		itemClass = classArray[1];
-		initalizeMapper();
+		initializeMapper();
 	}
 
 	/**
 	 * Initializes the mapper for items in the List.
 	 */
-	private void initalizeMapper() {
+	private void initializeMapper() {
 		if (itemClass == null) {
 			itemMapper = CatchAllMapper.getInstance();
 		} else {

@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  * QueryRequest objects hold the necessary information about a query to execute.
- * The {@link EntityManager} executes the QueryRquests and returns the
+ * The {@link EntityManager} executes the QueryRquest and returns the
  * {@link QueryResponse}.
  * 
  * @author Sai Pullabhotla

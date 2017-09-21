@@ -98,7 +98,7 @@ public class EntityIntrospector {
 	 *
 	 * @param entity
 	 *            the entity object to introspect.
-	 * @return the meatadata of the entity
+	 * @return the metadata of the entity
 	 */
 	public static EntityMetadata introspect(Object entity) {
 		return introspect(entity.getClass());
@@ -215,7 +215,7 @@ public class EntityIntrospector {
 	}
 
 	/**
-	 * Processes the fields defined in this entity and updates the meatadata.
+	 * Processes the fields defined in this entity and updates the metadata.
 	 */
 	private void processFields() {
 		List<Field> fields = getAllFields();
@@ -303,7 +303,7 @@ public class EntityIntrospector {
 	}
 
 	/**
-	 * Processes the given field and generates the meatadata.
+	 * Processes the given field and generates the metadata.
 	 *
 	 * @param field
 	 *            the field to process

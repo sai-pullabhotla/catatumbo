@@ -30,7 +30,7 @@ import com.jmethods.catatumbo.EntityListeners;
 public class ListenerFactory {
 
 	/**
-	 * A cahce of listener class and the corresponding listener instance.
+	 * A cache of listener class and the corresponding listener instance.
 	 */
 	private Cache<Class<?>, Object> listeners;
 

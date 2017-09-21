@@ -415,7 +415,7 @@ public class DefaultEntityManager implements EntityManager {
 	 * @param callbackType
 	 *            the event type
 	 * @param entity
-	 *            the entity that prodeced the event
+	 *            the entity that produced the event
 	 */
 	public void executeEntityListeners(CallbackType callbackType, Object entity) {
 		// We may get null entities here. For example loading a nonexistent ID

@@ -143,7 +143,7 @@ class DatastoreUtils {
 	 * @param nativeEntity
 	 *            the target entity
 	 * @param versionMetadata
-	 *            the meatdata of the version property
+	 *            the metadata of the version property
 	 * @return a new entity (copy of the given), but with the incremented
 	 *         version.
 	 */

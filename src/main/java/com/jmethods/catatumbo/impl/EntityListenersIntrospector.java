@@ -70,7 +70,7 @@ public class EntityListenersIntrospector {
 	}
 
 	/**
-	 * Returns the metadata of various registred listeners for the given entity
+	 * Returns the metadata of various registered listeners for the given entity
 	 * class.
 	 * 
 	 * @param entityClass
@@ -84,7 +84,7 @@ public class EntityListenersIntrospector {
 	}
 
 	/**
-	 * Introspects the entity class and builds the listeners meatadata.
+	 * Introspects the entity class and builds the listeners metadata.
 	 */
 	private void introspect() {
 		metadata = new EntityListenersMetadata(entityClass);
@@ -94,7 +94,7 @@ public class EntityListenersIntrospector {
 
 	/**
 	 * Gathers information about all external listeners (listeners specified
-	 * with {@link EntityListeners} annotation) and updates the meatdata.
+	 * with {@link EntityListeners} annotation) and updates the metadata.
 	 */
 	private void processExternalListeners() {
 		List<Class<?>> externalListeners = getAllExternalListeners();

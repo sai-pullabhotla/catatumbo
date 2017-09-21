@@ -25,7 +25,7 @@ import java.lang.reflect.Field;
 public class KeyMetadata extends FieldMetadata {
 
 	/**
-	 * Creates a new instance of <code>KeyMeatadata</code>.
+	 * Creates a new instance of <code>KeyMetadata</code>.
 	 * 
 	 * @param field
 	 *            the field.

@@ -137,7 +137,7 @@ public class InternalListenerIntrospector {
 			throw new EntityManagerException(message);
 		}
 		if (method.getReturnType() != void.class) {
-			String message = String.format("Method %s in class %s must have a retun type of %s", method.getName(),
+			String message = String.format("Method %s in class %s must have a return type of %s", method.getName(),
 					method.getDeclaringClass().getName(), void.class.getName());
 			throw new EntityManagerException(message);
 		}

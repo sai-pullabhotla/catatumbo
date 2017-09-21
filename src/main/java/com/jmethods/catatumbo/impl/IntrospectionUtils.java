@@ -75,7 +75,7 @@ public class IntrospectionUtils {
 	}
 
 	/**
-	 * Returns the meatdata for the given field.
+	 * Returns the metadata for the given field.
 	 * 
 	 * @param field
 	 *            the field whose metadata has to be prepared
@@ -104,7 +104,7 @@ public class IntrospectionUtils {
 	 * @param field
 	 *            the field
 	 * 
-	 * @return the {@link MethodHandle} for reading the fieldd's value
+	 * @return the {@link MethodHandle} for reading the field's value
 	 * @throws EntityManagerException
 	 *             if no read method exists
 	 */

@@ -295,7 +295,7 @@ public class DefaultDatastoreWriter {
 	 * @param entities
 	 *            the entities to update
 	 * @param versionMetadata
-	 *            the mnetadata of the version property
+	 *            the metadata of the version property
 	 * @return the updated entities
 	 */
 	@SuppressWarnings("unchecked")

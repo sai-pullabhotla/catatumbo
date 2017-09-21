@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Specifies that a class is a Projected Entity. ProjectedEntiy is similar to a
+ * Specifies that a class is a Projected Entity. ProjectedEntity is similar to a
  * regular {@link Entity}, but typically contains a subset of fields of an
  * entity. Projected Entities are useful for mapping the results of a projection
  * query.
