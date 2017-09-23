@@ -21,6 +21,7 @@ import java.util.Random;
 
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.testing.LocalDatastoreHelper;
 import com.google.cloud.http.HttpTransportOptions;
 import com.jmethods.catatumbo.impl.DefaultEntityManager;
 
@@ -37,8 +38,29 @@ public class TestUtils {
 	public static final String ENV_CREDENTIALS = ENV_PREFIX + "CREDENTIALS";
 	public static final String ENV_CONNECTION_TIMEOUT = ENV_PREFIX + "CONNECTION_TIMEOUT";
 	public static final String ENV_READ_TIMEOUT = ENV_PREFIX + "READ_TIMEOUT";
+	public static boolean isCI;
+	private static DatastoreOptions options;
+
+	static {
+		String ci = System.getenv("CI");
+		isCI = Boolean.parseBoolean(ci);
+
+		if (isCI) {
+			LocalDatastoreHelper helper = LocalDatastoreHelper.create(1.0);
+			try {
+				helper.start();
+			} catch (Throwable t) {
+				t.printStackTrace();
+				throw new RuntimeException("Failed to start Datastore Emulator");
+			}
+			options = helper.getOptions();
+		}
+	}
 
 	public static EntityManager getEntityManager() throws FileNotFoundException {
+		if (isCI) {
+			return getCIEntityManager();
+		}
 		ConnectionParameters parameters = new ConnectionParameters();
 		parameters.setServiceURL(System.getenv(ENV_SERVICE_URL));
 		parameters.setProjectId(System.getenv(ENV_PROJECT_ID));
@@ -71,6 +93,10 @@ public class TestUtils {
 		System.out.println("***************************");
 		return em;
 
+	}
+
+	public static EntityManager getCIEntityManager() {
+		return EntityManagerFactory.getInstance().createLocalEntityManager(options.getHost(), options.getProjectId());
 	}
 
 	public static String getRandomString(int length) {
