@@ -1,6 +1,12 @@
 Catatumbo - JPA like Persistence Framework for Google Cloud Datastore
 ===================================================================== 
-Catatumbo is an Open Source, JPA like persistence framework for mapping and persisting domain model to 
+
+[![Build Status](https://travis-ci.org/sai-pullabhotla/catatumbo.svg?branch=master)](https://travis-ci.org/sai-pullabhotla/catatumbo)
+[![Coverage Status](https://coveralls.io/repos/github/sai-pullabhotla/catatumbo/badge.svg?branch=master)](https://coveralls.io/github/sai-pullabhotla/catatumbo?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8b150dc94a26419fa38aa61a18c4e0dd)](https://www.codacy.com/app/sai-pullabhotla/catatumbo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sai-pullabhotla/catatumbo&amp;utm_campaign=Badge_Grade)
+[![Maven](https://img.shields.io/maven-central/v/com.jmethods/catatumbo.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.jmethods%22%20a%3A%22catatumbo%22)
+
+Catatumbo is an Open Source, JPA like ORM framework for mapping and persisting domain model to 
 [Google Cloud Datastore](https://cloud.google.com/datastore/). 
 
 Catatumbo framework is built on top of 
