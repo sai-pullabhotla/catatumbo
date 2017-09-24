@@ -38,27 +38,25 @@ public class TestUtils {
 	public static final String ENV_CREDENTIALS = ENV_PREFIX + "CREDENTIALS";
 	public static final String ENV_CONNECTION_TIMEOUT = ENV_PREFIX + "CONNECTION_TIMEOUT";
 	public static final String ENV_READ_TIMEOUT = ENV_PREFIX + "READ_TIMEOUT";
-	public static boolean isCI;
+	public static final String ENV_CI = "CI";
+	public static final String ENV_TRAVIS = "TRAVIS";
 	private static DatastoreOptions options;
-
 	static {
-		String ci = System.getenv("CI");
-		isCI = Boolean.parseBoolean(ci);
 
-		if (isCI) {
+		if (isCI()) {
 			LocalDatastoreHelper helper = LocalDatastoreHelper.create(1.0);
 			try {
 				helper.start();
 			} catch (Throwable t) {
 				t.printStackTrace();
-				throw new RuntimeException("Failed to start Datastore Emulator");
+				throw new IllegalStateException("Failed to start Datastore Emulator");
 			}
 			options = helper.getOptions();
 		}
 	}
 
 	public static EntityManager getEntityManager() throws FileNotFoundException {
-		if (isCI) {
+		if (isCI()) {
 			return getCIEntityManager();
 		}
 		ConnectionParameters parameters = new ConnectionParameters();
@@ -97,6 +95,10 @@ public class TestUtils {
 
 	public static EntityManager getCIEntityManager() {
 		return EntityManagerFactory.getInstance().createLocalEntityManager(options.getHost(), options.getProjectId());
+	}
+
+	public static boolean isCI() {
+		return Boolean.parseBoolean(System.getenv("CI"));
 	}
 
 	public static String getRandomString(int length) {
