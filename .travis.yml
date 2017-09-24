@@ -1,2 +1,4 @@
 language: java
 dist: trusty 
+after_success:
+  - mvn clean test jacoco:report coveralls:report
