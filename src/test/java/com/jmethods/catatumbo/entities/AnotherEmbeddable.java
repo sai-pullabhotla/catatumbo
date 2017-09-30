@@ -28,67 +28,67 @@ import com.jmethods.catatumbo.Property;
 @Embeddable
 public class AnotherEmbeddable {
 
-	private String field1;
-	@Property(name = "FIELD2")
-	private String field2;
+  private String field1;
+  @Property(name = "FIELD2")
+  private String field2;
 
-	/**
-	 * 
-	 */
-	public AnotherEmbeddable() {
-		// TODO Auto-generated constructor stub
-	}
+  /**
+   * 
+   */
+  public AnotherEmbeddable() {
+    // TODO Auto-generated constructor stub
+  }
 
-	public AnotherEmbeddable(String field1, String field2) {
-		this.field1 = field1;
-		this.field2 = field2;
-	}
+  public AnotherEmbeddable(String field1, String field2) {
+    this.field1 = field1;
+    this.field2 = field2;
+  }
 
-	/**
-	 * @return the field1
-	 */
-	public String getField1() {
-		return field1;
-	}
+  /**
+   * @return the field1
+   */
+  public String getField1() {
+    return field1;
+  }
 
-	/**
-	 * @param field1
-	 *            the field1 to set
-	 */
-	public void setField1(String field1) {
-		this.field1 = field1;
-	}
+  /**
+   * @param field1
+   *          the field1 to set
+   */
+  public void setField1(String field1) {
+    this.field1 = field1;
+  }
 
-	/**
-	 * @return the field2
-	 */
-	public String getField2() {
-		return field2;
-	}
+  /**
+   * @return the field2
+   */
+  public String getField2() {
+    return field2;
+  }
 
-	/**
-	 * @param field2
-	 *            the field2 to set
-	 */
-	public void setField2(String field2) {
-		this.field2 = field2;
-	}
+  /**
+   * @param field2
+   *          the field2 to set
+   */
+  public void setField2(String field2) {
+    this.field2 = field2;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AnotherEmbeddable)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		AnotherEmbeddable that = (AnotherEmbeddable) obj;
-		return Objects.equals(this.field1, that.field1) && Objects.equals(this.field2, that.field2);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof AnotherEmbeddable)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    AnotherEmbeddable that = (AnotherEmbeddable) obj;
+    return Objects.equals(this.field1, that.field1) && Objects.equals(this.field2, that.field2);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(field1, field2);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(field1, field2);
+  }
 
 }

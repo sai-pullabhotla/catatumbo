@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class FloatObject {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Float area;
+  private Float area;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the area
-	 */
-	public Float getArea() {
-		return area;
-	}
+  /**
+   * @return the area
+   */
+  public Float getArea() {
+    return area;
+  }
 
-	/**
-	 * @param area
-	 *            the area to set
-	 */
-	public void setArea(Float area) {
-		this.area = area;
-	}
+  /**
+   * @param area
+   *          the area to set
+   */
+  public void setArea(Float area) {
+    this.area = area;
+  }
 
 }

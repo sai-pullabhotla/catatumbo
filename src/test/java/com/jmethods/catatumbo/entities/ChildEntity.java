@@ -29,85 +29,85 @@ import com.jmethods.catatumbo.ParentKey;
 @Entity
 public class ChildEntity {
 
-	public static final ChildEntity child1 = new ChildEntity(9100, "Child 9100");
+  public static final ChildEntity child1 = new ChildEntity(9100, "Child 9100");
 
-	@Identifier
-	private long id;
-	private String field1;
-	@Key
-	private DatastoreKey key;
-	@ParentKey
-	private DatastoreKey parentKey;
+  @Identifier
+  private long id;
+  private String field1;
+  @Key
+  private DatastoreKey key;
+  @ParentKey
+  private DatastoreKey parentKey;
 
-	/**
-	 * 
-	 */
-	public ChildEntity() {
-	}
+  /**
+   * 
+   */
+  public ChildEntity() {
+  }
 
-	public ChildEntity(long id, String field1) {
-		this.id = id;
-		this.field1 = field1;
-	}
+  public ChildEntity(long id, String field1) {
+    this.id = id;
+    this.field1 = field1;
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the field1
-	 */
-	public String getField1() {
-		return field1;
-	}
+  /**
+   * @return the field1
+   */
+  public String getField1() {
+    return field1;
+  }
 
-	/**
-	 * @param field1
-	 *            the field1 to set
-	 */
-	public void setField1(String field1) {
-		this.field1 = field1;
-	}
+  /**
+   * @param field1
+   *          the field1 to set
+   */
+  public void setField1(String field1) {
+    this.field1 = field1;
+  }
 
-	/**
-	 * @return the key
-	 */
-	public DatastoreKey getKey() {
-		return key;
-	}
+  /**
+   * @return the key
+   */
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	/**
-	 * @param key
-	 *            the key to set
-	 */
-	public void setKey(DatastoreKey key) {
-		this.key = key;
-	}
+  /**
+   * @param key
+   *          the key to set
+   */
+  public void setKey(DatastoreKey key) {
+    this.key = key;
+  }
 
-	/**
-	 * @return the parentKey
-	 */
-	public DatastoreKey getParentKey() {
-		return parentKey;
-	}
+  /**
+   * @return the parentKey
+   */
+  public DatastoreKey getParentKey() {
+    return parentKey;
+  }
 
-	/**
-	 * @param parentKey
-	 *            the parentKey to set
-	 */
-	public void setParentKey(DatastoreKey parentKey) {
-		this.parentKey = parentKey;
-	}
+  /**
+   * @param parentKey
+   *          the parentKey to set
+   */
+  public void setParentKey(DatastoreKey parentKey) {
+    this.parentKey = parentKey;
+  }
 
 }

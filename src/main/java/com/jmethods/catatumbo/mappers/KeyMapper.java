@@ -25,30 +25,29 @@ import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping Key types to/from the Cloud
- * Datastore.
+ * An implementation of {@link Mapper} for mapping Key types to/from the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class KeyMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		DatastoreKey datastoreKey = (DatastoreKey) input;
-		return KeyValue.newBuilder(datastoreKey.nativeKey());
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    DatastoreKey datastoreKey = (DatastoreKey) input;
+    return KeyValue.newBuilder(datastoreKey.nativeKey());
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		KeyValue keyValue = (KeyValue) input;
-		return new DefaultDatastoreKey(keyValue.get());
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    KeyValue keyValue = (KeyValue) input;
+    return new DefaultDatastoreKey(keyValue.get());
+  }
 
 }

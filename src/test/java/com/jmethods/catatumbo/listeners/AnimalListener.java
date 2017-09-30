@@ -27,14 +27,14 @@ import com.jmethods.catatumbo.entities.Animal;
 @EntityListener
 public class AnimalListener {
 
-	@PreInsert
-	public void beforeInsert(Animal animal) {
-		String value = animal.getValue();
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += AnimalListener.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-		animal.setValue(value);
-	}
+  @PreInsert
+  public void beforeInsert(Animal animal) {
+    String value = animal.getValue();
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += AnimalListener.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+    animal.setValue(value);
+  }
 
 }

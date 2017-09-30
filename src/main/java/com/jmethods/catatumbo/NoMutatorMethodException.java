@@ -17,55 +17,55 @@
 package com.jmethods.catatumbo;
 
 /**
- * An Exception to indicate that a model class (e.g. Entity, Embeddable, etc.)
- * is missing a required public mutator method.
+ * An Exception to indicate that a model class (e.g. Entity, Embeddable, etc.) is missing a required
+ * public mutator method.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class NoMutatorMethodException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 7547518972406162160L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 7547518972406162160L;
 
-	/**
-	 * Creates a new instance of {@code NoMutatorMethodException}.
-	 */
-	public NoMutatorMethodException() {
-	}
+  /**
+   * Creates a new instance of {@code NoMutatorMethodException}.
+   */
+  public NoMutatorMethodException() {
+  }
 
-	/**
-	 * Creates a new instance of {@code NoMutatorMethodException}.
-	 * 
-	 * @param msg
-	 *            the detailed message.
-	 */
-	public NoMutatorMethodException(String msg) {
-		super(msg);
-	}
+  /**
+   * Creates a new instance of {@code NoMutatorMethodException}.
+   * 
+   * @param msg
+   *          the detailed message.
+   */
+  public NoMutatorMethodException(String msg) {
+    super(msg);
+  }
 
-	/**
-	 * Creates a new instance of {@code NoMutatorMethodException}.
-	 * 
-	 * @param message
-	 *            the detailed message
-	 * @param cause
-	 *            the cause
-	 */
-	public NoMutatorMethodException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of {@code NoMutatorMethodException}.
+   * 
+   * @param message
+   *          the detailed message
+   * @param cause
+   *          the cause
+   */
+  public NoMutatorMethodException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of {@code NoMutatorMethodException}.
-	 * 
-	 * @param cause
-	 *            the cause.
-	 */
-	public NoMutatorMethodException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of {@code NoMutatorMethodException}.
+   * 
+   * @param cause
+   *          the cause.
+   */
+  public NoMutatorMethodException(Throwable cause) {
+    super(cause);
+  }
 
 }

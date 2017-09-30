@@ -28,57 +28,57 @@ import com.jmethods.catatumbo.Key;
 @Entity
 public class Tag {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@Key
-	private DatastoreKey key;
+  @Key
+  private DatastoreKey key;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the key
-	 */
-	public DatastoreKey getKey() {
-		return key;
-	}
+  /**
+   * @return the key
+   */
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	/**
-	 * @param key
-	 *            the key to set
-	 */
-	public void setKey(DatastoreKey key) {
-		this.key = key;
-	}
+  /**
+   * @param key
+   *          the key to set
+   */
+  public void setKey(DatastoreKey key) {
+    this.key = key;
+  }
 
 }

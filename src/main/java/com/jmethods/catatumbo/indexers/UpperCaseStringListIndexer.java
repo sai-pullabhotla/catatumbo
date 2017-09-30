@@ -27,36 +27,36 @@ import com.jmethods.catatumbo.IndexerFactory;
 import com.jmethods.catatumbo.IndexingException;
 
 /**
- * An implementation of {@link Indexer} interface to create index on a list of
- * Strings in upper case. Each item in the list will be converted to upper case
- * and then stored as an Array property in the Cloud Datastore.
+ * An implementation of {@link Indexer} interface to create index on a list of Strings in upper
+ * case. Each item in the list will be converted to upper case and then stored as an Array property
+ * in the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class UpperCaseStringListIndexer implements Indexer {
 
-	/**
-	 * Indexer for the items in the list
-	 */
-	private static final UpperCaseStringIndexer ITEM_INDEXER = IndexerFactory.getInstance()
-			.getIndexer(UpperCaseStringIndexer.class);
+  /**
+   * Indexer for the items in the list
+   */
+  private static final UpperCaseStringIndexer ITEM_INDEXER = IndexerFactory.getInstance()
+      .getIndexer(UpperCaseStringIndexer.class);
 
-	@Override
-	public Value<?> index(Value<?> input) {
-		if (input.getType() == ValueType.NULL) {
-			return NullValue.of();
-		}
-		try {
-			ListValue.Builder builder = ListValue.newBuilder();
-			List<? extends Value<?>> list = ((ListValue) input).get();
-			for (Value<?> item : list) {
-				builder.addValue(ITEM_INDEXER.index(item));
-			}
-			return builder.build();
-		} catch (Exception exp) {
-			throw new IndexingException(exp);
-		}
-	}
+  @Override
+  public Value<?> index(Value<?> input) {
+    if (input.getType() == ValueType.NULL) {
+      return NullValue.of();
+    }
+    try {
+      ListValue.Builder builder = ListValue.newBuilder();
+      List<? extends Value<?>> list = ((ListValue) input).get();
+      for (Value<?> item : list) {
+        builder.addValue(ITEM_INDEXER.index(item));
+      }
+      return builder.build();
+    } catch (Exception exp) {
+      throw new IndexingException(exp);
+    }
+  }
 
 }

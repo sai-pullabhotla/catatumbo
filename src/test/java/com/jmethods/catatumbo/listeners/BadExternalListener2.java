@@ -28,24 +28,24 @@ import com.jmethods.catatumbo.PostUpdate;
 @EntityListener
 public class BadExternalListener2 {
 
-	@PostInsert
-	public void afterInsert(Object obj) {
-		System.out.printf("Object %s of type %s inserted\n", obj, obj.getClass().getName());
-	}
+  @PostInsert
+  public void afterInsert(Object obj) {
+    System.out.printf("Object %s of type %s inserted\n", obj, obj.getClass().getName());
+  }
 
-	@PostUpdate
-	public void afterUpdate(Object obj) {
-		System.out.printf("Object %s of type %s updated\n", obj, obj.getClass().getName());
-	}
+  @PostUpdate
+  public void afterUpdate(Object obj) {
+    System.out.printf("Object %s of type %s updated\n", obj, obj.getClass().getName());
+  }
 
-	@PostDelete
-	public void afterDelete(Object obj) {
-		System.out.printf("Object %s of type %s deleted\n", obj, obj.getClass().getName());
-	}
+  @PostDelete
+  public void afterDelete(Object obj) {
+    System.out.printf("Object %s of type %s deleted\n", obj, obj.getClass().getName());
+  }
 
-	@PostInsert
-	public void afterInsert2(Object obj) {
-		System.out.printf("Object %s of type %s inserted\n", obj, obj.getClass().getName());
-	}
+  @PostInsert
+  public void afterInsert2(Object obj) {
+    System.out.printf("Object %s of type %s inserted\n", obj, obj.getClass().getName());
+  }
 
 }

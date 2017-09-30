@@ -42,132 +42,133 @@ import com.jmethods.catatumbo.impl.Marshaller.Intent;
  */
 public class MarshallerTest {
 
-	private static DefaultEntityManager em;
+  private static DefaultEntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = (DefaultEntityManager) TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = (DefaultEntityManager) TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testMarshal_Embedded() {
-		Customer customer = Customer.createSampleCustomer2();
-		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, customer, Intent.INSERT);
-		assertNull(entity.getString("ba_line1"));
-		assertNull(entity.getString("ba_line2"));
-		assertNull(entity.getString("ba_zip"));
-		assertNull(entity.getString("ba_zipx"));
-		assertNull(entity.getString("ba_zip"));
-	}
+  @Test
+  public void testMarshal_Embedded() {
+    Customer customer = Customer.createSampleCustomer2();
+    FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, customer, Intent.INSERT);
+    assertNull(entity.getString("ba_line1"));
+    assertNull(entity.getString("ba_line2"));
+    assertNull(entity.getString("ba_zip"));
+    assertNull(entity.getString("ba_zipx"));
+    assertNull(entity.getString("ba_zip"));
+  }
 
-	@Test
-	public void testMarshal_Embedded_Imploded() {
-		Contact contact = Contact.createContact1();
-		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
-		assertNull(entity.getValue("cellNumber").get());
-		assertNull(entity.getValue("homeAddress").get());
-	}
+  @Test
+  public void testMarshal_Embedded_Imploded() {
+    Contact contact = Contact.createContact1();
+    FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
+    assertNull(entity.getValue("cellNumber").get());
+    assertNull(entity.getValue("homeAddress").get());
+  }
 
-	@Test
-	public void testMarshal_Embedded_Imploded2() {
-		Contact contact = Contact.createContact2();
-		FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
-		assertEquals("55555", entity.getEntity("homeAddress").getEntity("postal_code").getString("zip"));
-	}
+  @Test
+  public void testMarshal_Embedded_Imploded2() {
+    Contact contact = Contact.createContact2();
+    FullEntity<?> entity = (FullEntity<?>) Marshaller.marshal(em, contact, Intent.INSERT);
+    assertEquals("55555",
+        entity.getEntity("homeAddress").getEntity("postal_code").getString("zip"));
+  }
 
-	@Test
-	public void testMarshal_WrappedLongId1() {
-		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample1();
-		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
-		IncompleteKey incompleteKey = nativeEntity.getKey();
-		assertNotNull(incompleteKey);
-	}
+  @Test
+  public void testMarshal_WrappedLongId1() {
+    WrappedLongIdEntity entity = WrappedLongIdEntity.getSample1();
+    FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+    IncompleteKey incompleteKey = nativeEntity.getKey();
+    assertNotNull(incompleteKey);
+  }
 
-	@Test
-	public void testMarshal_WrappedLongId2() {
-		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample2();
-		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
-		IncompleteKey incompleteKey = nativeEntity.getKey();
-		assertNotNull(incompleteKey);
-	}
+  @Test
+  public void testMarshal_WrappedLongId2() {
+    WrappedLongIdEntity entity = WrappedLongIdEntity.getSample2();
+    FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+    IncompleteKey incompleteKey = nativeEntity.getKey();
+    assertNotNull(incompleteKey);
+  }
 
-	@Test
-	public void testMarshal_WrappedLongId3() {
-		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample3();
-		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
-		Key key = (Key) nativeEntity.getKey();
-		assertNotNull(key);
-		assertEquals(50000L, (long) key.getId());
-	}
+  @Test
+  public void testMarshal_WrappedLongId3() {
+    WrappedLongIdEntity entity = WrappedLongIdEntity.getSample3();
+    FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+    Key key = (Key) nativeEntity.getKey();
+    assertNotNull(key);
+    assertEquals(50000L, (long) key.getId());
+  }
 
-	@Test
-	public void testMarshal_WrappedLongObjectId1() {
-		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample1();
-		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
-		IncompleteKey incompleteKey = nativeEntity.getKey();
-		assertNotNull(incompleteKey);
-	}
+  @Test
+  public void testMarshal_WrappedLongObjectId1() {
+    WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample1();
+    FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+    IncompleteKey incompleteKey = nativeEntity.getKey();
+    assertNotNull(incompleteKey);
+  }
 
-	@Test
-	public void testMarshal_WrappedLongObjectId2() {
-		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample2();
-		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
-		IncompleteKey incompleteKey = nativeEntity.getKey();
-		assertNotNull(incompleteKey);
-	}
+  @Test
+  public void testMarshal_WrappedLongObjectId2() {
+    WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample2();
+    FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+    IncompleteKey incompleteKey = nativeEntity.getKey();
+    assertNotNull(incompleteKey);
+  }
 
-	@Test
-	public void testMarshal_WrappedLongObjectId3() {
-		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample3();
-		FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
-		IncompleteKey incompleteKey = nativeEntity.getKey();
-		assertNotNull(incompleteKey);
-	}
+  @Test
+  public void testMarshal_WrappedLongObjectId3() {
+    WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample3();
+    FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(em, entity, Intent.INSERT);
+    IncompleteKey incompleteKey = nativeEntity.getKey();
+    assertNotNull(incompleteKey);
+  }
 
-	@Test
-	public void testMarshal_WrappedLongObjectId4() {
-		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample4();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		Key key = nativeEntity.getKey();
-		assertNotNull(key);
-		assertEquals(entity.getId().getValue(), key.getId());
-	}
+  @Test
+  public void testMarshal_WrappedLongObjectId4() {
+    WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample4();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    Key key = nativeEntity.getKey();
+    assertNotNull(key);
+    assertEquals(entity.getId().getValue(), key.getId());
+  }
 
-	@Test
-	public void testMarshal_WrappedStringId1() {
-		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample1();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		Key key = nativeEntity.getKey();
-		assertNotNull(key);
-		assertTrue(key.hasName());
-	}
+  @Test
+  public void testMarshal_WrappedStringId1() {
+    WrappedStringIdEntity entity = WrappedStringIdEntity.getSample1();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    Key key = nativeEntity.getKey();
+    assertNotNull(key);
+    assertTrue(key.hasName());
+  }
 
-	@Test
-	public void testMarshal_WrappedStringId2() {
-		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample2();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		Key key = nativeEntity.getKey();
-		assertNotNull(key);
-		assertTrue(key.hasName());
-	}
+  @Test
+  public void testMarshal_WrappedStringId2() {
+    WrappedStringIdEntity entity = WrappedStringIdEntity.getSample2();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    Key key = nativeEntity.getKey();
+    assertNotNull(key);
+    assertTrue(key.hasName());
+  }
 
-	@Test
-	public void testMarshal_WrappedStringId3() {
-		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample3();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		Key key = nativeEntity.getKey();
-		assertNotNull(key);
-		assertTrue(key.hasName());
-	}
+  @Test
+  public void testMarshal_WrappedStringId3() {
+    WrappedStringIdEntity entity = WrappedStringIdEntity.getSample3();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    Key key = nativeEntity.getKey();
+    assertNotNull(key);
+    assertTrue(key.hasName());
+  }
 
-	@Test
-	public void testMarshal_WrappedStringId4() {
-		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample4();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		Key key = nativeEntity.getKey();
-		assertNotNull(key);
-		assertTrue(key.hasName());
-		assertEquals(entity.getId().getValue(), key.getName());
-	}
+  @Test
+  public void testMarshal_WrappedStringId4() {
+    WrappedStringIdEntity entity = WrappedStringIdEntity.getSample4();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    Key key = nativeEntity.getKey();
+    assertNotNull(key);
+    assertTrue(key.hasName());
+    assertEquals(entity.getId().getValue(), key.getName());
+  }
 
 }

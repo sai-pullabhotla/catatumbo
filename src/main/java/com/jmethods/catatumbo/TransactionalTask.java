@@ -21,20 +21,21 @@ package com.jmethods.catatumbo;
  * 
  * @author Sai Pullabhotla
  * @param <T>
+ *          the result type of this {@code TransactionalTask}.
  * @see EntityManager#executeInTransaction(TransactionalTask)
  *
  */
 public interface TransactionalTask<T> {
 
-	/**
-	 * Executes the task. After the execute method finishes normally, the
-	 * transaction will be committed by the {@link EntityManager}. If the
-	 * execute method throws any exception, the transaction will be rolled back.
-	 * 
-	 * @param transaction
-	 *            the transaction to read from/write to the Cloud Datastore.
-	 * @return the result of execution
-	 */
-	T execute(DatastoreTransaction transaction);
+  /**
+   * Executes the task. After the execute method finishes normally, the transaction will be
+   * committed by the {@link EntityManager}. If the execute method throws any exception, the
+   * transaction will be rolled back.
+   * 
+   * @param transaction
+   *          the transaction to read from/write to the Cloud Datastore.
+   * @return the result of execution
+   */
+  T execute(DatastoreTransaction transaction);
 
 }

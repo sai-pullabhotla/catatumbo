@@ -22,6 +22,6 @@ package com.jmethods.catatumbo.entities;
  */
 public enum DeviceType {
 
-	DESKTOP, TABLET, SMARTPHONE;
+  DESKTOP, TABLET, SMARTPHONE;
 
 }

@@ -26,7 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ LowerCaseStringIndexerTest.class, LowerCaseStringListIndexerTest.class,
-		UpperCaseStringIndexerTest.class, UpperCaseStringListIndexerTest.class })
+    UpperCaseStringIndexerTest.class, UpperCaseStringListIndexerTest.class })
 public class AllTests {
 
 }

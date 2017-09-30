@@ -13,64 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo;
 
 /**
- * Exception thrown by EntityManager to indicate another entity with the same
- * Key already exists. This exception may be thrown from any of the variations
- * of INSERT methods of {@link EntityManager}, {@link DatastoreTransaction} and
- * {@link DatastoreBatch}.
+ * Exception thrown by EntityManager to indicate another entity with the same Key already exists.
+ * This exception may be thrown from any of the variations of INSERT methods of
+ * {@link EntityManager}, {@link DatastoreTransaction} and {@link DatastoreBatch}.
  * 
  * @author Sai Pullabhotla
  */
 public class EntityAlreadyExistsException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -2594975589977183143L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -2594975589977183143L;
 
-	/**
-	 * Creates a new instance of {@code EntityAlreadyExistsException} without
-	 * detail message.
-	 */
-	public EntityAlreadyExistsException() {
-		super();
-	}
+  /**
+   * Creates a new instance of {@code EntityAlreadyExistsException} without detail message.
+   */
+  public EntityAlreadyExistsException() {
+    super();
+  }
 
-	/**
-	 * Constructs an instance of {@code EntityAlreadyExistsException} with the
-	 * specified detail message.
-	 *
-	 * @param msg
-	 *            the detail message.
-	 */
-	public EntityAlreadyExistsException(String msg) {
-		super(msg);
-	}
+  /**
+   * Constructs an instance of {@code EntityAlreadyExistsException} with the specified detail
+   * message.
+   *
+   * @param msg
+   *          the detail message.
+   */
+  public EntityAlreadyExistsException(String msg) {
+    super(msg);
+  }
 
-	/**
-	 * Creates an instance of {@code EntityAlreadyExistsException} with the
-	 * given message and cause.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public EntityAlreadyExistsException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates an instance of {@code EntityAlreadyExistsException} with the given message and cause.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public EntityAlreadyExistsException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of {@code EntityAlreadyExistsException} with the
-	 * given cause.
-	 * 
-	 * @param cause
-	 *            the cause.
-	 */
-	public EntityAlreadyExistsException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of {@code EntityAlreadyExistsException} with the given cause.
+   * 
+   * @param cause
+   *          the cause.
+   */
+  public EntityAlreadyExistsException(Throwable cause) {
+    super(cause);
+  }
 
 }

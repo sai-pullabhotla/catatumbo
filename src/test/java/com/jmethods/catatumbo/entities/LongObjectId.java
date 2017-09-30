@@ -28,58 +28,58 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class LongObjectId {
 
-	@Identifier
-	private Long id;
+  @Identifier
+  private Long id;
 
-	private String comment;
+  private String comment;
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
-	}
+  /**
+   * @return the comment
+   */
+  public String getComment() {
+    return comment;
+  }
 
-	/**
-	 * @param comment
-	 *            the comment to set
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+  /**
+   * @param comment
+   *          the comment to set
+   */
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("LongObjectId [id=").append(id).append(", comment=").append(comment).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("LongObjectId [id=").append(id).append(", comment=").append(comment).append("]");
+    return builder.toString();
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		LongObjectId that = (LongObjectId) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.comment, that.comment);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    LongObjectId that = (LongObjectId) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.comment, that.comment);
+  }
 
 }

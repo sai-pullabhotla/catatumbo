@@ -28,44 +28,44 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class ZonedDateTimeField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private ZonedDateTime timestamp;
+  private ZonedDateTime timestamp;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the timestamp
-	 */
-	public ZonedDateTime getTimestamp() {
-		return timestamp;
-	}
+  /**
+   * @return the timestamp
+   */
+  public ZonedDateTime getTimestamp() {
+    return timestamp;
+  }
 
-	/**
-	 * @param timestamp
-	 *            the timestamp to set
-	 */
-	public void setTimestamp(ZonedDateTime timestamp) {
-		this.timestamp = timestamp;
-	}
+  /**
+   * @param timestamp
+   *          the timestamp to set
+   */
+  public void setTimestamp(ZonedDateTime timestamp) {
+    this.timestamp = timestamp;
+  }
 
-	@Override
-	public String toString() {
-		return "ZonedDateTimeField [id=" + id + ", timestamp=" + timestamp + "]";
-	}
+  @Override
+  public String toString() {
+    return "ZonedDateTimeField [id=" + id + ", timestamp=" + timestamp + "]";
+  }
 
 }

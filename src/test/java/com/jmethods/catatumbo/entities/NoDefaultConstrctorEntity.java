@@ -27,47 +27,47 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class NoDefaultConstrctorEntity {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Property
-	private String name;
+  @Property
+  private String name;
 
-	/**
-	 * 
-	 */
-	private NoDefaultConstrctorEntity(String name) {
-		this.name = name;
-	}
+  /**
+   * 
+   */
+  private NoDefaultConstrctorEntity(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
 }

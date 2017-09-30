@@ -48,221 +48,232 @@ import com.jmethods.catatumbo.stats.StatTotalNs;
  *
  */
 public class DatastoreStatsTest {
-	private static EntityManager em = null;
-	private static DatastoreStats stats = null;
-	private static Datastore datastore = null;
+  private static EntityManager em = null;
+  private static DatastoreStats stats = null;
+  private static Datastore datastore = null;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-		stats = em.getDatastoreStats();
-		datastore = ((DefaultEntityManager) em).getDatastore();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+    stats = em.getDatastoreStats();
+    datastore = ((DefaultEntityManager) em).getDatastore();
+  }
 
-	@Test
-	public void testGetSummary() {
-		StatTotal stat = stats.getSummary();
-		com.google.cloud.datastore.Key key = datastore.newKeyFactory().setNamespace("")
-				.setKind(StatConstants.STAT_TOTAL).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
-		com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
-		assertTrue(equals(stat, nativeEntity));
-	}
+  @Test
+  public void testGetSummary() {
+    StatTotal stat = stats.getSummary();
+    com.google.cloud.datastore.Key key = datastore.newKeyFactory().setNamespace("")
+        .setKind(StatConstants.STAT_TOTAL).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
+    com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
+    assertTrue(equals(stat, nativeEntity));
+  }
 
-	@Test
-	public void testGetSummaryNs() {
-		StatTotalNs stat = stats.getSummaryNs();
-		com.google.cloud.datastore.Key key = datastore.newKeyFactory().setKind(StatConstants.STAT_TOTAL_NS)
-				.newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
-		com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
-		assertTrue(equals(stat, nativeEntity));
-	}
+  @Test
+  public void testGetSummaryNs() {
+    StatTotalNs stat = stats.getSummaryNs();
+    com.google.cloud.datastore.Key key = datastore.newKeyFactory()
+        .setKind(StatConstants.STAT_TOTAL_NS).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
+    com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
+    assertTrue(equals(stat, nativeEntity));
+  }
 
-	@Test
-	public void testGetSummaryNs_ValidNamespace() {
-		final String namespace = "junit";
-		StatTotalNs stat = stats.getSummaryNs(namespace);
-		com.google.cloud.datastore.Key key = datastore.newKeyFactory().setNamespace(namespace)
-				.setKind(StatConstants.STAT_TOTAL_NS).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
-		com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
-		assertTrue(equals(stat, nativeEntity));
-	}
+  @Test
+  public void testGetSummaryNs_ValidNamespace() {
+    final String namespace = "junit";
+    StatTotalNs stat = stats.getSummaryNs(namespace);
+    com.google.cloud.datastore.Key key = datastore.newKeyFactory().setNamespace(namespace)
+        .setKind(StatConstants.STAT_TOTAL_NS).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
+    com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
+    assertTrue(equals(stat, nativeEntity));
+  }
 
-	@Test
-	public void testGetSummaryNs_InvalidNamespace() {
-		final String namespace = "junit9999999999";
-		StatTotalNs stat = stats.getSummaryNs(namespace);
-		com.google.cloud.datastore.Key key = datastore.newKeyFactory().setNamespace(namespace)
-				.setKind(StatConstants.STAT_TOTAL_NS).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
-		com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
-		assertNull(stat);
-		assertNull(nativeEntity);
-		assertTrue(equals(stat, nativeEntity));
-	}
+  @Test
+  public void testGetSummaryNs_InvalidNamespace() {
+    final String namespace = "junit9999999999";
+    StatTotalNs stat = stats.getSummaryNs(namespace);
+    com.google.cloud.datastore.Key key = datastore.newKeyFactory().setNamespace(namespace)
+        .setKind(StatConstants.STAT_TOTAL_NS).newKey(StatConstants.ID_TOTAL_ENTITY_USAGE);
+    com.google.cloud.datastore.Entity nativeEntity = datastore.get(key);
+    assertNull(stat);
+    assertNull(nativeEntity);
+    assertTrue(equals(stat, nativeEntity));
+  }
 
-	@Test
-	public void testGetKinds() {
-		List<StatKind> statEntities = stats.getKinds();
-		Query query = Query.newEntityQueryBuilder().setNamespace("").setKind(StatConstants.STAT_KIND).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		int i = 0;
-		while (results.hasNext()) {
-			StatKind statEntity = statEntities.get(i);
-			com.google.cloud.datastore.Entity nativeEntity = results.next();
-			assertTrue(equals(statEntity, nativeEntity));
-			i++;
-		}
-	}
+  @Test
+  public void testGetKinds() {
+    List<StatKind> statEntities = stats.getKinds();
+    Query query = Query.newEntityQueryBuilder().setNamespace("").setKind(StatConstants.STAT_KIND)
+        .build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    int i = 0;
+    while (results.hasNext()) {
+      StatKind statEntity = statEntities.get(i);
+      com.google.cloud.datastore.Entity nativeEntity = results.next();
+      assertTrue(equals(statEntity, nativeEntity));
+      i++;
+    }
+  }
 
-	@Test
-	public void testGetKind() {
-		final String kindName = "StringField";
-		StatKind statEntity = stats.getKind(kindName);
-		Query query = Query.newEntityQueryBuilder().setNamespace("").setKind(StatConstants.STAT_KIND)
-				.setFilter(StructuredQuery.PropertyFilter.eq(StatConstants.PROP_KIND_NAME, kindName)).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		com.google.cloud.datastore.Entity nativeEntity = null;
-		if (results.hasNext()) {
-			nativeEntity = results.next();
-		}
-		assertTrue(equals(statEntity, nativeEntity));
+  @Test
+  public void testGetKind() {
+    final String kindName = "StringField";
+    StatKind statEntity = stats.getKind(kindName);
+    Query query = Query.newEntityQueryBuilder().setNamespace("").setKind(StatConstants.STAT_KIND)
+        .setFilter(StructuredQuery.PropertyFilter.eq(StatConstants.PROP_KIND_NAME, kindName))
+        .build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    com.google.cloud.datastore.Entity nativeEntity = null;
+    if (results.hasNext()) {
+      nativeEntity = results.next();
+    }
+    assertTrue(equals(statEntity, nativeEntity));
 
-	}
+  }
 
-	@Test
-	public void testGetKindsNs() {
-		List<StatKindNs> statEntities = stats.getKindsNs();
-		Query query = Query.newEntityQueryBuilder().setKind(StatConstants.STAT_KIND_NS).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		int i = 0;
-		while (results.hasNext()) {
-			StatKindNs statEntity = statEntities.get(i);
-			com.google.cloud.datastore.Entity nativeEntity = results.next();
-			assertTrue(equals(statEntity, nativeEntity));
-			i++;
-		}
-	}
+  @Test
+  public void testGetKindsNs() {
+    List<StatKindNs> statEntities = stats.getKindsNs();
+    Query query = Query.newEntityQueryBuilder().setKind(StatConstants.STAT_KIND_NS).build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    int i = 0;
+    while (results.hasNext()) {
+      StatKindNs statEntity = statEntities.get(i);
+      com.google.cloud.datastore.Entity nativeEntity = results.next();
+      assertTrue(equals(statEntity, nativeEntity));
+      i++;
+    }
+  }
 
-	@Test
-	public void testGetKindNs_KindName() {
-		final String kindName = "StringField";
-		StatKindNs statEntity = stats.getKindNs(kindName);
-		Query query = Query.newEntityQueryBuilder().setKind(StatConstants.STAT_KIND_NS)
-				.setFilter(StructuredQuery.PropertyFilter.eq(StatConstants.PROP_KIND_NAME, kindName)).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		com.google.cloud.datastore.Entity nativeEntity = null;
-		if (results.hasNext()) {
-			nativeEntity = results.next();
-		}
-		assertTrue(equals(statEntity, nativeEntity));
-	}
+  @Test
+  public void testGetKindNs_KindName() {
+    final String kindName = "StringField";
+    StatKindNs statEntity = stats.getKindNs(kindName);
+    Query query = Query.newEntityQueryBuilder().setKind(StatConstants.STAT_KIND_NS)
+        .setFilter(StructuredQuery.PropertyFilter.eq(StatConstants.PROP_KIND_NAME, kindName))
+        .build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    com.google.cloud.datastore.Entity nativeEntity = null;
+    if (results.hasNext()) {
+      nativeEntity = results.next();
+    }
+    assertTrue(equals(statEntity, nativeEntity));
+  }
 
-	@Test
-	public void testGetKindNs_Namespace_KindName() {
-		final String namespace = "junit";
-		final String kindName = "StringField";
-		StatKindNs statEntity = stats.getKindNs(namespace, kindName);
-		Query query = Query.newEntityQueryBuilder().setNamespace(namespace).setKind(StatConstants.STAT_KIND_NS)
-				.setFilter(StructuredQuery.PropertyFilter.eq(StatConstants.PROP_KIND_NAME, kindName)).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		com.google.cloud.datastore.Entity nativeEntity = null;
-		if (results.hasNext()) {
-			nativeEntity = results.next();
-		}
-		assertTrue(equals(statEntity, nativeEntity));
-	}
+  @Test
+  public void testGetKindNs_Namespace_KindName() {
+    final String namespace = "junit";
+    final String kindName = "StringField";
+    StatKindNs statEntity = stats.getKindNs(namespace, kindName);
+    Query query = Query.newEntityQueryBuilder().setNamespace(namespace)
+        .setKind(StatConstants.STAT_KIND_NS)
+        .setFilter(StructuredQuery.PropertyFilter.eq(StatConstants.PROP_KIND_NAME, kindName))
+        .build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    com.google.cloud.datastore.Entity nativeEntity = null;
+    if (results.hasNext()) {
+      nativeEntity = results.next();
+    }
+    assertTrue(equals(statEntity, nativeEntity));
+  }
 
-	@Test
-	public void testGetCompositeIndexes() {
-		List<StatCompositeIndex> statEntities = stats.getCompositeIndexes();
-		Query query = Query.newEntityQueryBuilder().setNamespace("").setKind(StatConstants.STAT_COMPOSITE_INDEX)
-				.build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		int i = 0;
-		while (results.hasNext()) {
-			StatCompositeIndex statEntity = statEntities.get(i);
-			com.google.cloud.datastore.Entity nativeEntity = results.next();
-			assertTrue(equals(statEntity, nativeEntity));
-			i++;
-		}
-	}
+  @Test
+  public void testGetCompositeIndexes() {
+    List<StatCompositeIndex> statEntities = stats.getCompositeIndexes();
+    Query query = Query.newEntityQueryBuilder().setNamespace("")
+        .setKind(StatConstants.STAT_COMPOSITE_INDEX).build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    int i = 0;
+    while (results.hasNext()) {
+      StatCompositeIndex statEntity = statEntities.get(i);
+      com.google.cloud.datastore.Entity nativeEntity = results.next();
+      assertTrue(equals(statEntity, nativeEntity));
+      i++;
+    }
+  }
 
-	@Test
-	public void testGetCompositeIndexesNs() {
-		List<StatCompositeIndexNs> statEntities = stats.getCompositeIndexesNs();
-		Query query = Query.newEntityQueryBuilder().setKind(StatConstants.STAT_COMPOSITE_INDEX_NS).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		int i = 0;
-		while (results.hasNext()) {
-			StatCompositeIndexNs statEntity = statEntities.get(i);
-			com.google.cloud.datastore.Entity nativeEntity = results.next();
-			assertTrue(equals(statEntity, nativeEntity));
-			i++;
-		}
-	}
+  @Test
+  public void testGetCompositeIndexesNs() {
+    List<StatCompositeIndexNs> statEntities = stats.getCompositeIndexesNs();
+    Query query = Query.newEntityQueryBuilder().setKind(StatConstants.STAT_COMPOSITE_INDEX_NS)
+        .build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    int i = 0;
+    while (results.hasNext()) {
+      StatCompositeIndexNs statEntity = statEntities.get(i);
+      com.google.cloud.datastore.Entity nativeEntity = results.next();
+      assertTrue(equals(statEntity, nativeEntity));
+      i++;
+    }
+  }
 
-	@Test
-	public void testGetCompositeIndexesNs_Namespace() {
-		final String namespace = "junit";
-		List<StatCompositeIndexNs> statEntities = stats.getCompositeIndexesNs(namespace);
-		Query query = Query.newEntityQueryBuilder().setNamespace(namespace)
-				.setKind(StatConstants.STAT_COMPOSITE_INDEX_NS).build();
-		QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
-		int i = 0;
-		while (results.hasNext()) {
-			StatCompositeIndexNs statEntity = statEntities.get(i);
-			com.google.cloud.datastore.Entity nativeEntity = results.next();
-			assertTrue(equals(statEntity, nativeEntity));
-			i++;
-		}
-	}
+  @Test
+  public void testGetCompositeIndexesNs_Namespace() {
+    final String namespace = "junit";
+    List<StatCompositeIndexNs> statEntities = stats.getCompositeIndexesNs(namespace);
+    Query query = Query.newEntityQueryBuilder().setNamespace(namespace)
+        .setKind(StatConstants.STAT_COMPOSITE_INDEX_NS).build();
+    QueryResults<com.google.cloud.datastore.Entity> results = datastore.run(query);
+    int i = 0;
+    while (results.hasNext()) {
+      StatCompositeIndexNs statEntity = statEntities.get(i);
+      com.google.cloud.datastore.Entity nativeEntity = results.next();
+      assertTrue(equals(statEntity, nativeEntity));
+      i++;
+    }
+  }
 
-	private static boolean equals(StatTotalBase stat, com.google.cloud.datastore.Entity entity) {
-		if (stat != null && entity != null) {
-			return stat.getBuiltinIndexBytes() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_BYTES)
-					&& stat.getBuiltinIndexCount() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_COUNT)
-					&& stat.getBytes() == entity.getLong(StatConstants.PROP_BYTES)
-					&& stat.getCompositeIndexBytes() == entity.getLong(StatConstants.PROP_COMPOSITE_INDEX_BYTES)
-					&& stat.getCompositeIndexCount() == entity.getLong(StatConstants.PROP_COMPOSITE_INDEX_COUNT)
-					&& stat.getCount() == entity.getLong(StatConstants.PROP_COUNT)
-					&& stat.getEntityBytes() == entity.getLong(StatConstants.PROP_ENTITY_BYTES)
-					&& equals(stat.getTimestamp(), entity.getTimestamp(StatConstants.PROP_TIMESTAMP));
-		}
-		return stat == null && entity == null;
-	}
+  private static boolean equals(StatTotalBase stat, com.google.cloud.datastore.Entity entity) {
+    if (stat != null && entity != null) {
+      return stat.getBuiltinIndexBytes() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_BYTES)
+          && stat.getBuiltinIndexCount() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_COUNT)
+          && stat.getBytes() == entity.getLong(StatConstants.PROP_BYTES)
+          && stat.getCompositeIndexBytes() == entity
+              .getLong(StatConstants.PROP_COMPOSITE_INDEX_BYTES)
+          && stat.getCompositeIndexCount() == entity
+              .getLong(StatConstants.PROP_COMPOSITE_INDEX_COUNT)
+          && stat.getCount() == entity.getLong(StatConstants.PROP_COUNT)
+          && stat.getEntityBytes() == entity.getLong(StatConstants.PROP_ENTITY_BYTES)
+          && equals(stat.getTimestamp(), entity.getTimestamp(StatConstants.PROP_TIMESTAMP));
+    }
+    return stat == null && entity == null;
+  }
 
-	private static boolean equals(StatKindBase stat, com.google.cloud.datastore.Entity entity) {
-		if (stat != null && entity != null) {
-			return stat.getBuiltinIndexBytes() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_BYTES)
-					&& stat.getBuiltinIndexCount() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_COUNT)
-					&& stat.getBytes() == entity.getLong(StatConstants.PROP_BYTES)
-					&& stat.getCompositeIndexBytes() == entity.getLong(StatConstants.PROP_COMPOSITE_INDEX_BYTES)
-					&& stat.getCompositeIndexCount() == entity.getLong(StatConstants.PROP_COMPOSITE_INDEX_COUNT)
-					&& stat.getCount() == entity.getLong(StatConstants.PROP_COUNT)
-					&& stat.getEntityBytes() == entity.getLong(StatConstants.PROP_ENTITY_BYTES)
-					&& stat.getKindName().equals(entity.getString(StatConstants.PROP_KIND_NAME))
-					&& equals(stat.getTimestamp(), entity.getTimestamp(StatConstants.PROP_TIMESTAMP));
-		}
-		return stat == null && entity == null;
-	}
+  private static boolean equals(StatKindBase stat, com.google.cloud.datastore.Entity entity) {
+    if (stat != null && entity != null) {
+      return stat.getBuiltinIndexBytes() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_BYTES)
+          && stat.getBuiltinIndexCount() == entity.getLong(StatConstants.PROP_BUILTIN_INDEX_COUNT)
+          && stat.getBytes() == entity.getLong(StatConstants.PROP_BYTES)
+          && stat.getCompositeIndexBytes() == entity
+              .getLong(StatConstants.PROP_COMPOSITE_INDEX_BYTES)
+          && stat.getCompositeIndexCount() == entity
+              .getLong(StatConstants.PROP_COMPOSITE_INDEX_COUNT)
+          && stat.getCount() == entity.getLong(StatConstants.PROP_COUNT)
+          && stat.getEntityBytes() == entity.getLong(StatConstants.PROP_ENTITY_BYTES)
+          && stat.getKindName().equals(entity.getString(StatConstants.PROP_KIND_NAME))
+          && equals(stat.getTimestamp(), entity.getTimestamp(StatConstants.PROP_TIMESTAMP));
+    }
+    return stat == null && entity == null;
+  }
 
-	private static boolean equals(StatCompositeIndexBase stat, com.google.cloud.datastore.Entity entity) {
-		if (stat != null && entity != null) {
-			return stat.getBytes() == entity.getLong(StatConstants.PROP_BYTES)
-					&& stat.getCount() == entity.getLong(StatConstants.PROP_COUNT)
-					&& stat.getIndexId() == entity.getLong(StatConstants.PROP_INDEX_ID)
-					&& stat.getKindName().equals(entity.getString(StatConstants.PROP_KIND_NAME))
-					&& stat.getKindName().equals(entity.getString(StatConstants.PROP_KIND_NAME))
-					&& equals(stat.getTimestamp(), entity.getTimestamp(StatConstants.PROP_TIMESTAMP));
+  private static boolean equals(StatCompositeIndexBase stat,
+      com.google.cloud.datastore.Entity entity) {
+    if (stat != null && entity != null) {
+      return stat.getBytes() == entity.getLong(StatConstants.PROP_BYTES)
+          && stat.getCount() == entity.getLong(StatConstants.PROP_COUNT)
+          && stat.getIndexId() == entity.getLong(StatConstants.PROP_INDEX_ID)
+          && stat.getKindName().equals(entity.getString(StatConstants.PROP_KIND_NAME))
+          && stat.getKindName().equals(entity.getString(StatConstants.PROP_KIND_NAME))
+          && equals(stat.getTimestamp(), entity.getTimestamp(StatConstants.PROP_TIMESTAMP));
 
-		}
-		return stat == null && entity == null;
-	}
+    }
+    return stat == null && entity == null;
+  }
 
-	private static boolean equals(Date date, Timestamp timestamp) {
-		long ms1 = date.getTime();
-		long ms2 = TimeUnit.SECONDS.toMillis(timestamp.getSeconds())
-				+ TimeUnit.NANOSECONDS.toMillis(timestamp.getNanos());
-		return ms1 == ms2;
-	}
+  private static boolean equals(Date date, Timestamp timestamp) {
+    long ms1 = date.getTime();
+    long ms2 = TimeUnit.SECONDS.toMillis(timestamp.getSeconds())
+        + TimeUnit.NANOSECONDS.toMillis(timestamp.getNanos());
+    return ms1 == ms2;
+  }
 
 }

@@ -29,78 +29,78 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class Visitor {
 
-	public Visitor() {
-		timestamp = new Date();
-	}
+  public Visitor() {
+    timestamp = new Date();
+  }
 
-	public Visitor(DeviceType deviceType) {
-		timestamp = new Date();
-		this.deviceType = deviceType;
-	}
+  public Visitor(DeviceType deviceType) {
+    timestamp = new Date();
+    this.deviceType = deviceType;
+  }
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Date timestamp;
+  private Date timestamp;
 
-	private DeviceType deviceType;
+  private DeviceType deviceType;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the timestamp
-	 */
-	public Date getTimestamp() {
-		return timestamp;
-	}
+  /**
+   * @return the timestamp
+   */
+  public Date getTimestamp() {
+    return timestamp;
+  }
 
-	/**
-	 * @param timestamp
-	 *            the timestamp to set
-	 */
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+  /**
+   * @param timestamp
+   *          the timestamp to set
+   */
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
 
-	/**
-	 * @return the deviceType
-	 */
-	public DeviceType getDeviceType() {
-		return deviceType;
-	}
+  /**
+   * @return the deviceType
+   */
+  public DeviceType getDeviceType() {
+    return deviceType;
+  }
 
-	/**
-	 * @param deviceType
-	 *            the deviceType to set
-	 */
-	public void setDeviceType(DeviceType deviceType) {
-		this.deviceType = deviceType;
-	}
+  /**
+   * @param deviceType
+   *          the deviceType to set
+   */
+  public void setDeviceType(DeviceType deviceType) {
+    this.deviceType = deviceType;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj == null || !obj.getClass().equals(this.getClass())) {
-			return false;
-		}
-		Visitor that = (Visitor) obj;
-		return this.id == that.id && Objects.equals(this.timestamp, that.timestamp)
-				&& Objects.equals(this.deviceType, that.deviceType);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (obj == null || !obj.getClass().equals(this.getClass())) {
+      return false;
+    }
+    Visitor that = (Visitor) obj;
+    return this.id == that.id && Objects.equals(this.timestamp, that.timestamp)
+        && Objects.equals(this.deviceType, that.deviceType);
+  }
 
 }

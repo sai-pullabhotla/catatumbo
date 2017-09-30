@@ -24,14 +24,14 @@ package com.jmethods.catatumbo.impl;
  */
 public class InternalListenerMetadata extends AbstractListenerMetadata {
 
-	/**
-	 * Creates a new instance of <code>InternalListenerMetadata</code>.
-	 * 
-	 * @param listenerClass
-	 *            the listener class to which this metadata belongs.
-	 */
-	public InternalListenerMetadata(Class<?> listenerClass) {
-		super(listenerClass);
-	}
+  /**
+   * Creates a new instance of <code>InternalListenerMetadata</code>.
+   * 
+   * @param listenerClass
+   *          the listener class to which this metadata belongs.
+   */
+  public InternalListenerMetadata(Class<?> listenerClass) {
+    super(listenerClass);
+  }
 
 }

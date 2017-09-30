@@ -31,63 +31,63 @@ import com.jmethods.catatumbo.PropertyOverrides;
  */
 @Entity
 @PropertyOverrides({
-		@PropertyOverride(name = "phone.countryCode", property = @Property(name = "ccode", optional = false)),
-		@PropertyOverride(name = "phone.areaCode", property = @Property(name = "acode", optional = true)) })
+    @PropertyOverride(name = "phone.countryCode", property = @Property(name = "ccode", optional = false)),
+    @PropertyOverride(name = "phone.areaCode", property = @Property(name = "acode", optional = true)) })
 
 public class OptionalFieldsEntity3 {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Key
-	private DatastoreKey key;
+  @Key
+  private DatastoreKey key;
 
-	@Embedded
-	private PhoneNumber phone;
+  @Embedded
+  private PhoneNumber phone;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the phoneNumbers
-	 */
-	public PhoneNumber getPhone() {
-		return phone;
-	}
+  /**
+   * @return the phoneNumbers
+   */
+  public PhoneNumber getPhone() {
+    return phone;
+  }
 
-	/**
-	 * @param phone
-	 *            the phoneNumbers to set
-	 */
-	public void setPhone(PhoneNumber phone) {
-		this.phone = phone;
-	}
+  /**
+   * @param phone
+   *          the phoneNumbers to set
+   */
+  public void setPhone(PhoneNumber phone) {
+    this.phone = phone;
+  }
 
-	/**
-	 * @return the key
-	 */
-	public DatastoreKey getKey() {
-		return key;
-	}
+  /**
+   * @return the key
+   */
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	/**
-	 * @param key
-	 *            the key to set
-	 */
-	public void setKey(DatastoreKey key) {
-		this.key = key;
-	}
+  /**
+   * @param key
+   *          the key to set
+   */
+  public void setKey(DatastoreKey key) {
+    this.key = key;
+  }
 
 }

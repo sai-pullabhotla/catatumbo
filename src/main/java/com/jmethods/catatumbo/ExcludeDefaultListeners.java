@@ -16,22 +16,20 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Specifies that any default listeners registered with the
- * {@link EntityManager} should be excluded. This annotation can be specified on
- * an {@link Entity} or a {@link MappedSuperClass}.
+ * Specifies that any default listeners registered with the {@link EntityManager} should be
+ * excluded. This annotation can be specified on an {@link Entity} or a {@link MappedSuperClass}.
  * 
  * <p>
- * If this annotation is defined on an {@link Entity}, default listeners are
- * skipped for various life cycle events of that entity. If this annotation is
- * defined on a {@link MappedSuperClass}, default listeners are skipped for all
- * entities extending that {@link MappedSuperClass}.
+ * If this annotation is defined on an {@link Entity}, default listeners are skipped for various
+ * life cycle events of that entity. If this annotation is defined on a {@link MappedSuperClass},
+ * default listeners are skipped for all entities extending that {@link MappedSuperClass}.
  * </p>
  * 
  * @author Sai Pullabhotla
@@ -40,5 +38,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface ExcludeDefaultListeners {
-
+  // Marker
 }

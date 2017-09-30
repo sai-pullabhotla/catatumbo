@@ -31,91 +31,92 @@ import com.jmethods.catatumbo.Key;
 @Entity
 public class ParentEntity implements Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 8794953055891942172L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 8794953055891942172L;
 
-	public static ParentEntity parent1 = new ParentEntity(9000, "Parent 9000");
+  public static ParentEntity parent1 = new ParentEntity(9000, "Parent 9000");
 
-	@Identifier
-	private long id;
-	private String field1;
-	@Key
-	private DatastoreKey key;
+  @Identifier
+  private long id;
+  private String field1;
+  @Key
+  private DatastoreKey key;
 
-	public ParentEntity() {
+  public ParentEntity() {
 
-	}
+  }
 
-	public ParentEntity(long id, String field1) {
-		this.id = id;
-		this.field1 = field1;
-	}
+  public ParentEntity(long id, String field1) {
+    this.id = id;
+    this.field1 = field1;
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the field1
-	 */
-	public String getField1() {
-		return field1;
-	}
+  /**
+   * @return the field1
+   */
+  public String getField1() {
+    return field1;
+  }
 
-	/**
-	 * @param field1
-	 *            the field1 to set
-	 */
-	public void setField1(String field1) {
-		this.field1 = field1;
-	}
+  /**
+   * @param field1
+   *          the field1 to set
+   */
+  public void setField1(String field1) {
+    this.field1 = field1;
+  }
 
-	/**
-	 * @return the key
-	 */
-	public DatastoreKey getKey() {
-		return key;
-	}
+  /**
+   * @return the key
+   */
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	/**
-	 * @param key
-	 *            the key to set
-	 */
-	public void setKey(DatastoreKey key) {
-		this.key = key;
-	}
+  /**
+   * @param key
+   *          the key to set
+   */
+  public void setKey(DatastoreKey key) {
+    this.key = key;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		ParentEntity that = (ParentEntity) obj;
-		return this.id == that.id && Objects.equals(this.field1, that.field1) && Objects.equals(this.key, that.key);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    ParentEntity that = (ParentEntity) obj;
+    return this.id == that.id && Objects.equals(this.field1, that.field1)
+        && Objects.equals(this.key, that.key);
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ParentEntity [id=").append(id).append(", field1=").append(field1).append(", key=").append(key)
-				.append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("ParentEntity [id=").append(id).append(", field1=").append(field1)
+        .append(", key=").append(key).append("]");
+    return builder.toString();
+  }
 
 }

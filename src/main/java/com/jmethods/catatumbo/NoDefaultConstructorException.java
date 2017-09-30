@@ -17,56 +17,56 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception to indicate a model class (Entity, Embeddable, etc.) does not
- * have the required public no-argument constructor.
+ * An exception to indicate a model class (Entity, Embeddable, etc.) does not have the required
+ * public no-argument constructor.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class NoDefaultConstructorException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -8627001926046445483L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -8627001926046445483L;
 
-	/**
-	 * Creates a new instance of <code>NoDefaultConstructorException</code>.
-	 */
-	public NoDefaultConstructorException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>NoDefaultConstructorException</code>.
+   */
+  public NoDefaultConstructorException() {
+    super();
+  }
 
-	/**
-	 * Creates a new instance of <code>NoDefaultConstructorException</code>.
-	 * 
-	 * @param msg
-	 *            the detailed message
-	 */
-	public NoDefaultConstructorException(String msg) {
-		super(msg);
-	}
+  /**
+   * Creates a new instance of <code>NoDefaultConstructorException</code>.
+   * 
+   * @param msg
+   *          the detailed message
+   */
+  public NoDefaultConstructorException(String msg) {
+    super(msg);
+  }
 
-	/**
-	 * Creates a new instance of <code>NoDefaultConstructorException</code>.
-	 * 
-	 * @param message
-	 *            the detailed message
-	 * @param cause
-	 *            the cause
-	 */
-	public NoDefaultConstructorException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of <code>NoDefaultConstructorException</code>.
+   * 
+   * @param message
+   *          the detailed message
+   * @param cause
+   *          the cause
+   */
+  public NoDefaultConstructorException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>NoDefaultConstructorException</code>.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public NoDefaultConstructorException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of <code>NoDefaultConstructorException</code>.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public NoDefaultConstructorException(Throwable cause) {
+    super(cause);
+  }
 
 }

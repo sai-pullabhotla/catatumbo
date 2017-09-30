@@ -29,9 +29,9 @@ import com.jmethods.catatumbo.Entity;
 @Entity(kind = StatConstants.STAT_TOTAL_NS)
 public class StatTotalNs extends StatTotalBase implements Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -5834153984732391563L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -5834153984732391563L;
 
 }

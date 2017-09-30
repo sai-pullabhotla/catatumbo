@@ -24,14 +24,14 @@ package com.jmethods.catatumbo;
  */
 public class EntityQueryRequest extends BaseQueryRequest {
 
-	/**
-	 * Creates a new instance of <code>EntityQueryRequest</code>.
-	 * 
-	 * @param query
-	 *            the GQL query string
-	 */
-	public EntityQueryRequest(String query) {
-		super(query);
-	}
+  /**
+   * Creates a new instance of <code>EntityQueryRequest</code>.
+   * 
+   * @param query
+   *          the GQL query string
+   */
+  public EntityQueryRequest(String query) {
+    super(query);
+  }
 
 }

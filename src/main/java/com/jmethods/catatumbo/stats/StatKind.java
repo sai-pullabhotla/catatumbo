@@ -29,9 +29,9 @@ import com.jmethods.catatumbo.Entity;
 @Entity(kind = StatConstants.STAT_KIND)
 public class StatKind extends StatKindBase implements Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 2549703734475617627L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 2549703734475617627L;
 
 }

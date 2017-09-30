@@ -39,78 +39,80 @@ import com.jmethods.catatumbo.impl.PropertyMetadata;
  */
 public class EmbeddedObjectMapper implements Mapper {
 
-	/**
-	 * The Embeddable class.
-	 */
-	private final Class<?> clazz;
+  /**
+   * The Embeddable class.
+   */
+  private final Class<?> clazz;
 
-	/**
-	 * Metadata of the Embeddable class.
-	 */
-	private final EmbeddableMetadata metadata;
+  /**
+   * Metadata of the Embeddable class.
+   */
+  private final EmbeddableMetadata metadata;
 
-	/**
-	 * Creates a new instance of <code>EmbeddedObjectMapper</code>.
-	 * 
-	 * @param clazz
-	 *            the Embeddable class
-	 */
-	public EmbeddedObjectMapper(Class<?> clazz) {
-		this.clazz = clazz;
-		this.metadata = EmbeddableIntrospector.introspect(clazz);
-	}
+  /**
+   * Creates a new instance of <code>EmbeddedObjectMapper</code>.
+   * 
+   * @param clazz
+   *          the Embeddable class
+   */
+  public EmbeddedObjectMapper(Class<?> clazz) {
+    this.clazz = clazz;
+    this.metadata = EmbeddableIntrospector.introspect(clazz);
+  }
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		try {
-			FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
-			for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
-				Object propertyValue = propertyMetadata.getReadMethod().invoke(input);
-				if (propertyValue == null && propertyMetadata.isOptional()) {
-					continue;
-				}
-				ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(propertyValue);
-				valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
-				Value<?> value = valueBuilder.build();
-				entityBuilder.set(propertyMetadata.getMappedName(), value);
-				Indexer indexer = propertyMetadata.getSecondaryIndexer();
-				if (indexer != null) {
-					entityBuilder.set(propertyMetadata.getSecondaryIndexName(), indexer.index(value));
-				}
-			}
-			return EntityValue.newBuilder(entityBuilder.build());
-		} catch (Throwable exp) {
-			throw new MappingException(exp);
-		}
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    try {
+      FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
+      for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
+        Object propertyValue = propertyMetadata.getReadMethod().invoke(input);
+        if (propertyValue == null && propertyMetadata.isOptional()) {
+          continue;
+        }
+        ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper()
+            .toDatastore(propertyValue);
+        valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
+        Value<?> value = valueBuilder.build();
+        entityBuilder.set(propertyMetadata.getMappedName(), value);
+        Indexer indexer = propertyMetadata.getSecondaryIndexer();
+        if (indexer != null) {
+          entityBuilder.set(propertyMetadata.getSecondaryIndexName(), indexer.index(value));
+        }
+      }
+      return EntityValue.newBuilder(entityBuilder.build());
+    } catch (Throwable exp) {
+      throw new MappingException(exp);
+    }
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input.getType() == ValueType.NULL) {
-			return null;
-		}
-		try {
-			FullEntity<?> entity = ((EntityValue) input).get();
-			ConstructorMetadata constructorMetadata = metadata.getConstructorMetadata();
-			Object embeddedObject = constructorMetadata.getConstructorMethodHandle().invoke();
-			for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
-				String mappedName = propertyMetadata.getMappedName();
-				if (entity.contains(mappedName)) {
-					Value<?> propertyValue = entity.getValue(mappedName);
-					Object fieldValue = propertyMetadata.getMapper().toModel(propertyValue);
-					propertyMetadata.getWriteMethod().invoke(embeddedObject, fieldValue);
-				}
-			}
-			if (constructorMetadata.isBuilderConstructionStrategy()) {
-				embeddedObject = metadata.getConstructorMetadata().getBuildMethodHandle().invoke(embeddedObject);
-			}
-			return embeddedObject;
-		} catch (Throwable exp) {
-			throw new MappingException(exp);
-		}
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input.getType() == ValueType.NULL) {
+      return null;
+    }
+    try {
+      FullEntity<?> entity = ((EntityValue) input).get();
+      ConstructorMetadata constructorMetadata = metadata.getConstructorMetadata();
+      Object embeddedObject = constructorMetadata.getConstructorMethodHandle().invoke();
+      for (PropertyMetadata propertyMetadata : metadata.getPropertyMetadataCollection()) {
+        String mappedName = propertyMetadata.getMappedName();
+        if (entity.contains(mappedName)) {
+          Value<?> propertyValue = entity.getValue(mappedName);
+          Object fieldValue = propertyMetadata.getMapper().toModel(propertyValue);
+          propertyMetadata.getWriteMethod().invoke(embeddedObject, fieldValue);
+        }
+      }
+      if (constructorMetadata.isBuilderConstructionStrategy()) {
+        embeddedObject = metadata.getConstructorMetadata().getBuildMethodHandle()
+            .invoke(embeddedObject);
+      }
+      return embeddedObject;
+    } catch (Throwable exp) {
+      throw new MappingException(exp);
+    }
+  }
 
 }

@@ -27,44 +27,44 @@ import com.jmethods.catatumbo.Identifier;
  */
 @Entity
 public class LocalDateField {
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private LocalDate birthDate;
+  private LocalDate birthDate;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the birthDate
-	 */
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
+  /**
+   * @return the birthDate
+   */
+  public LocalDate getBirthDate() {
+    return birthDate;
+  }
 
-	/**
-	 * @param birthDate
-	 *            the birthDate to set
-	 */
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
+  /**
+   * @param birthDate
+   *          the birthDate to set
+   */
+  public void setBirthDate(LocalDate birthDate) {
+    this.birthDate = birthDate;
+  }
 
-	@Override
-	public String toString() {
-		return "LocalDateField [id=" + id + ", birthDate=" + birthDate + "]";
-	}
+  @Override
+  public String toString() {
+    return "LocalDateField [id=" + id + ", birthDate=" + birthDate + "]";
+  }
 
 }

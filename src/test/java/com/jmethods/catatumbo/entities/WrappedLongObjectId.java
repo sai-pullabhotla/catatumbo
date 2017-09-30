@@ -24,33 +24,33 @@ import java.util.Objects;
  */
 public class WrappedLongObjectId {
 
-	private Long value;
+  private Long value;
 
-	public WrappedLongObjectId(Long value) {
-		this.value = value;
-	}
+  public WrappedLongObjectId(Long value) {
+    this.value = value;
+  }
 
-	public Long getValue() {
-		return value;
-	}
+  public Long getValue() {
+    return value;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WrappedLongObjectId [value=").append(value).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("WrappedLongObjectId [value=").append(value).append("]");
+    return builder.toString();
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		WrappedLongObjectId that = (WrappedLongObjectId) obj;
-		return Objects.equals(this.value, that.value);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    WrappedLongObjectId that = (WrappedLongObjectId) obj;
+    return Objects.equals(this.value, that.value);
+  }
 
 }

@@ -32,81 +32,81 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class PhoneList {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private List<PhoneNumber> mobileNumbers;
-	private Set<PhoneNumber> landLineNumbers;
+  private List<PhoneNumber> mobileNumbers;
+  private Set<PhoneNumber> landLineNumbers;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the phoneNumbers
-	 */
-	public List<PhoneNumber> getMobileNumbers() {
-		return mobileNumbers;
-	}
+  /**
+   * @return the phoneNumbers
+   */
+  public List<PhoneNumber> getMobileNumbers() {
+    return mobileNumbers;
+  }
 
-	/**
-	 * @param phoneNumbers
-	 *            the phoneNumbers to set
-	 */
-	public void setMobileNumbers(List<PhoneNumber> phoneNumbers) {
-		this.mobileNumbers = phoneNumbers;
-	}
+  /**
+   * @param phoneNumbers
+   *          the phoneNumbers to set
+   */
+  public void setMobileNumbers(List<PhoneNumber> phoneNumbers) {
+    this.mobileNumbers = phoneNumbers;
+  }
 
-	/**
-	 * @return the landLineNumbers
-	 */
-	public Set<PhoneNumber> getLandLineNumbers() {
-		return landLineNumbers;
-	}
+  /**
+   * @return the landLineNumbers
+   */
+  public Set<PhoneNumber> getLandLineNumbers() {
+    return landLineNumbers;
+  }
 
-	/**
-	 * @param landLineNumbers
-	 *            the landLineNumbers to set
-	 */
-	public void setLandLineNumbers(Set<PhoneNumber> landLineNumbers) {
-		this.landLineNumbers = landLineNumbers;
-	}
+  /**
+   * @param landLineNumbers
+   *          the landLineNumbers to set
+   */
+  public void setLandLineNumbers(Set<PhoneNumber> landLineNumbers) {
+    this.landLineNumbers = landLineNumbers;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof PhoneList)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		PhoneList that = (PhoneList) obj;
-		return this.id == that.id && Objects.equals(this.mobileNumbers, that.mobileNumbers)
-				&& Objects.equals(this.landLineNumbers, that.landLineNumbers);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof PhoneList)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    PhoneList that = (PhoneList) obj;
+    return this.id == that.id && Objects.equals(this.mobileNumbers, that.mobileNumbers)
+        && Objects.equals(this.landLineNumbers, that.landLineNumbers);
+  }
 
-	public static PhoneList getSample1() {
-		PhoneList entity = new PhoneList();
-		List<PhoneNumber> phoneNumbers = new ArrayList<>();
-		phoneNumbers.add(PhoneNumber.getSample1());
-		phoneNumbers.add(PhoneNumber.getSample2());
-		entity.setMobileNumbers(phoneNumbers);
-		Set<PhoneNumber> landLineNumbers = new HashSet<>();
-		landLineNumbers.add(PhoneNumber.getSample3());
-		landLineNumbers.add(PhoneNumber.getSample4());
-		entity.setLandLineNumbers(landLineNumbers);
-		return entity;
-	}
+  public static PhoneList getSample1() {
+    PhoneList entity = new PhoneList();
+    List<PhoneNumber> phoneNumbers = new ArrayList<>();
+    phoneNumbers.add(PhoneNumber.getSample1());
+    phoneNumbers.add(PhoneNumber.getSample2());
+    entity.setMobileNumbers(phoneNumbers);
+    Set<PhoneNumber> landLineNumbers = new HashSet<>();
+    landLineNumbers.add(PhoneNumber.getSample3());
+    landLineNumbers.add(PhoneNumber.getSample4());
+    entity.setLandLineNumbers(landLineNumbers);
+    return entity;
+  }
 
 }

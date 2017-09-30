@@ -27,70 +27,70 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class OptionalPrimitive {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@Property(optional = true)
-	private int optionalInt;
+  @Property(optional = true)
+  private int optionalInt;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the optionalInt
-	 */
-	public int getOptionalInt() {
-		return optionalInt;
-	}
+  /**
+   * @return the optionalInt
+   */
+  public int getOptionalInt() {
+    return optionalInt;
+  }
 
-	/**
-	 * @param optionalInt
-	 *            the optionalInt to set
-	 */
-	public void setOptionalInt(int optionalInt) {
-		this.optionalInt = optionalInt;
-	}
+  /**
+   * @param optionalInt
+   *          the optionalInt to set
+   */
+  public void setOptionalInt(int optionalInt) {
+    this.optionalInt = optionalInt;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PrimitveOptionalFieldsEntity [id=").append(id).append(", name=").append(name)
-				.append(", optionalInt=").append(optionalInt).append("]");
-		return builder.toString();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("PrimitveOptionalFieldsEntity [id=").append(id).append(", name=").append(name)
+        .append(", optionalInt=").append(optionalInt).append("]");
+    return builder.toString();
+  }
 
 }

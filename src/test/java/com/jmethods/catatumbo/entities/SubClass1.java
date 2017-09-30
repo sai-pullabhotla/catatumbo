@@ -28,54 +28,54 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class SubClass1 extends SuperClass1 {
 
-	@Identifier
-	private long id;
-	private String name;
+  @Identifier
+  private long id;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		SubClass1 that = (SubClass1) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
-				&& Objects.equals(this.getCreatedBy(), that.getCreatedBy())
-				&& Objects.equals(this.getCreatedOn(), that.getCreatedOn())
-				&& Objects.equals(this.getModifiedBy(), that.getModifiedBy())
-				&& Objects.equals(this.getModifiedOn(), that.getModifiedOn());
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    SubClass1 that = (SubClass1) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
+        && Objects.equals(this.getCreatedBy(), that.getCreatedBy())
+        && Objects.equals(this.getCreatedOn(), that.getCreatedOn())
+        && Objects.equals(this.getModifiedBy(), that.getModifiedBy())
+        && Objects.equals(this.getModifiedOn(), that.getModifiedOn());
+  }
 
 }

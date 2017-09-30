@@ -36,73 +36,73 @@ import com.jmethods.catatumbo.PreUpsert;
  */
 public enum CallbackType {
 
-	/**
-	 * Pre insert
-	 */
-	PRE_INSERT(PreInsert.class),
+  /**
+   * Pre insert
+   */
+  PRE_INSERT(PreInsert.class),
 
-	/**
-	 * Pre update
-	 */
-	PRE_UPDATE(PreUpdate.class),
+  /**
+   * Pre update
+   */
+  PRE_UPDATE(PreUpdate.class),
 
-	/**
-	 * Pre upsert
-	 */
-	PRE_UPSERT(PreUpsert.class),
+  /**
+   * Pre upsert
+   */
+  PRE_UPSERT(PreUpsert.class),
 
-	/**
-	 * Pre delete
-	 */
-	PRE_DELETE(PreDelete.class),
+  /**
+   * Pre delete
+   */
+  PRE_DELETE(PreDelete.class),
 
-	/**
-	 * Post load
-	 */
-	POST_LOAD(PostLoad.class),
+  /**
+   * Post load
+   */
+  POST_LOAD(PostLoad.class),
 
-	/**
-	 * Post insert
-	 */
-	POST_INSERT(PostInsert.class),
+  /**
+   * Post insert
+   */
+  POST_INSERT(PostInsert.class),
 
-	/**
-	 * Post update
-	 */
-	POST_UPDATE(PostUpdate.class),
+  /**
+   * Post update
+   */
+  POST_UPDATE(PostUpdate.class),
 
-	/**
-	 * Post upsert
-	 */
-	POST_UPSERT(PostUpsert.class),
+  /**
+   * Post upsert
+   */
+  POST_UPSERT(PostUpsert.class),
 
-	/**
-	 * Post delete
-	 */
-	POST_DELETE(PostDelete.class);
+  /**
+   * Post delete
+   */
+  POST_DELETE(PostDelete.class);
 
-	/**
-	 * Annotation class for this callback type
-	 */
-	private final Class<? extends Annotation> annotationClass;
+  /**
+   * Annotation class for this callback type
+   */
+  private final Class<? extends Annotation> annotationClass;
 
-	/**
-	 * Creates a new instance of <code>CallbackEventType</code>.
-	 * 
-	 * @param annotationClass
-	 *            the annotation for this callback type
-	 */
-	private CallbackType(Class<? extends Annotation> annotationClass) {
-		this.annotationClass = annotationClass;
-	}
+  /**
+   * Creates a new instance of <code>CallbackEventType</code>.
+   * 
+   * @param annotationClass
+   *          the annotation for this callback type
+   */
+  private CallbackType(Class<? extends Annotation> annotationClass) {
+    this.annotationClass = annotationClass;
+  }
 
-	/**
-	 * Returns the annotation class for this callback type.
-	 * 
-	 * @return the annotation class for this callback type.
-	 */
-	public Class<? extends Annotation> getAnnotationClass() {
-		return annotationClass;
-	}
+  /**
+   * Returns the annotation class for this callback type.
+   * 
+   * @return the annotation class for this callback type.
+   */
+  public Class<? extends Annotation> getAnnotationClass() {
+    return annotationClass;
+  }
 
 }

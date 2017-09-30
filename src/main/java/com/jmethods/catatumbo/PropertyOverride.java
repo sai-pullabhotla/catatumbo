@@ -16,16 +16,15 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Used to override mapping of a property. This annotation must be specified on
- * the top-level entity to override any properties of {@link Embedded} objects
- * or a {@link MappedSuperClass}.
+ * Used to override mapping of a property. This annotation must be specified on the top-level entity
+ * to override any properties of {@link Embedded} objects or a {@link MappedSuperClass}.
  * 
  * @author Sai Pullabhotla
  *
@@ -34,18 +33,18 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 public @interface PropertyOverride {
 
-	/**
-	 * The name of the property whose mapping is to be overridden.
-	 * 
-	 * @return name of the property whose mapping is to be overridden.
-	 */
-	String name();
+  /**
+   * The name of the property whose mapping is to be overridden.
+   * 
+   * @return name of the property whose mapping is to be overridden.
+   */
+  String name();
 
-	/**
-	 * The override mapping information.
-	 * 
-	 * @return override mapping information.
-	 */
-	Property property();
+  /**
+   * The override mapping information.
+   * 
+   * @return override mapping information.
+   */
+  Property property();
 
 }

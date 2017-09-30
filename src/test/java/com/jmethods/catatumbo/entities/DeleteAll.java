@@ -27,48 +27,48 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class DeleteAll {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String field1;
+  private String field1;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the field1
-	 */
-	public String getField1() {
-		return field1;
-	}
+  /**
+   * @return the field1
+   */
+  public String getField1() {
+    return field1;
+  }
 
-	/**
-	 * @param field1
-	 *            the field1 to set
-	 */
-	public void setField1(String field1) {
-		this.field1 = field1;
-	}
+  /**
+   * @param field1
+   *          the field1 to set
+   */
+  public void setField1(String field1) {
+    this.field1 = field1;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof DeleteAll)) {
-			return false;
-		}
-		DeleteAll that = (DeleteAll) obj;
-		return this.id == that.id && Objects.equal(this.field1, that.field1);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof DeleteAll)) {
+      return false;
+    }
+    DeleteAll that = (DeleteAll) obj;
+    return this.id == that.id && Objects.equal(this.field1, that.field1);
+  }
 
 }

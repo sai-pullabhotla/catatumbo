@@ -31,75 +31,75 @@ import com.jmethods.catatumbo.Key;
 @Entity
 public class OptionalFieldsEntity2 {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Key
-	private DatastoreKey key;
+  @Key
+  private DatastoreKey key;
 
-	private List<PhoneNumber> phoneNumbers;
+  private List<PhoneNumber> phoneNumbers;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the phoneNumbers
-	 */
-	public List<PhoneNumber> getPhoneNumbers() {
-		return phoneNumbers;
-	}
+  /**
+   * @return the phoneNumbers
+   */
+  public List<PhoneNumber> getPhoneNumbers() {
+    return phoneNumbers;
+  }
 
-	/**
-	 * @param phoneNumbers
-	 *            the phoneNumbers to set
-	 */
-	public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-		this.phoneNumbers = phoneNumbers;
-	}
+  /**
+   * @param phoneNumbers
+   *          the phoneNumbers to set
+   */
+  public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+    this.phoneNumbers = phoneNumbers;
+  }
 
-	/**
-	 * @return the key
-	 */
-	public DatastoreKey getKey() {
-		return key;
-	}
+  /**
+   * @return the key
+   */
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	/**
-	 * @param key
-	 *            the key to set
-	 */
-	public void setKey(DatastoreKey key) {
-		this.key = key;
-	}
+  /**
+   * @param key
+   *          the key to set
+   */
+  public void setKey(DatastoreKey key) {
+    this.key = key;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("OptionalFieldsEntity2 [id=").append(id).append(", phoneNumbers=").append(phoneNumbers)
-				.append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("OptionalFieldsEntity2 [id=").append(id).append(", phoneNumbers=")
+        .append(phoneNumbers).append("]");
+    return builder.toString();
+  }
 
-	public static OptionalFieldsEntity2 getSample1() {
-		List<PhoneNumber> phones = new ArrayList<>();
-		phones.add(PhoneNumber.getSample1());
-		phones.add(PhoneNumber.getSample2());
-		phones.add(PhoneNumber.getSample5());
-		OptionalFieldsEntity2 entity = new OptionalFieldsEntity2();
-		entity.setPhoneNumbers(phones);
-		return entity;
-	}
+  public static OptionalFieldsEntity2 getSample1() {
+    List<PhoneNumber> phones = new ArrayList<>();
+    phones.add(PhoneNumber.getSample1());
+    phones.add(PhoneNumber.getSample2());
+    phones.add(PhoneNumber.getSample5());
+    OptionalFieldsEntity2 entity = new OptionalFieldsEntity2();
+    entity.setPhoneNumbers(phones);
+    return entity;
+  }
 
 }

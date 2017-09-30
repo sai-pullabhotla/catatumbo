@@ -25,31 +25,31 @@ import com.jmethods.catatumbo.GeoLocation;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping GeoLocation (a.k.a GeoPoint)
- * type to/from Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping GeoLocation (a.k.a GeoPoint) type to/from Cloud
+ * Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class GeoLocationMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		GeoLocation geoLocation = (GeoLocation) input;
-		return LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    GeoLocation geoLocation = (GeoLocation) input;
+    return LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		LatLngValue value = (LatLngValue) input;
-		LatLng coordinates = value.get();
-		return new GeoLocation(coordinates.getLatitude(), coordinates.getLongitude());
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    LatLngValue value = (LatLngValue) input;
+    LatLng coordinates = value.get();
+    return new GeoLocation(coordinates.getLatitude(), coordinates.getLongitude());
+  }
 
 }

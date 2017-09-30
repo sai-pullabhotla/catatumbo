@@ -28,57 +28,57 @@ import com.jmethods.catatumbo.Key;
 @Entity
 public class Department {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@Key
-	private DatastoreKey fullKey;
+  @Key
+  private DatastoreKey fullKey;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the fullKey
-	 */
-	public DatastoreKey getFullKey() {
-		return fullKey;
-	}
+  /**
+   * @return the fullKey
+   */
+  public DatastoreKey getFullKey() {
+    return fullKey;
+  }
 
-	/**
-	 * @param fullKey
-	 *            the fullKey to set
-	 */
-	public void setFullKey(DatastoreKey fullKey) {
-		this.fullKey = fullKey;
-	}
+  /**
+   * @param fullKey
+   *          the fullKey to set
+   */
+  public void setFullKey(DatastoreKey fullKey) {
+    this.fullKey = fullKey;
+  }
 
 }

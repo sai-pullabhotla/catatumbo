@@ -30,81 +30,81 @@ import com.jmethods.catatumbo.UpdatedTimestamp;
 @Entity
 public class AutoTimestampZonedDateTime {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@CreatedTimestamp
-	private ZonedDateTime createdOn;
+  @CreatedTimestamp
+  private ZonedDateTime createdOn;
 
-	@UpdatedTimestamp
-	private ZonedDateTime modifiedOn;
+  @UpdatedTimestamp
+  private ZonedDateTime modifiedOn;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the createdOn
-	 */
-	public ZonedDateTime getCreatedOn() {
-		return createdOn;
-	}
+  /**
+   * @return the createdOn
+   */
+  public ZonedDateTime getCreatedOn() {
+    return createdOn;
+  }
 
-	/**
-	 * @param createdOn
-	 *            the createdOn to set
-	 */
-	public void setCreatedOn(ZonedDateTime createdOn) {
-		this.createdOn = createdOn;
-	}
+  /**
+   * @param createdOn
+   *          the createdOn to set
+   */
+  public void setCreatedOn(ZonedDateTime createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	/**
-	 * @return the modifiedOn
-	 */
-	public ZonedDateTime getModifiedOn() {
-		return modifiedOn;
-	}
+  /**
+   * @return the modifiedOn
+   */
+  public ZonedDateTime getModifiedOn() {
+    return modifiedOn;
+  }
 
-	/**
-	 * @param modifiedOn
-	 *            the modifiedOn to set
-	 */
-	public void setModifiedOn(ZonedDateTime modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  /**
+   * @param modifiedOn
+   *          the modifiedOn to set
+   */
+  public void setModifiedOn(ZonedDateTime modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	@Override
-	public String toString() {
-		return "AutoTimestampZonedDateTime [id=" + id + ", name=" + name + ", createdOn=" + createdOn + ", modifiedOn="
-				+ modifiedOn + "]";
-	}
+  @Override
+  public String toString() {
+    return "AutoTimestampZonedDateTime [id=" + id + ", name=" + name + ", createdOn=" + createdOn
+        + ", modifiedOn=" + modifiedOn + "]";
+  }
 
 }

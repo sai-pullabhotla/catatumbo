@@ -28,39 +28,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class NoSuitableMapperEntity {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private URL url;
+  private URL url;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the url
-	 */
-	public URL getUrl() {
-		return url;
-	}
+  /**
+   * @return the url
+   */
+  public URL getUrl() {
+    return url;
+  }
 
-	/**
-	 * @param url
-	 *            the url to set
-	 */
-	public void setUrl(URL url) {
-		this.url = url;
-	}
+  /**
+   * @param url
+   *          the url to set
+   */
+  public void setUrl(URL url) {
+    this.url = url;
+  }
 
 }

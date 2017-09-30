@@ -17,23 +17,23 @@
 package com.jmethods.catatumbo;
 
 /**
- * An implementation of {@link QueryRequest} for executing key-only queries.
- * Key-only queries must only have <code>__key__</code> in the SELECT list of
- * fields, with optional WHERE or ORDER BY clauses.
+ * An implementation of {@link QueryRequest} for executing key-only queries. Key-only queries must
+ * only have <code>__key__</code> in the SELECT list of fields, with optional WHERE or ORDER BY
+ * clauses.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class KeyQueryRequest extends BaseQueryRequest {
 
-	/**
-	 * Creates a new instance of <code>KeyQueryRequest</code>.
-	 * 
-	 * @param query
-	 *            the query
-	 */
-	public KeyQueryRequest(String query) {
-		super(query);
-	}
+  /**
+   * Creates a new instance of <code>KeyQueryRequest</code>.
+   * 
+   * @param query
+   *          the query
+   */
+  public KeyQueryRequest(String query) {
+    super(query);
+  }
 
 }

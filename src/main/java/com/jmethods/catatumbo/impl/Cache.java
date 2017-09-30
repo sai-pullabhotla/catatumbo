@@ -24,91 +24,90 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author Sai Pullabhotla
  * @param <K>
- *            Type of keys in the cache
+ *          Type of keys in the cache
  * @param <V>
- *            Type of values in the cache
+ *          Type of values in the cache
  *
  */
 public class Cache<K, V> {
 
-	/**
-	 * A map to store the entries in the cache
-	 */
-	private Map<K, V> map;
+  /**
+   * A map to store the entries in the cache
+   */
+  private Map<K, V> map;
 
-	/**
-	 * Creates a new instance of <code>Cache</code>.
-	 */
-	public Cache() {
-		this(16, 0.75f);
-	}
+  /**
+   * Creates a new instance of <code>Cache</code>.
+   */
+  public Cache() {
+    this(16, 0.75f);
+  }
 
-	/**
-	 * Creates a new instance of <code>Cache</code>.
-	 * 
-	 * @param initialSize
-	 *            initial size
-	 */
-	public Cache(int initialSize) {
-		this(initialSize, 0.75f);
-	}
+  /**
+   * Creates a new instance of <code>Cache</code>.
+   * 
+   * @param initialSize
+   *          initial size
+   */
+  public Cache(int initialSize) {
+    this(initialSize, 0.75f);
+  }
 
-	/**
-	 * Creates a new instance of <code>Cache</code>.
-	 * 
-	 * @param initialSize
-	 *            initial size
-	 * @param loadFactor
-	 *            load factor
-	 */
-	public Cache(int initialSize, float loadFactor) {
-		map = new ConcurrentHashMap<>(initialSize, loadFactor);
-	}
+  /**
+   * Creates a new instance of <code>Cache</code>.
+   * 
+   * @param initialSize
+   *          initial size
+   * @param loadFactor
+   *          load factor
+   */
+  public Cache(int initialSize, float loadFactor) {
+    map = new ConcurrentHashMap<>(initialSize, loadFactor);
+  }
 
-	/**
-	 * Returns the cached value for the given key.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return the cached value of the given key. Returns <code>null</code>, if
-	 *         the given key does not exist in this cache.
-	 */
-	public V get(K key) {
-		return map.get(key);
-	}
+  /**
+   * Returns the cached value for the given key.
+   * 
+   * @param key
+   *          the key
+   * @return the cached value of the given key. Returns <code>null</code>, if the given key does not
+   *         exist in this cache.
+   */
+  public V get(K key) {
+    return map.get(key);
+  }
 
-	/**
-	 * Puts the given entry into this cache.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 * @return previous value, if any, for the given key.
-	 */
-	public V put(K key, V value) {
-		return map.put(key, value);
-	}
+  /**
+   * Puts the given entry into this cache.
+   * 
+   * @param key
+   *          the key
+   * @param value
+   *          the value
+   * @return previous value, if any, for the given key.
+   */
+  public V put(K key, V value) {
+    return map.put(key, value);
+  }
 
-	/**
-	 * Checks if the give key is in this cache.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return <code>true</code>, if the given key exists in the cache;
-	 *         <code>false</code>, otherwise.
-	 */
-	public boolean containsKey(K key) {
-		return map.containsKey(key);
-	}
+  /**
+   * Checks if the give key is in this cache.
+   * 
+   * @param key
+   *          the key
+   * @return <code>true</code>, if the given key exists in the cache; <code>false</code>, otherwise.
+   */
+  public boolean containsKey(K key) {
+    return map.containsKey(key);
+  }
 
-	/**
-	 * Returns the size of this cache.
-	 * 
-	 * @return the size of this cache.
-	 */
-	public int size() {
-		return map.size();
-	}
+  /**
+   * Returns the size of this cache.
+   * 
+   * @return the size of this cache.
+   */
+  public int size() {
+    return map.size();
+  }
 
 }

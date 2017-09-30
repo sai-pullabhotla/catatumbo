@@ -17,56 +17,55 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception thrown by {@link Indexer} to indicate any errors during data
- * indexing.
+ * An exception thrown by {@link Indexer} to indicate any errors during data indexing.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class IndexingException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 998960795045630795L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 998960795045630795L;
 
-	/**
-	 * Creates a new instance of <code>IndexingException</code>.
-	 */
-	public IndexingException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>IndexingException</code>.
+   */
+  public IndexingException() {
+    super();
+  }
 
-	/**
-	 * Creates a new instance of <code>IndexingException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public IndexingException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of <code>IndexingException</code>.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public IndexingException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>IndexingException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public IndexingException(String message) {
-		super(message);
-	}
+  /**
+   * Creates a new instance of <code>IndexingException</code>.
+   * 
+   * @param message
+   *          the message
+   */
+  public IndexingException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Creates a new instance of <code>IndexingException</code>.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public IndexingException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of <code>IndexingException</code>.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public IndexingException(Throwable cause) {
+    super(cause);
+  }
 
 }

@@ -23,28 +23,28 @@ import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping primitive and wrapper double
- * types to/from Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper double types to/from Cloud
+ * Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class DoubleMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return DoubleValue.newBuilder((double) input);
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return DoubleValue.newBuilder((double) input);
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		return ((DoubleValue) input).get();
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    return ((DoubleValue) input).get();
+  }
 
 }

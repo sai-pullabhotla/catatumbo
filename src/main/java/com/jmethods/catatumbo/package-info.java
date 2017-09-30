@@ -15,39 +15,8 @@
  */
 
 /**
- * This package contains the public API for mapping and persisting model objects
- * to the Google Cloud Datastore and vice versa. Catatumbo provides the
- * following annotations to take away the boilerplate code that is needed for
- * persisting objects to the Google Cloud Datastore and mapping the Google Cloud
- * Datastore entities to your model objects:
- * 
- * <ul>
- * <li>{@link com.jmethods.catatumbo.Entity}</li>
- * <li>{@link com.jmethods.catatumbo.Identifier}</li>
- * <li>{@link com.jmethods.catatumbo.Property}</li>
- * <li>{@link com.jmethods.catatumbo.Key}</li>
- * <li>{@link com.jmethods.catatumbo.ParentKey}</li>
- * <li>{@link com.jmethods.catatumbo.MappedSuperClass}</li>
- * <li>{@link com.jmethods.catatumbo.Embeddable}</li>
- * <li>{@link com.jmethods.catatumbo.Embedded}</li>
- * <li>{@link com.jmethods.catatumbo.PropertyOverrides}</li>
- * <li>{@link com.jmethods.catatumbo.PropertyOverride}</li>
- * <li>{@link com.jmethods.catatumbo.Ignore}</li>
- * <li>{@link com.jmethods.catatumbo.Version}</li>
- * <li>{@link com.jmethods.catatumbo.EntityListeners}</li>
- * <li>{@link com.jmethods.catatumbo.EntityListener}</li>
- * <li>{@link com.jmethods.catatumbo.ExcludeDefaultListeners}</li>
- * <li>{@link com.jmethods.catatumbo.ExcludeSuperclassListeners}</li>
- * <li>{@link com.jmethods.catatumbo.PreInsert}</li>
- * <li>{@link com.jmethods.catatumbo.PostInsert}</li>
- * <li>{@link com.jmethods.catatumbo.PreUpdate}</li>
- * <li>{@link com.jmethods.catatumbo.PostUpdate}</li>
- * <li>{@link com.jmethods.catatumbo.PreUpsert}</li>
- * <li>{@link com.jmethods.catatumbo.PostUpsert}</li>
- * <li>{@link com.jmethods.catatumbo.PreDelete}</li>
- * <li>{@link com.jmethods.catatumbo.PostDelete}</li>
- * <li>{@link com.jmethods.catatumbo.PostLoad}</li>
- * </ul>
- * 
+ * This package contains the public API for mapping and persisting model objects to the Google Cloud
+ * Datastore and vice versa.
  */
+
 package com.jmethods.catatumbo;

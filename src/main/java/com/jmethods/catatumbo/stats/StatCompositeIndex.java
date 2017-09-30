@@ -29,9 +29,9 @@ import com.jmethods.catatumbo.Entity;
 @Entity(kind = StatConstants.STAT_COMPOSITE_INDEX)
 public class StatCompositeIndex extends StatCompositeIndexBase implements Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 7142034196925336326L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 7142034196925336326L;
 
 }

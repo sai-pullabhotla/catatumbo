@@ -29,88 +29,88 @@ import com.jmethods.catatumbo.UpdatedTimestamp;
 @Entity
 public class AutoTimestampLong {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@CreatedTimestamp
-	@Property(name = "CREATED_TS", indexed = false)
-	private Long createdDate;
+  @CreatedTimestamp
+  @Property(name = "CREATED_TS", indexed = false)
+  private Long createdDate;
 
-	@UpdatedTimestamp
-	@Property(name = "UPDATED_TS", indexed = true)
-	private Long modifiedDate;
+  @UpdatedTimestamp
+  @Property(name = "UPDATED_TS", indexed = true)
+  private Long modifiedDate;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the createdDate
-	 */
-	public Long getCreatedDate() {
-		return createdDate;
-	}
+  /**
+   * @return the createdDate
+   */
+  public Long getCreatedDate() {
+    return createdDate;
+  }
 
-	/**
-	 * @param createdDate
-	 *            the createdDate to set
-	 */
-	public void setCreatedDate(Long createdDate) {
-		this.createdDate = createdDate;
-	}
+  /**
+   * @param createdDate
+   *          the createdDate to set
+   */
+  public void setCreatedDate(Long createdDate) {
+    this.createdDate = createdDate;
+  }
 
-	/**
-	 * @return the modifiedDate
-	 */
-	public Long getModifiedDate() {
-		return modifiedDate;
-	}
+  /**
+   * @return the modifiedDate
+   */
+  public Long getModifiedDate() {
+    return modifiedDate;
+  }
 
-	/**
-	 * @param modifiedDate
-	 *            the modifiedDate to set
-	 */
-	public void setModifiedDate(Long modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+  /**
+   * @param modifiedDate
+   *          the modifiedDate to set
+   */
+  public void setModifiedDate(Long modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "AutoTimestampDate [id=" + id + ", name=" + name + ", createdDate=" + createdDate + ", modifiedDate="
-				+ modifiedDate + "]";
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "AutoTimestampDate [id=" + id + ", name=" + name + ", createdDate=" + createdDate
+        + ", modifiedDate=" + modifiedDate + "]";
+  }
 
 }

@@ -27,68 +27,65 @@ import java.io.IOException;
  */
 public class Utility {
 
-	/**
-	 * Creates a new instance of <code>Utility</code>. This exists to hide the
-	 * implicit public constructor.
-	 */
-	private Utility() {
-		// Do nothing
-	}
+  /**
+   * Creates a new instance of <code>Utility</code>. This exists to hide the implicit public
+   * constructor.
+   */
+  private Utility() {
+    // Do nothing
+  }
 
-	/**
-	 * Closes the given Closeable.
-	 * 
-	 * @param closeable
-	 *            the Closeable (e.g. InputStream, OutputStream, etc.) to close.
-	 */
-	public static void close(Closeable closeable) {
-		if (closeable != null) {
-			try {
-				closeable.close();
-			} catch (IOException exp) {
-				// Ignore
-			}
-		}
-	}
+  /**
+   * Closes the given Closeable.
+   * 
+   * @param closeable
+   *          the Closeable (e.g. InputStream, OutputStream, etc.) to close.
+   */
+  public static void close(Closeable closeable) {
+    if (closeable != null) {
+      try {
+        closeable.close();
+      } catch (IOException exp) {
+        // Ignore
+      }
+    }
+  }
 
-	/**
-	 * Tells whether or not the given input String is null or empty.
-	 * 
-	 * @param input
-	 *            the input string to check
-	 * @return <code>true</code>, if the given input is null or empty;
-	 *         otherwise, <code>false</code>.
-	 */
-	public static boolean isNullOrEmpty(String input) {
-		return input == null || input.trim().length() == 0;
-	}
+  /**
+   * Tells whether or not the given input String is null or empty.
+   * 
+   * @param input
+   *          the input string to check
+   * @return <code>true</code>, if the given input is null or empty; otherwise, <code>false</code>.
+   */
+  public static boolean isNullOrEmpty(String input) {
+    return input == null || input.trim().length() == 0;
+  }
 
-	/**
-	 * Throws a {@link NullPointerException} if the given input is
-	 * <code>null</code>.
-	 * 
-	 * @param input
-	 *            the input to check
-	 */
-	public static void ensureNotNull(Object input) {
-		if (input == null) {
-			throw new NullPointerException();
-		}
-	}
+  /**
+   * Throws a {@link NullPointerException} if the given input is <code>null</code>.
+   * 
+   * @param input
+   *          the input to check
+   */
+  public static void ensureNotNull(Object input) {
+    if (input == null) {
+      throw new NullPointerException();
+    }
+  }
 
-	/**
-	 * Throws a {@link NullPointerException} if the input is null. If the input
-	 * is empty )<code>input.trim().length() == 0</code>, an
-	 * {@link IllegalArgumentException} is thrown.
-	 * 
-	 * @param input
-	 *            the input String to validate
-	 */
-	public static void ensureNotEmpty(String input) {
-		ensureNotNull(input);
-		if (input.trim().length() == 0) {
-			throw new IllegalArgumentException();
-		}
-	}
+  /**
+   * Throws a {@link NullPointerException} if the input is null. If the input is empty
+   * )<code>input.trim().length() == 0</code>, an {@link IllegalArgumentException} is thrown.
+   * 
+   * @param input
+   *          the input String to validate
+   */
+  public static void ensureNotEmpty(String input) {
+    ensureNotNull(input);
+    if (input.trim().length() == 0) {
+      throw new IllegalArgumentException();
+    }
+  }
 
 }

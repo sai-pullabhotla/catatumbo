@@ -35,50 +35,50 @@ import com.jmethods.catatumbo.entities.CalculatorEntity;
 @EntityListener
 public class Adder {
 
-	@PreInsert
-	public void beforeInsert(CalculatorEntity entity) {
-		entity.setSum(entity.getOperand1() + entity.getOperand2());
-	}
+  @PreInsert
+  public void beforeInsert(CalculatorEntity entity) {
+    entity.setSum(entity.getOperand1() + entity.getOperand2());
+  }
 
-	@PreUpdate
-	public void beforeUpdate(CalculatorEntity entity) {
-		entity.setSum(entity.getOperand1() + entity.getOperand2());
-	}
+  @PreUpdate
+  public void beforeUpdate(CalculatorEntity entity) {
+    entity.setSum(entity.getOperand1() + entity.getOperand2());
+  }
 
-	@PreUpsert
-	public void beforeUpsert(CalculatorEntity entity) {
-		entity.setSum(entity.getOperand1() + entity.getOperand2());
-	}
+  @PreUpsert
+  public void beforeUpsert(CalculatorEntity entity) {
+    entity.setSum(entity.getOperand1() + entity.getOperand2());
+  }
 
-	@PreDelete
-	public void beforeDelete(CalculatorEntity entity) {
-		entity.setSum(entity.getOperand1() + entity.getOperand2());
-	}
+  @PreDelete
+  public void beforeDelete(CalculatorEntity entity) {
+    entity.setSum(entity.getOperand1() + entity.getOperand2());
+  }
 
-	@PostInsert
-	public void afterInsert(CalculatorEntity entity) {
-		entity.setSum2(entity.getSum() * 2);
-	}
+  @PostInsert
+  public void afterInsert(CalculatorEntity entity) {
+    entity.setSum2(entity.getSum() * 2);
+  }
 
-	@PostUpdate
-	public void afterUpdate(CalculatorEntity entity) {
-		entity.setSum2(entity.getSum() * 3);
-	}
+  @PostUpdate
+  public void afterUpdate(CalculatorEntity entity) {
+    entity.setSum2(entity.getSum() * 3);
+  }
 
-	@PostUpsert
-	public void afterUpsert(CalculatorEntity entity) {
-		entity.setSum2(entity.getSum() * 4);
-	}
+  @PostUpsert
+  public void afterUpsert(CalculatorEntity entity) {
+    entity.setSum2(entity.getSum() * 4);
+  }
 
-	@PostDelete
-	public void afterDelete(CalculatorEntity entity) {
-		entity.setSum2(entity.getSum() * 5);
-	}
+  @PostDelete
+  public void afterDelete(CalculatorEntity entity) {
+    entity.setSum2(entity.getSum() * 5);
+  }
 
-	@PostLoad
-	public void afterLoad(CalculatorEntity entity) {
-		entity.setSum(entity.getOperand1() + entity.getOperand2());
-		entity.setSum2(entity.getSum() * 6);
-	}
+  @PostLoad
+  public void afterLoad(CalculatorEntity entity) {
+    entity.setSum(entity.getOperand1() + entity.getOperand2());
+    entity.setSum2(entity.getSum() * 6);
+  }
 
 }

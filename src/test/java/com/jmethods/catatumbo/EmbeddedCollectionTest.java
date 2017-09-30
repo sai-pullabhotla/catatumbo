@@ -34,77 +34,77 @@ import com.jmethods.catatumbo.entities.PhoneNumber;
  *
  */
 public class EmbeddedCollectionTest {
-	private static EntityManager em;
+  private static EntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testInsert_PhoneList() {
-		PhoneList entity = PhoneList.getSample1();
-		entity = em.insert(entity);
-		PhoneList loadedEntity = em.load(PhoneList.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testInsert_PhoneList() {
+    PhoneList entity = PhoneList.getSample1();
+    entity = em.insert(entity);
+    PhoneList loadedEntity = em.load(PhoneList.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
-	@Test
-	public void testInsert_PhoneList_Null() {
-		PhoneList entity = new PhoneList();
-		entity = em.insert(entity);
-		PhoneList loadedEntity = em.load(PhoneList.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testInsert_PhoneList_Null() {
+    PhoneList entity = new PhoneList();
+    entity = em.insert(entity);
+    PhoneList loadedEntity = em.load(PhoneList.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
-	@Test
-	public void testUpdate_PhoneList() {
-		PhoneList entity = PhoneList.getSample1();
-		entity = em.insert(entity);
-		entity = em.load(PhoneList.class, entity.getId());
-		entity.getLandLineNumbers().add(PhoneNumber.getSample1());
-		entity = em.update(entity);
-		PhoneList loadedEntity = em.load(PhoneList.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testUpdate_PhoneList() {
+    PhoneList entity = PhoneList.getSample1();
+    entity = em.insert(entity);
+    entity = em.load(PhoneList.class, entity.getId());
+    entity.getLandLineNumbers().add(PhoneNumber.getSample1());
+    entity = em.update(entity);
+    PhoneList loadedEntity = em.load(PhoneList.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
-	@Test
-	public void testInsert_AddressMap() {
-		AddressMap entity = new AddressMap();
-		Map<String, Address> addresses = new HashMap<>();
-		addresses.put("home", Address.getSample1());
-		addresses.put("work", Address.getSample2());
-		entity.setAddresses(addresses);
-		entity = em.insert(entity);
-		AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testInsert_AddressMap() {
+    AddressMap entity = new AddressMap();
+    Map<String, Address> addresses = new HashMap<>();
+    addresses.put("home", Address.getSample1());
+    addresses.put("work", Address.getSample2());
+    entity.setAddresses(addresses);
+    entity = em.insert(entity);
+    AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
-	@Test
-	public void testInsert_AddressMap_Null() {
-		AddressMap entity = AddressMap.getSample1();
-		entity = em.insert(entity);
-		AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testInsert_AddressMap_Null() {
+    AddressMap entity = AddressMap.getSample1();
+    entity = em.insert(entity);
+    AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
-	@Test
-	public void testInsert_AddressMap_NullZip() {
-		AddressMap entity = AddressMap.getSample2();
-		entity = em.insert(entity);
-		AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testInsert_AddressMap_NullZip() {
+    AddressMap entity = AddressMap.getSample2();
+    entity = em.insert(entity);
+    AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
-	@Test
-	public void testUpdate_AddressMap() {
-		AddressMap entity = AddressMap.getSample1();
-		entity = em.insert(entity);
-		entity = em.load(AddressMap.class, entity.getId());
-		entity.getAddresses().get("work").setStreet2("Suite 2");
-		entity = em.update(entity);
-		AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
-		assertTrue(entity.equals(loadedEntity));
-	}
+  @Test
+  public void testUpdate_AddressMap() {
+    AddressMap entity = AddressMap.getSample1();
+    entity = em.insert(entity);
+    entity = em.load(AddressMap.class, entity.getId());
+    entity.getAddresses().get("work").setStreet2("Suite 2");
+    entity = em.update(entity);
+    AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
+    assertTrue(entity.equals(loadedEntity));
+  }
 
 }

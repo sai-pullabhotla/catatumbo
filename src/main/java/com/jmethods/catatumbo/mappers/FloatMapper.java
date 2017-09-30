@@ -24,33 +24,33 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping primitive and wrapper Float
- * types to/from Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper Float types to/from Cloud
+ * Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class FloatMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return DoubleValue.newBuilder((float) input);
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return DoubleValue.newBuilder((float) input);
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		DoubleValue value = (DoubleValue) input;
-		Double d = value.get();
-		if (d < -Float.MAX_VALUE || d > Float.MAX_VALUE) {
-			throw new MappingException(String.format("Value %s is out of range for float type", d));
-		}
-		return d.floatValue();
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    DoubleValue value = (DoubleValue) input;
+    Double d = value.get();
+    if (d < -Float.MAX_VALUE || d > Float.MAX_VALUE) {
+      throw new MappingException(String.format("Value %s is out of range for float type", d));
+    }
+    return d.floatValue();
+  }
 
 }

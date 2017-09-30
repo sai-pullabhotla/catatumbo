@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class WrappedIntegerIdEntity {
 
-	@Identifier
-	private WrappedIntegerId id;
+  @Identifier
+  private WrappedIntegerId id;
 
-	private String name;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public WrappedIntegerId getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public WrappedIntegerId getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(WrappedIntegerId id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(WrappedIntegerId id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
 }

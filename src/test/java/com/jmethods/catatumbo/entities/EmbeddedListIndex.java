@@ -30,57 +30,57 @@ import com.jmethods.catatumbo.ParentKey;
 @Entity
 public class EmbeddedListIndex {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@ParentKey
-	private DatastoreKey parentKey;
+  @ParentKey
+  private DatastoreKey parentKey;
 
-	private List<Address> addresses;
+  private List<Address> addresses;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the parentKey
-	 */
-	public DatastoreKey getParentKey() {
-		return parentKey;
-	}
+  /**
+   * @return the parentKey
+   */
+  public DatastoreKey getParentKey() {
+    return parentKey;
+  }
 
-	/**
-	 * @param parentKey
-	 *            the parentKey to set
-	 */
-	public void setParentKey(DatastoreKey parentKey) {
-		this.parentKey = parentKey;
-	}
+  /**
+   * @param parentKey
+   *          the parentKey to set
+   */
+  public void setParentKey(DatastoreKey parentKey) {
+    this.parentKey = parentKey;
+  }
 
-	/**
-	 * @return the addresses
-	 */
-	public List<Address> getAddresses() {
-		return addresses;
-	}
+  /**
+   * @return the addresses
+   */
+  public List<Address> getAddresses() {
+    return addresses;
+  }
 
-	/**
-	 * @param addresses
-	 *            the addresses to set
-	 */
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
-	}
+  /**
+   * @param addresses
+   *          the addresses to set
+   */
+  public void setAddresses(List<Address> addresses) {
+    this.addresses = addresses;
+  }
 
 }

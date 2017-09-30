@@ -27,57 +27,57 @@ import com.jmethods.catatumbo.Ignore;
 @Entity
 public class IgnoreField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@Ignore
-	private String computed;
+  @Ignore
+  private String computed;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the computed
-	 */
-	public String getComputed() {
-		return computed;
-	}
+  /**
+   * @return the computed
+   */
+  public String getComputed() {
+    return computed;
+  }
 
-	/**
-	 * @param computed
-	 *            the computed to set
-	 */
-	public void setComputed(String computed) {
-		this.computed = computed;
-	}
+  /**
+   * @param computed
+   *          the computed to set
+   */
+  public void setComputed(String computed) {
+    this.computed = computed;
+  }
 
 }

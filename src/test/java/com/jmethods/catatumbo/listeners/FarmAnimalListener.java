@@ -27,14 +27,14 @@ import com.jmethods.catatumbo.entities.FarmAnimal;
 @EntityListener
 public class FarmAnimalListener {
 
-	@PreInsert
-	public void beforeInsert(FarmAnimal farmAnimal) {
-		String value = farmAnimal.getValue();
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += FarmAnimalListener.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-		farmAnimal.setValue(value);
-	}
+  @PreInsert
+  public void beforeInsert(FarmAnimal farmAnimal) {
+    String value = farmAnimal.getValue();
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += FarmAnimalListener.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+    farmAnimal.setValue(value);
+  }
 
 }

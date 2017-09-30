@@ -23,47 +23,46 @@ import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping Enum types to/from Cloud
- * Datastore.
+ * An implementation of {@link Mapper} for mapping Enum types to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class EnumMapper implements Mapper {
 
-	/**
-	 * Enum class
-	 */
-	@SuppressWarnings("rawtypes")
-	private Class enumClass;
+  /**
+   * Enum class
+   */
+  @SuppressWarnings("rawtypes")
+  private Class enumClass;
 
-	/**
-	 * Creates a new instance of <code>EnumMapper</code>.
-	 * 
-	 * @param enumClass
-	 *            the enum class
-	 */
-	@SuppressWarnings("rawtypes")
-	public EnumMapper(Class enumClass) {
-		this.enumClass = enumClass;
-	}
+  /**
+   * Creates a new instance of <code>EnumMapper</code>.
+   * 
+   * @param enumClass
+   *          the enum class
+   */
+  @SuppressWarnings("rawtypes")
+  public EnumMapper(Class enumClass) {
+    this.enumClass = enumClass;
+  }
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return StringValue.newBuilder(input.toString());
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return StringValue.newBuilder(input.toString());
+  }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		String value = ((StringValue) input).get();
-		return Enum.valueOf(enumClass, value);
-	}
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    String value = ((StringValue) input).get();
+    return Enum.valueOf(enumClass, value);
+  }
 
 }

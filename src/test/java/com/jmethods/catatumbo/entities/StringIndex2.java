@@ -29,130 +29,130 @@ import com.jmethods.catatumbo.indexers.UpperCaseStringIndexer;
  */
 @Entity(kind = "StringIndex")
 public class StringIndex2 {
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@SecondaryIndex
-	private String firstName;
+  @SecondaryIndex
+  private String firstName;
 
-	@SecondaryIndex
-	@PropertyIndexer(UpperCaseStringIndexer.class)
-	private String lastName;
+  @SecondaryIndex
+  @PropertyIndexer(UpperCaseStringIndexer.class)
+  private String lastName;
 
-	@SecondaryIndex(name = "emailIndex")
-	private String email = "x";
+  @SecondaryIndex(name = "emailIndex")
+  private String email = "x";
 
-	@Property(name = "$firstName")
-	private String firstNameIndex = "y";
+  @Property(name = "$firstName")
+  private String firstNameIndex = "y";
 
-	@Property(name = "$lastName")
-	private String lastNameIndex;
+  @Property(name = "$lastName")
+  private String lastNameIndex;
 
-	private String emailIndex = "z";
+  private String emailIndex = "z";
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the firstName
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
+  /**
+   * @return the firstName
+   */
+  public String getFirstName() {
+    return firstName;
+  }
 
-	/**
-	 * @param firstName
-	 *            the firstName to set
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  /**
+   * @param firstName
+   *          the firstName to set
+   */
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
+  /**
+   * @return the lastName
+   */
+  public String getLastName() {
+    return lastName;
+  }
 
-	/**
-	 * @param lastName
-	 *            the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  /**
+   * @param lastName
+   *          the lastName to set
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+  /**
+   * @return the email
+   */
+  public String getEmail() {
+    return email;
+  }
 
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  /**
+   * @param email
+   *          the email to set
+   */
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	/**
-	 * @return the firstNameIndex
-	 */
-	public String getFirstNameIndex() {
-		return firstNameIndex;
-	}
+  /**
+   * @return the firstNameIndex
+   */
+  public String getFirstNameIndex() {
+    return firstNameIndex;
+  }
 
-	/**
-	 * @param firstNameIndex
-	 *            the firstNameIndex to set
-	 */
-	public void setFirstNameIndex(String firstNameIndex) {
-		this.firstNameIndex = firstNameIndex;
-	}
+  /**
+   * @param firstNameIndex
+   *          the firstNameIndex to set
+   */
+  public void setFirstNameIndex(String firstNameIndex) {
+    this.firstNameIndex = firstNameIndex;
+  }
 
-	/**
-	 * @return the lastNameIndex
-	 */
-	public String getLastNameIndex() {
-		return lastNameIndex;
-	}
+  /**
+   * @return the lastNameIndex
+   */
+  public String getLastNameIndex() {
+    return lastNameIndex;
+  }
 
-	/**
-	 * @param lastNameIndex
-	 *            the lastNameIndex to set
-	 */
-	public void setLastNameIndex(String lastNameIndex) {
-		this.lastNameIndex = lastNameIndex;
-	}
+  /**
+   * @param lastNameIndex
+   *          the lastNameIndex to set
+   */
+  public void setLastNameIndex(String lastNameIndex) {
+    this.lastNameIndex = lastNameIndex;
+  }
 
-	/**
-	 * @return the emailIndex
-	 */
-	public String getEmailIndex() {
-		return emailIndex;
-	}
+  /**
+   * @return the emailIndex
+   */
+  public String getEmailIndex() {
+    return emailIndex;
+  }
 
-	/**
-	 * @param emailIndex
-	 *            the emailIndex to set
-	 */
-	public void setEmailIndex(String emailIndex) {
-		this.emailIndex = emailIndex;
-	}
+  /**
+   * @param emailIndex
+   *          the emailIndex to set
+   */
+  public void setEmailIndex(String emailIndex) {
+    this.emailIndex = emailIndex;
+  }
 
 }

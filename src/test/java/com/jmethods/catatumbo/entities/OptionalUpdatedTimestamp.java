@@ -30,41 +30,41 @@ import com.jmethods.catatumbo.UpdatedTimestamp;
 @Entity
 public class OptionalUpdatedTimestamp {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Property(optional = true)
-	@UpdatedTimestamp
-	private Date modificationTimestamp;
+  @Property(optional = true)
+  @UpdatedTimestamp
+  private Date modificationTimestamp;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the version
-	 */
-	public Date getModificationTimestamp() {
-		return modificationTimestamp;
-	}
+  /**
+   * @return the version
+   */
+  public Date getModificationTimestamp() {
+    return modificationTimestamp;
+  }
 
-	/**
-	 * @param modificationTimestamp
-	 *            the version to set
-	 */
-	public void setModificationTimestamp(Date modificationTimestamp) {
-		this.modificationTimestamp = modificationTimestamp;
-	}
+  /**
+   * @param modificationTimestamp
+   *          the version to set
+   */
+  public void setModificationTimestamp(Date modificationTimestamp) {
+    this.modificationTimestamp = modificationTimestamp;
+  }
 
 }

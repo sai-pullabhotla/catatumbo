@@ -17,56 +17,56 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception thrown by {@link EntityManagerFactory} when it fails to create
- * an {@link EntityManager}.
+ * An exception thrown by {@link EntityManagerFactory} when it fails to create an
+ * {@link EntityManager}.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class EntityManagerFactoryException extends RuntimeException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 8903535956977463773L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 8903535956977463773L;
 
-	/**
-	 * Creates a new instance of <code>EntityManagerFactoryException</code>.
-	 */
-	public EntityManagerFactoryException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>EntityManagerFactoryException</code>.
+   */
+  public EntityManagerFactoryException() {
+    super();
+  }
 
-	/**
-	 * Creates a new instance of <code>EntityManagerFactoryException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public EntityManagerFactoryException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of <code>EntityManagerFactoryException</code>.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public EntityManagerFactoryException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>EntityManagerFactoryException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public EntityManagerFactoryException(String message) {
-		super(message);
-	}
+  /**
+   * Creates a new instance of <code>EntityManagerFactoryException</code>.
+   * 
+   * @param message
+   *          the message
+   */
+  public EntityManagerFactoryException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Creates a new instance of <code>EntityManagerFactoryException</code>.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public EntityManagerFactoryException(Throwable cause) {
-		super(cause.getMessage(), cause);
-	}
+  /**
+   * Creates a new instance of <code>EntityManagerFactoryException</code>.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public EntityManagerFactoryException(Throwable cause) {
+    super(cause.getMessage(), cause);
+  }
 
 }

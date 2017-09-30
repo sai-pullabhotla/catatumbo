@@ -28,89 +28,90 @@ import com.jmethods.catatumbo.Property;
 @Embeddable
 public class ImmutableZipCode {
 
-	private String fiveDigits;
+  private String fiveDigits;
 
-	@Property(optional = true)
-	private String fourDgits;
+  @Property(optional = true)
+  private String fourDgits;
 
-	/**
-	 * 
-	 */
-	public ImmutableZipCode(Builder builder) {
-		this.fiveDigits = builder.fiveDigits;
-		this.fourDgits = builder.fourDgits;
-	}
+  /**
+   * 
+   */
+  public ImmutableZipCode(Builder builder) {
+    this.fiveDigits = builder.fiveDigits;
+    this.fourDgits = builder.fourDgits;
+  }
 
-	/**
-	 * @return the fiveDigits
-	 */
-	public String getFiveDigits() {
-		return fiveDigits;
-	}
+  /**
+   * @return the fiveDigits
+   */
+  public String getFiveDigits() {
+    return fiveDigits;
+  }
 
-	/**
-	 * @return the fourDgits
-	 */
-	public String getFourDgits() {
-		return fourDgits;
-	}
+  /**
+   * @return the fourDgits
+   */
+  public String getFourDgits() {
+    return fourDgits;
+  }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder2 = new StringBuilder();
-		builder2.append("ImmutableZipCode [fiveDigits=").append(fiveDigits).append(", fourDgits=").append(fourDgits)
-				.append("]");
-		return builder2.toString();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    StringBuilder builder2 = new StringBuilder();
+    builder2.append("ImmutableZipCode [fiveDigits=").append(fiveDigits).append(", fourDgits=")
+        .append(fourDgits).append("]");
+    return builder2.toString();
+  }
 
-	public static class Builder {
-		private String fiveDigits;
-		private String fourDgits;
+  public static class Builder {
+    private String fiveDigits;
+    private String fourDgits;
 
-		private Builder() {
+    private Builder() {
 
-		}
+    }
 
-		/**
-		 * @param fiveDigits
-		 *            the fiveDigits to set
-		 */
-		public void setFiveDigits(String fiveDigits) {
-			this.fiveDigits = fiveDigits;
-		}
+    /**
+     * @param fiveDigits
+     *          the fiveDigits to set
+     */
+    public void setFiveDigits(String fiveDigits) {
+      this.fiveDigits = fiveDigits;
+    }
 
-		/**
-		 * @param fourDgits
-		 *            the fourDgits to set
-		 */
-		public void setFourDgits(String fourDgits) {
-			this.fourDgits = fourDgits;
-		}
+    /**
+     * @param fourDgits
+     *          the fourDgits to set
+     */
+    public void setFourDgits(String fourDgits) {
+      this.fourDgits = fourDgits;
+    }
 
-		public ImmutableZipCode build() {
-			return new ImmutableZipCode(this);
-		}
+    public ImmutableZipCode build() {
+      return new ImmutableZipCode(this);
+    }
 
-	}
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		ImmutableZipCode that = (ImmutableZipCode) obj;
-		return Objects.equals(this.fiveDigits, that.fiveDigits) && Objects.equals(this.fourDgits, that.fourDgits);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    ImmutableZipCode that = (ImmutableZipCode) obj;
+    return Objects.equals(this.fiveDigits, that.fiveDigits)
+        && Objects.equals(this.fourDgits, that.fourDgits);
+  }
 }

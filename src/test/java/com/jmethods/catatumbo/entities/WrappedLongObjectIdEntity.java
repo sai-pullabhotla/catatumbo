@@ -28,85 +28,86 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class WrappedLongObjectIdEntity {
 
-	@Identifier
-	private WrappedLongObjectId id;
+  @Identifier
+  private WrappedLongObjectId id;
 
-	private String name;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public WrappedLongObjectId getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public WrappedLongObjectId getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(WrappedLongObjectId id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(WrappedLongObjectId id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WrappedLongObjectIdEntity").append(id).append(", name=").append(name).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("WrappedLongObjectIdEntity").append(id).append(", name=").append(name)
+        .append("]");
+    return builder.toString();
+  }
 
-	public static WrappedLongObjectIdEntity getSample1() {
-		WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedLongObjectIdEntity getSample1() {
+    WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	public static WrappedLongObjectIdEntity getSample2() {
-		WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
-		entity.setId(new WrappedLongObjectId(null));
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedLongObjectIdEntity getSample2() {
+    WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
+    entity.setId(new WrappedLongObjectId(null));
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	public static WrappedLongObjectIdEntity getSample3() {
-		WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
-		entity.setId(new WrappedLongObjectId(0L));
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedLongObjectIdEntity getSample3() {
+    WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
+    entity.setId(new WrappedLongObjectId(0L));
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	public static WrappedLongObjectIdEntity getSample4() {
-		WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
-		entity.setId(new WrappedLongObjectId(60000L));
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedLongObjectIdEntity getSample4() {
+    WrappedLongObjectIdEntity entity = new WrappedLongObjectIdEntity();
+    entity.setId(new WrappedLongObjectId(60000L));
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		WrappedLongObjectIdEntity that = (WrappedLongObjectIdEntity) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    WrappedLongObjectIdEntity that = (WrappedLongObjectIdEntity) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
+  }
 
 }

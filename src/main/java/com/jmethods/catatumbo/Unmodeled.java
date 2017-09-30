@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo;
 
 import java.lang.annotation.ElementType;
@@ -22,14 +23,13 @@ import java.lang.annotation.Target;
 import java.util.Map;
 
 /**
- * NOT IMPLEMENTED YET. A {@link Map} field in an entity can be annotated with
- * this annotation to hold all unmodeled (or custom) fields. Only one field can
- * have this annotation in a given entity.
+ * NOT IMPLEMENTED YET. A {@link Map} field in an entity can be annotated with this annotation to
+ * hold all unmodeled (or custom) fields. Only one field can have this annotation in a given entity.
  * 
  * @author Sai Pullabhotla
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Unmodeled {
-
+  // Marker
 }

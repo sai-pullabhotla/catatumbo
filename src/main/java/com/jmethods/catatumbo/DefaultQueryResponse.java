@@ -22,78 +22,78 @@ import java.util.List;
  * Default implementation of {@link QueryResponse} interface.
  * 
  * @param <T>
- *            the expected result type
+ *          the expected result type
  * @author Sai Pullabhotla
  *
  */
 public class DefaultQueryResponse<T> implements QueryResponse<T> {
 
-	/**
-	 * A list to hold the results of the query
-	 */
-	protected List<T> results = null;
+  /**
+   * A list to hold the results of the query
+   */
+  protected List<T> results = null;
 
-	/**
-	 * Start cursor
-	 */
-	protected DatastoreCursor startCursor = null;
+  /**
+   * Start cursor
+   */
+  protected DatastoreCursor startCursor = null;
 
-	/**
-	 * End cursor
-	 */
-	protected DatastoreCursor endCursor = null;
+  /**
+   * End cursor
+   */
+  protected DatastoreCursor endCursor = null;
 
-	/**
-	 * Creates a new instance of <code>BaseQueryResponse</code>.
-	 * 
-	 */
-	public DefaultQueryResponse() {
-		// Do nothing
-	}
+  /**
+   * Creates a new instance of <code>BaseQueryResponse</code>.
+   * 
+   */
+  public DefaultQueryResponse() {
+    // Do nothing
+  }
 
-	@Override
-	public List<T> getResults() {
-		return results;
-	}
+  @Override
+  public List<T> getResults() {
+    return results;
+  }
 
-	/**
-	 * Sets the results to the given <code>results</code>.
-	 * 
-	 * @param results
-	 *            the results
-	 */
-	public void setResults(List<T> results) {
-		this.results = results;
-	}
+  /**
+   * Sets the results to the given <code>results</code>.
+   * 
+   * @param results
+   *          the results
+   */
+  public void setResults(List<T> results) {
+    this.results = results;
+  }
 
-	@Override
-	public DatastoreCursor getStartCursor() {
-		return startCursor;
-	}
+  @Override
+  public DatastoreCursor getStartCursor() {
+    return startCursor;
+  }
 
-	/**
-	 * Sets the starting cursor to the given value.
-	 * 
-	 * @param startCursor
-	 *            the start cursor
-	 */
-	public void setStartCursor(DatastoreCursor startCursor) {
-		this.startCursor = startCursor;
-	}
+  /**
+   * Sets the starting cursor to the given value.
+   * 
+   * @param startCursor
+   *          the start cursor
+   */
+  public void setStartCursor(DatastoreCursor startCursor) {
+    this.startCursor = startCursor;
+  }
 
-	@Override
-	public DatastoreCursor getEndCursor() {
-		return endCursor;
-	}
+  @Override
+  public DatastoreCursor getEndCursor() {
+    return endCursor;
+  }
 
-	/**
-	 * Sets the end cursor to the given value.
-	 * 
-	 * @param endCursor
-	 *            the end cursor
-	 */
-	public void setEndCursor(DatastoreCursor endCursor) {
-		this.endCursor = endCursor;
-	}
+  /**
+   * Sets the end cursor to the given value.
+   * 
+   * @param endCursor
+   *          the end cursor
+   */
+  public void setEndCursor(DatastoreCursor endCursor) {
+    this.endCursor = endCursor;
+  }
 
 }

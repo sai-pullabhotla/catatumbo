@@ -16,16 +16,15 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Specifies that the execution of listeners defined in the super class should
- * be excluded. This annotation can be specified on an {@link Entity} or
- * {@link MappedSuperClass}.
+ * Specifies that the execution of listeners defined in the super class should be excluded. This
+ * annotation can be specified on an {@link Entity} or {@link MappedSuperClass}.
  * 
  * @author Sai Pullabhotla
  *
@@ -33,5 +32,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface ExcludeSuperclassListeners {
-
+  // Marker
 }

@@ -23,25 +23,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Designates a class whose mapping information is applied to the entities that
- * inherit from it. A class designated with the MappedSuperclass annotation can
- * be mapped in the same way as an entity except that the mappings will apply
- * only to its subclasses. This means, a MappedSuperClass may contain fields
- * with {@link Identifier}, {@link Key}, {@link ParentKey}, {@link Property},
- * {@link Embedded} and {@link Ignore} annotations. The mapping information
- * defined in the MappedSuperClass can be overridden by the Entity using the
- * {@link PropertyOverrides} and {@link PropertyOverride} annotations. This
- * allows an entity to use a different property name or turn on/off the indexing
- * of a property.
+ * Designates a class whose mapping information is applied to the entities that inherit from it. A
+ * class designated with the MappedSuperclass annotation can be mapped in the same way as an entity
+ * except that the mappings will apply only to its subclasses. This means, a MappedSuperClass may
+ * contain fields with {@link Identifier}, {@link Key}, {@link ParentKey}, {@link Property},
+ * {@link Embedded} and {@link Ignore} annotations. The mapping information defined in the
+ * MappedSuperClass can be overridden by the Entity using the {@link PropertyOverrides} and
+ * {@link PropertyOverride} annotations. This allows an entity to use a different property name or
+ * turn on/off the indexing of a property.
  * 
  * <p>
  * It is legal for a MappedSuperClass extend from another MappedSuperClass.
  * </p>
  * 
  * <p>
- * Like {@link Entity entities}, the MappedSuperClass may also use either the
- * classic Java Beans pattern or the Builder pattern. Subclasses of
- * MappedSuperClass must use the same design pattern.
+ * Like {@link Entity entities}, the MappedSuperClass may also use either the classic Java Beans
+ * pattern or the Builder pattern. Subclasses of MappedSuperClass must use the same design pattern.
  * </p>
  * 
  * @author Sai Pullabhotla
@@ -50,5 +47,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface MappedSuperClass {
-
+  // Marker
 }

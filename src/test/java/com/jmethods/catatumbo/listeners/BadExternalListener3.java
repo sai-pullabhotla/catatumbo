@@ -28,11 +28,11 @@ import com.jmethods.catatumbo.PreUpsert;
 @EntityListener
 public class BadExternalListener3 {
 
-	@PreInsert
-	@PreUpdate
-	@PreUpsert
-	public void beforePersist() {
+  @PreInsert
+  @PreUpdate
+  @PreUpsert
+  public void beforePersist() {
 
-	}
+  }
 
 }

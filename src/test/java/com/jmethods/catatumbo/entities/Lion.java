@@ -27,12 +27,12 @@ import com.jmethods.catatumbo.PreInsert;
 @Entity
 @ExcludeDefaultListeners
 public class Lion extends WildAnimal {
-	@PreInsert
-	public void insertingLion() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += Lion.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingLion() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += Lion.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 
 }

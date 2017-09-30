@@ -28,68 +28,68 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class BigDecimalField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private BigDecimal value;
+  private BigDecimal value;
 
-	public BigDecimalField() {
+  public BigDecimalField() {
 
-	}
+  }
 
-	public BigDecimalField(BigDecimal value) {
-		this.value = value;
-	}
+  public BigDecimalField(BigDecimal value) {
+    this.value = value;
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the value
-	 */
-	public BigDecimal getValue() {
-		return value;
-	}
+  /**
+   * @return the value
+   */
+  public BigDecimal getValue() {
+    return value;
+  }
 
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(BigDecimal value) {
-		this.value = value;
-	}
+  /**
+   * @param value
+   *          the value to set
+   */
+  public void setValue(BigDecimal value) {
+    this.value = value;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !(obj instanceof BigDecimalField)) {
-			return false;
-		}
-		BigDecimalField that = (BigDecimalField) obj;
-		if (this.id != that.id) {
-			return false;
-		}
-		if (this.value == null && that.value == null) {
-			return true;
-		}
-		if (this.value == null || that.value == null) {
-			return false;
-		}
-		return this.value.compareTo(that.value) == 0;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !(obj instanceof BigDecimalField)) {
+      return false;
+    }
+    BigDecimalField that = (BigDecimalField) obj;
+    if (this.id != that.id) {
+      return false;
+    }
+    if (this.value == null && that.value == null) {
+      return true;
+    }
+    if (this.value == null || that.value == null) {
+      return false;
+    }
+    return this.value.compareTo(that.value) == 0;
+  }
 
 }

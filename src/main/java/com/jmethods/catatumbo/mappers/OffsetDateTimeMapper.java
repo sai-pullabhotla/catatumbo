@@ -30,43 +30,43 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping {@link OffsetDateTime}
- * to/from Cloud Datastore. {@link OffsetDateTime} types are mapped to DateTime
- * type in the Cloud Datastore. This maximum precision is capped to Microseconds
- * to match with what the Datastore supports.
+ * An implementation of {@link Mapper} for mapping {@link OffsetDateTime} to/from Cloud Datastore.
+ * {@link OffsetDateTime} types are mapped to DateTime type in the Cloud Datastore. This maximum
+ * precision is capped to Microseconds to match with what the Datastore supports.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class OffsetDateTimeMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		OffsetDateTime offsetDateTime = (OffsetDateTime) input;
-		long seconds = offsetDateTime.toEpochSecond();
-		int nanos = offsetDateTime.getNano();
-		long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
-		return TimestampValue.newBuilder(Timestamp.ofTimeMicroseconds(microseconds));
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    OffsetDateTime offsetDateTime = (OffsetDateTime) input;
+    long seconds = offsetDateTime.toEpochSecond();
+    int nanos = offsetDateTime.getNano();
+    long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
+    return TimestampValue.newBuilder(Timestamp.ofTimeMicroseconds(microseconds));
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		try {
-			Timestamp ts = ((TimestampValue) input).get();
-			long seconds = ts.getSeconds();
-			int nanos = ts.getNanos();
-			return OffsetDateTime.ofInstant(Instant.ofEpochSecond(seconds, nanos), ZoneId.systemDefault());
-		} catch (ClassCastException exp) {
-			String pattern = "Expecting %s, but found %s";
-			throw new MappingException(
-					String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
-		}
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    try {
+      Timestamp ts = ((TimestampValue) input).get();
+      long seconds = ts.getSeconds();
+      int nanos = ts.getNanos();
+      return OffsetDateTime.ofInstant(Instant.ofEpochSecond(seconds, nanos),
+          ZoneId.systemDefault());
+    } catch (ClassCastException exp) {
+      String pattern = "Expecting %s, but found %s";
+      throw new MappingException(
+          String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
+    }
+  }
 
 }

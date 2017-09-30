@@ -39,38 +39,38 @@ import com.jmethods.catatumbo.IndexingException;
  */
 public class UpperCaseStringIndexerTest {
 
-	private static final Logger LOGGER = Logger.getLogger(UpperCaseStringIndexerTest.class.getName());
-	private static UpperCaseStringIndexer indexer;
+  private static final Logger LOGGER = Logger.getLogger(UpperCaseStringIndexerTest.class.getName());
+  private static UpperCaseStringIndexer indexer;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		indexer = IndexerFactory.getInstance().getIndexer(UpperCaseStringIndexer.class);
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    indexer = IndexerFactory.getInstance().getIndexer(UpperCaseStringIndexer.class);
+  }
 
-	@Test
-	public void testIndex_1() {
-		Value<?> input = NullValue.of();
-		Value<?> output = indexer.index(input);
-		assertEquals(input, output);
-	}
+  @Test
+  public void testIndex_1() {
+    Value<?> input = NullValue.of();
+    Value<?> output = indexer.index(input);
+    assertEquals(input, output);
+  }
 
-	@Test
-	public void testIndex_2() {
-		StringValue input = StringValue.of("Hello World!");
-		StringValue output = (StringValue) indexer.index(input);
-		assertEquals(input.get().toUpperCase(Locale.ENGLISH), output.get());
-		assertNotEquals(input.get(), output.get());
-	}
+  @Test
+  public void testIndex_2() {
+    StringValue input = StringValue.of("Hello World!");
+    StringValue output = (StringValue) indexer.index(input);
+    assertEquals(input.get().toUpperCase(Locale.ENGLISH), output.get());
+    assertNotEquals(input.get(), output.get());
+  }
 
-	@Test(expected = IndexingException.class)
-	public void testIndex_3() {
-		LongValue input = LongValue.of(5L);
-		try {
-			Value<?> output = indexer.index(input);
-		} catch (Exception exp) {
-			LOGGER.log(Level.INFO, exp.toString());
-			throw exp;
-		}
-	}
+  @Test(expected = IndexingException.class)
+  public void testIndex_3() {
+    LongValue input = LongValue.of(5L);
+    try {
+      Value<?> output = indexer.index(input);
+    } catch (Exception exp) {
+      LOGGER.log(Level.INFO, exp.toString());
+      throw exp;
+    }
+  }
 
 }

@@ -27,54 +27,54 @@ import java.util.Objects;
  */
 public class DefaultDatastoreCursor implements DatastoreCursor, Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -6434001816829294681L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -6434001816829294681L;
 
-	/**
-	 * Cursor data in URL-safe format
-	 */
-	private String encoded = null;
+  /**
+   * Cursor data in URL-safe format
+   */
+  private String encoded = null;
 
-	/**
-	 * Creates a new instance of <code>DefaultDatastoreCursor</code>.
-	 * 
-	 * @param encoded
-	 *            cursor data, in URL-safe format. A <code>null</code> value
-	 *            will be converted to an empty string.
-	 */
-	public DefaultDatastoreCursor(String encoded) {
-		this.encoded = encoded != null ? encoded : "";
-	}
+  /**
+   * Creates a new instance of <code>DefaultDatastoreCursor</code>.
+   * 
+   * @param encoded
+   *          cursor data, in URL-safe format. A <code>null</code> value will be converted to an
+   *          empty string.
+   */
+  public DefaultDatastoreCursor(String encoded) {
+    this.encoded = encoded != null ? encoded : "";
+  }
 
-	/**
-	 * Returns the encoded value of this cursor, in URL-safe format.
-	 * 
-	 * @return the encoded value of this cursor, in URL-safe format.
-	 */
-	@Override
-	public String getEncoded() {
-		return encoded;
-	}
+  /**
+   * Returns the encoded value of this cursor, in URL-safe format.
+   * 
+   * @return the encoded value of this cursor, in URL-safe format.
+   */
+  @Override
+  public String getEncoded() {
+    return encoded;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof DefaultDatastoreCursor)) {
-			return false;
-		}
-		DefaultDatastoreCursor that = (DefaultDatastoreCursor) obj;
-		return this.encoded.equals(that.encoded);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof DefaultDatastoreCursor)) {
+      return false;
+    }
+    DefaultDatastoreCursor that = (DefaultDatastoreCursor) obj;
+    return this.encoded.equals(that.encoded);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(encoded);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(encoded);
+  }
 
-	@Override
-	public String toString() {
-		return encoded;
-	}
+  @Override
+  public String toString() {
+    return encoded;
+  }
 
 }

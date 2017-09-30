@@ -13,62 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo;
 
 /**
- * Exception thrown by EntityManager when mapping objects to/from the Cloud
- * Datastore.
+ * Exception thrown by EntityManager when mapping objects to/from the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  */
 public class EntityManagerException extends RuntimeException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -4427708611101283783L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -4427708611101283783L;
 
-	/**
-	 * Creates a new instance of <code>EntityManagerException</code> without
-	 * detail message.
-	 */
-	public EntityManagerException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>EntityManagerException</code> without detail message.
+   */
+  public EntityManagerException() {
+    super();
+  }
 
-	/**
-	 * Constructs an instance of <code>EntityManagerException</code> with the
-	 * specified detail message.
-	 *
-	 * @param msg
-	 *            the detail message.
-	 */
-	public EntityManagerException(String msg) {
-		super(msg);
-	}
+  /**
+   * Constructs an instance of <code>EntityManagerException</code> with the specified detail
+   * message.
+   *
+   * @param msg
+   *          the detail message.
+   */
+  public EntityManagerException(String msg) {
+    super(msg);
+  }
 
-	/**
-	 * Creates an instance of <code>EntityManagerException</code> with the given
-	 * message and cause.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public EntityManagerException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates an instance of <code>EntityManagerException</code> with the given message and cause.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public EntityManagerException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>EntityManagerException</code> with the
-	 * given cause.
-	 * 
-	 * @param cause
-	 *            the cause.
-	 */
-	public EntityManagerException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of <code>EntityManagerException</code> with the given cause.
+   * 
+   * @param cause
+   *          the cause.
+   */
+  public EntityManagerException(Throwable cause) {
+    super(cause);
+  }
 
 }

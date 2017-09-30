@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class IntegerObject {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Integer count;
+  private Integer count;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the count
-	 */
-	public Integer getCount() {
-		return count;
-	}
+  /**
+   * @return the count
+   */
+  public Integer getCount() {
+    return count;
+  }
 
-	/**
-	 * @param count
-	 *            the count to set
-	 */
-	public void setCount(Integer count) {
-		this.count = count;
-	}
+  /**
+   * @param count
+   *          the count to set
+   */
+  public void setCount(Integer count) {
+    this.count = count;
+  }
 
 }

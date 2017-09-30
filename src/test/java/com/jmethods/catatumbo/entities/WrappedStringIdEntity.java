@@ -28,85 +28,86 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class WrappedStringIdEntity {
 
-	@Identifier
-	private WrappedStringId id;
+  @Identifier
+  private WrappedStringId id;
 
-	private String name;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public WrappedStringId getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public WrappedStringId getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(WrappedStringId id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(WrappedStringId id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WrappedStringIdEntity [id=").append(id).append(", name=").append(name).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("WrappedStringIdEntity [id=").append(id).append(", name=").append(name)
+        .append("]");
+    return builder.toString();
+  }
 
-	public static WrappedStringIdEntity getSample1() {
-		WrappedStringIdEntity entity = new WrappedStringIdEntity();
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedStringIdEntity getSample1() {
+    WrappedStringIdEntity entity = new WrappedStringIdEntity();
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	public static WrappedStringIdEntity getSample2() {
-		WrappedStringIdEntity entity = new WrappedStringIdEntity();
-		entity.setId(new WrappedStringId(null));
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedStringIdEntity getSample2() {
+    WrappedStringIdEntity entity = new WrappedStringIdEntity();
+    entity.setId(new WrappedStringId(null));
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	public static WrappedStringIdEntity getSample3() {
-		WrappedStringIdEntity entity = new WrappedStringIdEntity();
-		entity.setId(new WrappedStringId(""));
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedStringIdEntity getSample3() {
+    WrappedStringIdEntity entity = new WrappedStringIdEntity();
+    entity.setId(new WrappedStringId(""));
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	public static WrappedStringIdEntity getSample4() {
-		WrappedStringIdEntity entity = new WrappedStringIdEntity();
-		entity.setId(new WrappedStringId("mykey"));
-		entity.setName("johndoe");
-		return entity;
-	}
+  public static WrappedStringIdEntity getSample4() {
+    WrappedStringIdEntity entity = new WrappedStringIdEntity();
+    entity.setId(new WrappedStringId("mykey"));
+    entity.setName("johndoe");
+    return entity;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		WrappedStringIdEntity that = (WrappedStringIdEntity) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    WrappedStringIdEntity that = (WrappedStringIdEntity) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
+  }
 
 }

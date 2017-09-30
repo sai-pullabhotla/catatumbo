@@ -17,4 +17,5 @@
 /**
  * Contains various indexers for indexing the entity properties.
  */
+
 package com.jmethods.catatumbo.indexers;

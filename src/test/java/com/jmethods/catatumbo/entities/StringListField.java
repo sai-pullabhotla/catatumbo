@@ -28,39 +28,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class StringListField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private List<String> hobbies;
+  private List<String> hobbies;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the list
-	 */
-	public List<String> getHobbies() {
-		return hobbies;
-	}
+  /**
+   * @return the list
+   */
+  public List<String> getHobbies() {
+    return hobbies;
+  }
 
-	/**
-	 * @param hobbies
-	 *            the list to set
-	 */
-	public void setHobbies(List<String> hobbies) {
-		this.hobbies = hobbies;
-	}
+  /**
+   * @param hobbies
+   *          the list to set
+   */
+  public void setHobbies(List<String> hobbies) {
+    this.hobbies = hobbies;
+  }
 
 }

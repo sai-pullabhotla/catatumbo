@@ -43,99 +43,106 @@ import com.jmethods.catatumbo.entities.StringSetIndex2;
  */
 public class SecondaryIndexTest {
 
-	private static EntityManager em;
+  private static EntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testInsertStringIndex() {
-		StringIndex entity = StringIndex.getSample1();
-		entity = em.insert(entity);
-		StringIndex loadedEntity = em.load(StringIndex.class, entity.getId());
-		StringIndex2 entity2 = em.load(StringIndex2.class, entity.getId());
-		assertEquals(entity, loadedEntity);
-		assertEquals(entity.getFirstName(), entity2.getFirstName());
-		assertEquals(entity.getLastName(), entity2.getLastName());
-		assertEquals(entity.getEmail(), entity2.getEmail());
-		assertEquals(entity2.getFirstNameIndex(), entity.getFirstName().toLowerCase(Locale.ENGLISH));
-		assertEquals(entity2.getLastNameIndex(), entity.getLastName().toUpperCase(Locale.ENGLISH));
-		assertEquals(entity2.getEmailIndex(), entity.getEmail().toLowerCase(Locale.ENGLISH));
-	}
+  @Test
+  public void testInsertStringIndex() {
+    StringIndex entity = StringIndex.getSample1();
+    entity = em.insert(entity);
+    StringIndex loadedEntity = em.load(StringIndex.class, entity.getId());
+    StringIndex2 entity2 = em.load(StringIndex2.class, entity.getId());
+    assertEquals(entity, loadedEntity);
+    assertEquals(entity.getFirstName(), entity2.getFirstName());
+    assertEquals(entity.getLastName(), entity2.getLastName());
+    assertEquals(entity.getEmail(), entity2.getEmail());
+    assertEquals(entity2.getFirstNameIndex(), entity.getFirstName().toLowerCase(Locale.ENGLISH));
+    assertEquals(entity2.getLastNameIndex(), entity.getLastName().toUpperCase(Locale.ENGLISH));
+    assertEquals(entity2.getEmailIndex(), entity.getEmail().toLowerCase(Locale.ENGLISH));
+  }
 
-	@Test
-	public void testInsertStringIndex_Null() {
-		StringIndex entity = new StringIndex();
-		entity = em.insert(entity);
-		StringIndex loadedEntity = em.load(StringIndex.class, entity.getId());
-		StringIndex2 entity2 = em.load(StringIndex2.class, entity.getId());
-		assertEquals(entity, loadedEntity);
-		assertEquals(entity.getFirstName(), entity2.getFirstName());
-		assertEquals(entity.getLastName(), entity2.getLastName());
-		assertEquals(entity.getEmail(), entity2.getEmail());
-		assertNull(entity2.getFirstNameIndex());
-		assertNull(entity2.getLastNameIndex());
-		assertNull(entity2.getEmailIndex());
-	}
+  @Test
+  public void testInsertStringIndex_Null() {
+    StringIndex entity = new StringIndex();
+    entity = em.insert(entity);
+    StringIndex loadedEntity = em.load(StringIndex.class, entity.getId());
+    StringIndex2 entity2 = em.load(StringIndex2.class, entity.getId());
+    assertEquals(entity, loadedEntity);
+    assertEquals(entity.getFirstName(), entity2.getFirstName());
+    assertEquals(entity.getLastName(), entity2.getLastName());
+    assertEquals(entity.getEmail(), entity2.getEmail());
+    assertNull(entity2.getFirstNameIndex());
+    assertNull(entity2.getLastNameIndex());
+    assertNull(entity2.getEmailIndex());
+  }
 
-	@Test
-	public void testInsertStringListIndex() {
-		StringListIndex entity = StringListIndex.getSample1();
-		entity = em.insert(entity);
-		StringListIndex loadedEntity = em.load(StringListIndex.class, entity.getId());
-		StringListIndex2 entity2 = em.load(StringListIndex2.class, entity.getId());
-		assertEquals(entity, loadedEntity);
-		assertEquals(entity.getColors().get(0).toLowerCase(Locale.ENGLISH), entity2.getColorsIndex().get(0));
-		assertEquals(entity.getColors().get(1).toLowerCase(Locale.ENGLISH), entity2.getColorsIndex().get(1));
-		assertEquals(entity.getColors().get(2).toLowerCase(Locale.ENGLISH), entity2.getColorsIndex().get(2));
-		assertEquals(entity.getSizes().get(0).toUpperCase(Locale.ENGLISH), entity2.getSizesIndex().get(0));
-		assertEquals(entity.getSizes().get(1).toUpperCase(Locale.ENGLISH), entity2.getSizesIndex().get(1));
-		assertEquals(entity.getSizes().get(2).toUpperCase(Locale.ENGLISH), entity2.getSizesIndex().get(2));
-		assertEquals(entity.getSizes().get(3), entity2.getSizesIndex().get(3));
-	}
+  @Test
+  public void testInsertStringListIndex() {
+    StringListIndex entity = StringListIndex.getSample1();
+    entity = em.insert(entity);
+    StringListIndex loadedEntity = em.load(StringListIndex.class, entity.getId());
+    StringListIndex2 entity2 = em.load(StringListIndex2.class, entity.getId());
+    assertEquals(entity, loadedEntity);
+    assertEquals(entity.getColors().get(0).toLowerCase(Locale.ENGLISH),
+        entity2.getColorsIndex().get(0));
+    assertEquals(entity.getColors().get(1).toLowerCase(Locale.ENGLISH),
+        entity2.getColorsIndex().get(1));
+    assertEquals(entity.getColors().get(2).toLowerCase(Locale.ENGLISH),
+        entity2.getColorsIndex().get(2));
+    assertEquals(entity.getSizes().get(0).toUpperCase(Locale.ENGLISH),
+        entity2.getSizesIndex().get(0));
+    assertEquals(entity.getSizes().get(1).toUpperCase(Locale.ENGLISH),
+        entity2.getSizesIndex().get(1));
+    assertEquals(entity.getSizes().get(2).toUpperCase(Locale.ENGLISH),
+        entity2.getSizesIndex().get(2));
+    assertEquals(entity.getSizes().get(3), entity2.getSizesIndex().get(3));
+  }
 
-	@Test
-	public void testInsertStringSetIndex() {
-		StringSetIndex entity = StringSetIndex.getSample1();
-		entity = em.insert(entity);
-		StringSetIndex loadedEntity = em.load(StringSetIndex.class, entity.getId());
-		StringSetIndex2 entity2 = em.load(StringSetIndex2.class, entity.getId());
-		assertEquals(entity, loadedEntity);
-		Iterator<String> colors1 = entity.getColors().iterator();
-		Iterator<String> colors2 = entity2.getColorsIndex().iterator();
-		Iterator<String> sizes1 = entity.getSizes().iterator();
-		Iterator<String> sizes2 = entity2.getSizesIndex().iterator();
-		assertEquals(colors1.next().toLowerCase(Locale.ENGLISH), colors2.next());
-		assertEquals(colors1.next().toLowerCase(Locale.ENGLISH), colors2.next());
-		assertEquals(colors1.next().toLowerCase(Locale.ENGLISH), colors2.next());
-		assertEquals(sizes1.next().toUpperCase(Locale.ENGLISH), sizes2.next());
-		assertEquals(sizes1.next().toUpperCase(Locale.ENGLISH), sizes2.next());
-		assertEquals(sizes1.next().toUpperCase(Locale.ENGLISH), sizes2.next());
-		assertEquals(sizes1.next(), sizes2.next());
-	}
+  @Test
+  public void testInsertStringSetIndex() {
+    StringSetIndex entity = StringSetIndex.getSample1();
+    entity = em.insert(entity);
+    StringSetIndex loadedEntity = em.load(StringSetIndex.class, entity.getId());
+    StringSetIndex2 entity2 = em.load(StringSetIndex2.class, entity.getId());
+    assertEquals(entity, loadedEntity);
+    Iterator<String> colors1 = entity.getColors().iterator();
+    Iterator<String> colors2 = entity2.getColorsIndex().iterator();
+    Iterator<String> sizes1 = entity.getSizes().iterator();
+    Iterator<String> sizes2 = entity2.getSizesIndex().iterator();
+    assertEquals(colors1.next().toLowerCase(Locale.ENGLISH), colors2.next());
+    assertEquals(colors1.next().toLowerCase(Locale.ENGLISH), colors2.next());
+    assertEquals(colors1.next().toLowerCase(Locale.ENGLISH), colors2.next());
+    assertEquals(sizes1.next().toUpperCase(Locale.ENGLISH), sizes2.next());
+    assertEquals(sizes1.next().toUpperCase(Locale.ENGLISH), sizes2.next());
+    assertEquals(sizes1.next().toUpperCase(Locale.ENGLISH), sizes2.next());
+    assertEquals(sizes1.next(), sizes2.next());
+  }
 
-	@Test
-	public void testInsertEmbeddedListIndex() {
-		ParentEntity parent = new ParentEntity();
-		parent.setField1("SecondaryIndex Test");
-		parent = em.insert(parent);
-		EmbeddedListIndex entity = new EmbeddedListIndex();
-		entity.setParentKey(parent.getKey());
-		List<Address> addresses = new ArrayList<>();
-		addresses.add(Address.getSample1());
-		addresses.add(Address.getSample2());
-		addresses.add(Address.getSample3());
-		entity.setAddresses(addresses);
-		entity = em.insert(entity);
-		String query = "SELECT * FROM EmbeddedListIndex WHERE __key__ HAS ANCESTOR @1 AND addresses.$city=@2";
-		EntityQueryRequest request = em.createEntityQueryRequest(query);
-		request.addPositionalBinding(parent.getKey());
-		request.addPositionalBinding("lincoln");
-		QueryResponse<EmbeddedListIndex> response = em.executeEntityQueryRequest(EmbeddedListIndex.class, request);
-		List<EmbeddedListIndex> entities = response.getResults();
-		assertEquals(1, entities.size());
-	}
+  @Test
+  public void testInsertEmbeddedListIndex() {
+    ParentEntity parent = new ParentEntity();
+    parent.setField1("SecondaryIndex Test");
+    parent = em.insert(parent);
+    EmbeddedListIndex entity = new EmbeddedListIndex();
+    entity.setParentKey(parent.getKey());
+    List<Address> addresses = new ArrayList<>();
+    addresses.add(Address.getSample1());
+    addresses.add(Address.getSample2());
+    addresses.add(Address.getSample3());
+    entity.setAddresses(addresses);
+    entity = em.insert(entity);
+    String query = "SELECT * FROM EmbeddedListIndex WHERE __key__ HAS ANCESTOR @1 AND addresses.$city=@2";
+    EntityQueryRequest request = em.createEntityQueryRequest(query);
+    request.addPositionalBinding(parent.getKey());
+    request.addPositionalBinding("lincoln");
+    QueryResponse<EmbeddedListIndex> response = em
+        .executeEntityQueryRequest(EmbeddedListIndex.class, request);
+    List<EmbeddedListIndex> entities = response.getResults();
+    assertEquals(1, entities.size());
+  }
 
 }

@@ -27,62 +27,62 @@ import com.jmethods.catatumbo.Version;
 @Entity
 public class OptimisticLock1 {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@Version
-	private long version = 1;
+  @Version
+  private long version = 1;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the version
-	 */
-	public long getVersion() {
-		return version;
-	}
+  /**
+   * @return the version
+   */
+  public long getVersion() {
+    return version;
+  }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(long version) {
-		this.version = version;
-	}
+  /**
+   * @param version
+   *          the version to set
+   */
+  public void setVersion(long version) {
+    this.version = version;
+  }
 
-	@Override
-	public String toString() {
-		return "OptimisticLock1 [id=" + id + ", name=" + name + ", version=" + version + "]";
-	}
+  @Override
+  public String toString() {
+    return "OptimisticLock1 [id=" + id + ", name=" + name + ", version=" + version + "]";
+  }
 
 }

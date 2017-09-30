@@ -26,43 +26,43 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class EnumField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Size size;
+  private Size size;
 
-	public enum Size {
-		SMALL, MEDIUM, LARGE, EXTRA_LARGE;
-	}
+  public enum Size {
+    SMALL, MEDIUM, LARGE, EXTRA_LARGE;
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the size
-	 */
-	public Size getSize() {
-		return size;
-	}
+  /**
+   * @return the size
+   */
+  public Size getSize() {
+    return size;
+  }
 
-	/**
-	 * @param size
-	 *            the size to set
-	 */
-	public void setSize(Size size) {
-		this.size = size;
-	}
+  /**
+   * @param size
+   *          the size to set
+   */
+  public void setSize(Size size) {
+    this.size = size;
+  }
 
 }

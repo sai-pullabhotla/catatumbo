@@ -26,40 +26,40 @@ import com.jmethods.catatumbo.Property;
  */
 @Entity
 public class UnindexedStringField {
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Property(indexed = false)
-	private String hugeString;
+  @Property(indexed = false)
+  private String hugeString;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the hugeString
-	 */
-	public String getHugeString() {
-		return hugeString;
-	}
+  /**
+   * @return the hugeString
+   */
+  public String getHugeString() {
+    return hugeString;
+  }
 
-	/**
-	 * @param hugeString
-	 *            the hugeString to set
-	 */
-	public void setHugeString(String hugeString) {
-		this.hugeString = hugeString;
-	}
+  /**
+   * @param hugeString
+   *          the hugeString to set
+   */
+  public void setHugeString(String hugeString) {
+    this.hugeString = hugeString;
+  }
 
 }

@@ -31,20 +31,20 @@ import com.jmethods.catatumbo.PreInsert;
 @ExcludeDefaultListeners
 public class Dog extends Pet {
 
-	@PreInsert
-	public void insertingDog() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += Dog.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingDog() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += Dog.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 
-	@PostInsert
-	public void dogInserted() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += Dog.class.getSimpleName() + "." + PostInsert.class.getSimpleName();
-	}
+  @PostInsert
+  public void dogInserted() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += Dog.class.getSimpleName() + "." + PostInsert.class.getSimpleName();
+  }
 
 }

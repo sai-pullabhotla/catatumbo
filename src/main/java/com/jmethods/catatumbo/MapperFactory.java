@@ -63,253 +63,252 @@ import com.jmethods.catatumbo.mappers.StringMapper;
 import com.jmethods.catatumbo.mappers.ZonedDateTimeMapper;
 
 /**
- * A factory for producing data mappers that are used for mapping fields of
- * model class to/from the Cloud Datastore.
+ * A factory for producing data mappers that are used for mapping fields of model class to/from the
+ * Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class MapperFactory {
 
-	/**
-	 * Singleton instance
-	 */
-	private static final MapperFactory INSTANCE = new MapperFactory();
+  /**
+   * Singleton instance
+   */
+  private static final MapperFactory INSTANCE = new MapperFactory();
 
-	/**
-	 * Cache of mappers by Type
-	 */
-	private Cache<Type, Mapper> cache = null;
+  /**
+   * Cache of mappers by Type
+   */
+  private Cache<Type, Mapper> cache = null;
 
-	/**
-	 * A lock for preventing multiple threads creating Mappers simultaneously
-	 */
-	private Lock lock;
+  /**
+   * A lock for preventing multiple threads creating Mappers simultaneously
+   */
+  private Lock lock;
 
-	/**
-	 * Creates a new instance of <code>MapperFactory</code>.
-	 */
-	private MapperFactory() {
-		cache = new Cache<>();
-		lock = new ReentrantLock();
-		createDefaultMappers();
-	}
+  /**
+   * Creates a new instance of <code>MapperFactory</code>.
+   */
+  private MapperFactory() {
+    cache = new Cache<>();
+    lock = new ReentrantLock();
+    createDefaultMappers();
+  }
 
-	/**
-	 * Returns the singleton instance of this <code>MapperFactory</code>.
-	 * 
-	 * @return the singleton instance of this <code>MapperFactory</code>.
-	 */
-	public static MapperFactory getInstance() {
-		return INSTANCE;
-	}
+  /**
+   * Returns the singleton instance of this <code>MapperFactory</code>.
+   * 
+   * @return the singleton instance of this <code>MapperFactory</code>.
+   */
+  public static MapperFactory getInstance() {
+    return INSTANCE;
+  }
 
-	/**
-	 * Returns the mapper for the given field. If the field has a custom mapper,
-	 * a new instance of the specified mapper will be created and returned.
-	 * Otherwise, one of the built-in mappers will be returned based on the
-	 * field type.
-	 * 
-	 * @param field
-	 *            the field
-	 * @return the mapper for the given field.
-	 */
-	public Mapper getMapper(Field field) {
-		PropertyMapper propertyMapperAnnotation = field.getAnnotation(PropertyMapper.class);
-		if (propertyMapperAnnotation != null) {
-			return createCustomMapper(field, propertyMapperAnnotation);
-		}
-		Class<?> fieldType = field.getType();
-		if (fieldType.equals(BigDecimal.class)) {
-			Decimal decimalAnnotation = field.getAnnotation(Decimal.class);
-			if (decimalAnnotation != null) {
-				return new DecimalMapper(decimalAnnotation.precision(), decimalAnnotation.scale());
-			}
-		}
-		if (List.class.isAssignableFrom(fieldType) || Set.class.isAssignableFrom(fieldType)) {
-			return CollectionMapperFactory.getInstance().getMapper(field);
-		}
-		return getMapper(field.getGenericType());
-	}
+  /**
+   * Returns the mapper for the given field. If the field has a custom mapper, a new instance of the
+   * specified mapper will be created and returned. Otherwise, one of the built-in mappers will be
+   * returned based on the field type.
+   * 
+   * @param field
+   *          the field
+   * @return the mapper for the given field.
+   */
+  public Mapper getMapper(Field field) {
+    PropertyMapper propertyMapperAnnotation = field.getAnnotation(PropertyMapper.class);
+    if (propertyMapperAnnotation != null) {
+      return createCustomMapper(field, propertyMapperAnnotation);
+    }
+    Class<?> fieldType = field.getType();
+    if (fieldType.equals(BigDecimal.class)) {
+      Decimal decimalAnnotation = field.getAnnotation(Decimal.class);
+      if (decimalAnnotation != null) {
+        return new DecimalMapper(decimalAnnotation.precision(), decimalAnnotation.scale());
+      }
+    }
+    if (List.class.isAssignableFrom(fieldType) || Set.class.isAssignableFrom(fieldType)) {
+      return CollectionMapperFactory.getInstance().getMapper(field);
+    }
+    return getMapper(field.getGenericType());
+  }
 
-	/**
-	 * Returns a mapper for the given type. If a mapper that can handle given
-	 * type exists in the cache, it will be returned. Otherwise, a new mapper
-	 * will be created.
-	 * 
-	 * @param type
-	 *            the type of field in the model class
-	 * @return a {@link Mapper} that is capable of mapping the given type.
-	 */
-	public Mapper getMapper(Type type) {
-		Mapper mapper = cache.get(type);
-		if (mapper == null) {
-			mapper = createMapper(type);
-		}
-		return mapper;
-	}
+  /**
+   * Returns a mapper for the given type. If a mapper that can handle given type exists in the
+   * cache, it will be returned. Otherwise, a new mapper will be created.
+   * 
+   * @param type
+   *          the type of field in the model class
+   * @return a {@link Mapper} that is capable of mapping the given type.
+   */
+  public Mapper getMapper(Type type) {
+    Mapper mapper = cache.get(type);
+    if (mapper == null) {
+      mapper = createMapper(type);
+    }
+    return mapper;
+  }
 
-	/**
-	 * Sets or registers the given mapper for the given type. This method must
-	 * be called before performing any persistence operations, preferably,
-	 * during application startup. Entities that were introspected before
-	 * calling this method will NOT use the new mapper.
-	 * 
-	 * @param type
-	 *            the type
-	 * @param mapper
-	 *            the mapper to use for the given type
-	 */
-	public void setDefaultMapper(Type type, Mapper mapper) {
-		if (mapper == null) {
-			throw new NullPointerException("mapper cannot be null");
-		}
-		lock.lock();
-		try {
-			cache.put(type, mapper);
-		} finally {
-			lock.unlock();
-		}
-	}
+  /**
+   * Sets or registers the given mapper for the given type. This method must be called before
+   * performing any persistence operations, preferably, during application startup. Entities that
+   * were introspected before calling this method will NOT use the new mapper.
+   * 
+   * @param type
+   *          the type
+   * @param mapper
+   *          the mapper to use for the given type
+   */
+  public void setDefaultMapper(Type type, Mapper mapper) {
+    if (mapper == null) {
+      throw new NullPointerException("mapper cannot be null");
+    }
+    lock.lock();
+    try {
+      cache.put(type, mapper);
+    } finally {
+      lock.unlock();
+    }
+  }
 
-	/**
-	 * Creates a new mapper for the given type.
-	 * 
-	 * @param type
-	 *            the type for which a mapper is to be created
-	 * @return a mapper that can handle the mapping of given type to/from the
-	 *         Cloud Datastore.
-	 */
-	private Mapper createMapper(Type type) {
-		lock.lock();
-		try {
-			Mapper mapper = cache.get(type);
-			if (mapper != null) {
-				return mapper;
-			}
-			if (type instanceof Class) {
-				mapper = createMapper((Class<?>) type);
-			} else if (type instanceof ParameterizedType) {
-				mapper = createMapper((ParameterizedType) type);
-			} else {
-				throw new IllegalArgumentException(
-						String.format("Type %s is neither a Class nor ParameterizedType", type));
-			}
-			cache.put(type, mapper);
-			return mapper;
-		} finally {
-			lock.unlock();
-		}
-	}
+  /**
+   * Creates a new mapper for the given type.
+   * 
+   * @param type
+   *          the type for which a mapper is to be created
+   * @return a mapper that can handle the mapping of given type to/from the Cloud Datastore.
+   */
+  private Mapper createMapper(Type type) {
+    lock.lock();
+    try {
+      Mapper mapper = cache.get(type);
+      if (mapper != null) {
+        return mapper;
+      }
+      if (type instanceof Class) {
+        mapper = createMapper((Class<?>) type);
+      } else if (type instanceof ParameterizedType) {
+        mapper = createMapper((ParameterizedType) type);
+      } else {
+        throw new IllegalArgumentException(
+            String.format("Type %s is neither a Class nor ParameterizedType", type));
+      }
+      cache.put(type, mapper);
+      return mapper;
+    } finally {
+      lock.unlock();
+    }
+  }
 
-	/**
-	 * Creates a mapper for the given class.
-	 * 
-	 * @param clazz
-	 *            the class
-	 * @return the mapper for the given class.
-	 */
-	private Mapper createMapper(Class<?> clazz) {
-		Mapper mapper;
-		if (Enum.class.isAssignableFrom(clazz)) {
-			mapper = new EnumMapper(clazz);
-		} else if (Map.class.isAssignableFrom(clazz)) {
-			mapper = new MapMapper(clazz);
-		} else if (clazz.isAnnotationPresent(Embeddable.class)) {
-			mapper = new EmbeddedObjectMapper(clazz);
-		} else {
-			throw new NoSuitableMapperException(String.format("No mapper found for class %s", clazz.getName()));
-		}
-		return mapper;
-	}
+  /**
+   * Creates a mapper for the given class.
+   * 
+   * @param clazz
+   *          the class
+   * @return the mapper for the given class.
+   */
+  private Mapper createMapper(Class<?> clazz) {
+    Mapper mapper;
+    if (Enum.class.isAssignableFrom(clazz)) {
+      mapper = new EnumMapper(clazz);
+    } else if (Map.class.isAssignableFrom(clazz)) {
+      mapper = new MapMapper(clazz);
+    } else if (clazz.isAnnotationPresent(Embeddable.class)) {
+      mapper = new EmbeddedObjectMapper(clazz);
+    } else {
+      throw new NoSuitableMapperException(
+          String.format("No mapper found for class %s", clazz.getName()));
+    }
+    return mapper;
+  }
 
-	/**
-	 * Creates a {@link Mapper} for the given class/type.
-	 * 
-	 * @param type
-	 *            the type
-	 * @return a {@link Mapper} for the given class/type.
-	 */
-	private Mapper createMapper(ParameterizedType type) {
-		Type rawType = type.getRawType();
-		if (!(rawType instanceof Class)) {
-			// Don't see how this could ever happen, but just in case...
-			throw new IllegalArgumentException(String.format("Raw type of ParameterizedType is not a class: %s", type));
-		}
-		Class<?> rawClass = (Class<?>) rawType;
-		Mapper mapper;
-		if (Map.class.isAssignableFrom(rawClass)) {
-			mapper = new MapMapper(type);
-		} else {
-			throw new NoSuitableMapperException(String.format("Unsupported type: %s", type));
-		}
-		return mapper;
-	}
+  /**
+   * Creates a {@link Mapper} for the given class/type.
+   * 
+   * @param type
+   *          the type
+   * @return a {@link Mapper} for the given class/type.
+   */
+  private Mapper createMapper(ParameterizedType type) {
+    Type rawType = type.getRawType();
+    if (!(rawType instanceof Class)) {
+      // Don't see how this could ever happen, but just in case...
+      throw new IllegalArgumentException(
+          String.format("Raw type of ParameterizedType is not a class: %s", type));
+    }
+    Class<?> rawClass = (Class<?>) rawType;
+    Mapper mapper;
+    if (Map.class.isAssignableFrom(rawClass)) {
+      mapper = new MapMapper(type);
+    } else {
+      throw new NoSuitableMapperException(String.format("Unsupported type: %s", type));
+    }
+    return mapper;
+  }
 
-	/**
-	 * Creates and assigns default Mappers various common types.
-	 */
-	private void createDefaultMappers() {
-		BooleanMapper booleanMapper = new BooleanMapper();
-		CharMapper charMapper = new CharMapper();
-		ShortMapper shortMapper = new ShortMapper();
-		IntegerMapper integerMapper = new IntegerMapper();
-		LongMapper longMapper = new LongMapper();
-		FloatMapper floatMapper = new FloatMapper();
-		DoubleMapper doubleMapper = new DoubleMapper();
+  /**
+   * Creates and assigns default Mappers various common types.
+   */
+  private void createDefaultMappers() {
+    BooleanMapper booleanMapper = new BooleanMapper();
+    CharMapper charMapper = new CharMapper();
+    ShortMapper shortMapper = new ShortMapper();
+    IntegerMapper integerMapper = new IntegerMapper();
+    LongMapper longMapper = new LongMapper();
+    FloatMapper floatMapper = new FloatMapper();
+    DoubleMapper doubleMapper = new DoubleMapper();
 
-		cache.put(boolean.class, booleanMapper);
-		cache.put(Boolean.class, booleanMapper);
-		cache.put(char.class, charMapper);
-		cache.put(Character.class, charMapper);
-		cache.put(short.class, shortMapper);
-		cache.put(Short.class, shortMapper);
-		cache.put(int.class, integerMapper);
-		cache.put(Integer.class, integerMapper);
-		cache.put(long.class, longMapper);
-		cache.put(Long.class, longMapper);
-		cache.put(float.class, floatMapper);
-		cache.put(Float.class, floatMapper);
-		cache.put(double.class, doubleMapper);
-		cache.put(Double.class, doubleMapper);
-		cache.put(String.class, new StringMapper());
-		cache.put(BigDecimal.class, new BigDecimalMapper());
-		cache.put(byte[].class, new ByteArrayMapper());
-		cache.put(char[].class, new CharArrayMapper());
-		cache.put(Date.class, new DateMapper());
-		cache.put(Calendar.class, new CalendarMapper());
-		cache.put(GeoLocation.class, new GeoLocationMapper());
-		cache.put(DatastoreKey.class, new KeyMapper());
-		cache.put(LocalDate.class, new LocalDateMapper());
-		cache.put(LocalTime.class, new LocalTimeMapper());
-		cache.put(LocalDateTime.class, new LocalDateTimeMapper());
-		cache.put(OffsetDateTime.class, new OffsetDateTimeMapper());
-		cache.put(ZonedDateTime.class, new ZonedDateTimeMapper());
-	}
+    cache.put(boolean.class, booleanMapper);
+    cache.put(Boolean.class, booleanMapper);
+    cache.put(char.class, charMapper);
+    cache.put(Character.class, charMapper);
+    cache.put(short.class, shortMapper);
+    cache.put(Short.class, shortMapper);
+    cache.put(int.class, integerMapper);
+    cache.put(Integer.class, integerMapper);
+    cache.put(long.class, longMapper);
+    cache.put(Long.class, longMapper);
+    cache.put(float.class, floatMapper);
+    cache.put(Float.class, floatMapper);
+    cache.put(double.class, doubleMapper);
+    cache.put(Double.class, doubleMapper);
+    cache.put(String.class, new StringMapper());
+    cache.put(BigDecimal.class, new BigDecimalMapper());
+    cache.put(byte[].class, new ByteArrayMapper());
+    cache.put(char[].class, new CharArrayMapper());
+    cache.put(Date.class, new DateMapper());
+    cache.put(Calendar.class, new CalendarMapper());
+    cache.put(GeoLocation.class, new GeoLocationMapper());
+    cache.put(DatastoreKey.class, new KeyMapper());
+    cache.put(LocalDate.class, new LocalDateMapper());
+    cache.put(LocalTime.class, new LocalTimeMapper());
+    cache.put(LocalDateTime.class, new LocalDateTimeMapper());
+    cache.put(OffsetDateTime.class, new OffsetDateTimeMapper());
+    cache.put(ZonedDateTime.class, new ZonedDateTimeMapper());
+  }
 
-	/**
-	 * Creates and returns a custom mapper for the given field.
-	 * 
-	 * @param field
-	 *            the field
-	 * @param propertyMapperAnnotation
-	 *            property mapper annotation that specifies the mapper class
-	 * @return custom mapper for the given field
-	 */
-	private Mapper createCustomMapper(Field field, PropertyMapper propertyMapperAnnotation) {
-		Class<? extends Mapper> mapperClass = propertyMapperAnnotation.value();
-		Constructor<? extends Mapper> constructor = IntrospectionUtils.getConstructor(mapperClass, Field.class);
-		if (constructor != null) {
-			try {
-				return constructor.newInstance(field);
-			} catch (Exception exp) {
-				throw new EntityManagerException(exp);
-			}
-		}
-		throw new EntityManagerException(
-				String.format("Mapper class %s must have a public constructor with a parameter type of %s",
-						mapperClass.getName(), Field.class.getName()));
+  /**
+   * Creates and returns a custom mapper for the given field.
+   * 
+   * @param field
+   *          the field
+   * @param propertyMapperAnnotation
+   *          property mapper annotation that specifies the mapper class
+   * @return custom mapper for the given field
+   */
+  private Mapper createCustomMapper(Field field, PropertyMapper propertyMapperAnnotation) {
+    Class<? extends Mapper> mapperClass = propertyMapperAnnotation.value();
+    Constructor<? extends Mapper> constructor = IntrospectionUtils.getConstructor(mapperClass,
+        Field.class);
+    if (constructor != null) {
+      try {
+        return constructor.newInstance(field);
+      } catch (Exception exp) {
+        throw new EntityManagerException(exp);
+      }
+    }
+    throw new EntityManagerException(
+        String.format("Mapper class %s must have a public constructor with a parameter type of %s",
+            mapperClass.getName(), Field.class.getName()));
 
-	}
+  }
 
 }

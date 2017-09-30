@@ -30,98 +30,98 @@ import com.jmethods.catatumbo.indexers.UpperCaseStringIndexer;
  */
 @Entity
 public class StringIndex {
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@SecondaryIndex
-	private String firstName;
+  @SecondaryIndex
+  private String firstName;
 
-	@SecondaryIndex
-	@PropertyIndexer(UpperCaseStringIndexer.class)
-	private String lastName;
+  @SecondaryIndex
+  @PropertyIndexer(UpperCaseStringIndexer.class)
+  private String lastName;
 
-	@SecondaryIndex(name = "emailIndex")
-	private String email;
+  @SecondaryIndex(name = "emailIndex")
+  private String email;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the firstName
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
+  /**
+   * @return the firstName
+   */
+  public String getFirstName() {
+    return firstName;
+  }
 
-	/**
-	 * @param firstName
-	 *            the firstName to set
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  /**
+   * @param firstName
+   *          the firstName to set
+   */
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
+  /**
+   * @return the lastName
+   */
+  public String getLastName() {
+    return lastName;
+  }
 
-	/**
-	 * @param lastName
-	 *            the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  /**
+   * @param lastName
+   *          the lastName to set
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+  /**
+   * @return the email
+   */
+  public String getEmail() {
+    return email;
+  }
 
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  /**
+   * @param email
+   *          the email to set
+   */
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof StringIndex)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		StringIndex that = (StringIndex) obj;
-		return this.id == that.id && Objects.equals(this.firstName, that.firstName)
-				&& Objects.equals(this.lastName, that.lastName) && Objects.equals(this.email, that.email);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof StringIndex)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    StringIndex that = (StringIndex) obj;
+    return this.id == that.id && Objects.equals(this.firstName, that.firstName)
+        && Objects.equals(this.lastName, that.lastName) && Objects.equals(this.email, that.email);
+  }
 
-	public static StringIndex getSample1() {
-		StringIndex entity = new StringIndex();
-		entity.setFirstName("John");
-		entity.setLastName("Doe");
-		entity.setEmail("John.Doe@Example.com");
-		return entity;
-	}
+  public static StringIndex getSample1() {
+    StringIndex entity = new StringIndex();
+    entity.setFirstName("John");
+    entity.setLastName("Doe");
+    entity.setEmail("John.Doe@Example.com");
+    return entity;
+  }
 
 }

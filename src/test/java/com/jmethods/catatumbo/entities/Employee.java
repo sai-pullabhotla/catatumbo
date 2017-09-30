@@ -28,74 +28,74 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class Employee {
 
-	@Identifier
-	private long id;
-	private String name;
+  @Identifier
+  private long id;
+  private String name;
 
-	@Property(name = "DEPT")
-	private DatastoreKey department;
+  @Property(name = "DEPT")
+  private DatastoreKey department;
 
-	@Property(indexed = true)
-	private DatastoreKey country;
+  @Property(indexed = true)
+  private DatastoreKey country;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the department
-	 */
-	public DatastoreKey getDepartment() {
-		return department;
-	}
+  /**
+   * @return the department
+   */
+  public DatastoreKey getDepartment() {
+    return department;
+  }
 
-	/**
-	 * @param department
-	 *            the department to set
-	 */
-	public void setDepartment(DatastoreKey department) {
-		this.department = department;
-	}
+  /**
+   * @param department
+   *          the department to set
+   */
+  public void setDepartment(DatastoreKey department) {
+    this.department = department;
+  }
 
-	/**
-	 * @return the country
-	 */
-	public DatastoreKey getCountry() {
-		return country;
-	}
+  /**
+   * @return the country
+   */
+  public DatastoreKey getCountry() {
+    return country;
+  }
 
-	/**
-	 * @param country
-	 *            the country to set
-	 */
-	public void setCountry(DatastoreKey country) {
-		this.country = country;
-	}
+  /**
+   * @param country
+   *          the country to set
+   */
+  public void setCountry(DatastoreKey country) {
+    this.country = country;
+  }
 
 }

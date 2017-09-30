@@ -16,20 +16,19 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Specifies that the {@link Embedded} object of an {@link Entity} should be
- * stored using the Imploded strategy. With Imploded strategy, the
- * {@link Embedded} object of an entity is stored in a single field as an
- * Embedded Entity in the Datastore. This annotation can be added to any
- * {@link Embedded} field of an {@link Entity} or {@link MappedSuperClass}.
- * Having this annotation on a nested Embedded object will not have any effect
- * as the storage strategy is enforced at the entity level.
+ * Specifies that the {@link Embedded} object of an {@link Entity} should be stored using the
+ * Imploded strategy. With Imploded strategy, the {@link Embedded} object of an entity is stored in
+ * a single field as an Embedded Entity in the Datastore. This annotation can be added to any
+ * {@link Embedded} field of an {@link Entity} or {@link MappedSuperClass}. Having this annotation
+ * on a nested Embedded object will not have any effect as the storage strategy is enforced at the
+ * entity level.
  * 
  * @author Sai Pullabhotla
  *
@@ -37,5 +36,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Imploded {
-
+  // Markers
 }

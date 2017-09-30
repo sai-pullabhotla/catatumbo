@@ -24,32 +24,32 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping primitive and wrapper Short
- * types to/from the Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper Short types to/from the
+ * Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class ShortMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return LongValue.newBuilder((short) input);
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return LongValue.newBuilder((short) input);
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		Long l = ((LongValue) input).get();
-		if (l < Short.MIN_VALUE || l > Short.MAX_VALUE) {
-			throw new MappingException(String.format("Value %d is out of range for short type", l));
-		}
-		return l.shortValue();
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    Long l = ((LongValue) input).get();
+    if (l < Short.MIN_VALUE || l > Short.MAX_VALUE) {
+      throw new MappingException(String.format("Value %d is out of range for short type", l));
+    }
+    return l.shortValue();
+  }
 
 }

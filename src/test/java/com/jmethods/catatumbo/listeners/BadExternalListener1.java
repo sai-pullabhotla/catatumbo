@@ -24,9 +24,9 @@ import com.jmethods.catatumbo.PostInsert;
  */
 public class BadExternalListener1 {
 
-	@PostInsert
-	public void afterInsert(Object obj) {
-		System.out.printf("Object %s of type %s inserted\n", obj, obj.getClass().getName());
-	}
+  @PostInsert
+  public void afterInsert(Object obj) {
+    System.out.printf("Object %s of type %s inserted\n", obj, obj.getClass().getName());
+  }
 
 }

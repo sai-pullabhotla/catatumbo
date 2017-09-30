@@ -28,78 +28,78 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class WrappedLongIdEntity {
 
-	@Identifier
-	private WrappedLongId id;
+  @Identifier
+  private WrappedLongId id;
 
-	private String name;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public WrappedLongId getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public WrappedLongId getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(WrappedLongId id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(WrappedLongId id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("User [id=").append(id).append(", name=").append(name).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("User [id=").append(id).append(", name=").append(name).append("]");
+    return builder.toString();
+  }
 
-	public static WrappedLongIdEntity getSample1() {
-		WrappedLongIdEntity user = new WrappedLongIdEntity();
-		user.setName("johndoe");
-		return user;
-	}
+  public static WrappedLongIdEntity getSample1() {
+    WrappedLongIdEntity user = new WrappedLongIdEntity();
+    user.setName("johndoe");
+    return user;
+  }
 
-	public static WrappedLongIdEntity getSample2() {
-		WrappedLongIdEntity user = new WrappedLongIdEntity();
-		user.setId(new WrappedLongId(0L));
-		user.setName("johndoe");
-		return user;
-	}
+  public static WrappedLongIdEntity getSample2() {
+    WrappedLongIdEntity user = new WrappedLongIdEntity();
+    user.setId(new WrappedLongId(0L));
+    user.setName("johndoe");
+    return user;
+  }
 
-	public static WrappedLongIdEntity getSample3() {
-		WrappedLongIdEntity user = new WrappedLongIdEntity();
-		user.setId(new WrappedLongId(50000L));
-		user.setName("johndoe");
-		return user;
-	}
+  public static WrappedLongIdEntity getSample3() {
+    WrappedLongIdEntity user = new WrappedLongIdEntity();
+    user.setId(new WrappedLongId(50000L));
+    user.setName("johndoe");
+    return user;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		WrappedLongIdEntity that = (WrappedLongIdEntity) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    WrappedLongIdEntity that = (WrappedLongIdEntity) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name);
+  }
 
 }

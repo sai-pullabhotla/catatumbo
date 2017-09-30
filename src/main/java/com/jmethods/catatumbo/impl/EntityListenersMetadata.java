@@ -29,129 +29,126 @@ import java.util.Map;
  */
 public class EntityListenersMetadata {
 
-	/**
-	 * The entity class to which this metadata belongs to.
-	 */
-	private final Class<?> entityClass;
+  /**
+   * The entity class to which this metadata belongs to.
+   */
+  private final Class<?> entityClass;
 
-	/**
-	 * A map containing all {@link CallbackMetadata} by the callback type,
-	 * Lazily loaded.
-	 */
-	private Map<CallbackType, List<CallbackMetadata>> callbacks;
+  /**
+   * A map containing all {@link CallbackMetadata} by the callback type, Lazily loaded.
+   */
+  private Map<CallbackType, List<CallbackMetadata>> callbacks;
 
-	/**
-	 * Whether or not to exclude global listeners.
-	 */
-	private boolean excludeDefaultListeners;
+  /**
+   * Whether or not to exclude global listeners.
+   */
+  private boolean excludeDefaultListeners;
 
-	/**
-	 * Whether or not to exclude super class listeners (this is really not
-	 * needed as we exclude them from the callbacks map).
-	 */
-	private boolean excludeSuperClassListeners;
+  /**
+   * Whether or not to exclude super class listeners (this is really not needed as we exclude them
+   * from the callbacks map).
+   */
+  private boolean excludeSuperClassListeners;
 
-	/**
-	 * Creates a new instance of <code>EntityListenersMetadata</code>.
-	 * 
-	 * @param entityClass
-	 *            the entity class
-	 */
-	public EntityListenersMetadata(Class<?> entityClass) {
-		this.entityClass = entityClass;
-		excludeDefaultListeners = false;
-		excludeSuperClassListeners = false;
-	}
+  /**
+   * Creates a new instance of <code>EntityListenersMetadata</code>.
+   * 
+   * @param entityClass
+   *          the entity class
+   */
+  public EntityListenersMetadata(Class<?> entityClass) {
+    this.entityClass = entityClass;
+    excludeDefaultListeners = false;
+    excludeSuperClassListeners = false;
+  }
 
-	/**
-	 * Returns the entity class to which this metadata belongs.
-	 * 
-	 * @return the entityClass the entity class to which this metadata belongs.
-	 */
-	public Class<?> getEntityClass() {
-		return entityClass;
-	}
+  /**
+   * Returns the entity class to which this metadata belongs.
+   * 
+   * @return the entityClass the entity class to which this metadata belongs.
+   */
+  public Class<?> getEntityClass() {
+    return entityClass;
+  }
 
-	/**
-	 * Tells whether or not the default (aka global) listeners should be
-	 * excluded.
-	 * 
-	 * @return <code>true</code>, if global listeners should be excluded;
-	 *         <code>false</code>, otherwise.
-	 */
-	public boolean isExcludeDefaultListeners() {
-		return excludeDefaultListeners;
-	}
+  /**
+   * Tells whether or not the default (aka global) listeners should be excluded.
+   * 
+   * @return <code>true</code>, if global listeners should be excluded; <code>false</code>,
+   *         otherwise.
+   */
+  public boolean isExcludeDefaultListeners() {
+    return excludeDefaultListeners;
+  }
 
-	/**
-	 * Sets whether or not to exclude the default (aka global) listeners.
-	 * 
-	 * @param excludeGlobalListeners
-	 *            whether or not to exclude the global listeners
-	 */
-	public void setExcludeDefaultListeners(boolean excludeGlobalListeners) {
-		this.excludeDefaultListeners = excludeGlobalListeners;
-	}
+  /**
+   * Sets whether or not to exclude the default (aka global) listeners.
+   * 
+   * @param excludeGlobalListeners
+   *          whether or not to exclude the global listeners
+   */
+  public void setExcludeDefaultListeners(boolean excludeGlobalListeners) {
+    this.excludeDefaultListeners = excludeGlobalListeners;
+  }
 
-	/**
-	 * Tells whether or not to exclude the listeners defined in the super
-	 * classes of the entity.
-	 * 
-	 * @return <code>true</code>, if super class listeners should be excluded;
-	 *         <code>false</code>, otherwise.
-	 */
-	public boolean isExcludeSuperClassListeners() {
-		return excludeSuperClassListeners;
-	}
+  /**
+   * Tells whether or not to exclude the listeners defined in the super classes of the entity.
+   * 
+   * @return <code>true</code>, if super class listeners should be excluded; <code>false</code>,
+   *         otherwise.
+   */
+  public boolean isExcludeSuperClassListeners() {
+    return excludeSuperClassListeners;
+  }
 
-	/**
-	 * Sets whether or not to exclude the super class listeners.
-	 * 
-	 * @param excludeSuperClassListeners
-	 *            whether or not to exclude the super class listeners
-	 */
-	public void setExcludeSuperClassListeners(boolean excludeSuperClassListeners) {
-		this.excludeSuperClassListeners = excludeSuperClassListeners;
-	}
+  /**
+   * Sets whether or not to exclude the super class listeners.
+   * 
+   * @param excludeSuperClassListeners
+   *          whether or not to exclude the super class listeners
+   */
+  public void setExcludeSuperClassListeners(boolean excludeSuperClassListeners) {
+    this.excludeSuperClassListeners = excludeSuperClassListeners;
+  }
 
-	/**
-	 * Adds the given CallbackEventMetadata.
-	 * 
-	 * @param callbackType
-	 *            the callback type
-	 * @param callbackMetadata
-	 *            the metadata of the callback
-	 */
-	public void put(CallbackType callbackType, CallbackMetadata callbackMetadata) {
-		if (callbacks == null) {
-			callbacks = new EnumMap<>(CallbackType.class);
-		}
-		List<CallbackMetadata> callbackMetadataList = callbacks.get(callbackType);
-		if (callbackMetadataList == null) {
-			callbackMetadataList = new ArrayList<>();
-			callbacks.put(callbackType, callbackMetadataList);
-		}
-		callbackMetadataList.add(callbackMetadata);
-	}
+  /**
+   * Adds the given CallbackEventMetadata.
+   * 
+   * @param callbackType
+   *          the callback type
+   * @param callbackMetadata
+   *          the metadata of the callback
+   */
+  public void put(CallbackType callbackType, CallbackMetadata callbackMetadata) {
+    if (callbacks == null) {
+      callbacks = new EnumMap<>(CallbackType.class);
+    }
+    List<CallbackMetadata> callbackMetadataList = callbacks.get(callbackType);
+    if (callbackMetadataList == null) {
+      callbackMetadataList = new ArrayList<>();
+      callbacks.put(callbackType, callbackMetadataList);
+    }
+    callbackMetadataList.add(callbackMetadata);
+  }
 
-	/**
-	 * Returns the callbacks for the given callback type.
-	 * 
-	 * @param callbackType
-	 *            the callback type
-	 * @return the list of callbacks for the given callback type
-	 */
-	public List<CallbackMetadata> getCallbacks(CallbackType callbackType) {
-		return callbacks == null ? null : callbacks.get(callbackType);
-	}
+  /**
+   * Returns the callbacks for the given callback type.
+   * 
+   * @param callbackType
+   *          the callback type
+   * @return the list of callbacks for the given callback type
+   */
+  public List<CallbackMetadata> getCallbacks(CallbackType callbackType) {
+    return callbacks == null ? null : callbacks.get(callbackType);
+  }
 
-	/**
-	 * Returns all callbacks.
-	 * 
-	 * @return All call backs.
-	 */
-	public Map<CallbackType, List<CallbackMetadata>> getCallbacks() {
-		return callbacks;
-	}
+  /**
+   * Returns all callbacks.
+   * 
+   * @return All call backs.
+   */
+  public Map<CallbackType, List<CallbackMetadata>> getCallbacks() {
+    return callbacks;
+  }
 
 }

@@ -35,50 +35,50 @@ import com.jmethods.catatumbo.entities.CalculatorEntity;
 @EntityListener
 public class Subtractor {
 
-	@PreInsert
-	public void beforeInsert(CalculatorEntity entity) {
-		entity.setDifference(entity.getOperand1() - entity.getOperand2());
-	}
+  @PreInsert
+  public void beforeInsert(CalculatorEntity entity) {
+    entity.setDifference(entity.getOperand1() - entity.getOperand2());
+  }
 
-	@PreUpdate
-	public void beforeUpdate(CalculatorEntity entity) {
-		entity.setDifference(entity.getOperand1() - entity.getOperand2());
-	}
+  @PreUpdate
+  public void beforeUpdate(CalculatorEntity entity) {
+    entity.setDifference(entity.getOperand1() - entity.getOperand2());
+  }
 
-	@PreUpsert
-	public void beforeUpsert(CalculatorEntity entity) {
-		entity.setDifference(entity.getOperand1() - entity.getOperand2());
-	}
+  @PreUpsert
+  public void beforeUpsert(CalculatorEntity entity) {
+    entity.setDifference(entity.getOperand1() - entity.getOperand2());
+  }
 
-	@PreDelete
-	public void beforeDelete(CalculatorEntity entity) {
-		entity.setDifference(entity.getOperand1() - entity.getOperand2());
-	}
+  @PreDelete
+  public void beforeDelete(CalculatorEntity entity) {
+    entity.setDifference(entity.getOperand1() - entity.getOperand2());
+  }
 
-	@PostInsert
-	public void afterInsert(CalculatorEntity entity) {
-		entity.setDifference2(entity.getDifference() * 2);
-	}
+  @PostInsert
+  public void afterInsert(CalculatorEntity entity) {
+    entity.setDifference2(entity.getDifference() * 2);
+  }
 
-	@PostUpdate
-	public void afterUpdate(CalculatorEntity entity) {
-		entity.setDifference2(entity.getDifference() * 3);
-	}
+  @PostUpdate
+  public void afterUpdate(CalculatorEntity entity) {
+    entity.setDifference2(entity.getDifference() * 3);
+  }
 
-	@PostUpsert
-	public void afterUpsert(CalculatorEntity entity) {
-		entity.setDifference2(entity.getDifference() * 4);
-	}
+  @PostUpsert
+  public void afterUpsert(CalculatorEntity entity) {
+    entity.setDifference2(entity.getDifference() * 4);
+  }
 
-	@PostDelete
-	public void afterDelete(CalculatorEntity entity) {
-		entity.setDifference2(entity.getDifference() * 5);
-	}
+  @PostDelete
+  public void afterDelete(CalculatorEntity entity) {
+    entity.setDifference2(entity.getDifference() * 5);
+  }
 
-	@PostLoad
-	public void afterLoad(CalculatorEntity entity) {
-		entity.setDifference(entity.getOperand1() - entity.getOperand2());
-		entity.setDifference2(entity.getDifference() * 6);
-	}
+  @PostLoad
+  public void afterLoad(CalculatorEntity entity) {
+    entity.setDifference(entity.getOperand1() - entity.getOperand2());
+    entity.setDifference2(entity.getDifference() * 6);
+  }
 
 }

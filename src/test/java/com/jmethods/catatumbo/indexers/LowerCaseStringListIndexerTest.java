@@ -41,65 +41,68 @@ import com.jmethods.catatumbo.IndexingException;
  */
 public class LowerCaseStringListIndexerTest {
 
-	private static final Logger LOGGER = Logger.getLogger(LowerCaseStringListIndexerTest.class.getName());
-	private static LowerCaseStringListIndexer indexer;
+  private static final Logger LOGGER = Logger
+      .getLogger(LowerCaseStringListIndexerTest.class.getName());
+  private static LowerCaseStringListIndexer indexer;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		indexer = IndexerFactory.getInstance().getIndexer(LowerCaseStringListIndexer.class);
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    indexer = IndexerFactory.getInstance().getIndexer(LowerCaseStringListIndexer.class);
+  }
 
-	@Test
-	public void testIndex_1() {
-		Value<?> input = NullValue.of();
-		Value<?> output = indexer.index(input);
-		assertEquals(input, output);
-	}
+  @Test
+  public void testIndex_1() {
+    Value<?> input = NullValue.of();
+    Value<?> output = indexer.index(input);
+    assertEquals(input, output);
+  }
 
-	@Test
-	public void testIndex_2() {
-		Value<?>[] inputArray = { StringValue.of("ONE"), StringValue.of("Two"), StringValue.of("thRee") };
-		ListValue input = ListValue.of(Arrays.asList(inputArray));
-		ListValue output = (ListValue) indexer.index(input);
-		List<StringValue> inputList = (List<StringValue>) input.get();
-		List<StringValue> outputList = (List<StringValue>) output.get();
-		assertEquals(inputList.get(0).get().toLowerCase(Locale.ENGLISH), outputList.get(0).get());
-		assertEquals(inputList.get(1).get().toLowerCase(Locale.ENGLISH), outputList.get(1).get());
-		assertEquals(inputList.get(2).get().toLowerCase(Locale.ENGLISH), outputList.get(2).get());
-	}
+  @Test
+  public void testIndex_2() {
+    Value<?>[] inputArray = { StringValue.of("ONE"), StringValue.of("Two"),
+        StringValue.of("thRee") };
+    ListValue input = ListValue.of(Arrays.asList(inputArray));
+    ListValue output = (ListValue) indexer.index(input);
+    List<StringValue> inputList = (List<StringValue>) input.get();
+    List<StringValue> outputList = (List<StringValue>) output.get();
+    assertEquals(inputList.get(0).get().toLowerCase(Locale.ENGLISH), outputList.get(0).get());
+    assertEquals(inputList.get(1).get().toLowerCase(Locale.ENGLISH), outputList.get(1).get());
+    assertEquals(inputList.get(2).get().toLowerCase(Locale.ENGLISH), outputList.get(2).get());
+  }
 
-	@Test
-	public void testIndex_3() {
-		Value<?>[] inputArray = { StringValue.of("Hello"), NullValue.of() };
-		ListValue input = ListValue.of(Arrays.asList(inputArray));
-		ListValue output = (ListValue) indexer.index(input);
-		List<? extends Value> inputList = input.get();
-		List<? extends Value> outputList = output.get();
-		assertEquals(((StringValue) inputList.get(0)).get().toLowerCase(Locale.ENGLISH), outputList.get(0).get());
-		assertEquals(inputList.get(1).get(), outputList.get(1).get());
-	}
+  @Test
+  public void testIndex_3() {
+    Value<?>[] inputArray = { StringValue.of("Hello"), NullValue.of() };
+    ListValue input = ListValue.of(Arrays.asList(inputArray));
+    ListValue output = (ListValue) indexer.index(input);
+    List<? extends Value> inputList = input.get();
+    List<? extends Value> outputList = output.get();
+    assertEquals(((StringValue) inputList.get(0)).get().toLowerCase(Locale.ENGLISH),
+        outputList.get(0).get());
+    assertEquals(inputList.get(1).get(), outputList.get(1).get());
+  }
 
-	@Test(expected = IndexingException.class)
-	public void testIndex_4() {
-		StringValue input = StringValue.of("Hello World");
-		try {
-			Value<?> output = indexer.index(input);
-		} catch (Exception exp) {
-			LOGGER.log(Level.INFO, exp.toString());
-			throw exp;
-		}
-	}
+  @Test(expected = IndexingException.class)
+  public void testIndex_4() {
+    StringValue input = StringValue.of("Hello World");
+    try {
+      Value<?> output = indexer.index(input);
+    } catch (Exception exp) {
+      LOGGER.log(Level.INFO, exp.toString());
+      throw exp;
+    }
+  }
 
-	@Test(expected = IndexingException.class)
-	public void testIndex_5() {
-		Value<?>[] inputArray = { StringValue.of("Hello"), NullValue.of(), LongValue.of(5L) };
-		ListValue input = ListValue.of(Arrays.asList(inputArray));
-		try {
-			ListValue output = (ListValue) indexer.index(input);
-		} catch (Exception exp) {
-			LOGGER.log(Level.INFO, exp.toString());
-			throw exp;
-		}
-	}
+  @Test(expected = IndexingException.class)
+  public void testIndex_5() {
+    Value<?>[] inputArray = { StringValue.of("Hello"), NullValue.of(), LongValue.of(5L) };
+    ListValue input = ListValue.of(Arrays.asList(inputArray));
+    try {
+      ListValue output = (ListValue) indexer.index(input);
+    } catch (Exception exp) {
+      LOGGER.log(Level.INFO, exp.toString());
+      throw exp;
+    }
+  }
 
 }

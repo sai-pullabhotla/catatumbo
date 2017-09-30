@@ -30,81 +30,81 @@ import com.jmethods.catatumbo.UpdatedTimestamp;
 @Entity
 public class AutoTimestampOffsetDateTime {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@CreatedTimestamp
-	private OffsetDateTime createdOn;
+  @CreatedTimestamp
+  private OffsetDateTime createdOn;
 
-	@UpdatedTimestamp
-	private OffsetDateTime modifiedOn;
+  @UpdatedTimestamp
+  private OffsetDateTime modifiedOn;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the createdOn
-	 */
-	public OffsetDateTime getCreatedOn() {
-		return createdOn;
-	}
+  /**
+   * @return the createdOn
+   */
+  public OffsetDateTime getCreatedOn() {
+    return createdOn;
+  }
 
-	/**
-	 * @param createdOn
-	 *            the createdOn to set
-	 */
-	public void setCreatedOn(OffsetDateTime createdOn) {
-		this.createdOn = createdOn;
-	}
+  /**
+   * @param createdOn
+   *          the createdOn to set
+   */
+  public void setCreatedOn(OffsetDateTime createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	/**
-	 * @return the modifiedOn
-	 */
-	public OffsetDateTime getModifiedOn() {
-		return modifiedOn;
-	}
+  /**
+   * @return the modifiedOn
+   */
+  public OffsetDateTime getModifiedOn() {
+    return modifiedOn;
+  }
 
-	/**
-	 * @param modifiedOn
-	 *            the modifiedOn to set
-	 */
-	public void setModifiedOn(OffsetDateTime modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  /**
+   * @param modifiedOn
+   *          the modifiedOn to set
+   */
+  public void setModifiedOn(OffsetDateTime modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	@Override
-	public String toString() {
-		return "AutoTimestampOffsetDateTime [id=" + id + ", name=" + name + ", createdOn=" + createdOn + ", modifiedOn="
-				+ modifiedOn + "]";
-	}
+  @Override
+  public String toString() {
+    return "AutoTimestampOffsetDateTime [id=" + id + ", name=" + name + ", createdOn=" + createdOn
+        + ", modifiedOn=" + modifiedOn + "]";
+  }
 
 }

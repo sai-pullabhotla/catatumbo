@@ -34,116 +34,116 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class ArrayIndex {
 
-	@Identifier
-	private long id;
-	@ParentKey
-	private DatastoreKey parentKey;
+  @Identifier
+  private long id;
+  @ParentKey
+  private DatastoreKey parentKey;
 
-	private List<String> stringList;
-	@Property(indexed = false)
-	private List<String> unindexedStringList;
-	private Set<String> stringSet;
-	@Property(indexed = false)
-	private Set<String> unindexedStringSet;
+  private List<String> stringList;
+  @Property(indexed = false)
+  private List<String> unindexedStringList;
+  private Set<String> stringSet;
+  @Property(indexed = false)
+  private Set<String> unindexedStringSet;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the parentKey
-	 */
-	public DatastoreKey getParentKey() {
-		return parentKey;
-	}
+  /**
+   * @return the parentKey
+   */
+  public DatastoreKey getParentKey() {
+    return parentKey;
+  }
 
-	/**
-	 * @param parentKey
-	 *            the parentKey to set
-	 */
-	public void setParentKey(DatastoreKey parentKey) {
-		this.parentKey = parentKey;
-	}
+  /**
+   * @param parentKey
+   *          the parentKey to set
+   */
+  public void setParentKey(DatastoreKey parentKey) {
+    this.parentKey = parentKey;
+  }
 
-	/**
-	 * @return the stringList
-	 */
-	public List<String> getStringList() {
-		return stringList;
-	}
+  /**
+   * @return the stringList
+   */
+  public List<String> getStringList() {
+    return stringList;
+  }
 
-	/**
-	 * @param stringList
-	 *            the stringList to set
-	 */
-	public void setStringList(List<String> stringList) {
-		this.stringList = stringList;
-	}
+  /**
+   * @param stringList
+   *          the stringList to set
+   */
+  public void setStringList(List<String> stringList) {
+    this.stringList = stringList;
+  }
 
-	/**
-	 * @return the unindexedStringList
-	 */
-	public List<String> getUnindexedStringList() {
-		return unindexedStringList;
-	}
+  /**
+   * @return the unindexedStringList
+   */
+  public List<String> getUnindexedStringList() {
+    return unindexedStringList;
+  }
 
-	/**
-	 * @param unindexedStringList
-	 *            the unindexedStringList to set
-	 */
-	public void setUnindexedStringList(List<String> unindexedStringList) {
-		this.unindexedStringList = unindexedStringList;
-	}
+  /**
+   * @param unindexedStringList
+   *          the unindexedStringList to set
+   */
+  public void setUnindexedStringList(List<String> unindexedStringList) {
+    this.unindexedStringList = unindexedStringList;
+  }
 
-	/**
-	 * @return the stringSet
-	 */
-	public Set<String> getStringSet() {
-		return stringSet;
-	}
+  /**
+   * @return the stringSet
+   */
+  public Set<String> getStringSet() {
+    return stringSet;
+  }
 
-	/**
-	 * @param stringSet
-	 *            the stringSet to set
-	 */
-	public void setStringSet(Set<String> stringSet) {
-		this.stringSet = stringSet;
-	}
+  /**
+   * @param stringSet
+   *          the stringSet to set
+   */
+  public void setStringSet(Set<String> stringSet) {
+    this.stringSet = stringSet;
+  }
 
-	/**
-	 * @return the unindexedStringSet
-	 */
-	public Set<String> getUnindexedStringSet() {
-		return unindexedStringSet;
-	}
+  /**
+   * @return the unindexedStringSet
+   */
+  public Set<String> getUnindexedStringSet() {
+    return unindexedStringSet;
+  }
 
-	/**
-	 * @param unindexedStringSet
-	 *            the unindexedStringSet to set
-	 */
-	public void setUnindexedStringSet(Set<String> unindexedStringSet) {
-		this.unindexedStringSet = unindexedStringSet;
-	}
+  /**
+   * @param unindexedStringSet
+   *          the unindexedStringSet to set
+   */
+  public void setUnindexedStringSet(Set<String> unindexedStringSet) {
+    this.unindexedStringSet = unindexedStringSet;
+  }
 
-	public static ArrayIndex getSampleEntity() {
-		List<String> items = Arrays.asList("One", "Two", "Three");
-		ArrayIndex entity = new ArrayIndex();
-		entity.setStringList(items);
-		entity.setUnindexedStringList(items);
-		entity.setStringSet(new HashSet<>(items));
-		entity.setUnindexedStringSet(new HashSet<>(items));
-		return entity;
-	}
+  public static ArrayIndex getSampleEntity() {
+    List<String> items = Arrays.asList("One", "Two", "Three");
+    ArrayIndex entity = new ArrayIndex();
+    entity.setStringList(items);
+    entity.setUnindexedStringList(items);
+    entity.setStringSet(new HashSet<>(items));
+    entity.setUnindexedStringSet(new HashSet<>(items));
+    return entity;
+  }
 
 }

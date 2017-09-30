@@ -24,32 +24,31 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping Char type to/from Cloud
- * Datastore.
+ * An implementation of {@link Mapper} for mapping Char type to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class CharMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return StringValue.newBuilder(String.valueOf((char) input));
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return StringValue.newBuilder(String.valueOf((char) input));
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		String str = ((StringValue) input).get();
-		if (str.length() != 1) {
-			throw new MappingException(String.format("Unable to convert %s to char", str));
-		}
-		return str.charAt(0);
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    String str = ((StringValue) input).get();
+    if (str.length() != 1) {
+      throw new MappingException(String.format("Unable to convert %s to char", str));
+    }
+    return str.charAt(0);
+  }
 
 }

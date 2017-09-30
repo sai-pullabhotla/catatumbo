@@ -26,52 +26,52 @@ import com.jmethods.catatumbo.Identifier;
  */
 @Entity
 public class StringId {
-	@Identifier
-	private String id;
-	private String greetings;
+  @Identifier
+  private String id;
+  private String greetings;
 
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public String getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the greetings
-	 */
-	public String getGreetings() {
-		return greetings;
-	}
+  /**
+   * @return the greetings
+   */
+  public String getGreetings() {
+    return greetings;
+  }
 
-	/**
-	 * @param greetings
-	 *            the greetings to set
-	 */
-	public void setGreetings(String greetings) {
-		this.greetings = greetings;
-	}
+  /**
+   * @param greetings
+   *          the greetings to set
+   */
+  public void setGreetings(String greetings) {
+    this.greetings = greetings;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof StringId)) {
-			return false;
-		}
-		StringId that = (StringId) obj;
-		return Objects.equal(this.id, that.id) && Objects.equal(this.greetings, that.greetings);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof StringId)) {
+      return false;
+    }
+    StringId that = (StringId) obj;
+    return Objects.equal(this.id, that.id) && Objects.equal(this.greetings, that.greetings);
+  }
 
-	@Override
-	public String toString() {
-		return id + ": " + greetings;
-	}
+  @Override
+  public String toString() {
+    return id + ": " + greetings;
+  }
 
 }

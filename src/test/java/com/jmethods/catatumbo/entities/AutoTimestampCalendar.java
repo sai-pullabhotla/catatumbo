@@ -30,87 +30,87 @@ import com.jmethods.catatumbo.UpdatedTimestamp;
 @Entity
 public class AutoTimestampCalendar {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	@CreatedTimestamp
-	private Calendar createdOn;
+  @CreatedTimestamp
+  private Calendar createdOn;
 
-	@UpdatedTimestamp
-	private Calendar modifiedOn;
+  @UpdatedTimestamp
+  private Calendar modifiedOn;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the createdOn
-	 */
-	public Calendar getCreatedOn() {
-		return createdOn;
-	}
+  /**
+   * @return the createdOn
+   */
+  public Calendar getCreatedOn() {
+    return createdOn;
+  }
 
-	/**
-	 * @param createdOn
-	 *            the createdOn to set
-	 */
-	public void setCreatedOn(Calendar createdOn) {
-		this.createdOn = createdOn;
-	}
+  /**
+   * @param createdOn
+   *          the createdOn to set
+   */
+  public void setCreatedOn(Calendar createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	/**
-	 * @return the modifiedOn
-	 */
-	public Calendar getModifiedOn() {
-		return modifiedOn;
-	}
+  /**
+   * @return the modifiedOn
+   */
+  public Calendar getModifiedOn() {
+    return modifiedOn;
+  }
 
-	/**
-	 * @param modifiedOn
-	 *            the modifiedOn to set
-	 */
-	public void setModifiedOn(Calendar modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  /**
+   * @param modifiedOn
+   *          the modifiedOn to set
+   */
+  public void setModifiedOn(Calendar modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "AutoTimestampCalendar [id=" + id + ", name=" + name + ", createdOn="
-				+ (createdOn != null ? createdOn.getTime() : null) + ", modifiedOn="
-				+ (modifiedOn != null ? modifiedOn.getTime() : null) + "]";
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "AutoTimestampCalendar [id=" + id + ", name=" + name + ", createdOn="
+        + (createdOn != null ? createdOn.getTime() : null) + ", modifiedOn="
+        + (modifiedOn != null ? modifiedOn.getTime() : null) + "]";
+  }
 
 }

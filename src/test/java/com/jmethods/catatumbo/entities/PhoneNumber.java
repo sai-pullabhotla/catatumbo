@@ -28,129 +28,130 @@ import com.jmethods.catatumbo.Property;
 @Embeddable
 public class PhoneNumber {
 
-	@Property(optional = true)
-	private String countryCode;
+  @Property(optional = true)
+  private String countryCode;
 
-	private String areaCode;
+  private String areaCode;
 
-	private String subscriberNumber;
+  private String subscriberNumber;
 
-	/**
-	 * @return the countryCode
-	 */
-	public String getCountryCode() {
-		return countryCode;
-	}
+  /**
+   * @return the countryCode
+   */
+  public String getCountryCode() {
+    return countryCode;
+  }
 
-	/**
-	 * @param countryCode
-	 *            the countryCode to set
-	 */
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
-	}
+  /**
+   * @param countryCode
+   *          the countryCode to set
+   */
+  public void setCountryCode(String countryCode) {
+    this.countryCode = countryCode;
+  }
 
-	/**
-	 * @return the areaCode
-	 */
-	public String getAreaCode() {
-		return areaCode;
-	}
+  /**
+   * @return the areaCode
+   */
+  public String getAreaCode() {
+    return areaCode;
+  }
 
-	/**
-	 * @param areaCode
-	 *            the areaCode to set
-	 */
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
-	}
+  /**
+   * @param areaCode
+   *          the areaCode to set
+   */
+  public void setAreaCode(String areaCode) {
+    this.areaCode = areaCode;
+  }
 
-	/**
-	 * @return the number
-	 */
-	public String getSubscriberNumber() {
-		return subscriberNumber;
-	}
+  /**
+   * @return the number
+   */
+  public String getSubscriberNumber() {
+    return subscriberNumber;
+  }
 
-	/**
-	 * @param number
-	 *            the number to set
-	 */
-	public void setSubscriberNumber(String number) {
-		this.subscriberNumber = number;
-	}
+  /**
+   * @param number
+   *          the number to set
+   */
+  public void setSubscriberNumber(String number) {
+    this.subscriberNumber = number;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "+" + countryCode + " (" + areaCode + ")" + subscriberNumber;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "+" + countryCode + " (" + areaCode + ")" + subscriberNumber;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
 
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof PhoneNumber)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		PhoneNumber that = (PhoneNumber) obj;
-		return Objects.equals(this.countryCode, that.countryCode) && Objects.equals(this.areaCode, that.areaCode)
-				&& Objects.equals(this.subscriberNumber, that.subscriberNumber);
-	}
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof PhoneNumber)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    PhoneNumber that = (PhoneNumber) obj;
+    return Objects.equals(this.countryCode, that.countryCode)
+        && Objects.equals(this.areaCode, that.areaCode)
+        && Objects.equals(this.subscriberNumber, that.subscriberNumber);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(countryCode, areaCode, subscriberNumber);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(countryCode, areaCode, subscriberNumber);
+  }
 
-	public static PhoneNumber getSample1() {
-		PhoneNumber phone = new PhoneNumber();
-		phone.setCountryCode("1");
-		phone.setAreaCode("212");
-		phone.setSubscriberNumber("8889999");
-		return phone;
-	}
+  public static PhoneNumber getSample1() {
+    PhoneNumber phone = new PhoneNumber();
+    phone.setCountryCode("1");
+    phone.setAreaCode("212");
+    phone.setSubscriberNumber("8889999");
+    return phone;
+  }
 
-	public static PhoneNumber getSample2() {
-		PhoneNumber phone = new PhoneNumber();
-		phone.setCountryCode("1");
-		phone.setAreaCode("402");
-		phone.setSubscriberNumber("5556666");
-		return phone;
-	}
+  public static PhoneNumber getSample2() {
+    PhoneNumber phone = new PhoneNumber();
+    phone.setCountryCode("1");
+    phone.setAreaCode("402");
+    phone.setSubscriberNumber("5556666");
+    return phone;
+  }
 
-	public static PhoneNumber getSample3() {
-		PhoneNumber phone = new PhoneNumber();
-		phone.setCountryCode("91");
-		phone.setAreaCode("40");
-		phone.setSubscriberNumber("2722 5858");
-		return phone;
-	}
+  public static PhoneNumber getSample3() {
+    PhoneNumber phone = new PhoneNumber();
+    phone.setCountryCode("91");
+    phone.setAreaCode("40");
+    phone.setSubscriberNumber("2722 5858");
+    return phone;
+  }
 
-	public static PhoneNumber getSample4() {
-		PhoneNumber phone = new PhoneNumber();
-		phone.setCountryCode("91");
-		phone.setAreaCode("80");
-		phone.setSubscriberNumber("6666 0000");
-		return phone;
-	}
+  public static PhoneNumber getSample4() {
+    PhoneNumber phone = new PhoneNumber();
+    phone.setCountryCode("91");
+    phone.setAreaCode("80");
+    phone.setSubscriberNumber("6666 0000");
+    return phone;
+  }
 
-	public static PhoneNumber getSample5() {
-		PhoneNumber phone = new PhoneNumber();
-		phone.setAreaCode("80");
-		phone.setSubscriberNumber("6666 0000");
-		return phone;
-	}
+  public static PhoneNumber getSample5() {
+    PhoneNumber phone = new PhoneNumber();
+    phone.setAreaCode("80");
+    phone.setSubscriberNumber("6666 0000");
+    return phone;
+  }
 
 }

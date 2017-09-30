@@ -16,7 +16,8 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -26,128 +27,119 @@ import org.junit.Test;
  */
 public class LRUCacheTest {
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#getMaxCapacity()}.
-	 */
-	@Test
-	public void testGetMaxCapacity() {
-		LRUCache<Integer, Integer> cache = new LRUCache<>(5, 10);
-		assertTrue(cache.getMaxCapacity() == 10);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#getMaxCapacity()}.
+   */
+  @Test
+  public void testGetMaxCapacity() {
+    LRUCache<Integer, Integer> cache = new LRUCache<>(5, 10);
+    assertTrue(cache.getMaxCapacity() == 10);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#setMaxCapacity(int)}.
-	 */
-	@Test
-	public void testSetMaxCapacity_Good() {
-		LRUCache<String, String> cache = new LRUCache<>(2, 5);
-		cache.setMaxCapacity(20);
-		assertTrue(cache.getMaxCapacity() == 20);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#setMaxCapacity(int)}.
+   */
+  @Test
+  public void testSetMaxCapacity_Good() {
+    LRUCache<String, String> cache = new LRUCache<>(2, 5);
+    cache.setMaxCapacity(20);
+    assertTrue(cache.getMaxCapacity() == 20);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#setMaxCapacity(int)}.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testSetMaxCapacity_Bad() {
-		LRUCache<String, String> cache = new LRUCache<>(2, 5);
-		cache.setMaxCapacity(0);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#setMaxCapacity(int)}.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testSetMaxCapacity_Bad() {
+    LRUCache<String, String> cache = new LRUCache<>(2, 5);
+    cache.setMaxCapacity(0);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
-	 */
-	@Test
-	public void testGet() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		for (int i = 1; i <= 5; i++) {
-			squaresCache.put(i, i * i);
-		}
-		assertTrue(squaresCache.get(4) == 16);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
+   */
+  @Test
+  public void testGet() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    for (int i = 1; i <= 5; i++) {
+      squaresCache.put(i, i * i);
+    }
+    assertTrue(squaresCache.get(4) == 16);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
-	 */
-	@Test
-	public void testGet_2() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		for (int i = 1; i <= 11; i++) {
-			squaresCache.put(i, i * i);
-		}
-		assertTrue(squaresCache.size() == 10 && squaresCache.get(1) == null && squaresCache.get(11) != null);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
+   */
+  @Test
+  public void testGet_2() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    for (int i = 1; i <= 11; i++) {
+      squaresCache.put(i, i * i);
+    }
+    assertTrue(
+        squaresCache.size() == 10 && squaresCache.get(1) == null && squaresCache.get(11) != null);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
-	 */
-	@Test
-	public void testGet_3() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		for (int i = 1; i <= 10; i++) {
-			squaresCache.put(i, i * i);
-		}
-		squaresCache.get(1);
-		squaresCache.put(11, 11 * 11);
-		assertTrue(squaresCache.size() == 10 && squaresCache.get(1) != null && squaresCache.get(11) != null);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
+   */
+  @Test
+  public void testGet_3() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    for (int i = 1; i <= 10; i++) {
+      squaresCache.put(i, i * i);
+    }
+    squaresCache.get(1);
+    squaresCache.put(11, 11 * 11);
+    assertTrue(
+        squaresCache.size() == 10 && squaresCache.get(1) != null && squaresCache.get(11) != null);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
-	 */
-	@Test
-	public void testGet_4() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		for (int i = 1; i <= 10; i++) {
-			squaresCache.put(i, i * i);
-		}
-		squaresCache.setMaxCapacity(20);
-		squaresCache.get(1);
-		squaresCache.put(11, 11 * 11);
-		assertTrue(squaresCache.size() == 11 && squaresCache.get(1) == 1 && squaresCache.get(11) == 121);
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#get(java.lang.Object)}.
+   */
+  @Test
+  public void testGet_4() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    for (int i = 1; i <= 10; i++) {
+      squaresCache.put(i, i * i);
+    }
+    squaresCache.setMaxCapacity(20);
+    squaresCache.get(1);
+    squaresCache.put(11, 11 * 11);
+    assertTrue(
+        squaresCache.size() == 11 && squaresCache.get(1) == 1 && squaresCache.get(11) == 121);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#put(java.lang.Object, java.lang.Object)}
-	 * .
-	 */
-	@Test
-	public void testPut() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		squaresCache.put(6, 6 * 6);
-		assertTrue(squaresCache.get(6) == 36);
-	}
+  /**
+   * Test method for
+   * {@link com.jmethods.catatumbo.impl.LRUCache#put(java.lang.Object, java.lang.Object)} .
+   */
+  @Test
+  public void testPut() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    squaresCache.put(6, 6 * 6);
+    assertTrue(squaresCache.get(6) == 36);
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#containsKey(java.lang.Object)}
-	 * .
-	 */
-	@Test
-	public void testContainsKey() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		squaresCache.put(6, 6 * 6);
-		assertTrue(squaresCache.containsKey(6));
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#containsKey(java.lang.Object)} .
+   */
+  @Test
+  public void testContainsKey() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    squaresCache.put(6, 6 * 6);
+    assertTrue(squaresCache.containsKey(6));
+  }
 
-	/**
-	 * Test method for
-	 * {@link com.jmethods.catatumbo.impl.LRUCache#containsKey(java.lang.Object)}
-	 * .
-	 */
-	@Test
-	public void testContainsKey_2() {
-		LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
-		squaresCache.put(6, 6 * 6);
-		assertFalse(squaresCache.containsKey(5));
-	}
+  /**
+   * Test method for {@link com.jmethods.catatumbo.impl.LRUCache#containsKey(java.lang.Object)} .
+   */
+  @Test
+  public void testContainsKey_2() {
+    LRUCache<Integer, Integer> squaresCache = new LRUCache<>(5, 10);
+    squaresCache.put(6, 6 * 6);
+    assertFalse(squaresCache.containsKey(5));
+  }
 
 }

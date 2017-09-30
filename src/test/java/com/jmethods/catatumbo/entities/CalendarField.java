@@ -27,38 +27,38 @@ import com.jmethods.catatumbo.Identifier;
  */
 @Entity
 public class CalendarField {
-	@Identifier
-	private long id;
-	private Calendar creationDate;
+  @Identifier
+  private long id;
+  private Calendar creationDate;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the creationDate
-	 */
-	public Calendar getCreationDate() {
-		return creationDate;
-	}
+  /**
+   * @return the creationDate
+   */
+  public Calendar getCreationDate() {
+    return creationDate;
+  }
 
-	/**
-	 * @param creationDate
-	 *            the creationDate to set
-	 */
-	public void setCreationDate(Calendar creationDate) {
-		this.creationDate = creationDate;
-	}
+  /**
+   * @param creationDate
+   *          the creationDate to set
+   */
+  public void setCreationDate(Calendar creationDate) {
+    this.creationDate = creationDate;
+  }
 
 }

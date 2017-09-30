@@ -22,11 +22,11 @@ package com.jmethods.catatumbo.entities;
  */
 public class UserId extends GenericLongId {
 
-	/**
-	 * @param value
-	 */
-	public UserId(long value) {
-		super(value);
-	}
+  /**
+   * @param value
+   */
+  public UserId(long value) {
+    super(value);
+  }
 
 }

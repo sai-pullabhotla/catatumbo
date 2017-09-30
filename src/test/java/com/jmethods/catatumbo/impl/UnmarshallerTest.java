@@ -36,65 +36,67 @@ import com.jmethods.catatumbo.impl.Marshaller.Intent;
  *
  */
 public class UnmarshallerTest {
-	private static DefaultEntityManager em;
+  private static DefaultEntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = (DefaultEntityManager) TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = (DefaultEntityManager) TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testUnmarshal_StringId() {
-		StringId entity = new StringId();
-		entity.setGreetings("Hello");
-		entity.setId("myid");
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		StringId entity2 = Unmarshaller.unmarshal(nativeEntity, StringId.class);
-		assertTrue(entity.equals(entity2));
-	}
+  @Test
+  public void testUnmarshal_StringId() {
+    StringId entity = new StringId();
+    entity.setGreetings("Hello");
+    entity.setId("myid");
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    StringId entity2 = Unmarshaller.unmarshal(nativeEntity, StringId.class);
+    assertTrue(entity.equals(entity2));
+  }
 
-	@Test
-	public void testUnmarshal_LongObjectId() {
-		LongObjectId entity = new LongObjectId();
-		entity.setComment("Hello");
-		entity.setId(900001L);
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		LongObjectId entity2 = Unmarshaller.unmarshal(nativeEntity, LongObjectId.class);
-		assertTrue(entity.equals(entity2));
-	}
+  @Test
+  public void testUnmarshal_LongObjectId() {
+    LongObjectId entity = new LongObjectId();
+    entity.setComment("Hello");
+    entity.setId(900001L);
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    LongObjectId entity2 = Unmarshaller.unmarshal(nativeEntity, LongObjectId.class);
+    assertTrue(entity.equals(entity2));
+  }
 
-	@Test
-	public void testUnmarshal_LongId() {
-		LongId entity = new LongId();
-		entity.setField1("Hello");
-		entity.setId(90000L);
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		LongId entity2 = Unmarshaller.unmarshal(nativeEntity, LongId.class);
-		assertTrue(entity.equals(entity2));
-	}
+  @Test
+  public void testUnmarshal_LongId() {
+    LongId entity = new LongId();
+    entity.setField1("Hello");
+    entity.setId(90000L);
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    LongId entity2 = Unmarshaller.unmarshal(nativeEntity, LongId.class);
+    assertTrue(entity.equals(entity2));
+  }
 
-	@Test
-	public void testUnmarshal_WrappedLongId() {
-		WrappedLongIdEntity entity = WrappedLongIdEntity.getSample3();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
-		WrappedLongIdEntity entity2 = Unmarshaller.unmarshal(nativeEntity, WrappedLongIdEntity.class);
-		assertTrue(entity.equals(entity2));
-	}
+  @Test
+  public void testUnmarshal_WrappedLongId() {
+    WrappedLongIdEntity entity = WrappedLongIdEntity.getSample3();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.INSERT);
+    WrappedLongIdEntity entity2 = Unmarshaller.unmarshal(nativeEntity, WrappedLongIdEntity.class);
+    assertTrue(entity.equals(entity2));
+  }
 
-	@Test
-	public void testUnmarshal_WrappedLongObjectId() {
-		WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample4();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.UPDATE);
-		WrappedLongObjectIdEntity entity2 = Unmarshaller.unmarshal(nativeEntity, WrappedLongObjectIdEntity.class);
-		assertTrue(entity.equals(entity2));
-	}
+  @Test
+  public void testUnmarshal_WrappedLongObjectId() {
+    WrappedLongObjectIdEntity entity = WrappedLongObjectIdEntity.getSample4();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.UPDATE);
+    WrappedLongObjectIdEntity entity2 = Unmarshaller.unmarshal(nativeEntity,
+        WrappedLongObjectIdEntity.class);
+    assertTrue(entity.equals(entity2));
+  }
 
-	@Test
-	public void testUnmarshal_WrappedStringId() {
-		WrappedStringIdEntity entity = WrappedStringIdEntity.getSample4();
-		Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.UPDATE);
-		WrappedStringIdEntity entity2 = Unmarshaller.unmarshal(nativeEntity, WrappedStringIdEntity.class);
-		assertTrue(entity.equals(entity2));
-	}
+  @Test
+  public void testUnmarshal_WrappedStringId() {
+    WrappedStringIdEntity entity = WrappedStringIdEntity.getSample4();
+    Entity nativeEntity = (Entity) Marshaller.marshal(em, entity, Intent.UPDATE);
+    WrappedStringIdEntity entity2 = Unmarshaller.unmarshal(nativeEntity,
+        WrappedStringIdEntity.class);
+    assertTrue(entity.equals(entity2));
+  }
 
 }

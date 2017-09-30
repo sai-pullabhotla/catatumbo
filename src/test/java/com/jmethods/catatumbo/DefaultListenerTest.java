@@ -32,60 +32,60 @@ import com.jmethods.catatumbo.listeners.Adder;
  */
 public class DefaultListenerTest {
 
-	private static EntityManager em;
-	private static Random random = new Random();
+  private static EntityManager em;
+  private static Random random = new Random();
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-		em.setDefaultListeners(Adder.class);
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+    em.setDefaultListeners(Adder.class);
+  }
 
-	@Test
-	public void testPreAndPostInsert() {
-		GlobalCalculatorEntity entity = new GlobalCalculatorEntity(7, 5);
-		entity = em.insert(entity);
-		assertTrue(entity.getSum() == 12);
-		assertTrue(entity.getSum2() == 24);
-	}
+  @Test
+  public void testPreAndPostInsert() {
+    GlobalCalculatorEntity entity = new GlobalCalculatorEntity(7, 5);
+    entity = em.insert(entity);
+    assertTrue(entity.getSum() == 12);
+    assertTrue(entity.getSum2() == 24);
+  }
 
-	@Test
-	public void testPreAndPostUpdate() {
-		GlobalCalculatorEntity entity = new GlobalCalculatorEntity();
-		entity = em.insert(entity);
-		entity.setOperand1(9);
-		entity.setOperand2(2);
-		entity = em.update(entity);
-		assertTrue(entity.getSum() == 11);
-		assertTrue(entity.getSum2() == 33);
-	}
+  @Test
+  public void testPreAndPostUpdate() {
+    GlobalCalculatorEntity entity = new GlobalCalculatorEntity();
+    entity = em.insert(entity);
+    entity.setOperand1(9);
+    entity.setOperand2(2);
+    entity = em.update(entity);
+    assertTrue(entity.getSum() == 11);
+    assertTrue(entity.getSum2() == 33);
+  }
 
-	@Test
-	public void testPreAndPostUpsert() {
-		GlobalCalculatorEntity entity = new GlobalCalculatorEntity(8, 8);
-		entity = em.upsert(entity);
-		assertTrue(entity.getSum() == 16);
-		assertTrue(entity.getSum2() == 64);
-	}
+  @Test
+  public void testPreAndPostUpsert() {
+    GlobalCalculatorEntity entity = new GlobalCalculatorEntity(8, 8);
+    entity = em.upsert(entity);
+    assertTrue(entity.getSum() == 16);
+    assertTrue(entity.getSum2() == 64);
+  }
 
-	@Test
-	public void testPreAndPostDelete() {
-		GlobalCalculatorEntity entity = new GlobalCalculatorEntity();
-		entity = em.insert(entity);
-		entity.setOperand1(1);
-		entity.setOperand2(2);
-		em.delete(entity);
-		assertTrue(entity.getSum() == 3);
-		assertTrue(entity.getSum2() == 15);
-	}
+  @Test
+  public void testPreAndPostDelete() {
+    GlobalCalculatorEntity entity = new GlobalCalculatorEntity();
+    entity = em.insert(entity);
+    entity.setOperand1(1);
+    entity.setOperand2(2);
+    em.delete(entity);
+    assertTrue(entity.getSum() == 3);
+    assertTrue(entity.getSum2() == 15);
+  }
 
-	@Test
-	public void testPostLoad() {
-		GlobalCalculatorEntity entity = new GlobalCalculatorEntity(6, 9);
-		entity = em.insert(entity);
-		entity = em.load(GlobalCalculatorEntity.class, entity.getId());
-		assertTrue(entity.getSum() == 15);
-		assertTrue(entity.getSum2() == 90);
-	}
+  @Test
+  public void testPostLoad() {
+    GlobalCalculatorEntity entity = new GlobalCalculatorEntity(6, 9);
+    entity = em.insert(entity);
+    entity = em.load(GlobalCalculatorEntity.class, entity.getId());
+    assertTrue(entity.getSum() == 15);
+    assertTrue(entity.getSum2() == 90);
+  }
 
 }

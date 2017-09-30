@@ -28,37 +28,38 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping Dates to/from Cloud
- * Datastore. Date objects are mapped to DateTime type in the Cloud Datastore.
- * The values are stored with a maximum precision of milliseconds.
+ * An implementation of {@link Mapper} for mapping Dates to/from Cloud Datastore. Date objects are
+ * mapped to DateTime type in the Cloud Datastore. The values are stored with a maximum precision of
+ * milliseconds.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class DateMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return TimestampValue.newBuilder(Timestamp.of((Date) input));
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return TimestampValue.newBuilder(Timestamp.of((Date) input));
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		try {
-			Timestamp ts = ((TimestampValue) input).get();
-			long millis = TimeUnit.SECONDS.toMillis(ts.getSeconds()) + TimeUnit.NANOSECONDS.toMillis(ts.getNanos());
-			return new Date(millis);
-		} catch (ClassCastException exp) {
-			String pattern = "Expecting %s, but found %s";
-			throw new MappingException(
-					String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
-		}
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    try {
+      Timestamp ts = ((TimestampValue) input).get();
+      long millis = TimeUnit.SECONDS.toMillis(ts.getSeconds())
+          + TimeUnit.NANOSECONDS.toMillis(ts.getNanos());
+      return new Date(millis);
+    } catch (ClassCastException exp) {
+      String pattern = "Expecting %s, but found %s";
+      throw new MappingException(
+          String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
+    }
+  }
 
 }

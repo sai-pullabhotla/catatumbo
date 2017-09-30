@@ -25,20 +25,19 @@ package com.jmethods.catatumbo;
  */
 public class UnsupportedConstructionStrategyException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -1012347475989414105L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -1012347475989414105L;
 
-	/**
-	 * Creates a new instance of
-	 * {@code UnsupportedConstructionStrategyException}.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public UnsupportedConstructionStrategyException(String message) {
-		super(message);
-	}
+  /**
+   * Creates a new instance of {@code UnsupportedConstructionStrategyException}.
+   * 
+   * @param message
+   *          the message
+   */
+  public UnsupportedConstructionStrategyException(String message) {
+    super(message);
+  }
 
 }

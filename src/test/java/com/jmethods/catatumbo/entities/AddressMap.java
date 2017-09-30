@@ -30,70 +30,70 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class AddressMap {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Map<String, Address> addresses;
+  private Map<String, Address> addresses;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the addresses
-	 */
-	public Map<String, Address> getAddresses() {
-		return addresses;
-	}
+  /**
+   * @return the addresses
+   */
+  public Map<String, Address> getAddresses() {
+    return addresses;
+  }
 
-	/**
-	 * @param addresses
-	 *            the addresses to set
-	 */
-	public void setAddresses(Map<String, Address> addresses) {
-		this.addresses = addresses;
-	}
+  /**
+   * @param addresses
+   *          the addresses to set
+   */
+  public void setAddresses(Map<String, Address> addresses) {
+    this.addresses = addresses;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AddressMap)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		AddressMap that = (AddressMap) obj;
-		return this.id == that.id && Objects.equals(this.addresses, that.addresses);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof AddressMap)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    AddressMap that = (AddressMap) obj;
+    return this.id == that.id && Objects.equals(this.addresses, that.addresses);
+  }
 
-	public static AddressMap getSample1() {
-		AddressMap entity = new AddressMap();
-		Map<String, Address> addresses = new HashMap<>();
-		addresses.put("home", Address.getSample1());
-		addresses.put("work", Address.getSample2());
-		entity.setAddresses(addresses);
-		return entity;
-	}
+  public static AddressMap getSample1() {
+    AddressMap entity = new AddressMap();
+    Map<String, Address> addresses = new HashMap<>();
+    addresses.put("home", Address.getSample1());
+    addresses.put("work", Address.getSample2());
+    entity.setAddresses(addresses);
+    return entity;
+  }
 
-	public static AddressMap getSample2() {
-		AddressMap entity = new AddressMap();
-		Map<String, Address> addresses = new HashMap<>();
-		addresses.put("home", Address.getSample1());
-		addresses.put("work", Address.getSample2());
-		addresses.put("nullZip", Address.getSample3());
-		entity.setAddresses(addresses);
-		return entity;
-	}
+  public static AddressMap getSample2() {
+    AddressMap entity = new AddressMap();
+    Map<String, Address> addresses = new HashMap<>();
+    addresses.put("home", Address.getSample1());
+    addresses.put("work", Address.getSample2());
+    addresses.put("nullZip", Address.getSample3());
+    entity.setAddresses(addresses);
+    return entity;
+  }
 
 }

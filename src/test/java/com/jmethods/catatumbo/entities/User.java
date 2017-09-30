@@ -31,83 +31,83 @@ import com.jmethods.catatumbo.Key;
 @Entity
 public class User {
 
-	@Identifier
-	private UserId id;
+  @Identifier
+  private UserId id;
 
-	@Key
-	private DatastoreKey key;
+  @Key
+  private DatastoreKey key;
 
-	private String name;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public UserId getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public UserId getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(UserId id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(UserId id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the key
-	 */
-	public DatastoreKey getKey() {
-		return key;
-	}
+  /**
+   * @return the key
+   */
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	/**
-	 * @param key
-	 *            the key to set
-	 */
-	public void setKey(DatastoreKey key) {
-		this.key = key;
-	}
+  /**
+   * @param key
+   *          the key to set
+   */
+  public void setKey(DatastoreKey key) {
+    this.key = key;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		User that = (User) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.key, that.key)
-				&& Objects.equals(this.name, that.name);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    User that = (User) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.key, that.key)
+        && Objects.equals(this.name, that.name);
+  }
 
-	public static User getSample1() {
-		User entity = new User();
-		entity.setName("John Doe");
-		return entity;
-	}
+  public static User getSample1() {
+    User entity = new User();
+    entity.setName("John Doe");
+    return entity;
+  }
 
-	public static User getSample2() {
-		User entity = new User();
-		entity.setId(new UserId(0));
-		entity.setName("John Doe");
-		return entity;
-	}
+  public static User getSample2() {
+    User entity = new User();
+    entity.setId(new UserId(0));
+    entity.setName("John Doe");
+    return entity;
+  }
 
 }

@@ -27,133 +27,132 @@ import java.util.Objects;
  */
 public class EmbeddedField {
 
-	/**
-	 * The underlying field
-	 */
-	private Field field;
+  /**
+   * The underlying field
+   */
+  private Field field;
 
-	/**
-	 * Parent embedded field, if any
-	 */
-	private EmbeddedField parent;
+  /**
+   * Parent embedded field, if any
+   */
+  private EmbeddedField parent;
 
-	/**
-	 * Qualified name of this embedded field (e.g. If city is a field in Address
-	 * class and Address is embedded in a class called Customer as
-	 * billingAddress, the qualified name of this field would be
-	 * billingAddress.city).
-	 */
-	private String qualifiedName;
+  /**
+   * Qualified name of this embedded field (e.g. If city is a field in Address class and Address is
+   * embedded in a class called Customer as billingAddress, the qualified name of this field would
+   * be billingAddress.city).
+   */
+  private String qualifiedName;
 
-	/**
-	 * Creates a new instance of <code>EmbeddedField</code>.
-	 * 
-	 * @param field
-	 *            the underlying field
-	 */
-	public EmbeddedField(Field field) {
-		this(field, null);
-	}
+  /**
+   * Creates a new instance of <code>EmbeddedField</code>.
+   * 
+   * @param field
+   *          the underlying field
+   */
+  public EmbeddedField(Field field) {
+    this(field, null);
+  }
 
-	/**
-	 * Creates a new instance of <code>EmbeddedField</code>.
-	 * 
-	 * @param field
-	 *            the underlying field
-	 * @param parent
-	 *            the parent embedded field. May be <code>null</code>.
-	 */
-	public EmbeddedField(Field field, EmbeddedField parent) {
-		this.field = field;
-		this.parent = parent;
-		computeQualifiedName();
-	}
+  /**
+   * Creates a new instance of <code>EmbeddedField</code>.
+   * 
+   * @param field
+   *          the underlying field
+   * @param parent
+   *          the parent embedded field. May be <code>null</code>.
+   */
+  public EmbeddedField(Field field, EmbeddedField parent) {
+    this.field = field;
+    this.parent = parent;
+    computeQualifiedName();
+  }
 
-	/**
-	 * Returns the underlying field.
-	 * 
-	 * @return the field the underlying field.
-	 */
-	public Field getField() {
-		return field;
-	}
+  /**
+   * Returns the underlying field.
+   * 
+   * @return the field the underlying field.
+   */
+  public Field getField() {
+    return field;
+  }
 
-	/**
-	 * Returns the parent field.
-	 * 
-	 * @return the parent field.
-	 */
-	public EmbeddedField getParent() {
-		return parent;
-	}
+  /**
+   * Returns the parent field.
+   * 
+   * @return the parent field.
+   */
+  public EmbeddedField getParent() {
+    return parent;
+  }
 
-	/**
-	 * Returns the qualified name of this embedded field.
-	 * 
-	 * @return the qualified name of this embedded field.
-	 */
-	public String getQualifiedName() {
-		return qualifiedName;
-	}
+  /**
+   * Returns the qualified name of this embedded field.
+   * 
+   * @return the qualified name of this embedded field.
+   */
+  public String getQualifiedName() {
+    return qualifiedName;
+  }
 
-	/**
-	 * Returns the type of this field.
-	 * 
-	 * @return the type of this field.
-	 */
-	public Class<?> getType() {
-		return field.getType();
-	}
+  /**
+   * Returns the type of this field.
+   * 
+   * @return the type of this field.
+   */
+  public Class<?> getType() {
+    return field.getType();
+  }
 
-	/**
-	 * Returns the name of this field.
-	 * 
-	 * @return the name of this field.
-	 */
-	public String getName() {
-		return field.getName();
-	}
+  /**
+   * Returns the name of this field.
+   * 
+   * @return the name of this field.
+   */
+  public String getName() {
+    return field.getName();
+  }
 
-	/**
-	 * Returns the class in which this field is declared.
-	 * 
-	 * @return the class in which this field is declared.
-	 */
-	public Class<?> getDeclaringClass() {
-		return field.getDeclaringClass();
-	}
+  /**
+   * Returns the class in which this field is declared.
+   * 
+   * @return the class in which this field is declared.
+   */
+  public Class<?> getDeclaringClass() {
+    return field.getDeclaringClass();
+  }
 
-	/**
-	 * Computes and sets the qualified name of this field.
-	 */
-	private void computeQualifiedName() {
-		if (parent != null) {
-			qualifiedName = parent.qualifiedName + "." + field.getName();
-		} else {
-			qualifiedName = field.getName();
-		}
-	}
+  /**
+   * Computes and sets the qualified name of this field.
+   */
+  private void computeQualifiedName() {
+    if (parent != null) {
+      qualifiedName = parent.qualifiedName + "." + field.getName();
+    } else {
+      qualifiedName = field.getName();
+    }
+  }
 
-	@Override
-	public String toString() {
-		return qualifiedName;
-	}
+  @Override
+  public String toString() {
+    return qualifiedName;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof EmbeddedField)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		EmbeddedField that = (EmbeddedField) obj;
-		return Objects.equals(this.field, that.field) && Objects.equals(this.parent, that.parent);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof EmbeddedField)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    EmbeddedField that = (EmbeddedField) obj;
+    return Objects.equals(this.field, that.field) && Objects.equals(this.parent, that.parent);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(field, parent);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(field, parent);
+  }
 
 }

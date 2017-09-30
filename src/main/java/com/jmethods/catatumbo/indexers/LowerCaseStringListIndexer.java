@@ -27,36 +27,35 @@ import com.jmethods.catatumbo.IndexerFactory;
 import com.jmethods.catatumbo.IndexingException;
 
 /**
- * An implementation of {@link Indexer} interface to index a List of Strings.
- * Each item in the list will be converted to lower case and stored as an Array
- * property in the Cloud Datastore.
+ * An implementation of {@link Indexer} interface to index a List of Strings. Each item in the list
+ * will be converted to lower case and stored as an Array property in the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class LowerCaseStringListIndexer implements Indexer {
 
-	/**
-	 * Indexer for items in the list.
-	 */
-	private static final LowerCaseStringIndexer ITEM_INDEXER = IndexerFactory.getInstance()
-			.getIndexer(LowerCaseStringIndexer.class);
+  /**
+   * Indexer for items in the list.
+   */
+  private static final LowerCaseStringIndexer ITEM_INDEXER = IndexerFactory.getInstance()
+      .getIndexer(LowerCaseStringIndexer.class);
 
-	@Override
-	public Value<?> index(Value<?> input) {
-		if (input.getType() == ValueType.NULL) {
-			return NullValue.of();
-		}
-		try {
-			List<? extends Value<?>> list = ((ListValue) input).get();
-			ListValue.Builder builder = ListValue.newBuilder();
-			for (Value<?> item : list) {
-				builder.addValue(ITEM_INDEXER.index(item));
-			}
-			return builder.build();
-		} catch (Exception exp) {
-			throw new IndexingException(exp);
-		}
-	}
+  @Override
+  public Value<?> index(Value<?> input) {
+    if (input.getType() == ValueType.NULL) {
+      return NullValue.of();
+    }
+    try {
+      List<? extends Value<?>> list = ((ListValue) input).get();
+      ListValue.Builder builder = ListValue.newBuilder();
+      for (Value<?> item : list) {
+        builder.addValue(ITEM_INDEXER.index(item));
+      }
+      return builder.build();
+    } catch (Exception exp) {
+      throw new IndexingException(exp);
+    }
+  }
 
 }

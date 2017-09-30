@@ -26,35 +26,34 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping {@link LocalDate} to/from
- * Cloud Datastore. {@link LocalDate} types are mapped to String type in the
- * Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping {@link LocalDate} to/from Cloud Datastore.
+ * {@link LocalDate} types are mapped to String type in the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class LocalDateMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return StringValue.newBuilder(input.toString());
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return StringValue.newBuilder(input.toString());
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		try {
-			return LocalDate.parse(((StringValue) input).get());
-		} catch (ClassCastException exp) {
-			String pattern = "Mapping of type %s to %s is not supported";
-			throw new MappingException(String.format(pattern, input.getClass().getName(), LocalDate.class.getName()),
-					exp);
-		}
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    try {
+      return LocalDate.parse(((StringValue) input).get());
+    } catch (ClassCastException exp) {
+      String pattern = "Mapping of type %s to %s is not supported";
+      throw new MappingException(
+          String.format(pattern, input.getClass().getName(), LocalDate.class.getName()), exp);
+    }
+  }
 
 }

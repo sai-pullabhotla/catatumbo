@@ -28,143 +28,144 @@ import com.jmethods.catatumbo.Embedded;
 @Embeddable
 public class ImmutableAddress {
 
-	private String line1;
-	private String line2;
-	private String city;
-	private String state;
-	@Embedded
-	private ImmutableZipCode zipCode;
+  private String line1;
+  private String line2;
+  private String city;
+  private String state;
+  @Embedded
+  private ImmutableZipCode zipCode;
 
-	private ImmutableAddress(Builder builder) {
-		this.line1 = builder.line1;
-		this.line2 = builder.line2;
-		this.city = builder.city;
-		this.state = builder.state;
-		this.zipCode = builder.zipCode;
-	}
+  private ImmutableAddress(Builder builder) {
+    this.line1 = builder.line1;
+    this.line2 = builder.line2;
+    this.city = builder.city;
+    this.state = builder.state;
+    this.zipCode = builder.zipCode;
+  }
 
-	public static Builder builder() {
-		return new Builder();
-	}
+  public static Builder builder() {
+    return new Builder();
+  }
 
-	/**
-	 * @return the line1
-	 */
-	public String getLine1() {
-		return line1;
-	}
+  /**
+   * @return the line1
+   */
+  public String getLine1() {
+    return line1;
+  }
 
-	/**
-	 * @return the line2
-	 */
-	public String getLine2() {
-		return line2;
-	}
+  /**
+   * @return the line2
+   */
+  public String getLine2() {
+    return line2;
+  }
 
-	/**
-	 * @return the city
-	 */
-	public String getCity() {
-		return city;
-	}
+  /**
+   * @return the city
+   */
+  public String getCity() {
+    return city;
+  }
 
-	/**
-	 * @return the state
-	 */
-	public String getState() {
-		return state;
-	}
+  /**
+   * @return the state
+   */
+  public String getState() {
+    return state;
+  }
 
-	/**
-	 * @return the zipCode
-	 */
-	public ImmutableZipCode getZipCode() {
-		return zipCode;
-	}
+  /**
+   * @return the zipCode
+   */
+  public ImmutableZipCode getZipCode() {
+    return zipCode;
+  }
 
-	public static class Builder {
-		private String line1;
-		private String line2;
-		private String city;
-		private String state;
-		private ImmutableZipCode zipCode;
+  public static class Builder {
+    private String line1;
+    private String line2;
+    private String city;
+    private String state;
+    private ImmutableZipCode zipCode;
 
-		private Builder() {
+    private Builder() {
 
-		}
+    }
 
-		/**
-		 * @param line1
-		 *            the line1 to set
-		 */
-		public Builder setLine1(String line1) {
-			this.line1 = line1;
-			return this;
-		}
+    /**
+     * @param line1
+     *          the line1 to set
+     */
+    public Builder setLine1(String line1) {
+      this.line1 = line1;
+      return this;
+    }
 
-		/**
-		 * @param line2
-		 *            the line2 to set
-		 */
-		public Builder setLine2(String line2) {
-			this.line2 = line2;
-			return this;
-		}
+    /**
+     * @param line2
+     *          the line2 to set
+     */
+    public Builder setLine2(String line2) {
+      this.line2 = line2;
+      return this;
+    }
 
-		/**
-		 * @param city
-		 *            the city to set
-		 */
-		public Builder setCity(String city) {
-			this.city = city;
-			return this;
-		}
+    /**
+     * @param city
+     *          the city to set
+     */
+    public Builder setCity(String city) {
+      this.city = city;
+      return this;
+    }
 
-		/**
-		 * @param state
-		 *            the state to set
-		 */
-		public Builder setState(String state) {
-			this.state = state;
-			return this;
-		}
+    /**
+     * @param state
+     *          the state to set
+     */
+    public Builder setState(String state) {
+      this.state = state;
+      return this;
+    }
 
-		public Builder setZipCode(ImmutableZipCode zipCode) {
-			this.zipCode = zipCode;
-			return this;
-		}
+    public Builder setZipCode(ImmutableZipCode zipCode) {
+      this.zipCode = zipCode;
+      return this;
+    }
 
-		public ImmutableAddress build() {
-			return new ImmutableAddress(this);
-		}
+    public ImmutableAddress build() {
+      return new ImmutableAddress(this);
+    }
 
-	}
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder2 = new StringBuilder();
-		builder2.append("ImmutableAddress [line1=").append(line1).append(", line2=").append(line2).append(", city=")
-				.append(city).append(", state=").append(state).append(", zipCode=").append(zipCode).append("]");
-		return builder2.toString();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    StringBuilder builder2 = new StringBuilder();
+    builder2.append("ImmutableAddress [line1=").append(line1).append(", line2=").append(line2)
+        .append(", city=").append(city).append(", state=").append(state).append(", zipCode=")
+        .append(zipCode).append("]");
+    return builder2.toString();
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		ImmutableAddress that = (ImmutableAddress) obj;
-		return Objects.equals(this.line1, that.line1) && Objects.equals(this.line2, that.line2)
-				&& Objects.equals(this.city, that.city) && Objects.equals(this.state, that.state)
-				&& Objects.equals(this.zipCode, that.zipCode);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    ImmutableAddress that = (ImmutableAddress) obj;
+    return Objects.equals(this.line1, that.line1) && Objects.equals(this.line2, that.line2)
+        && Objects.equals(this.city, that.city) && Objects.equals(this.state, that.state)
+        && Objects.equals(this.zipCode, that.zipCode);
+  }
 
 }

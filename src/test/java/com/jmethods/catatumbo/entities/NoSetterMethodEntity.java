@@ -27,32 +27,32 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class NoSetterMethodEntity {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Property
-	private String name;
+  @Property
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
 }

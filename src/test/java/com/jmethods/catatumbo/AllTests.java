@@ -32,43 +32,45 @@ import com.jmethods.catatumbo.entities.Task;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ CustomTypeTest.class, DatastoreBatchTest.class, DatastoreMetadataTest.class, DatastoreStatsTest.class,
-		DatastoreTransactionTest.class, DecimalFieldsTest.class, DefaultAndExternalListenersTest.class,
-		DefaultListenerTest.class, EmbeddedCollectionTest.class, EntityManagerFactoryTest.class,
-		EntityManagerTest.class, ExcludeDefaultListenerTest.class, ExternalListenerTest.class, IndexerFactoryTest.class,
-		InternalListenerTest.class, ListenerInheritanceTest.class, MapperFactoryTest.class, OptionalFieldsTest.class,
-		SecondaryIndexTest.class, TenantTest.class, TwoDefaultListenersTest.class, TwoExternalListenersTest.class })
+@SuiteClasses({ CustomTypeTest.class, DatastoreBatchTest.class, DatastoreMetadataTest.class,
+    DatastoreStatsTest.class, DatastoreTransactionTest.class, DecimalFieldsTest.class,
+    DefaultAndExternalListenersTest.class, DefaultListenerTest.class, EmbeddedCollectionTest.class,
+    EntityManagerFactoryTest.class, EntityManagerTest.class, ExcludeDefaultListenerTest.class,
+    ExternalListenerTest.class, IndexerFactoryTest.class, InternalListenerTest.class,
+    ListenerInheritanceTest.class, MapperFactoryTest.class, OptionalFieldsTest.class,
+    SecondaryIndexTest.class, TenantTest.class, TwoDefaultListenersTest.class,
+    TwoExternalListenersTest.class })
 
 public class AllTests {
 
-	private static EntityManager em;
+  private static EntityManager em;
 
-	@BeforeClass
-	public static void clearDatastore() throws Exception {
-		em = TestUtils.getEntityManager();
-		em.getDatastoreMetadata().getKinds(true).forEach(em::deleteAll);
-		populateTasks();
-	}
+  @BeforeClass
+  public static void clearDatastore() throws Exception {
+    em = TestUtils.getEntityManager();
+    em.getDatastoreMetadata().getKinds(true).forEach(em::deleteAll);
+    populateTasks();
+  }
 
-	private static void populateTasks() {
-		List<Task> tasks = new ArrayList<>(50);
-		Calendar today = Calendar.getInstance();
-		today.set(Calendar.HOUR_OF_DAY, 0);
-		today.set(Calendar.MINUTE, 0);
-		today.set(Calendar.SECOND, 0);
-		today.set(Calendar.MILLISECOND, 0);
-		for (int i = 1; i <= 50; i++) {
-			Task task = new Task();
-			task.setId(i);
-			task.setName("My Task " + i);
-			task.setPriority(i % 5);
-			task.setComplete(i % 10 == 0);
-			Calendar cal = (Calendar) today.clone();
-			cal.add(Calendar.DATE, i % 5);
-			task.setCompletionDate(cal.getTime());
-			tasks.add(task);
-		}
-		em.insert(tasks);
-	}
+  private static void populateTasks() {
+    List<Task> tasks = new ArrayList<>(50);
+    Calendar today = Calendar.getInstance();
+    today.set(Calendar.HOUR_OF_DAY, 0);
+    today.set(Calendar.MINUTE, 0);
+    today.set(Calendar.SECOND, 0);
+    today.set(Calendar.MILLISECOND, 0);
+    for (int i = 1; i <= 50; i++) {
+      Task task = new Task();
+      task.setId(i);
+      task.setName("My Task " + i);
+      task.setPriority(i % 5);
+      task.setComplete(i % 10 == 0);
+      Calendar cal = (Calendar) today.clone();
+      cal.add(Calendar.DATE, i % 5);
+      task.setCompletionDate(cal.getTime());
+      tasks.add(task);
+    }
+    em.insert(tasks);
+  }
 
 }

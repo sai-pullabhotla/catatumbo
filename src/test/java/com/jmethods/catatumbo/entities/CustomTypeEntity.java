@@ -25,39 +25,39 @@ import com.jmethods.catatumbo.Identifier;
  */
 @Entity
 public class CustomTypeEntity {
-	@Identifier
-	private Long id;
+  @Identifier
+  private Long id;
 
-	private byte byteField;
+  private byte byteField;
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the byteField
-	 */
-	public byte getByteField() {
-		return byteField;
-	}
+  /**
+   * @return the byteField
+   */
+  public byte getByteField() {
+    return byteField;
+  }
 
-	/**
-	 * @param byteField
-	 *            the byteField to set
-	 */
-	public void setByteField(byte byteField) {
-		this.byteField = byteField;
-	}
+  /**
+   * @param byteField
+   *          the byteField to set
+   */
+  public void setByteField(byte byteField) {
+    this.byteField = byteField;
+  }
 
 }

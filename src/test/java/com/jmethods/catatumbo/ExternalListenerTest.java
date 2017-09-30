@@ -29,58 +29,58 @@ import com.jmethods.catatumbo.entities.ExternalCalculatorEntity;
  */
 public class ExternalListenerTest {
 
-	private static EntityManager em;
+  private static EntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testPreAndPostInsert() {
-		ExternalCalculatorEntity entity = new ExternalCalculatorEntity(7, 5);
-		entity = em.insert(entity);
-		assertTrue(entity.getSum() == 12);
-		assertTrue(entity.getSum2() == 24);
-	}
+  @Test
+  public void testPreAndPostInsert() {
+    ExternalCalculatorEntity entity = new ExternalCalculatorEntity(7, 5);
+    entity = em.insert(entity);
+    assertTrue(entity.getSum() == 12);
+    assertTrue(entity.getSum2() == 24);
+  }
 
-	@Test
-	public void testPreAndPostUpdate() {
-		ExternalCalculatorEntity entity = new ExternalCalculatorEntity();
-		entity = em.insert(entity);
-		entity.setOperand1(9);
-		entity.setOperand2(2);
-		entity = em.update(entity);
-		assertTrue(entity.getSum() == 11);
-		assertTrue(entity.getSum2() == 33);
-	}
+  @Test
+  public void testPreAndPostUpdate() {
+    ExternalCalculatorEntity entity = new ExternalCalculatorEntity();
+    entity = em.insert(entity);
+    entity.setOperand1(9);
+    entity.setOperand2(2);
+    entity = em.update(entity);
+    assertTrue(entity.getSum() == 11);
+    assertTrue(entity.getSum2() == 33);
+  }
 
-	@Test
-	public void testPreAndPostUpsert() {
-		ExternalCalculatorEntity entity = new ExternalCalculatorEntity(8, 8);
-		entity = em.upsert(entity);
-		assertTrue(entity.getSum() == 16);
-		assertTrue(entity.getSum2() == 64);
-	}
+  @Test
+  public void testPreAndPostUpsert() {
+    ExternalCalculatorEntity entity = new ExternalCalculatorEntity(8, 8);
+    entity = em.upsert(entity);
+    assertTrue(entity.getSum() == 16);
+    assertTrue(entity.getSum2() == 64);
+  }
 
-	@Test
-	public void testPreAndPostDelete() {
-		ExternalCalculatorEntity entity = new ExternalCalculatorEntity();
-		entity = em.insert(entity);
-		entity.setOperand1(1);
-		entity.setOperand2(2);
-		em.delete(entity);
-		assertTrue(entity.getSum() == 3);
-		assertTrue(entity.getSum2() == 15);
-	}
+  @Test
+  public void testPreAndPostDelete() {
+    ExternalCalculatorEntity entity = new ExternalCalculatorEntity();
+    entity = em.insert(entity);
+    entity.setOperand1(1);
+    entity.setOperand2(2);
+    em.delete(entity);
+    assertTrue(entity.getSum() == 3);
+    assertTrue(entity.getSum2() == 15);
+  }
 
-	@Test
-	public void testPostLoad() {
-		ExternalCalculatorEntity entity = new ExternalCalculatorEntity(6, 9);
-		entity = em.insert(entity);
-		entity = em.load(ExternalCalculatorEntity.class, entity.getId());
-		assertTrue(entity.getSum() == 15);
-		assertTrue(entity.getSum2() == 90);
-	}
+  @Test
+  public void testPostLoad() {
+    ExternalCalculatorEntity entity = new ExternalCalculatorEntity(6, 9);
+    entity = em.insert(entity);
+    entity = em.load(ExternalCalculatorEntity.class, entity.getId());
+    assertTrue(entity.getSum() == 15);
+    assertTrue(entity.getSum2() == 90);
+  }
 
 }

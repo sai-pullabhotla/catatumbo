@@ -34,79 +34,81 @@ import com.jmethods.catatumbo.indexers.UpperCaseStringListIndexer;
 @Entity
 public class StringListIndex {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@SecondaryIndex
-	private List<String> colors;
+  @SecondaryIndex
+  private List<String> colors;
 
-	@SecondaryIndex
-	@PropertyIndexer(UpperCaseStringListIndexer.class)
-	private LinkedList<String> sizes;
+  @SecondaryIndex
+  @PropertyIndexer(UpperCaseStringListIndexer.class)
+  private LinkedList<String> sizes;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the colors
-	 */
-	public List<String> getColors() {
-		return colors;
-	}
+  /**
+   * @return the colors
+   */
+  public List<String> getColors() {
+    return colors;
+  }
 
-	/**
-	 * @param colors
-	 *            the colors to set
-	 */
-	public void setColors(List<String> colors) {
-		this.colors = colors;
-	}
+  /**
+   * @param colors
+   *          the colors to set
+   */
+  public void setColors(List<String> colors) {
+    this.colors = colors;
+  }
 
-	/**
-	 * @return the sizes
-	 */
-	public LinkedList<String> getSizes() {
-		return sizes;
-	}
+  /**
+   * @return the sizes
+   */
+  public LinkedList<String> getSizes() {
+    return sizes;
+  }
 
-	/**
-	 * @param sizes
-	 *            the sizes to set
-	 */
-	public void setSizes(LinkedList<String> sizes) {
-		this.sizes = sizes;
-	}
+  /**
+   * @param sizes
+   *          the sizes to set
+   */
+  public void setSizes(LinkedList<String> sizes) {
+    this.sizes = sizes;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof StringListIndex)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		StringListIndex that = (StringListIndex) obj;
-		return this.id == that.id && Objects.equals(this.colors, that.colors) && Objects.equals(this.sizes, that.sizes);
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof StringListIndex)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    StringListIndex that = (StringListIndex) obj;
+    return this.id == that.id && Objects.equals(this.colors, that.colors)
+        && Objects.equals(this.sizes, that.sizes);
 
-	}
+  }
 
-	public static StringListIndex getSample1() {
-		StringListIndex entity = new StringListIndex();
-		entity.setColors(Arrays.asList(new String[] { "Black", "White", "Red" }));
-		entity.setSizes(new LinkedList<>(Arrays.asList(new String[] { "Small", "Medium", "Large", null })));
-		return entity;
-	}
+  public static StringListIndex getSample1() {
+    StringListIndex entity = new StringListIndex();
+    entity.setColors(Arrays.asList(new String[] { "Black", "White", "Red" }));
+    entity.setSizes(
+        new LinkedList<>(Arrays.asList(new String[] { "Small", "Medium", "Large", null })));
+    return entity;
+  }
 
 }

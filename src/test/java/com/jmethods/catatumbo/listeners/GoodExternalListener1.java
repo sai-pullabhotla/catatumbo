@@ -28,15 +28,15 @@ import com.jmethods.catatumbo.PreUpdate;
 @EntityListener
 public class GoodExternalListener1 {
 
-	@PreInsert
-	@PreUpdate
-	public void preInsert(Object obj) {
+  @PreInsert
+  @PreUpdate
+  public void preInsert(Object obj) {
 
-	}
+  }
 
-	@PostLoad
-	public void afterLoad(Object entity) {
+  @PostLoad
+  public void afterLoad(Object entity) {
 
-	}
+  }
 
 }

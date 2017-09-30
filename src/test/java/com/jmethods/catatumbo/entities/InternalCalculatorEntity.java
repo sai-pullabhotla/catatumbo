@@ -29,29 +29,29 @@ import com.jmethods.catatumbo.PreUpsert;
 @Entity
 public class InternalCalculatorEntity extends CalculatorEntity {
 
-	/**
-	 * 
-	 */
-	public InternalCalculatorEntity() {
-		super();
-	}
+  /**
+   * 
+   */
+  public InternalCalculatorEntity() {
+    super();
+  }
 
-	/**
-	 * @param operand1
-	 * @param operand2
-	 */
-	public InternalCalculatorEntity(long operand1, long operand2) {
-		super(operand1, operand2);
-	}
+  /**
+   * @param operand1
+   * @param operand2
+   */
+  public InternalCalculatorEntity(long operand1, long operand2) {
+    super(operand1, operand2);
+  }
 
-	@PreInsert
-	@PreUpdate
-	@PreUpsert
-	@PreDelete
-	public void beforeEvent() {
-		setSum(getOperand1() + getOperand2());
-		setProduct(getOperand1() * getOperand2());
-		setDifference(getOperand1() - getOperand2());
-	}
+  @PreInsert
+  @PreUpdate
+  @PreUpsert
+  @PreDelete
+  public void beforeEvent() {
+    setSum(getOperand1() + getOperand2());
+    setProduct(getOperand1() * getOperand2());
+    setDifference(getOperand1() - getOperand2());
+  }
 
 }

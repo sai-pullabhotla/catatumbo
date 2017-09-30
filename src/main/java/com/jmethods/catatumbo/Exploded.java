@@ -16,20 +16,19 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the {@link Embedded} object of an entity should be stored
- * using the Exploded strategy. With Exploded strategy, the {@link Embedded}
- * object, and nested embedded objects, if any, are exploded into separate
- * properties when stored into the Datastore. This annotation can exist on any
- * {@link Embedded} field of an {@link Entity} or {@link MappedSuperClass}.
- * Annotating a nested Embedded field with this annotation will not have any
- * effect as the storage strategy is enforced at the Entity level.
+ * Indicates that the {@link Embedded} object of an entity should be stored using the Exploded
+ * strategy. With Exploded strategy, the {@link Embedded} object, and nested embedded objects, if
+ * any, are exploded into separate properties when stored into the Datastore. This annotation can
+ * exist on any {@link Embedded} field of an {@link Entity} or {@link MappedSuperClass}. Annotating
+ * a nested Embedded field with this annotation will not have any effect as the storage strategy is
+ * enforced at the Entity level.
  * 
  * @author Sai Pullabhotla
  *
@@ -37,5 +36,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Exploded {
-
+  // Marker
 }

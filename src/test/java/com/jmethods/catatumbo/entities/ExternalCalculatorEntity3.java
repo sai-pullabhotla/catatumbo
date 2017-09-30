@@ -31,19 +31,19 @@ import com.jmethods.catatumbo.listeners.Multiplier;
 @ExcludeDefaultListeners
 public class ExternalCalculatorEntity3 extends CalculatorEntity {
 
-	/**
-	 * 
-	 */
-	public ExternalCalculatorEntity3() {
-		super();
-	}
+  /**
+   * 
+   */
+  public ExternalCalculatorEntity3() {
+    super();
+  }
 
-	/**
-	 * @param operand1
-	 * @param operand2
-	 */
-	public ExternalCalculatorEntity3(long operand1, long operand2) {
-		super(operand1, operand2);
-	}
+  /**
+   * @param operand1
+   * @param operand2
+   */
+  public ExternalCalculatorEntity3(long operand1, long operand2) {
+    super(operand1, operand2);
+  }
 
 }

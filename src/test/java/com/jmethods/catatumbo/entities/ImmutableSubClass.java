@@ -27,74 +27,75 @@ import com.jmethods.catatumbo.Entity;
 @Entity
 public class ImmutableSubClass extends ImmutableSuperClass {
 
-	private String name;
+  private String name;
 
-	private ImmutableSubClass(Builder builder) {
-		super(builder);
-		this.name = builder.name;
-	}
+  private ImmutableSubClass(Builder builder) {
+    super(builder);
+    this.name = builder.name;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder2 = new StringBuilder();
-		builder2.append("ImmutableSubClass [name=").append(name).append(", getId()=").append(getId())
-				.append(", getKey()=").append(getKey()).append(", getCreatedTimestamp()=").append(getCreatedTimestamp())
-				.append(", getModifiedTimestamp()=").append(getModifiedTimestamp()).append(", getVersion()=")
-				.append(getVersion()).append("]");
-		return builder2.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder2 = new StringBuilder();
+    builder2.append("ImmutableSubClass [name=").append(name).append(", getId()=").append(getId())
+        .append(", getKey()=").append(getKey()).append(", getCreatedTimestamp()=")
+        .append(getCreatedTimestamp()).append(", getModifiedTimestamp()=")
+        .append(getModifiedTimestamp()).append(", getVersion()=").append(getVersion()).append("]");
+    return builder2.toString();
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (!this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		if (equalsExceptGeneratedValues(obj)) {
-			ImmutableSubClass that = (ImmutableSubClass) obj;
-			return Objects.equals(this.getId(), that.getId()) && Objects.equals(this.getKey(), that.getKey())
-					&& Objects.equals(this.getCreatedTimestamp(), that.getCreatedTimestamp())
-					&& Objects.equals(this.getModifiedTimestamp(), that.getModifiedTimestamp());
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (!this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    if (equalsExceptGeneratedValues(obj)) {
+      ImmutableSubClass that = (ImmutableSubClass) obj;
+      return Objects.equals(this.getId(), that.getId())
+          && Objects.equals(this.getKey(), that.getKey())
+          && Objects.equals(this.getCreatedTimestamp(), that.getCreatedTimestamp())
+          && Objects.equals(this.getModifiedTimestamp(), that.getModifiedTimestamp());
 
-		}
-		return false;
-	}
+    }
+    return false;
+  }
 
-	public boolean equalsExceptGeneratedValues(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (!this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		ImmutableSubClass that = (ImmutableSubClass) obj;
-		return Objects.equals(this.name, that.name);
-	}
+  public boolean equalsExceptGeneratedValues(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (!this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    ImmutableSubClass that = (ImmutableSubClass) obj;
+    return Objects.equals(this.name, that.name);
+  }
 
-	public static class Builder extends ImmutableSuperClass.Builder<Builder> {
+  public static class Builder extends ImmutableSuperClass.Builder<Builder> {
 
-		private String name;
+    private String name;
 
-		public Builder setName(String name) {
-			this.name = name;
-			return this;
-		}
+    public Builder setName(String name) {
+      this.name = name;
+      return this;
+    }
 
-		@Override
-		public ImmutableSubClass build() {
-			return new ImmutableSubClass(this);
-		}
+    @Override
+    public ImmutableSubClass build() {
+      return new ImmutableSubClass(this);
+    }
 
-	}
+  }
 
 }

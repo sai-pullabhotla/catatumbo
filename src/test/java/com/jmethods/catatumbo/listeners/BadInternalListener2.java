@@ -26,9 +26,9 @@ import com.jmethods.catatumbo.PreInsert;
 @Entity
 public class BadInternalListener2 {
 
-	@PreInsert
-	public int beforeInsert() {
-		return 0;
-	}
+  @PreInsert
+  public int beforeInsert() {
+    return 0;
+  }
 
 }

@@ -26,7 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ DecimalMapperTest.class, FloatMapperTest.class, OffsetDateTimeMapperTest.class,
-		ZonedDateTimeMapperTest.class })
+    ZonedDateTimeMapperTest.class })
 public class AllTests {
 
 }

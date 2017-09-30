@@ -29,43 +29,44 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping {@link LocalTime} to/from
- * Cloud Datastore. {@link LocalTime} types are mapped to String type in the
- * Cloud Datastore. {@link LocalTime} objects are persisted into the datastore
- * with a nano-second precision in the <code>HH:mm:ss.nnnnnnnnn</code> format.
+ * An implementation of {@link Mapper} for mapping {@link LocalTime} to/from Cloud Datastore.
+ * {@link LocalTime} types are mapped to String type in the Cloud Datastore. {@link LocalTime}
+ * objects are persisted into the datastore with a nano-second precision in the
+ * <code>HH:mm:ss.nnnnnnnnn</code> format.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class LocalTimeMapper implements Mapper {
 
-	/**
-	 * The formatter to use for converting LocalTime to String and vice versa.
-	 */
-	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss.nnnnnnnnn", Locale.ENGLISH);
+  /**
+   * The formatter to use for converting LocalTime to String and vice versa.
+   */
+  public static final DateTimeFormatter FORMATTER = DateTimeFormatter
+      .ofPattern("HH:mm:ss.nnnnnnnnn", Locale.ENGLISH);
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return StringValue.newBuilder(((LocalTime) input).format(FORMATTER));
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return StringValue.newBuilder(((LocalTime) input).format(FORMATTER));
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		try {
-			return LocalTime.parse(((StringValue) input).get(), FORMATTER);
-		} catch (ClassCastException exp) {
-			String pattern = "Mapping of type %s to %s is not supported";
-			throw new MappingException(String.format(pattern, input.getClass().getName(), LocalTime.class.getName()),
-					exp);
-		} catch (DateTimeParseException exp) {
-			throw new MappingException(exp);
-		}
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    try {
+      return LocalTime.parse(((StringValue) input).get(), FORMATTER);
+    } catch (ClassCastException exp) {
+      String pattern = "Mapping of type %s to %s is not supported";
+      throw new MappingException(
+          String.format(pattern, input.getClass().getName(), LocalTime.class.getName()), exp);
+    } catch (DateTimeParseException exp) {
+      throw new MappingException(exp);
+    }
+  }
 
 }

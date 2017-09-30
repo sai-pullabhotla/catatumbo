@@ -36,58 +36,59 @@ import com.jmethods.catatumbo.MappingException;
  */
 public class ZonedDateTimeMapperTest {
 
-	@Test
-	public void testToDatastore_Now() {
-		ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
-		ZonedDateTime now = ZonedDateTime.now();
-		Timestamp ts = ((TimestampValue) mapper.toDatastore(now).build()).get();
-		assertEquals(now.toEpochSecond(), ts.getSeconds());
-		assertEquals(now.getNano(), ts.getNanos());
-	}
+  @Test
+  public void testToDatastore_Now() {
+    ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
+    ZonedDateTime now = ZonedDateTime.now();
+    Timestamp ts = ((TimestampValue) mapper.toDatastore(now).build()).get();
+    assertEquals(now.toEpochSecond(), ts.getSeconds());
+    assertEquals(now.getNano(), ts.getNanos());
+  }
 
-	@Test
-	public void testToDatastorel_Nanos() {
-		ZonedDateTime input = ZonedDateTime.now().withNano(999999999);
-		ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
-		Timestamp ts = ((TimestampValue) mapper.toDatastore(input).build()).get();
-		assertEquals(ts.getSeconds(), input.toEpochSecond());
-		assertEquals(TimeUnit.NANOSECONDS.toMicros(input.getNano()), TimeUnit.NANOSECONDS.toMicros(ts.getNanos()));
-	}
+  @Test
+  public void testToDatastorel_Nanos() {
+    ZonedDateTime input = ZonedDateTime.now().withNano(999999999);
+    ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
+    Timestamp ts = ((TimestampValue) mapper.toDatastore(input).build()).get();
+    assertEquals(ts.getSeconds(), input.toEpochSecond());
+    assertEquals(TimeUnit.NANOSECONDS.toMicros(input.getNano()),
+        TimeUnit.NANOSECONDS.toMicros(ts.getNanos()));
+  }
 
-	@Test
-	public void testToDatastore_Null() {
-		ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
-		NullValue v = (NullValue) mapper.toDatastore(null).build();
-		assertNull(v.get());
-	}
+  @Test
+  public void testToDatastore_Null() {
+    ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
+    NullValue v = (NullValue) mapper.toDatastore(null).build();
+    assertNull(v.get());
+  }
 
-	@Test
-	public void testToModel_Now() {
-		Timestamp now = Timestamp.now();
-		TimestampValue v = TimestampValue.newBuilder(now).build();
-		ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
-		ZonedDateTime output = (ZonedDateTime) mapper.toModel(v);
-		assertEquals(now.getSeconds(), output.toEpochSecond());
-		assertEquals(now.getNanos(), output.getNano());
-	}
+  @Test
+  public void testToModel_Now() {
+    Timestamp now = Timestamp.now();
+    TimestampValue v = TimestampValue.newBuilder(now).build();
+    ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
+    ZonedDateTime output = (ZonedDateTime) mapper.toModel(v);
+    assertEquals(now.getSeconds(), output.toEpochSecond());
+    assertEquals(now.getNanos(), output.getNano());
+  }
 
-	@Test
-	public void testToModel_Null() {
-		ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
-		ZonedDateTime output = (ZonedDateTime) mapper.toModel(NullValue.of());
-		assertNull(output);
-	}
+  @Test
+  public void testToModel_Null() {
+    ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
+    ZonedDateTime output = (ZonedDateTime) mapper.toModel(NullValue.of());
+    assertNull(output);
+  }
 
-	@Test(expected = MappingException.class)
-	public void testToModel2() {
-		StringValue v = StringValue.of("Hello");
-		ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
-		try {
-			mapper.toModel(v);
-		} catch (MappingException e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testToModel2() {
+    StringValue v = StringValue.of("Hello");
+    ZonedDateTimeMapper mapper = new ZonedDateTimeMapper();
+    try {
+      mapper.toModel(v);
+    } catch (MappingException e) {
+      e.printStackTrace();
+      throw e;
+    }
+  }
 
 }

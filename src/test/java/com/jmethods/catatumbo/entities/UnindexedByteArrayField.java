@@ -27,40 +27,40 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class UnindexedByteArrayField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Property(indexed = false)
-	private byte[] junk;
+  @Property(indexed = false)
+  private byte[] junk;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the salt
-	 */
-	public byte[] getJunk() {
-		return junk;
-	}
+  /**
+   * @return the salt
+   */
+  public byte[] getJunk() {
+    return junk;
+  }
 
-	/**
-	 * @param salt
-	 *            the salt to set
-	 */
-	public void setJunk(byte[] salt) {
-		this.junk = salt;
-	}
+  /**
+   * @param salt
+   *          the salt to set
+   */
+  public void setJunk(byte[] salt) {
+    this.junk = salt;
+  }
 
 }

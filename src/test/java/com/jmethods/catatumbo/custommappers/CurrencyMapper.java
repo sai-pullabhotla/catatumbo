@@ -27,54 +27,54 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;;
 
 /**
- * A custom mapper for testing the custom mapper functionality. This mapper maps
- * a BigDecimal type to an Integer property in the Cloud Datastore.
+ * A custom mapper for testing the custom mapper functionality. This mapper maps a BigDecimal type
+ * to an Integer property in the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class CurrencyMapper implements Mapper {
 
-	/**
-	 * Fractional digits
-	 */
-	private int fractionalDigits;
+  /**
+   * Fractional digits
+   */
+  private int fractionalDigits;
 
-	/**
-	 * Creates a new instance of CurrencyMapper.
-	 * 
-	 * @param field
-	 *            the field to which this mapper is to be attached.
-	 */
-	public CurrencyMapper(Field field) {
-		if (!field.getType().equals(BigDecimal.class)) {
-			throw new IllegalArgumentException("Field type must be BigDecimal");
-		}
-		this.fractionalDigits = 2;
-	}
+  /**
+   * Creates a new instance of CurrencyMapper.
+   * 
+   * @param field
+   *          the field to which this mapper is to be attached.
+   */
+  public CurrencyMapper(Field field) {
+    if (!field.getType().equals(BigDecimal.class)) {
+      throw new IllegalArgumentException("Field type must be BigDecimal");
+    }
+    this.fractionalDigits = 2;
+  }
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		try {
-			BigDecimal n = (BigDecimal) input;
-			n = n.movePointRight(fractionalDigits);
-			return LongValue.newBuilder(n.longValueExact());
-		} catch (Exception e) {
-			throw new MappingException(e);
-		}
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    try {
+      BigDecimal n = (BigDecimal) input;
+      n = n.movePointRight(fractionalDigits);
+      return LongValue.newBuilder(n.longValueExact());
+    } catch (Exception e) {
+      throw new MappingException(e);
+    }
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		BigDecimal n = new BigDecimal(((LongValue) input).get());
-		n = n.movePointLeft(fractionalDigits);
-		return n;
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    BigDecimal n = new BigDecimal(((LongValue) input).get());
+    n = n.movePointLeft(fractionalDigits);
+    return n;
+  }
 
 }

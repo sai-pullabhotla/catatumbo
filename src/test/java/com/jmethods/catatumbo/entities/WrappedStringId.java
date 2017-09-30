@@ -22,33 +22,33 @@ package com.jmethods.catatumbo.entities;
  */
 public class WrappedStringId {
 
-	private String value;
+  private String value;
 
-	public WrappedStringId(String value) {
-		this.value = value;
-	}
+  public WrappedStringId(String value) {
+    this.value = value;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WrappedStringId [value=").append(value).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("WrappedStringId [value=").append(value).append("]");
+    return builder.toString();
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		WrappedStringId that = (WrappedStringId) obj;
-		return this.value == that.value;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    WrappedStringId that = (WrappedStringId) obj;
+    return this.value == that.value;
+  }
 
 }

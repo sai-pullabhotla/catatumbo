@@ -26,12 +26,12 @@ import com.jmethods.catatumbo.PreInsert;
 @Entity
 public class Cow extends FarmAnimal {
 
-	@PreInsert
-	public void insertingCow() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += Cow.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingCow() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += Cow.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 
 }

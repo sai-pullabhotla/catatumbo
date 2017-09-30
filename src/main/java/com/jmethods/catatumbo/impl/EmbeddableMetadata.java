@@ -26,14 +26,14 @@ import com.jmethods.catatumbo.Embeddable;
  */
 public class EmbeddableMetadata extends MetadataBase {
 
-	/**
-	 * Creates a new instance of <code>EmbeddableMetadata</code>.
-	 * 
-	 * @param clazz
-	 *            the Embeddable class
-	 */
-	public EmbeddableMetadata(Class<?> clazz) {
-		super(clazz);
-	}
+  /**
+   * Creates a new instance of <code>EmbeddableMetadata</code>.
+   * 
+   * @param clazz
+   *          the Embeddable class
+   */
+  public EmbeddableMetadata(Class<?> clazz) {
+    super(clazz);
+  }
 
 }

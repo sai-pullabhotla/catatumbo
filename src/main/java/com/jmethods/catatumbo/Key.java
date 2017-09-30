@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo;
 
 import java.lang.annotation.ElementType;
@@ -21,15 +22,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Fields annotated with this annotation in an Entity hold the full key of the
- * entity. Full key includes the ancestor paths and the key of the entity. Only
- * one field can be annotated as Key in a given entity. The type of field must
- * be {@link DatastoreKey}.
+ * Fields annotated with this annotation in an Entity hold the full key of the entity. Full key
+ * includes the ancestor paths and the key of the entity. Only one field can be annotated as Key in
+ * a given entity. The type of field must be {@link DatastoreKey}.
  *
  * @author Sai Pullabhotla
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Key {
-
+  // Markers
 }

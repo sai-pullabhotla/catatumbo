@@ -31,96 +31,98 @@ import com.jmethods.catatumbo.ParentKey;
 @Entity
 public class UserContact {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@ParentKey
-	private DatastoreKey userKey;
+  @ParentKey
+  private DatastoreKey userKey;
 
-	@Key
-	private DatastoreKey contactKey;
+  @Key
+  private DatastoreKey contactKey;
 
-	private String contactName;
+  private String contactName;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the userKey
-	 */
-	public DatastoreKey getUserKey() {
-		return userKey;
-	}
+  /**
+   * @return the userKey
+   */
+  public DatastoreKey getUserKey() {
+    return userKey;
+  }
 
-	/**
-	 * @param userKey
-	 *            the userKey to set
-	 */
-	public void setUserKey(DatastoreKey userKey) {
-		this.userKey = userKey;
-	}
+  /**
+   * @param userKey
+   *          the userKey to set
+   */
+  public void setUserKey(DatastoreKey userKey) {
+    this.userKey = userKey;
+  }
 
-	/**
-	 * @return the contactKey
-	 */
-	public DatastoreKey getContactKey() {
-		return contactKey;
-	}
+  /**
+   * @return the contactKey
+   */
+  public DatastoreKey getContactKey() {
+    return contactKey;
+  }
 
-	/**
-	 * @param contactKey
-	 *            the contactKey to set
-	 */
-	public void setContactKey(DatastoreKey contactKey) {
-		this.contactKey = contactKey;
-	}
+  /**
+   * @param contactKey
+   *          the contactKey to set
+   */
+  public void setContactKey(DatastoreKey contactKey) {
+    this.contactKey = contactKey;
+  }
 
-	/**
-	 * @return the contactName
-	 */
-	public String getContactName() {
-		return contactName;
-	}
+  /**
+   * @return the contactName
+   */
+  public String getContactName() {
+    return contactName;
+  }
 
-	/**
-	 * @param contactName
-	 *            the contactName to set
-	 */
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
-	}
+  /**
+   * @param contactName
+   *          the contactName to set
+   */
+  public void setContactName(String contactName) {
+    this.contactName = contactName;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || !this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		UserContact that = (UserContact) obj;
-		return Objects.equal(this.id, that.id) && Objects.equal(this.userKey, that.userKey)
-				&& Objects.equal(this.contactKey, that.contactKey) && Objects.equal(this.contactName, that.contactName);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    UserContact that = (UserContact) obj;
+    return Objects.equal(this.id, that.id) && Objects.equal(this.userKey, that.userKey)
+        && Objects.equal(this.contactKey, that.contactKey)
+        && Objects.equal(this.contactName, that.contactName);
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("UserContact [id=").append(id).append(", userKey=").append(userKey).append(", contactKey=")
-				.append(contactKey).append(", contactName=").append(contactName).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("UserContact [id=").append(id).append(", userKey=").append(userKey)
+        .append(", contactKey=").append(contactKey).append(", contactName=").append(contactName)
+        .append("]");
+    return builder.toString();
+  }
 
 }

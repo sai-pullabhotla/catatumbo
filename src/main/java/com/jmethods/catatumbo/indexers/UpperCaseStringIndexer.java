@@ -26,26 +26,26 @@ import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.IndexingException;
 
 /**
- * An implementation of {@link Indexer} interface for creating indexes in upper
- * case. This indexer assumes that the value being indexed is of type String.
- * Any other type will result in ClassCastException.
+ * An implementation of {@link Indexer} interface for creating indexes in upper case. This indexer
+ * assumes that the value being indexed is of type String. Any other type will result in
+ * ClassCastException.
  * 
  * @author Sai Pullabhotla
  * 
  */
 public class UpperCaseStringIndexer implements Indexer {
 
-	@Override
-	public Value<?> index(Value<?> input) {
-		if (input.getType() == ValueType.NULL) {
-			return NullValue.of();
-		}
-		try {
-			String str = ((StringValue) input).get();
-			return StringValue.of(str.toUpperCase(Locale.ENGLISH));
-		} catch (Exception exp) {
-			throw new IndexingException(exp);
-		}
-	}
+  @Override
+  public Value<?> index(Value<?> input) {
+    if (input.getType() == ValueType.NULL) {
+      return NullValue.of();
+    }
+    try {
+      String str = ((StringValue) input).get();
+      return StringValue.of(str.toUpperCase(Locale.ENGLISH));
+    } catch (Exception exp) {
+      throw new IndexingException(exp);
+    }
+  }
 
 }

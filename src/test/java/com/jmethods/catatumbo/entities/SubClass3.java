@@ -29,61 +29,62 @@ import com.jmethods.catatumbo.PropertyOverrides;
  *
  */
 @Entity
-@PropertyOverrides({ @PropertyOverride(name = "fieldx", property = @Property(name = "myfieldx", indexed = true)),
-		@PropertyOverride(name = "address.city", property = @Property(name = "mycity", indexed = true)),
-		@PropertyOverride(name = "address.zipCode.fourDigits", property = @Property(name = "zip_four_digits", indexed = true)), })
+@PropertyOverrides({
+    @PropertyOverride(name = "fieldx", property = @Property(name = "myfieldx", indexed = true)),
+    @PropertyOverride(name = "address.city", property = @Property(name = "mycity", indexed = true)),
+    @PropertyOverride(name = "address.zipCode.fourDigits", property = @Property(name = "zip_four_digits", indexed = true)), })
 public class SubClass3 extends SuperClass3 {
 
-	@Identifier
-	private long id;
-	private String name;
+  @Identifier
+  private long id;
+  private String name;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		SubClass3 that = (SubClass3) obj;
-		return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
-				&& Objects.equals(this.getCreatedBy(), that.getCreatedBy())
-				&& Objects.equals(this.getCreatedOn(), that.getCreatedOn())
-				&& Objects.equals(this.getModifiedBy(), that.getModifiedBy())
-				&& Objects.equals(this.getModifiedOn(), that.getModifiedOn())
-				&& Objects.equals(this.getFieldx(), that.getFieldx())
-				&& Objects.equals(this.getAddress(), that.getAddress());
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    SubClass3 that = (SubClass3) obj;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.name, that.name)
+        && Objects.equals(this.getCreatedBy(), that.getCreatedBy())
+        && Objects.equals(this.getCreatedOn(), that.getCreatedOn())
+        && Objects.equals(this.getModifiedBy(), that.getModifiedBy())
+        && Objects.equals(this.getModifiedOn(), that.getModifiedOn())
+        && Objects.equals(this.getFieldx(), that.getFieldx())
+        && Objects.equals(this.getAddress(), that.getAddress());
+  }
 
 }

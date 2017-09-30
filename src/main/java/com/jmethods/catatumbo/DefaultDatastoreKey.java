@@ -28,115 +28,115 @@ import com.google.cloud.datastore.Key;
  */
 public class DefaultDatastoreKey implements DatastoreKey, Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -5298686524012987642L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -5298686524012987642L;
 
-	/**
-	 * Native key from gcloud API
-	 */
-	private Key key;
+  /**
+   * Native key from gcloud API
+   */
+  private Key key;
 
-	/**
-	 * Creates a new instance of <code>DefaultDatastoreKey</code>.
-	 * 
-	 * @param encoded
-	 *            the encoded string from which the key should be constructed.
-	 */
-	public DefaultDatastoreKey(String encoded) {
-		this(Key.fromUrlSafe(encoded));
-	}
+  /**
+   * Creates a new instance of <code>DefaultDatastoreKey</code>.
+   * 
+   * @param encoded
+   *          the encoded string from which the key should be constructed.
+   */
+  public DefaultDatastoreKey(String encoded) {
+    this(Key.fromUrlSafe(encoded));
+  }
 
-	/**
-	 * Creates a new instance of <code>DefaultDatastoreKey</code>.
-	 * 
-	 * @param key
-	 *            the native key.
-	 */
-	public DefaultDatastoreKey(Key key) {
-		this.key = key;
-	}
+  /**
+   * Creates a new instance of <code>DefaultDatastoreKey</code>.
+   * 
+   * @param key
+   *          the native key.
+   */
+  public DefaultDatastoreKey(Key key) {
+    this.key = key;
+  }
 
-	@Override
-	public String namespace() {
-		return key.getNamespace();
-	}
+  @Override
+  public String namespace() {
+    return key.getNamespace();
+  }
 
-	@Override
-	public String projectId() {
-		return key.getProjectId();
-	}
+  @Override
+  public String projectId() {
+    return key.getProjectId();
+  }
 
-	@Override
-	public String kind() {
-		return key.getKind();
-	}
+  @Override
+  public String kind() {
+    return key.getKind();
+  }
 
-	@Override
-	public boolean hasId() {
-		return key.hasId();
-	}
+  @Override
+  public boolean hasId() {
+    return key.hasId();
+  }
 
-	@Override
-	public boolean hasName() {
-		return key.hasName();
-	}
+  @Override
+  public boolean hasName() {
+    return key.hasName();
+  }
 
-	@Override
-	public long id() {
-		return key.getId();
-	}
+  @Override
+  public long id() {
+    return key.getId();
+  }
 
-	@Override
-	public String name() {
-		return key.getName();
-	}
+  @Override
+  public String name() {
+    return key.getName();
+  }
 
-	@Override
-	public Object nameOrId() {
-		return key.getNameOrId();
-	}
+  @Override
+  public Object nameOrId() {
+    return key.getNameOrId();
+  }
 
-	@Override
-	public DatastoreKey parent() {
-		Key parent = key.getParent();
-		if (parent != null) {
-			return new DefaultDatastoreKey(parent);
-		}
-		return null;
-	}
+  @Override
+  public DatastoreKey parent() {
+    Key parent = key.getParent();
+    if (parent != null) {
+      return new DefaultDatastoreKey(parent);
+    }
+    return null;
+  }
 
-	@Override
-	public String getEncoded() {
-		return key.toUrlSafe();
-	}
+  @Override
+  public String getEncoded() {
+    return key.toUrlSafe();
+  }
 
-	@Override
-	public Key nativeKey() {
-		return key;
-	}
+  @Override
+  public Key nativeKey() {
+    return key;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof DefaultDatastoreKey)) {
-			return false;
-		}
-		DefaultDatastoreKey that = (DefaultDatastoreKey) obj;
-		return this.key.equals(that.key);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof DefaultDatastoreKey)) {
+      return false;
+    }
+    DefaultDatastoreKey that = (DefaultDatastoreKey) obj;
+    return this.key.equals(that.key);
+  }
 
-	@Override
-	public int hashCode() {
-		return key.hashCode();
-	}
+  @Override
+  public int hashCode() {
+    return key.hashCode();
+  }
 
-	@Override
-	public String toString() {
-		return key.toUrlSafe();
-	}
+  @Override
+  public String toString() {
+    return key.toUrlSafe();
+  }
 
 }

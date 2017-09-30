@@ -32,95 +32,95 @@ import com.jmethods.catatumbo.indexers.UpperCaseStringListIndexer;
 @Entity(kind = "StringSetIndex")
 public class StringSetIndex2 {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@SecondaryIndex
-	private LinkedHashSet<String> colors;
+  @SecondaryIndex
+  private LinkedHashSet<String> colors;
 
-	@SecondaryIndex
-	@PropertyIndexer(UpperCaseStringListIndexer.class)
-	private LinkedHashSet<String> sizes;
+  @SecondaryIndex
+  @PropertyIndexer(UpperCaseStringListIndexer.class)
+  private LinkedHashSet<String> sizes;
 
-	@Property(name = "$colors")
-	private LinkedHashSet<String> colorsIndex;
+  @Property(name = "$colors")
+  private LinkedHashSet<String> colorsIndex;
 
-	@Property(name = "$sizes")
-	private LinkedHashSet<String> sizesIndex;
+  @Property(name = "$sizes")
+  private LinkedHashSet<String> sizesIndex;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the colors
-	 */
-	public LinkedHashSet<String> getColors() {
-		return colors;
-	}
+  /**
+   * @return the colors
+   */
+  public LinkedHashSet<String> getColors() {
+    return colors;
+  }
 
-	/**
-	 * @param colors
-	 *            the colors to set
-	 */
-	public void setColors(LinkedHashSet<String> colors) {
-		this.colors = colors;
-	}
+  /**
+   * @param colors
+   *          the colors to set
+   */
+  public void setColors(LinkedHashSet<String> colors) {
+    this.colors = colors;
+  }
 
-	/**
-	 * @return the sizes
-	 */
-	public LinkedHashSet<String> getSizes() {
-		return sizes;
-	}
+  /**
+   * @return the sizes
+   */
+  public LinkedHashSet<String> getSizes() {
+    return sizes;
+  }
 
-	/**
-	 * @param sizes
-	 *            the sizes to set
-	 */
-	public void setSizes(LinkedHashSet<String> sizes) {
-		this.sizes = sizes;
-	}
+  /**
+   * @param sizes
+   *          the sizes to set
+   */
+  public void setSizes(LinkedHashSet<String> sizes) {
+    this.sizes = sizes;
+  }
 
-	/**
-	 * @return the colorsIndex
-	 */
-	public LinkedHashSet<String> getColorsIndex() {
-		return colorsIndex;
-	}
+  /**
+   * @return the colorsIndex
+   */
+  public LinkedHashSet<String> getColorsIndex() {
+    return colorsIndex;
+  }
 
-	/**
-	 * @param colorsIndex
-	 *            the colorsIndex to set
-	 */
-	public void setColorsIndex(LinkedHashSet<String> colorsIndex) {
-		this.colorsIndex = colorsIndex;
-	}
+  /**
+   * @param colorsIndex
+   *          the colorsIndex to set
+   */
+  public void setColorsIndex(LinkedHashSet<String> colorsIndex) {
+    this.colorsIndex = colorsIndex;
+  }
 
-	/**
-	 * @return the sizesIndex
-	 */
-	public LinkedHashSet<String> getSizesIndex() {
-		return sizesIndex;
-	}
+  /**
+   * @return the sizesIndex
+   */
+  public LinkedHashSet<String> getSizesIndex() {
+    return sizesIndex;
+  }
 
-	/**
-	 * @param sizesIndex
-	 *            the sizesIndex to set
-	 */
-	public void setSizesIndex(LinkedHashSet<String> sizesIndex) {
-		this.sizesIndex = sizesIndex;
-	}
+  /**
+   * @param sizesIndex
+   *          the sizesIndex to set
+   */
+  public void setSizesIndex(LinkedHashSet<String> sizesIndex) {
+    this.sizesIndex = sizesIndex;
+  }
 
 }

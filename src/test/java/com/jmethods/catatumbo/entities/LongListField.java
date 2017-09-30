@@ -28,39 +28,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class LongListField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private List<Long> numbers;
+  private List<Long> numbers;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the list
-	 */
-	public List<Long> getNumbers() {
-		return numbers;
-	}
+  /**
+   * @return the list
+   */
+  public List<Long> getNumbers() {
+    return numbers;
+  }
 
-	/**
-	 * @param numbers
-	 *            the list to set
-	 */
-	public void setNumbers(List<Long> numbers) {
-		this.numbers = numbers;
-	}
+  /**
+   * @param numbers
+   *          the list to set
+   */
+  public void setNumbers(List<Long> numbers) {
+    this.numbers = numbers;
+  }
 
 }

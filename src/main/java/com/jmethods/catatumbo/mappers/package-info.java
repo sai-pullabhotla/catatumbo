@@ -15,7 +15,7 @@
  */
 
 /**
- * Contains various mappers for mapping model fields to entity properties and
- * vice versa.
+ * Contains various mappers for mapping model fields to entity properties and vice versa.
  */
+
 package com.jmethods.catatumbo.mappers;

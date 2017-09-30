@@ -37,55 +37,57 @@ import com.jmethods.catatumbo.listeners.FarmAnimalListener;
  *
  */
 public class ListenerInheritanceTest {
-	private static EntityManager em;
+  private static EntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-		em.setDefaultListeners(AnimalListener.class);
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+    em.setDefaultListeners(AnimalListener.class);
+  }
 
-	@Test
-	public void testPreInsert_Cat() {
-		Cat cat = new Cat();
-		cat = em.insert(cat);
-		String preInsertClassName = PreInsert.class.getSimpleName();
-		String expected = Animal.class.getSimpleName() + "." + preInsertClassName + "->" + Pet.class.getSimpleName()
-				+ "." + preInsertClassName + "->" + Cat.class.getSimpleName() + "." + preInsertClassName;
-		assertEquals(expected, cat.getValue());
-	}
+  @Test
+  public void testPreInsert_Cat() {
+    Cat cat = new Cat();
+    cat = em.insert(cat);
+    String preInsertClassName = PreInsert.class.getSimpleName();
+    String expected = Animal.class.getSimpleName() + "." + preInsertClassName + "->"
+        + Pet.class.getSimpleName() + "." + preInsertClassName + "->" + Cat.class.getSimpleName()
+        + "." + preInsertClassName;
+    assertEquals(expected, cat.getValue());
+  }
 
-	@Test
-	public void testPreAndPostInsert_Dog() {
-		Dog dog = new Dog();
-		dog = em.insert(dog);
-		String preInsertClassName = PreInsert.class.getSimpleName();
-		String postInsertClassName = PostInsert.class.getSimpleName();
-		String expected = Dog.class.getSimpleName() + "." + preInsertClassName + "->" + Dog.class.getSimpleName() + "."
-				+ postInsertClassName;
-		assertEquals(expected, dog.getValue());
-	}
+  @Test
+  public void testPreAndPostInsert_Dog() {
+    Dog dog = new Dog();
+    dog = em.insert(dog);
+    String preInsertClassName = PreInsert.class.getSimpleName();
+    String postInsertClassName = PostInsert.class.getSimpleName();
+    String expected = Dog.class.getSimpleName() + "." + preInsertClassName + "->"
+        + Dog.class.getSimpleName() + "." + postInsertClassName;
+    assertEquals(expected, dog.getValue());
+  }
 
-	@Test
-	public void testPreInsert_Lion() {
-		Lion lion = new Lion();
-		lion = em.insert(lion);
-		String preInsertClassName = PreInsert.class.getSimpleName();
-		String expected = WildAnimal.class.getSimpleName() + "." + preInsertClassName + "->"
-				+ Lion.class.getSimpleName() + "." + preInsertClassName;
-		assertEquals(expected, lion.getValue());
-	}
+  @Test
+  public void testPreInsert_Lion() {
+    Lion lion = new Lion();
+    lion = em.insert(lion);
+    String preInsertClassName = PreInsert.class.getSimpleName();
+    String expected = WildAnimal.class.getSimpleName() + "." + preInsertClassName + "->"
+        + Lion.class.getSimpleName() + "." + preInsertClassName;
+    assertEquals(expected, lion.getValue());
+  }
 
-	@Test
-	public void testPreInsert_Cow() {
-		Cow cow = new Cow();
-		cow = em.insert(cow);
-		String preInsertClassName = PreInsert.class.getSimpleName();
-		String expected = AnimalListener.class.getSimpleName() + "." + preInsertClassName + "->"
-				+ FarmAnimalListener.class.getSimpleName() + "." + preInsertClassName + "->"
-				+ Animal.class.getSimpleName() + "." + preInsertClassName + "->" + FarmAnimal.class.getSimpleName()
-				+ "." + preInsertClassName + "->" + Cow.class.getSimpleName() + "." + preInsertClassName;
-		assertEquals(expected, cow.getValue());
-	}
+  @Test
+  public void testPreInsert_Cow() {
+    Cow cow = new Cow();
+    cow = em.insert(cow);
+    String preInsertClassName = PreInsert.class.getSimpleName();
+    String expected = AnimalListener.class.getSimpleName() + "." + preInsertClassName + "->"
+        + FarmAnimalListener.class.getSimpleName() + "." + preInsertClassName + "->"
+        + Animal.class.getSimpleName() + "." + preInsertClassName + "->"
+        + FarmAnimal.class.getSimpleName() + "." + preInsertClassName + "->"
+        + Cow.class.getSimpleName() + "." + preInsertClassName;
+    assertEquals(expected, cow.getValue());
+  }
 
 }

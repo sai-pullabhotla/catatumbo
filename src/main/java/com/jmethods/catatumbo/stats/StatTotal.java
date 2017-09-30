@@ -21,8 +21,7 @@ import java.io.Serializable;
 import com.jmethods.catatumbo.Entity;
 
 /**
- * Statistic entity that contains summary of the Datastore usage (all
- * namespaces).
+ * Statistic entity that contains summary of the Datastore usage (all namespaces).
  * 
  * @author Sai Pullabhotla
  *
@@ -30,9 +29,9 @@ import com.jmethods.catatumbo.Entity;
 @Entity(kind = StatConstants.STAT_TOTAL)
 public class StatTotal extends StatTotalBase implements Serializable {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -8279421156053694066L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -8279421156053694066L;
 
 }

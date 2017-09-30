@@ -29,18 +29,18 @@ import com.jmethods.catatumbo.indexers.UpperCaseStringListIndexer;
  */
 public class IndexerFactoryTest {
 
-	@Test
-	public void testGetIndexer_LowerCaseStringIndexer() {
-		Indexer i1 = IndexerFactory.getInstance().getIndexer(LowerCaseStringIndexer.class);
-		Indexer i2 = IndexerFactory.getInstance().getIndexer(LowerCaseStringIndexer.class);
-		assertTrue(i1 == i2);
-	}
+  @Test
+  public void testGetIndexer_LowerCaseStringIndexer() {
+    Indexer i1 = IndexerFactory.getInstance().getIndexer(LowerCaseStringIndexer.class);
+    Indexer i2 = IndexerFactory.getInstance().getIndexer(LowerCaseStringIndexer.class);
+    assertTrue(i1 == i2);
+  }
 
-	@Test
-	public void testGetIndexer_UpperCaseSringListIndexer() {
-		Indexer i1 = IndexerFactory.getInstance().getIndexer(UpperCaseStringListIndexer.class);
-		Indexer i2 = IndexerFactory.getInstance().getIndexer(UpperCaseStringListIndexer.class);
-		assertTrue(i1 == i2);
-	}
+  @Test
+  public void testGetIndexer_UpperCaseSringListIndexer() {
+    Indexer i1 = IndexerFactory.getInstance().getIndexer(UpperCaseStringListIndexer.class);
+    Indexer i2 = IndexerFactory.getInstance().getIndexer(UpperCaseStringListIndexer.class);
+    assertTrue(i1 == i2);
+  }
 
 }

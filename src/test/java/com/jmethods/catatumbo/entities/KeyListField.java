@@ -29,39 +29,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class KeyListField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private List<DatastoreKey> tags;
+  private List<DatastoreKey> tags;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the tags
-	 */
-	public List<DatastoreKey> getTags() {
-		return tags;
-	}
+  /**
+   * @return the tags
+   */
+  public List<DatastoreKey> getTags() {
+    return tags;
+  }
 
-	/**
-	 * @param tags
-	 *            the tags to set
-	 */
-	public void setTags(List<DatastoreKey> tags) {
-		this.tags = tags;
-	}
+  /**
+   * @param tags
+   *          the tags to set
+   */
+  public void setTags(List<DatastoreKey> tags) {
+    this.tags = tags;
+  }
 
 }

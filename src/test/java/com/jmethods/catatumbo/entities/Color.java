@@ -22,6 +22,6 @@ package com.jmethods.catatumbo.entities;
  */
 public enum Color {
 
-	WHITE, BLACK, RED, YELLOW, PURPLE, GOLD, SILVER, BLUE, PINK;
+  WHITE, BLACK, RED, YELLOW, PURPLE, GOLD, SILVER, BLUE, PINK;
 
 }

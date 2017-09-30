@@ -26,54 +26,54 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class BadBuilderEntity3 {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	public BadBuilderEntity3(String name) {
+  public BadBuilderEntity3(String name) {
 
-	}
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	public static Builder newBuilder() {
-		return new Builder();
-	}
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
-	public static class Builder {
-		private long id;
+  public static class Builder {
+    private long id;
 
-		private String name;
+    private String name;
 
-		/**
-		 * @param id
-		 *            the id to set
-		 */
-		public void setId(long id) {
-			this.id = id;
-		}
+    /**
+     * @param id
+     *          the id to set
+     */
+    public void setId(long id) {
+      this.id = id;
+    }
 
-		/**
-		 * @param name
-		 *            the name to set
-		 */
-		public void setName(String name) {
-			this.name = name;
-		}
+    /**
+     * @param name
+     *          the name to set
+     */
+    public void setName(String name) {
+      this.name = name;
+    }
 
-	}
+  }
 
 }

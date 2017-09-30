@@ -26,69 +26,66 @@ import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.MappedSuperClass;
 
 /**
- * Base class for holding the metadata of listeners defined in an
- * {@link Entity}, {@link MappedSuperClass} or {@link EntityListener}.
+ * Base class for holding the metadata of listeners defined in an {@link Entity},
+ * {@link MappedSuperClass} or {@link EntityListener}.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class AbstractListenerMetadata {
 
-	/**
-	 * The listener class to which this metadata belongs
-	 */
-	private Class<?> listenerClass;
+  /**
+   * The listener class to which this metadata belongs
+   */
+  private Class<?> listenerClass;
 
-	/**
-	 * Mapping of callback type to its callback method. Created lazily, if
-	 * needed.
-	 */
-	private Map<CallbackType, Method> callbacks;
+  /**
+   * Mapping of callback type to its callback method. Created lazily, if needed.
+   */
+  private Map<CallbackType, Method> callbacks;
 
-	/**
-	 * Creates a new instance of <code>AbstractListenerMetadata</code>.
-	 * 
-	 * @param listenerClass
-	 *            the listener class to which this metadata belongs.
-	 */
-	public AbstractListenerMetadata(Class<?> listenerClass) {
-		this.listenerClass = listenerClass;
-	}
+  /**
+   * Creates a new instance of <code>AbstractListenerMetadata</code>.
+   * 
+   * @param listenerClass
+   *          the listener class to which this metadata belongs.
+   */
+  public AbstractListenerMetadata(Class<?> listenerClass) {
+    this.listenerClass = listenerClass;
+  }
 
-	/**
-	 * Registers the given method as the callback method for the given event
-	 * type.
-	 * 
-	 * @param callbackType
-	 *            the callback type
-	 * @param method
-	 *            the callback method
-	 * @throws EntityManagerException
-	 *             if there was already a callback method for the given event
-	 *             type.
-	 */
-	public void putListener(CallbackType callbackType, Method method) {
-		if (callbacks == null) {
-			callbacks = new EnumMap<>(CallbackType.class);
-		}
-		Method oldMethod = callbacks.put(callbackType, method);
-		if (oldMethod != null) {
-			String format = "Class %s has at least two methods, %s and %s, with annotation of %s. "
-					+ "At most one method is allowed for a given callback type. ";
-			String message = String.format(format, listenerClass.getName(), oldMethod.getName(), method.getName(),
-					callbackType.getAnnotationClass().getName());
-			throw new EntityManagerException(message);
-		}
-	}
+  /**
+   * Registers the given method as the callback method for the given event type.
+   * 
+   * @param callbackType
+   *          the callback type
+   * @param method
+   *          the callback method
+   * @throws EntityManagerException
+   *           if there was already a callback method for the given event type.
+   */
+  public void putListener(CallbackType callbackType, Method method) {
+    if (callbacks == null) {
+      callbacks = new EnumMap<>(CallbackType.class);
+    }
+    Method oldMethod = callbacks.put(callbackType, method);
+    if (oldMethod != null) {
+      String format = "Class %s has at least two methods, %s and %s, with annotation of %s. "
+          + "At most one method is allowed for a given callback type. ";
+      String message = String.format(format, listenerClass.getName(), oldMethod.getName(),
+          method.getName(), callbackType.getAnnotationClass().getName());
+      throw new EntityManagerException(message);
+    }
+  }
 
-	/**
-	 * Returns all defined callbacks.
-	 * 
-	 * @return all defined callbacks. Returns <code>null</code>, if there are no
-	 *         callback methods defined in the listener class.
-	 */
-	public Map<CallbackType, Method> getCallbacks() {
-		return callbacks;
-	}
+  /**
+   * Returns all defined callbacks.
+   * 
+   * @return all defined callbacks. Returns <code>null</code>, if there are no callback methods
+   *         defined in the listener class.
+   */
+  public Map<CallbackType, Method> getCallbacks() {
+    return callbacks;
+  }
 
 }

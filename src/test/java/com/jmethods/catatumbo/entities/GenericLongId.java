@@ -22,29 +22,29 @@ package com.jmethods.catatumbo.entities;
  */
 public class GenericLongId {
 
-	private long value;
+  private long value;
 
-	public GenericLongId(long value) {
-		this.value = value;
-	}
+  public GenericLongId(long value) {
+    this.value = value;
+  }
 
-	/**
-	 * @return the value
-	 */
-	public long getValue() {
-		return value;
-	}
+  /**
+   * @return the value
+   */
+  public long getValue() {
+    return value;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj != null && !(obj instanceof GenericLongId)) {
-			return false;
-		}
-		GenericLongId that = (GenericLongId) obj;
-		return this.value == that.value;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj != null && !(obj instanceof GenericLongId)) {
+      return false;
+    }
+    GenericLongId that = (GenericLongId) obj;
+    return this.value == that.value;
+  }
 
 }

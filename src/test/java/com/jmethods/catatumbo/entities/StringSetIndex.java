@@ -33,79 +33,81 @@ import com.jmethods.catatumbo.indexers.UpperCaseStringListIndexer;
 @Entity
 public class StringSetIndex {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@SecondaryIndex
-	private LinkedHashSet<String> colors;
+  @SecondaryIndex
+  private LinkedHashSet<String> colors;
 
-	@SecondaryIndex
-	@PropertyIndexer(UpperCaseStringListIndexer.class)
-	private LinkedHashSet<String> sizes;
+  @SecondaryIndex
+  @PropertyIndexer(UpperCaseStringListIndexer.class)
+  private LinkedHashSet<String> sizes;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the colors
-	 */
-	public LinkedHashSet<String> getColors() {
-		return colors;
-	}
+  /**
+   * @return the colors
+   */
+  public LinkedHashSet<String> getColors() {
+    return colors;
+  }
 
-	/**
-	 * @param colors
-	 *            the colors to set
-	 */
-	public void setColors(LinkedHashSet<String> colors) {
-		this.colors = colors;
-	}
+  /**
+   * @param colors
+   *          the colors to set
+   */
+  public void setColors(LinkedHashSet<String> colors) {
+    this.colors = colors;
+  }
 
-	/**
-	 * @return the sizes
-	 */
-	public LinkedHashSet<String> getSizes() {
-		return sizes;
-	}
+  /**
+   * @return the sizes
+   */
+  public LinkedHashSet<String> getSizes() {
+    return sizes;
+  }
 
-	/**
-	 * @param sizes
-	 *            the sizes to set
-	 */
-	public void setSizes(LinkedHashSet<String> sizes) {
-		this.sizes = sizes;
-	}
+  /**
+   * @param sizes
+   *          the sizes to set
+   */
+  public void setSizes(LinkedHashSet<String> sizes) {
+    this.sizes = sizes;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof StringSetIndex)) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		StringSetIndex that = (StringSetIndex) obj;
-		return this.id == that.id && Objects.equals(this.colors, that.colors) && Objects.equals(this.sizes, that.sizes);
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof StringSetIndex)) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    StringSetIndex that = (StringSetIndex) obj;
+    return this.id == that.id && Objects.equals(this.colors, that.colors)
+        && Objects.equals(this.sizes, that.sizes);
 
-	}
+  }
 
-	public static StringSetIndex getSample1() {
-		StringSetIndex entity = new StringSetIndex();
-		entity.setColors(new LinkedHashSet<>(Arrays.asList(new String[] { "Black", "White", "Red" })));
-		entity.setSizes(new LinkedHashSet<>(Arrays.asList(new String[] { "Small", "Medium", "Large", null })));
-		return entity;
-	}
+  public static StringSetIndex getSample1() {
+    StringSetIndex entity = new StringSetIndex();
+    entity.setColors(new LinkedHashSet<>(Arrays.asList(new String[] { "Black", "White", "Red" })));
+    entity.setSizes(
+        new LinkedHashSet<>(Arrays.asList(new String[] { "Small", "Medium", "Large", null })));
+    return entity;
+  }
 
 }

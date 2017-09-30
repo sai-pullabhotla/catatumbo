@@ -20,45 +20,43 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * QueryRequest objects hold the necessary information about a query to execute.
- * The {@link EntityManager} executes the QueryRquest and returns the
- * {@link QueryResponse}.
+ * QueryRequest objects hold the necessary information about a query to execute. The
+ * {@link EntityManager} executes the QueryRquest and returns the {@link QueryResponse}.
  * 
  * @author Sai Pullabhotla
  *
  */
 public interface QueryRequest {
 
-	/**
-	 * Returns the GQL query
-	 * 
-	 * @return the GQL query
-	 */
-	public String getQuery();
+  /**
+   * Returns the GQL query
+   * 
+   * @return the GQL query
+   */
+  public String getQuery();
 
-	/**
-	 * Returns the named bindings for this QueryRequest, if any. Implementations
-	 * should never return <code>null</code>.
-	 * 
-	 * @return the named bindings
-	 */
-	public Map<String, Object> getNamedBindings();
+  /**
+   * Returns the named bindings for this QueryRequest, if any. Implementations should never return
+   * <code>null</code>.
+   * 
+   * @return the named bindings
+   */
+  public Map<String, Object> getNamedBindings();
 
-	/**
-	 * Returns the positional bindings of this QueryRequest, if any,
-	 * Implementations should never return a <code>null</code>.
-	 * 
-	 * @return the positional bindings
-	 */
-	public List<Object> getPositionalBindings();
+  /**
+   * Returns the positional bindings of this QueryRequest, if any, Implementations should never
+   * return a <code>null</code>.
+   * 
+   * @return the positional bindings
+   */
+  public List<Object> getPositionalBindings();
 
-	/**
-	 * Tells whether or not to allow literals (constant values or synthetic
-	 * literals) in the query.
-	 * 
-	 * @return <code>true</code>, if literals are to be allowed in the query;
-	 *         <code>false</code>, otherwise.
-	 */
-	public boolean isAllowLiterals();
+  /**
+   * Tells whether or not to allow literals (constant values or synthetic literals) in the query.
+   * 
+   * @return <code>true</code>, if literals are to be allowed in the query; <code>false</code>,
+   *         otherwise.
+   */
+  public boolean isAllowLiterals();
 
 }

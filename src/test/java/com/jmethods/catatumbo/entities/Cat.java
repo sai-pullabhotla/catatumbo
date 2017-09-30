@@ -28,12 +28,12 @@ import com.jmethods.catatumbo.PreInsert;
 @ExcludeDefaultListeners
 public class Cat extends Pet {
 
-	@PreInsert
-	public void insertingCat() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += Cat.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingCat() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += Cat.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 
 }

@@ -39,100 +39,100 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
 
 /**
- * An implementation of {@link Mapper} for mapping select set of
- * primitive/wrapper types to the Cloud Datastore. The primary purpose if this
- * mapper is to aid with mapping Lists, Sets and Maps when the collections are
- * not parameterized.
+ * An implementation of {@link Mapper} for mapping select set of primitive/wrapper types to the
+ * Cloud Datastore. The primary purpose if this mapper is to aid with mapping Lists, Sets and Maps
+ * when the collections are not parameterized.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class CatchAllMapper implements Mapper {
 
-	/**
-	 * Singleton instance
-	 */
-	private static final CatchAllMapper INSTANCE = new CatchAllMapper();
+  /**
+   * Singleton instance
+   */
+  private static final CatchAllMapper INSTANCE = new CatchAllMapper();
 
-	/**
-	 * Creates a new instance of <code>CatchAllMapper</code>.
-	 */
-	private CatchAllMapper() {
-		// Do nothing
-	}
+  /**
+   * Creates a new instance of <code>CatchAllMapper</code>.
+   */
+  private CatchAllMapper() {
+    // Do nothing
+  }
 
-	/**
-	 * Returns the singleton instance of this mapper.
-	 * 
-	 * @return the singleton instance of this mapper.
-	 */
-	public static Mapper getInstance() {
-		return INSTANCE;
-	}
+  /**
+   * Returns the singleton instance of this mapper.
+   * 
+   * @return the singleton instance of this mapper.
+   */
+  public static Mapper getInstance() {
+    return INSTANCE;
+  }
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		ValueBuilder<?, ?, ?> builder;
-		if (input == null) {
-			builder = NullValue.newBuilder();
-		} else if (input instanceof Long) {
-			builder = LongValue.newBuilder((long) input);
-		} else if (input instanceof Double) {
-			builder = DoubleValue.newBuilder((double) input);
-		} else if (input instanceof Boolean) {
-			builder = BooleanValue.newBuilder((boolean) input);
-		} else if (input instanceof String) {
-			builder = StringValue.newBuilder((String) input);
-		} else if (input instanceof DatastoreKey) {
-			builder = KeyValue.newBuilder(((DatastoreKey) input).nativeKey());
-		} else if (input instanceof GeoLocation) {
-			GeoLocation geoLocation = (GeoLocation) input;
-			builder = LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
-		} else if (input instanceof Map) {
-			@SuppressWarnings("unchecked")
-			Map<String, ?> map = (Map<String, ?>) input;
-			FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
-			for (Map.Entry<String, ?> entry : map.entrySet()) {
-				String key = entry.getKey();
-				entityBuilder.set(key, toDatastore(entry.getValue()).build());
-			}
-			builder = EntityValue.newBuilder(entityBuilder.build());
-		} else {
-			throw new MappingException(String.format("Unsupported type: %s", input.getClass().getName()));
-		}
-		return builder;
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    ValueBuilder<?, ?, ?> builder;
+    if (input == null) {
+      builder = NullValue.newBuilder();
+    } else if (input instanceof Long) {
+      builder = LongValue.newBuilder((long) input);
+    } else if (input instanceof Double) {
+      builder = DoubleValue.newBuilder((double) input);
+    } else if (input instanceof Boolean) {
+      builder = BooleanValue.newBuilder((boolean) input);
+    } else if (input instanceof String) {
+      builder = StringValue.newBuilder((String) input);
+    } else if (input instanceof DatastoreKey) {
+      builder = KeyValue.newBuilder(((DatastoreKey) input).nativeKey());
+    } else if (input instanceof GeoLocation) {
+      GeoLocation geoLocation = (GeoLocation) input;
+      builder = LatLngValue
+          .newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
+    } else if (input instanceof Map) {
+      @SuppressWarnings("unchecked")
+      Map<String, ?> map = (Map<String, ?>) input;
+      FullEntity.Builder<IncompleteKey> entityBuilder = FullEntity.newBuilder();
+      for (Map.Entry<String, ?> entry : map.entrySet()) {
+        String key = entry.getKey();
+        entityBuilder.set(key, toDatastore(entry.getValue()).build());
+      }
+      builder = EntityValue.newBuilder(entityBuilder.build());
+    } else {
+      throw new MappingException(String.format("Unsupported type: %s", input.getClass().getName()));
+    }
+    return builder;
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		Object javaValue;
-		if (input instanceof NullValue) {
-			javaValue = null;
-		} else if (input instanceof StringValue) {
-			javaValue = input.get();
-		} else if (input instanceof LongValue) {
-			javaValue = input.get();
-		} else if (input instanceof DoubleValue) {
-			javaValue = input.get();
-		} else if (input instanceof BooleanValue) {
-			javaValue = input.get();
-		} else if (input instanceof KeyValue) {
-			javaValue = new DefaultDatastoreKey(((KeyValue) input).get());
-		} else if (input instanceof LatLngValue) {
-			LatLng latLong = ((LatLngValue) input).get();
-			javaValue = new GeoLocation(latLong.getLatitude(), latLong.getLongitude());
-		} else if (input instanceof EntityValue) {
-			EntityValue entityValue = (EntityValue) input;
-			FullEntity<?> entity = entityValue.get();
-			Map<String, Object> map = new HashMap<>();
-			for (String property : entity.getNames()) {
-				map.put(property, toModel(entity.getValue(property)));
-			}
-			javaValue = map;
-		} else {
-			throw new MappingException(String.format("Unsupported type %s", input.getClass().getName()));
-		}
-		return javaValue;
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    Object javaValue;
+    if (input instanceof NullValue) {
+      javaValue = null;
+    } else if (input instanceof StringValue) {
+      javaValue = input.get();
+    } else if (input instanceof LongValue) {
+      javaValue = input.get();
+    } else if (input instanceof DoubleValue) {
+      javaValue = input.get();
+    } else if (input instanceof BooleanValue) {
+      javaValue = input.get();
+    } else if (input instanceof KeyValue) {
+      javaValue = new DefaultDatastoreKey(((KeyValue) input).get());
+    } else if (input instanceof LatLngValue) {
+      LatLng latLong = ((LatLngValue) input).get();
+      javaValue = new GeoLocation(latLong.getLatitude(), latLong.getLongitude());
+    } else if (input instanceof EntityValue) {
+      EntityValue entityValue = (EntityValue) input;
+      FullEntity<?> entity = entityValue.get();
+      Map<String, Object> map = new HashMap<>();
+      for (String property : entity.getNames()) {
+        map.put(property, toModel(entity.getValue(property)));
+      }
+      javaValue = map;
+    } else {
+      throw new MappingException(String.format("Unsupported type %s", input.getClass().getName()));
+    }
+    return javaValue;
+  }
 
 }

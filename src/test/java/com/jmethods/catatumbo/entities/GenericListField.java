@@ -28,39 +28,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class GenericListField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private List<?> items;
+  private List<?> items;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the items
-	 */
-	public List<?> getItems() {
-		return items;
-	}
+  /**
+   * @return the items
+   */
+  public List<?> getItems() {
+    return items;
+  }
 
-	/**
-	 * @param items
-	 *            the items to set
-	 */
-	public void setItems(List<?> items) {
-		this.items = items;
-	}
+  /**
+   * @param items
+   *          the items to set
+   */
+  public void setItems(List<?> items) {
+    this.items = items;
+  }
 
 }

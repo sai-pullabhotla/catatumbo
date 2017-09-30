@@ -29,58 +29,58 @@ import com.jmethods.catatumbo.Property;
 @MappedSuperClass
 public class SuperSuperClass {
 
-	@Property(name = "super.super", indexed = false)
-	private String fieldx;
+  @Property(name = "super.super", indexed = false)
+  private String fieldx;
 
-	@Key
-	private DatastoreKey myKey;
+  @Key
+  private DatastoreKey myKey;
 
-	@Embedded
-	private Address address;
+  @Embedded
+  private Address address;
 
-	/**
-	 * @return the fieldx
-	 */
-	public String getFieldx() {
-		return fieldx;
-	}
+  /**
+   * @return the fieldx
+   */
+  public String getFieldx() {
+    return fieldx;
+  }
 
-	/**
-	 * @param fieldx
-	 *            the fieldx to set
-	 */
-	public void setFieldx(String fieldx) {
-		this.fieldx = fieldx;
-	}
+  /**
+   * @param fieldx
+   *          the fieldx to set
+   */
+  public void setFieldx(String fieldx) {
+    this.fieldx = fieldx;
+  }
 
-	/**
-	 * @return the myKey
-	 */
-	public DatastoreKey getMyKey() {
-		return myKey;
-	}
+  /**
+   * @return the myKey
+   */
+  public DatastoreKey getMyKey() {
+    return myKey;
+  }
 
-	/**
-	 * @param myKey
-	 *            the myKey to set
-	 */
-	public void setMyKey(DatastoreKey myKey) {
-		this.myKey = myKey;
-	}
+  /**
+   * @param myKey
+   *          the myKey to set
+   */
+  public void setMyKey(DatastoreKey myKey) {
+    this.myKey = myKey;
+  }
 
-	/**
-	 * @return the address
-	 */
-	public Address getAddress() {
-		return address;
-	}
+  /**
+   * @return the address
+   */
+  public Address getAddress() {
+    return address;
+  }
 
-	/**
-	 * @param address
-	 *            the address to set
-	 */
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+  /**
+   * @param address
+   *          the address to set
+   */
+  public void setAddress(Address address) {
+    this.address = address;
+  }
 
 }

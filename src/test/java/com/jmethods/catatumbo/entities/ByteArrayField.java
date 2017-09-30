@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class ByteArrayField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private byte[] salt;
+  private byte[] salt;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the salt
-	 */
-	public byte[] getSalt() {
-		return salt;
-	}
+  /**
+   * @return the salt
+   */
+  public byte[] getSalt() {
+    return salt;
+  }
 
-	/**
-	 * @param salt
-	 *            the salt to set
-	 */
-	public void setSalt(byte[] salt) {
-		this.salt = salt;
-	}
+  /**
+   * @param salt
+   *          the salt to set
+   */
+  public void setSalt(byte[] salt) {
+    this.salt = salt;
+  }
 
 }

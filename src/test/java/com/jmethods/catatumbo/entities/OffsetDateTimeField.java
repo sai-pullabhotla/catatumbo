@@ -28,44 +28,44 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class OffsetDateTimeField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private OffsetDateTime timestamp;
+  private OffsetDateTime timestamp;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the timestamp
-	 */
-	public OffsetDateTime getTimestamp() {
-		return timestamp;
-	}
+  /**
+   * @return the timestamp
+   */
+  public OffsetDateTime getTimestamp() {
+    return timestamp;
+  }
 
-	/**
-	 * @param timestamp
-	 *            the timestamp to set
-	 */
-	public void setTimestamp(OffsetDateTime timestamp) {
-		this.timestamp = timestamp;
-	}
+  /**
+   * @param timestamp
+   *          the timestamp to set
+   */
+  public void setTimestamp(OffsetDateTime timestamp) {
+    this.timestamp = timestamp;
+  }
 
-	@Override
-	public String toString() {
-		return "OffsetDateTimeField [id=" + id + ", timestamp=" + timestamp + "]";
-	}
+  @Override
+  public String toString() {
+    return "OffsetDateTimeField [id=" + id + ", timestamp=" + timestamp + "]";
+  }
 
 }

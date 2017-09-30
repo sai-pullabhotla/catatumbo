@@ -28,101 +28,101 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class Task {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String name;
+  private String name;
 
-	private int priority;
+  private int priority;
 
-	private Date completionDate;
+  private Date completionDate;
 
-	private boolean complete;
+  private boolean complete;
 
-	public Task() {
+  public Task() {
 
-	}
+  }
 
-	public Task(long id, String name, int priority, boolean complete) {
-		this.id = id;
-		this.name = name;
-		this.priority = priority;
-		this.complete = complete;
-	}
+  public Task(long id, String name, int priority, boolean complete) {
+    this.id = id;
+    this.name = name;
+    this.priority = priority;
+    this.complete = complete;
+  }
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the priority
-	 */
-	public int getPriority() {
-		return priority;
-	}
+  /**
+   * @return the priority
+   */
+  public int getPriority() {
+    return priority;
+  }
 
-	/**
-	 * @param priority
-	 *            the priority to set
-	 */
-	public void setPriority(int priority) {
-		this.priority = priority;
-	}
+  /**
+   * @param priority
+   *          the priority to set
+   */
+  public void setPriority(int priority) {
+    this.priority = priority;
+  }
 
-	/**
-	 * @return the completionDate
-	 */
-	public Date getCompletionDate() {
-		return completionDate;
-	}
+  /**
+   * @return the completionDate
+   */
+  public Date getCompletionDate() {
+    return completionDate;
+  }
 
-	/**
-	 * @param completionDate
-	 *            the completionDate to set
-	 */
-	public void setCompletionDate(Date completionDate) {
-		this.completionDate = completionDate;
-	}
+  /**
+   * @param completionDate
+   *          the completionDate to set
+   */
+  public void setCompletionDate(Date completionDate) {
+    this.completionDate = completionDate;
+  }
 
-	/**
-	 * @return the complete
-	 */
-	public boolean isComplete() {
-		return complete;
-	}
+  /**
+   * @return the complete
+   */
+  public boolean isComplete() {
+    return complete;
+  }
 
-	/**
-	 * @param complete
-	 *            the complete to set
-	 */
-	public void setComplete(boolean complete) {
-		this.complete = complete;
-	}
+  /**
+   * @param complete
+   *          the complete to set
+   */
+  public void setComplete(boolean complete) {
+    this.complete = complete;
+  }
 
 }

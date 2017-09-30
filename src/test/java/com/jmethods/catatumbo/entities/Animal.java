@@ -27,47 +27,47 @@ import com.jmethods.catatumbo.PreInsert;
 @MappedSuperClass
 public class Animal {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	protected String value = "";
+  protected String value = "";
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		return value;
-	}
+  /**
+   * @return the value
+   */
+  public String getValue() {
+    return value;
+  }
 
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
+  /**
+   * @param value
+   *          the value to set
+   */
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	@PreInsert
-	public void insertingAnimal() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += Animal.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingAnimal() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += Animal.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 
 }

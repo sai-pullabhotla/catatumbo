@@ -27,10 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Annotation for automatically setting the entity's creation timestamp. This
- * annotation can be applied to a field of an {@link Entity} or
- * {@link MappedSuperClass}. Only one field can have this annotation in a given
- * Entity hierarchy.
+ * Annotation for automatically setting the entity's creation timestamp. This annotation can be
+ * applied to a field of an {@link Entity} or {@link MappedSuperClass}. Only one field can have this
+ * annotation in a given Entity hierarchy.
  * 
  * <p>
  * Valid data types for the field include -
@@ -45,25 +44,23 @@ import java.util.Date;
  * </ul>
  *
  * <p>
- * When inserting entities (any variation of insert methods) that have a field
- * with this annotation, the framework sets the corresponding Datastore property
- * to the current timestamp as returned by the host JVM. Any value set in the
- * entity will be ignored/overwritten.
+ * When inserting entities (any variation of insert methods) that have a field with this annotation,
+ * the framework sets the corresponding Datastore property to the current timestamp as returned by
+ * the host JVM. Any value set in the entity will be ignored/overwritten.
  * </p>
  * 
  * <p>
- * Update and Upsert operations ignore this annotation, meaning the field does
- * not get any special treatment during UPSERT or UPDATE operations. However,
- * any value set in the entity (may be null) will be persisted to the Datastore.
+ * Update and Upsert operations ignore this annotation, meaning the field does not get any special
+ * treatment during UPSERT or UPDATE operations. However, any value set in the entity (may be null)
+ * will be persisted to the Datastore.
  * </p>
  * 
  * <p>
- * The field with this annotation is no different than any other property of the
- * entity. This means, this field could also have the {@link Property}
- * annotation and specify the property name to use in the Datastore as well as
- * whether or not the property should be indexed. The field will be mapped using
- * the specified {@link Mapper}, if a {@link PropertyMapper} is specified,
- * otherwise a default mapper for the data type is used.
+ * The field with this annotation is no different than any other property of the entity. This means,
+ * this field could also have the {@link Property} annotation and specify the property name to use
+ * in the Datastore as well as whether or not the property should be indexed. The field will be
+ * mapped using the specified {@link Mapper}, if a {@link PropertyMapper} is specified, otherwise a
+ * default mapper for the data type is used.
  * </p>
  * 
  * @author Sai Pullabhotla
@@ -72,5 +69,5 @@ import java.util.Date;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface CreatedTimestamp {
-
+  // Marker
 }

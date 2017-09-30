@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class CharObject {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Character sex;
+  private Character sex;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the sex
-	 */
-	public Character getSex() {
-		return sex;
-	}
+  /**
+   * @return the sex
+   */
+  public Character getSex() {
+    return sex;
+  }
 
-	/**
-	 * @param sex
-	 *            the sex to set
-	 */
-	public void setSex(Character sex) {
-		this.sex = sex;
-	}
+  /**
+   * @param sex
+   *          the sex to set
+   */
+  public void setSex(Character sex) {
+    this.sex = sex;
+  }
 
 }

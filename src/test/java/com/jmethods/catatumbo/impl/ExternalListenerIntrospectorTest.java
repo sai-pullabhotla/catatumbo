@@ -16,7 +16,7 @@
 
 package com.jmethods.catatumbo.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -35,44 +35,45 @@ import com.jmethods.catatumbo.listeners.GoodExternalListener1;
  */
 public class ExternalListenerIntrospectorTest {
 
-	@Test(expected = EntityManagerException.class)
-	public void testIntrospect_NotEntityListener() {
-		try {
-			ExternalListenerIntrospector.introspect(BadExternalListener1.class);
-		} catch (EntityManagerException exp) {
-			System.out.println(exp.getMessage());
-			throw exp;
-		}
-	}
+  @Test(expected = EntityManagerException.class)
+  public void testIntrospect_NotEntityListener() {
+    try {
+      ExternalListenerIntrospector.introspect(BadExternalListener1.class);
+    } catch (EntityManagerException exp) {
+      System.out.println(exp.getMessage());
+      throw exp;
+    }
+  }
 
-	@Test(expected = EntityManagerException.class)
-	public void testIntrospect_MultipleCallbacks() {
-		try {
-			ExternalListenerIntrospector.introspect(BadExternalListener2.class);
-		} catch (EntityManagerException exp) {
-			System.out.println(exp.getMessage());
-			throw exp;
-		}
-	}
+  @Test(expected = EntityManagerException.class)
+  public void testIntrospect_MultipleCallbacks() {
+    try {
+      ExternalListenerIntrospector.introspect(BadExternalListener2.class);
+    } catch (EntityManagerException exp) {
+      System.out.println(exp.getMessage());
+      throw exp;
+    }
+  }
 
-	@Test(expected = EntityManagerException.class)
-	public void testIntrospect_InvalidMethod() {
-		try {
-			ExternalListenerIntrospector.introspect(BadExternalListener3.class);
-		} catch (EntityManagerException exp) {
-			System.out.println(exp.getMessage());
-			throw exp;
-		}
-	}
+  @Test(expected = EntityManagerException.class)
+  public void testIntrospect_InvalidMethod() {
+    try {
+      ExternalListenerIntrospector.introspect(BadExternalListener3.class);
+    } catch (EntityManagerException exp) {
+      System.out.println(exp.getMessage());
+      throw exp;
+    }
+  }
 
-	@Test
-	public void testIntroSpect1() {
-		ExternalListenerMetadata metadata = ExternalListenerIntrospector.introspect(GoodExternalListener1.class);
-		Map<CallbackType, Method> callbacks = metadata.getCallbacks();
-		assertTrue(metadata.getCallbacks().size() == 3);
-		assertTrue(callbacks.containsKey(CallbackType.PRE_INSERT));
-		assertTrue(callbacks.containsKey(CallbackType.PRE_UPDATE));
-		assertTrue(callbacks.containsKey(CallbackType.POST_LOAD));
-	}
+  @Test
+  public void testIntroSpect1() {
+    ExternalListenerMetadata metadata = ExternalListenerIntrospector
+        .introspect(GoodExternalListener1.class);
+    Map<CallbackType, Method> callbacks = metadata.getCallbacks();
+    assertTrue(metadata.getCallbacks().size() == 3);
+    assertTrue(callbacks.containsKey(CallbackType.PRE_INSERT));
+    assertTrue(callbacks.containsKey(CallbackType.PRE_UPDATE));
+    assertTrue(callbacks.containsKey(CallbackType.POST_LOAD));
+  }
 
 }

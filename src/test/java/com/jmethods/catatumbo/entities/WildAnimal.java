@@ -27,11 +27,11 @@ import com.jmethods.catatumbo.PreInsert;
 @MappedSuperClass
 @ExcludeSuperclassListeners
 public class WildAnimal extends Animal {
-	@PreInsert
-	public void insertingWildAnimal() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += WildAnimal.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingWildAnimal() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += WildAnimal.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 }

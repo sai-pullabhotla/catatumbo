@@ -23,28 +23,28 @@ import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping primitive and wrapper and
- * Long types to/from the Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping primitive and wrapper and Long types to/from the
+ * Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class LongMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return LongValue.newBuilder((long) input);
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return LongValue.newBuilder((long) input);
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		return ((LongValue) input).get();
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    return ((LongValue) input).get();
+  }
 
 }

@@ -28,44 +28,44 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class LocalTimeField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private LocalTime startTime;
+  private LocalTime startTime;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the startTime
-	 */
-	public LocalTime getStartTime() {
-		return startTime;
-	}
+  /**
+   * @return the startTime
+   */
+  public LocalTime getStartTime() {
+    return startTime;
+  }
 
-	/**
-	 * @param startTime
-	 *            the startTime to set
-	 */
-	public void setStartTime(LocalTime startTime) {
-		this.startTime = startTime;
-	}
+  /**
+   * @param startTime
+   *          the startTime to set
+   */
+  public void setStartTime(LocalTime startTime) {
+    this.startTime = startTime;
+  }
 
-	@Override
-	public String toString() {
-		return "LocalTimeField [id=" + id + ", startTime=" + startTime + "]";
-	}
+  @Override
+  public String toString() {
+    return "LocalTimeField [id=" + id + ", startTime=" + startTime + "]";
+  }
 
 }

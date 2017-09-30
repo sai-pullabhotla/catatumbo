@@ -24,28 +24,27 @@ import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping byte array types to/from
- * Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping byte array types to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class ByteArrayMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return BlobValue.newBuilder(Blob.copyFrom((byte[]) input));
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return BlobValue.newBuilder(Blob.copyFrom((byte[]) input));
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		return ((BlobValue) input).get().toByteArray();
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    return ((BlobValue) input).get().toByteArray();
+  }
 
 }

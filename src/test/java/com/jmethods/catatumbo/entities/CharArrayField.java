@@ -25,39 +25,39 @@ import com.jmethods.catatumbo.Identifier;
  */
 @Entity
 public class CharArrayField {
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private char[] password;
+  private char[] password;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the password
-	 */
-	public char[] getPassword() {
-		return password;
-	}
+  /**
+   * @return the password
+   */
+  public char[] getPassword() {
+    return password;
+  }
 
-	/**
-	 * @param password
-	 *            the password to set
-	 */
-	public void setPassword(char[] password) {
-		this.password = password;
-	}
+  /**
+   * @param password
+   *          the password to set
+   */
+  public void setPassword(char[] password) {
+    this.password = password;
+  }
 
 }

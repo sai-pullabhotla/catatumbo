@@ -27,37 +27,37 @@ import com.jmethods.catatumbo.Entity;
 @Entity
 public class SubClass2 extends SuperClass2 {
 
-	private String name;
+  private String name;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		SubClass2 that = (SubClass2) obj;
-		return Objects.equals(this.getId(), that.getId()) && Objects.equals(this.name, that.name)
-				&& Objects.equals(this.getCreatedBy(), that.getCreatedBy())
-				&& Objects.equals(this.getCreatedOn(), that.getCreatedOn())
-				&& Objects.equals(this.getModifiedBy(), that.getModifiedBy())
-				&& Objects.equals(this.getModifiedOn(), that.getModifiedOn());
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    SubClass2 that = (SubClass2) obj;
+    return Objects.equals(this.getId(), that.getId()) && Objects.equals(this.name, that.name)
+        && Objects.equals(this.getCreatedBy(), that.getCreatedBy())
+        && Objects.equals(this.getCreatedOn(), that.getCreatedOn())
+        && Objects.equals(this.getModifiedBy(), that.getModifiedBy())
+        && Objects.equals(this.getModifiedOn(), that.getModifiedOn());
+  }
 
 }

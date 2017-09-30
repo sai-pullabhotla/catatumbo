@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class ShortField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private short age;
+  private short age;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the age
-	 */
-	public short getAge() {
-		return age;
-	}
+  /**
+   * @return the age
+   */
+  public short getAge() {
+    return age;
+  }
 
-	/**
-	 * @param age
-	 *            the age to set
-	 */
-	public void setAge(short age) {
-		this.age = age;
-	}
+  /**
+   * @param age
+   *          the age to set
+   */
+  public void setAge(short age) {
+    this.age = age;
+  }
 
 }

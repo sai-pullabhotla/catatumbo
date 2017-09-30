@@ -31,20 +31,20 @@ import com.jmethods.catatumbo.entities.CustomTypeEntity;
 
 public class CustomTypeTest {
 
-	private static EntityManager em = null;
+  private static EntityManager em = null;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		MapperFactory.getInstance().setDefaultMapper(byte.class, new ByteMapper());
-		em = TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    MapperFactory.getInstance().setDefaultMapper(byte.class, new ByteMapper());
+    em = TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testInsert() {
-		CustomTypeEntity entity = new CustomTypeEntity();
-		entity.setByteField((byte) 65);
-		entity = em.insert(entity);
-		assertEquals((byte) 65, entity.getByteField());
-	}
+  @Test
+  public void testInsert() {
+    CustomTypeEntity entity = new CustomTypeEntity();
+    entity.setByteField((byte) 65);
+    entity = em.insert(entity);
+    assertEquals((byte) 65, entity.getByteField());
+  }
 
 }

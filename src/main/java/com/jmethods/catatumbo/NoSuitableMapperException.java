@@ -17,56 +17,55 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception to indicate there is no {@link Mapper} to handle the mapping of
- * a specific type.
+ * An exception to indicate there is no {@link Mapper} to handle the mapping of a specific type.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class NoSuitableMapperException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -2512232420451752974L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -2512232420451752974L;
 
-	/**
-	 * Creates a new instance of <code>NoSuitableMapperException</code>.
-	 */
-	public NoSuitableMapperException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>NoSuitableMapperException</code>.
+   */
+  public NoSuitableMapperException() {
+    super();
+  }
 
-	/**
-	 * Creates a new instance of <code>NoSuitableMapperException</code>.
-	 * 
-	 * @param message
-	 *            the detailed message
-	 * @param cause
-	 *            the cause
-	 */
-	public NoSuitableMapperException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of <code>NoSuitableMapperException</code>.
+   * 
+   * @param message
+   *          the detailed message
+   * @param cause
+   *          the cause
+   */
+  public NoSuitableMapperException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>NoSuitableMapperException</code>.
-	 * 
-	 * @param message
-	 *            the detailed message
-	 */
-	public NoSuitableMapperException(String message) {
-		super(message);
-	}
+  /**
+   * Creates a new instance of <code>NoSuitableMapperException</code>.
+   * 
+   * @param message
+   *          the detailed message
+   */
+  public NoSuitableMapperException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Creates a new instance of <code>NoSuitableMapperException</code>.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public NoSuitableMapperException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of <code>NoSuitableMapperException</code>.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public NoSuitableMapperException(Throwable cause) {
+    super(cause);
+  }
 
 }

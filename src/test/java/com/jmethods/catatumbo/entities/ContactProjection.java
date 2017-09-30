@@ -26,49 +26,49 @@ import com.jmethods.catatumbo.ProjectedEntity;
 @ProjectedEntity(kind = "Contact")
 public class ContactProjection {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private String lastName;
+  private String lastName;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
+  /**
+   * @return the lastName
+   */
+  public String getLastName() {
+    return lastName;
+  }
 
-	/**
-	 * @param lastName
-	 *            the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  /**
+   * @param lastName
+   *          the lastName to set
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "ContactProjection [id=" + id + ", lastName=" + lastName + "]";
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "ContactProjection [id=" + id + ", lastName=" + lastName + "]";
+  }
 
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo;
 
 import java.lang.annotation.ElementType;
@@ -21,14 +22,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Fields annotated as <code>ParentKey</code> hold the parent key information,
- * if any. Only one field can be annotated with this annotation in a given
- * Entity.
+ * Fields annotated as <code>ParentKey</code> hold the parent key information, if any. Only one
+ * field can be annotated with this annotation in a given Entity.
  * 
  * @author Sai Pullabhotla
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ParentKey {
-
+  // Marker
 }

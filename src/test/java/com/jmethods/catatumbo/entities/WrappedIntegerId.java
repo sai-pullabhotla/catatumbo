@@ -22,14 +22,14 @@ package com.jmethods.catatumbo.entities;
  */
 public class WrappedIntegerId {
 
-	private int value;
+  private int value;
 
-	public WrappedIntegerId(int value) {
-		this.value = value;
-	}
+  public WrappedIntegerId(int value) {
+    this.value = value;
+  }
 
-	public int getValue() {
-		return value;
-	}
+  public int getValue() {
+    return value;
+  }
 
 }

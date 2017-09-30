@@ -28,11 +28,11 @@ import com.jmethods.catatumbo.listeners.FarmAnimalListener;
 @MappedSuperClass
 @EntityListeners(FarmAnimalListener.class)
 public class FarmAnimal extends Animal {
-	@PreInsert
-	public void insertingWildAnimal() {
-		if (value.trim().length() > 0) {
-			value += "->";
-		}
-		value += FarmAnimal.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
-	}
+  @PreInsert
+  public void insertingWildAnimal() {
+    if (value.trim().length() > 0) {
+      value += "->";
+    }
+    value += FarmAnimal.class.getSimpleName() + "." + PreInsert.class.getSimpleName();
+  }
 }

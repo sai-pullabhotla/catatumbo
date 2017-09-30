@@ -26,38 +26,38 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class LongObject {
 
-	@Identifier
-	private long id;
-	private Long distanceFromEarth;
+  @Identifier
+  private long id;
+  private Long distanceFromEarth;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the distanceFromEarth
-	 */
-	public Long getDistanceFromEarth() {
-		return distanceFromEarth;
-	}
+  /**
+   * @return the distanceFromEarth
+   */
+  public Long getDistanceFromEarth() {
+    return distanceFromEarth;
+  }
 
-	/**
-	 * @param distanceFromEarth
-	 *            the distanceFromEarth to set
-	 */
-	public void setDistanceFromEarth(Long distanceFromEarth) {
-		this.distanceFromEarth = distanceFromEarth;
-	}
+  /**
+   * @param distanceFromEarth
+   *          the distanceFromEarth to set
+   */
+  public void setDistanceFromEarth(Long distanceFromEarth) {
+    this.distanceFromEarth = distanceFromEarth;
+  }
 
 }

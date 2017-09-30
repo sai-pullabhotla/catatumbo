@@ -33,353 +33,355 @@ import com.jmethods.catatumbo.entities.DecimalFields;
  *
  */
 public class DecimalFieldsTest {
-	private static EntityManager em;
+  private static EntityManager em;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		em = TestUtils.getEntityManager();
-	}
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    em = TestUtils.getEntityManager();
+  }
 
-	@Test
-	public void testInsert_n10_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("5");
-		entity.setN10(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(n, entity.getN10());
-	}
+  @Test
+  public void testInsert_n10_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("5");
+    entity.setN10(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(n, entity.getN10());
+  }
 
-	@Test
-	public void testInsert_n10_2() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("5.00");
-		entity.setN10(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("5"), entity.getN10());
-	}
+  @Test
+  public void testInsert_n10_2() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("5.00");
+    entity.setN10(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("5"), entity.getN10());
+  }
 
-	@Test
-	public void testInsert_n10_3() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("-5");
-		entity.setN10(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(n, entity.getN10());
-	}
+  @Test
+  public void testInsert_n10_3() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("-5");
+    entity.setN10(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(n, entity.getN10());
+  }
 
-	@Test
-	public void testInsert_n10_4() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("-5.0000");
-		entity.setN10(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("-5"), entity.getN10());
-	}
+  @Test
+  public void testInsert_n10_4() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("-5.0000");
+    entity.setN10(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("-5"), entity.getN10());
+  }
 
-	@Test(expected = MappingException.class)
-	public void testInsert_n10_5() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("0.1");
-		entity.setN10(n);
-		try {
-			entity = em.insert(entity);
-		} catch (Exception e) {
-			System.err.println(e);
-			throw e;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testInsert_n10_5() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("0.1");
+    entity.setN10(n);
+    try {
+      entity = em.insert(entity);
+    } catch (Exception e) {
+      System.err.println(e);
+      throw e;
+    }
+  }
 
-	@Test
-	public void testInsert_n11_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal(".5");
-		entity.setN11(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("0.5"), entity.getN11());
-	}
+  @Test
+  public void testInsert_n11_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal(".5");
+    entity.setN11(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("0.5"), entity.getN11());
+  }
 
-	@Test
-	public void testInsert_n11_2() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal(".900");
-		entity.setN11(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("0.9"), entity.getN11());
-	}
+  @Test
+  public void testInsert_n11_2() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal(".900");
+    entity.setN11(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("0.9"), entity.getN11());
+  }
 
-	@Test(expected = MappingException.class)
-	public void testInsert_n11_3() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("1");
-		entity.setN11(n);
-		try {
-			entity = em.insert(entity);
-		} catch (Exception exp) {
-			System.err.println(exp);
-			throw exp;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testInsert_n11_3() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("1");
+    entity.setN11(n);
+    try {
+      entity = em.insert(entity);
+    } catch (Exception exp) {
+      System.err.println(exp);
+      throw exp;
+    }
+  }
 
-	@Test
-	public void testInsert_n50_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("99999");
-		entity.setN50(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("99999"), entity.getN50());
-	}
+  @Test
+  public void testInsert_n50_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("99999");
+    entity.setN50(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("99999"), entity.getN50());
+  }
 
-	@Test
-	public void testInsert_n50_2() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("99");
-		entity.setN50(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("99"), entity.getN50());
-	}
+  @Test
+  public void testInsert_n50_2() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("99");
+    entity.setN50(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("99"), entity.getN50());
+  }
 
-	@Test
-	public void testInsert_n50_3() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("99.000");
-		entity.setN50(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("99"), entity.getN50());
-	}
+  @Test
+  public void testInsert_n50_3() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("99.000");
+    entity.setN50(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("99"), entity.getN50());
+  }
 
-	@Test(expected = MappingException.class)
-	public void testInsert_n50_4() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("99.9");
-		entity.setN50(n);
-		try {
-			entity = em.insert(entity);
-		} catch (Exception exp) {
-			System.err.println(exp);
-			throw exp;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testInsert_n50_4() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("99.9");
+    entity.setN50(n);
+    try {
+      entity = em.insert(entity);
+    } catch (Exception exp) {
+      System.err.println(exp);
+      throw exp;
+    }
+  }
 
-	@Test
-	public void testInsert_n73_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("9999.999");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("9999.999"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("9999.999");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("9999.999"), entity.getN73());
+  }
 
-	@Test
-	public void testInsert_n73_2() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("1.999");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("1.999"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_2() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("1.999");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("1.999"), entity.getN73());
+  }
 
-	@Test
-	public void testInsert_n73_3() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("29.95");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("29.950"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_3() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("29.95");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("29.950"), entity.getN73());
+  }
 
-	@Test
-	public void testInsert_n73_4() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("29.95900");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("29.959"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_4() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("29.95900");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("29.959"), entity.getN73());
+  }
 
-	@Test
-	public void testInsert_n73_5() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("0.001");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("0.001"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_5() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("0.001");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("0.001"), entity.getN73());
+  }
 
-	@Test
-	public void testInsert_n73_6() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("-0.1");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("-0.100"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_6() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("-0.1");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("-0.100"), entity.getN73());
+  }
 
-	@Test
-	public void testInsert_n73_7() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("-9999.999");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("-9999.999"), entity.getN73());
-	}
+  @Test
+  public void testInsert_n73_7() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("-9999.999");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("-9999.999"), entity.getN73());
+  }
 
-	@Test(expected = MappingException.class)
-	public void testInsert_n73_8() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("-0.5432");
-		entity.setN73(n);
-		try {
-			entity = em.insert(entity);
-		} catch (Exception exp) {
-			System.err.println(exp);
-			throw exp;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testInsert_n73_8() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("-0.5432");
+    entity.setN73(n);
+    try {
+      entity = em.insert(entity);
+    } catch (Exception exp) {
+      System.err.println(exp);
+      throw exp;
+    }
+  }
 
-	@Test
-	public void testInsert_n180_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("999999999999999999");
-		entity.setN180(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("999999999999999999"), entity.getN180());
-	}
+  @Test
+  public void testInsert_n180_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("999999999999999999");
+    entity.setN180(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("999999999999999999"), entity.getN180());
+  }
 
-	@Test
-	public void testInsert_n180_2() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("999999999999999999.000000000000");
-		entity.setN180(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("999999999999999999"), entity.getN180());
-	}
+  @Test
+  public void testInsert_n180_2() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("999999999999999999.000000000000");
+    entity.setN180(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("999999999999999999"), entity.getN180());
+  }
 
-	@Test(expected = MappingException.class)
-	public void testInsert_n180_3() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("9999999999999999999");
-		entity.setN180(n);
-		try {
-			entity = em.insert(entity);
-		} catch (Exception exp) {
-			System.err.println(exp);
-			throw exp;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testInsert_n180_3() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("9999999999999999999");
+    entity.setN180(n);
+    try {
+      entity = em.insert(entity);
+    } catch (Exception exp) {
+      System.err.println(exp);
+      throw exp;
+    }
+  }
 
-	@Test
-	public void testInsert_n1818_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("0.000000000000000001");
-		entity.setN1818(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("0.000000000000000001"), entity.getN1818());
-	}
+  @Test
+  public void testInsert_n1818_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("0.000000000000000001");
+    entity.setN1818(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("0.000000000000000001"), entity.getN1818());
+  }
 
-	@Test
-	public void testInsert_n1818_2() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("0");
-		entity.setN1818(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		assertEquals(new BigDecimal("0.000000000000000000"), entity.getN1818());
-	}
+  @Test
+  public void testInsert_n1818_2() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("0");
+    entity.setN1818(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    assertEquals(new BigDecimal("0.000000000000000000"), entity.getN1818());
+  }
 
-	@Test(expected = MappingException.class)
-	public void testInsert_n1818_3() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("0.0000000000000000002");
-		entity.setN1818(n);
-		try {
-			entity = em.insert(entity);
-		} catch (Exception exp) {
-			System.err.println(exp);
-			throw exp;
-		}
-	}
+  @Test(expected = MappingException.class)
+  public void testInsert_n1818_3() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("0.0000000000000000002");
+    entity.setN1818(n);
+    try {
+      entity = em.insert(entity);
+    } catch (Exception exp) {
+      System.err.println(exp);
+      throw exp;
+    }
+  }
 
-	@Test
-	public void testQuery_1() {
-		// This test may fail at time, because of eventual consistency. Need to
-		// figure out a better way.
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("0.000000000000000001");
-		entity.setN1818(n);
-		entity = em.insert(entity);
-		EntityQueryRequest request = em.createEntityQueryRequest("SELECT * FROM DecimalFields WHERE __key__=@1");
-		request.addPositionalBinding(entity.getKey());
-		QueryResponse<DecimalFields> response = em.executeEntityQueryRequest(DecimalFields.class, request);
-		List<DecimalFields> entities = response.getResults();
-		assertEquals(1, entities.size());
-		assertEquals(new BigDecimal("0.000000000000000001"), entity.getN1818());
+  @Test
+  public void testQuery_1() {
+    // This test may fail at time, because of eventual consistency. Need to
+    // figure out a better way.
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("0.000000000000000001");
+    entity.setN1818(n);
+    entity = em.insert(entity);
+    EntityQueryRequest request = em
+        .createEntityQueryRequest("SELECT * FROM DecimalFields WHERE __key__=@1");
+    request.addPositionalBinding(entity.getKey());
+    QueryResponse<DecimalFields> response = em.executeEntityQueryRequest(DecimalFields.class,
+        request);
+    List<DecimalFields> entities = response.getResults();
+    assertEquals(1, entities.size());
+    assertEquals(new BigDecimal("0.000000000000000001"), entity.getN1818());
 
-	}
+  }
 
-	@Test
-	public void testUpdate_n10_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("-5.0000");
-		entity.setN10(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		entity.setN10(new BigDecimal("9.000"));
-		entity = em.update(entity);
-		assertEquals(new BigDecimal("9"), entity.getN10());
-	}
+  @Test
+  public void testUpdate_n10_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("-5.0000");
+    entity.setN10(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    entity.setN10(new BigDecimal("9.000"));
+    entity = em.update(entity);
+    assertEquals(new BigDecimal("9"), entity.getN10());
+  }
 
-	@Test
-	public void testUpdate_n73_1() {
-		DecimalFields entity = new DecimalFields();
-		BigDecimal n = new BigDecimal("9.99");
-		entity.setN73(n);
-		entity = em.insert(entity);
-		entity = em.load(DecimalFields.class, entity.getId());
-		entity.setN73(new BigDecimal("99.99"));
-		entity = em.update(entity);
-		assertEquals(new BigDecimal("99.990"), entity.getN73());
-	}
+  @Test
+  public void testUpdate_n73_1() {
+    DecimalFields entity = new DecimalFields();
+    BigDecimal n = new BigDecimal("9.99");
+    entity.setN73(n);
+    entity = em.insert(entity);
+    entity = em.load(DecimalFields.class, entity.getId());
+    entity.setN73(new BigDecimal("99.99"));
+    entity = em.update(entity);
+    assertEquals(new BigDecimal("99.990"), entity.getN73());
+  }
 
-	@Test
-	public void testUpdate_n73_2() {
-		BigDecimal[] inputs = { new BigDecimal("0"), new BigDecimal("-1"), new BigDecimal("5"), new BigDecimal("6.1"),
-				new BigDecimal("7.55"), new BigDecimal("9.328") };
-		List<DecimalFields> entities = new ArrayList<>(inputs.length);
-		for (BigDecimal input : inputs) {
-			entities.add(new DecimalFields());
-		}
-		entities = em.insert(entities);
-		int i = 0;
-		for (DecimalFields entity : entities) {
-			entity.setN73(inputs[i++]);
-		}
-		List<DecimalFields> updatedEntities = em.update(entities);
-		assertFalse(entities.equals(updatedEntities));
-		assertEquals(new BigDecimal("0.000"), updatedEntities.get(0).getN73());
-		assertEquals(new BigDecimal("-1.000"), updatedEntities.get(1).getN73());
-		assertEquals(new BigDecimal("5.000"), updatedEntities.get(2).getN73());
-		assertEquals(new BigDecimal("6.100"), updatedEntities.get(3).getN73());
-		assertEquals(new BigDecimal("7.550"), updatedEntities.get(4).getN73());
-		assertEquals(new BigDecimal("9.328"), updatedEntities.get(5).getN73());
-	}
+  @Test
+  public void testUpdate_n73_2() {
+    BigDecimal[] inputs = { new BigDecimal("0"), new BigDecimal("-1"), new BigDecimal("5"),
+        new BigDecimal("6.1"), new BigDecimal("7.55"), new BigDecimal("9.328") };
+    List<DecimalFields> entities = new ArrayList<>(inputs.length);
+    for (BigDecimal input : inputs) {
+      entities.add(new DecimalFields());
+    }
+    entities = em.insert(entities);
+    int i = 0;
+    for (DecimalFields entity : entities) {
+      entity.setN73(inputs[i++]);
+    }
+    List<DecimalFields> updatedEntities = em.update(entities);
+    assertFalse(entities.equals(updatedEntities));
+    assertEquals(new BigDecimal("0.000"), updatedEntities.get(0).getN73());
+    assertEquals(new BigDecimal("-1.000"), updatedEntities.get(1).getN73());
+    assertEquals(new BigDecimal("5.000"), updatedEntities.get(2).getN73());
+    assertEquals(new BigDecimal("6.100"), updatedEntities.get(3).getN73());
+    assertEquals(new BigDecimal("7.550"), updatedEntities.get(4).getN73());
+    assertEquals(new BigDecimal("9.328"), updatedEntities.get(5).getN73());
+  }
 
 }

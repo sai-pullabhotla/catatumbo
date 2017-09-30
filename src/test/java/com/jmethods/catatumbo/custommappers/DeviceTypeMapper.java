@@ -29,29 +29,29 @@ import com.jmethods.catatumbo.entities.DeviceType;
  */
 public class DeviceTypeMapper implements Mapper {
 
-	/**
-	 * Creates a new instance of DeviceTypeMapper.
-	 */
-	public DeviceTypeMapper() {
-		System.out.println("Creating DeviceTypeMapper");
-	}
+  /**
+   * Creates a new instance of DeviceTypeMapper.
+   */
+  public DeviceTypeMapper() {
+    System.out.println("Creating DeviceTypeMapper");
+  }
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		String s = ((DeviceType) input).toString().toLowerCase();
-		return StringValue.newBuilder(s);
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    String s = ((DeviceType) input).toString().toLowerCase();
+    return StringValue.newBuilder(s);
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		String s = ((StringValue) input).get();
-		return Enum.valueOf(DeviceType.class, s.toUpperCase());
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    String s = ((StringValue) input).get();
+    return Enum.valueOf(DeviceType.class, s.toUpperCase());
+  }
 
 }

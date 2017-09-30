@@ -25,19 +25,19 @@ import com.jmethods.catatumbo.Entity;
 @Entity
 public class GlobalCalculatorEntity extends CalculatorEntity {
 
-	/**
-	 * 
-	 */
-	public GlobalCalculatorEntity() {
-		super();
-	}
+  /**
+   * 
+   */
+  public GlobalCalculatorEntity() {
+    super();
+  }
 
-	/**
-	 * @param operand1
-	 * @param operand2
-	 */
-	public GlobalCalculatorEntity(long operand1, long operand2) {
-		super(operand1, operand2);
-	}
+  /**
+   * @param operand1
+   * @param operand2
+   */
+  public GlobalCalculatorEntity(long operand1, long operand2) {
+    super(operand1, operand2);
+  }
 
 }

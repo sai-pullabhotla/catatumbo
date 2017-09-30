@@ -24,14 +24,14 @@ package com.jmethods.catatumbo.impl;
  */
 public class ExternalListenerMetadata extends AbstractListenerMetadata {
 
-	/**
-	 * Creates a new instance of <code>ExternalListenerMetadata</code>.
-	 * 
-	 * @param listenerClass
-	 *            the listener class to which this metadata belongs.
-	 */
-	public ExternalListenerMetadata(Class<?> listenerClass) {
-		super(listenerClass);
-	}
+  /**
+   * Creates a new instance of <code>ExternalListenerMetadata</code>.
+   * 
+   * @param listenerClass
+   *          the listener class to which this metadata belongs.
+   */
+  public ExternalListenerMetadata(Class<?> listenerClass) {
+    super(listenerClass);
+  }
 
 }

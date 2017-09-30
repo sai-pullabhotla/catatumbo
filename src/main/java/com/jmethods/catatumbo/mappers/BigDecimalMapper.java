@@ -25,28 +25,27 @@ import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping BigDecimal types to/from
- * Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping BigDecimal types to/from Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class BigDecimalMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return DoubleValue.newBuilder(((BigDecimal) input).doubleValue());
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return DoubleValue.newBuilder(((BigDecimal) input).doubleValue());
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		return BigDecimal.valueOf(((DoubleValue) input).get());
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    return BigDecimal.valueOf(((DoubleValue) input).get());
+  }
 
 }

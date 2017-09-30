@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.jmethods.catatumbo.impl;
 
 import java.lang.reflect.Field;
@@ -24,14 +25,14 @@ import java.lang.reflect.Field;
  */
 public class ParentKeyMetadata extends KeyMetadata {
 
-	/**
-	 * Creates a new instance of <code>ParentKeyMetadata</code>.
-	 * 
-	 * @param field
-	 *            the field
-	 */
-	public ParentKeyMetadata(Field field) {
-		super(field);
-	}
+  /**
+   * Creates a new instance of <code>ParentKeyMetadata</code>.
+   * 
+   * @param field
+   *          the field
+   */
+  public ParentKeyMetadata(Field field) {
+    super(field);
+  }
 
 }

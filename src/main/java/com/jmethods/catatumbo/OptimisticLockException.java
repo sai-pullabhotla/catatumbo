@@ -17,58 +17,57 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception thrown by the {@link EntityManager} to report a conflict with
- * optimistic locks. This exception is thrown when the entity being updated does
- * not exist the in the Datastore or the version property of the entity does not
- * match with the entity being updated.
+ * An exception thrown by the {@link EntityManager} to report a conflict with optimistic locks. This
+ * exception is thrown when the entity being updated does not exist the in the Datastore or the
+ * version property of the entity does not match with the entity being updated.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class OptimisticLockException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 1879640702345246635L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = 1879640702345246635L;
 
-	/**
-	 * Creates a new instance of <code>OptimisticLockException</code>.
-	 */
-	public OptimisticLockException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>OptimisticLockException</code>.
+   */
+  public OptimisticLockException() {
+    super();
+  }
 
-	/**
-	 * Creates a new instance of <code>OptimisticLockException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public OptimisticLockException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of <code>OptimisticLockException</code>.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public OptimisticLockException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>OptimisticLockException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public OptimisticLockException(String message) {
-		super(message);
-	}
+  /**
+   * Creates a new instance of <code>OptimisticLockException</code>.
+   * 
+   * @param message
+   *          the message
+   */
+  public OptimisticLockException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Creates a new instance of <code>OptimisticLockException</code>.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public OptimisticLockException(Throwable cause) {
-		super(cause.getMessage(), cause);
-	}
+  /**
+   * Creates a new instance of <code>OptimisticLockException</code>.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public OptimisticLockException(Throwable cause) {
+    super(cause.getMessage(), cause);
+  }
 
 }

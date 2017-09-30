@@ -27,72 +27,72 @@ import com.jmethods.catatumbo.Version;
  */
 @Entity
 public class Account {
-	@Identifier
-	private long id;
-	private String email;
-	private String name;
-	@Version
-	@Property(name = "ENTITY_VERSION")
-	private long version = 1;
+  @Identifier
+  private long id;
+  private String email;
+  private String name;
+  @Version
+  @Property(name = "ENTITY_VERSION")
+  private long version = 1;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+  /**
+   * @return the email
+   */
+  public String getEmail() {
+    return email;
+  }
 
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  /**
+   * @param email
+   *          the email to set
+   */
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * @return the version
-	 */
-	public long getVersion() {
-		return version;
-	}
+  /**
+   * @return the version
+   */
+  public long getVersion() {
+    return version;
+  }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(long version) {
-		this.version = version;
-	}
+  /**
+   * @param version
+   *          the version to set
+   */
+  public void setVersion(long version) {
+    this.version = version;
+  }
 
 }

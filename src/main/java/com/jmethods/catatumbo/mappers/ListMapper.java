@@ -31,102 +31,102 @@ import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.impl.IntrospectionUtils;
 
 /**
- * An implementation of {@link Mapper} for mapping {@link List} types to/from
- * the Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping {@link List} types to/from the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class ListMapper implements Mapper {
 
-	/**
-	 * List type - could be a Class or a Parameterized type
-	 */
-	private Type listType;
+  /**
+   * List type - could be a Class or a Parameterized type
+   */
+  private Type listType;
 
-	/**
-	 * List class
-	 */
-	private Class<?> listClass;
+  /**
+   * List class
+   */
+  private Class<?> listClass;
 
-	/**
-	 * Class of items in the list
-	 */
-	private Class<?> itemClass;
+  /**
+   * Class of items in the list
+   */
+  private Class<?> itemClass;
 
-	/**
-	 * Mapper for mapping items in the list
-	 */
-	private Mapper itemMapper;
+  /**
+   * Mapper for mapping items in the list
+   */
+  private Mapper itemMapper;
 
-	/**
-	 * Whether or not the list property should be indexed. While this does not
-	 * affect the ListProperty itself, it is applied on the items in the list.
-	 */
-	private boolean indexed;
+  /**
+   * Whether or not the list property should be indexed. While this does not affect the ListProperty
+   * itself, it is applied on the items in the list.
+   */
+  private boolean indexed;
 
-	/**
-	 * Creates a new instance of <code>ListMapper</code>.
-	 * 
-	 * @param type
-	 *            the list type
-	 * @param indexed
-	 *            whether or not the property should be indexed
-	 */
-	public ListMapper(Type type, boolean indexed) {
-		this.listType = type;
-		this.indexed = indexed;
-		Class<?>[] classArray = IntrospectionUtils.resolveCollectionType(listType);
-		listClass = classArray[0];
-		itemClass = classArray[1];
-		initializeMapper();
-	}
+  /**
+   * Creates a new instance of <code>ListMapper</code>.
+   * 
+   * @param type
+   *          the list type
+   * @param indexed
+   *          whether or not the property should be indexed
+   */
+  public ListMapper(Type type, boolean indexed) {
+    this.listType = type;
+    this.indexed = indexed;
+    Class<?>[] classArray = IntrospectionUtils.resolveCollectionType(listType);
+    listClass = classArray[0];
+    itemClass = classArray[1];
+    initializeMapper();
+  }
 
-	/**
-	 * Initializes the mapper for items in the List.
-	 */
-	private void initializeMapper() {
-		if (itemClass == null) {
-			itemMapper = CatchAllMapper.getInstance();
-		} else {
-			try {
-				itemMapper = MapperFactory.getInstance().getMapper(itemClass);
-			} catch (NoSuitableMapperException exp) {
-				itemMapper = CatchAllMapper.getInstance();
-			}
-		}
-	}
+  /**
+   * Initializes the mapper for items in the List.
+   */
+  private void initializeMapper() {
+    if (itemClass == null) {
+      itemMapper = CatchAllMapper.getInstance();
+    } else {
+      try {
+        itemMapper = MapperFactory.getInstance().getMapper(itemClass);
+      } catch (NoSuitableMapperException exp) {
+        itemMapper = CatchAllMapper.getInstance();
+      }
+    }
+  }
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		List<?> list = (List<?>) input;
-		ListValue.Builder listValueBuilder = ListValue.newBuilder();
-		for (Object item : list) {
-			listValueBuilder.addValue(itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
-		}
-		return listValueBuilder;
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    List<?> list = (List<?>) input;
+    ListValue.Builder listValueBuilder = ListValue.newBuilder();
+    for (Object item : list) {
+      listValueBuilder
+          .addValue(itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
+    }
+    return listValueBuilder;
+  }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		List<? extends Value<?>> list = ((ListValue) input).get();
-		List<Object> output;
-		if (Modifier.isAbstract(listClass.getModifiers())) {
-			output = new ArrayList<>();
-		} else {
-			output = (List<Object>) IntrospectionUtils.instantiateObject(listClass);
-		}
-		for (Value<?> item : list) {
-			output.add(itemMapper.toModel(item));
-		}
-		return output;
-	}
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    List<? extends Value<?>> list = ((ListValue) input).get();
+    List<Object> output;
+    if (Modifier.isAbstract(listClass.getModifiers())) {
+      output = new ArrayList<>();
+    } else {
+      output = (List<Object>) IntrospectionUtils.instantiateObject(listClass);
+    }
+    for (Value<?> item : list) {
+      output.add(itemMapper.toModel(item));
+    }
+    return output;
+  }
 
 }

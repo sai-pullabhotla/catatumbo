@@ -28,19 +28,19 @@ import com.jmethods.catatumbo.listeners.Adder;
 @EntityListeners(Adder.class)
 public class ExternalCalculatorEntity extends CalculatorEntity {
 
-	/**
-	 * 
-	 */
-	public ExternalCalculatorEntity() {
-		super();
-	}
+  /**
+   * 
+   */
+  public ExternalCalculatorEntity() {
+    super();
+  }
 
-	/**
-	 * @param operand1
-	 * @param operand2
-	 */
-	public ExternalCalculatorEntity(long operand1, long operand2) {
-		super(operand1, operand2);
-	}
+  /**
+   * @param operand1
+   * @param operand2
+   */
+  public ExternalCalculatorEntity(long operand1, long operand2) {
+    super(operand1, operand2);
+  }
 
 }

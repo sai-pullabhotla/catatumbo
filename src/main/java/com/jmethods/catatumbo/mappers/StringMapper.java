@@ -23,28 +23,27 @@ import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 
 /**
- * An implementation of {@link Mapper} for mapping String types to/from the
- * Cloud Datastore.
+ * An implementation of {@link Mapper} for mapping String types to/from the Cloud Datastore.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class StringMapper implements Mapper {
 
-	@Override
-	public ValueBuilder<?, ?, ?> toDatastore(Object input) {
-		if (input == null) {
-			return NullValue.newBuilder();
-		}
-		return StringValue.newBuilder((String) input);
-	}
+  @Override
+  public ValueBuilder<?, ?, ?> toDatastore(Object input) {
+    if (input == null) {
+      return NullValue.newBuilder();
+    }
+    return StringValue.newBuilder((String) input);
+  }
 
-	@Override
-	public Object toModel(Value<?> input) {
-		if (input instanceof NullValue) {
-			return null;
-		}
-		return ((StringValue) input).get();
-	}
+  @Override
+  public Object toModel(Value<?> input) {
+    if (input instanceof NullValue) {
+      return null;
+    }
+    return ((StringValue) input).get();
+  }
 
 }

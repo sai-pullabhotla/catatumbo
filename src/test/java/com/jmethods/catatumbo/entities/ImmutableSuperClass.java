@@ -34,99 +34,99 @@ import com.jmethods.catatumbo.Version;
 @MappedSuperClass
 public class ImmutableSuperClass {
 
-	@Identifier
-	private String id;
+  @Identifier
+  private String id;
 
-	@Key
-	private DatastoreKey key;
+  @Key
+  private DatastoreKey key;
 
-	@CreatedTimestamp
-	@Property(name = "createdTS")
-	private Date createdTimestamp;
+  @CreatedTimestamp
+  @Property(name = "createdTS")
+  private Date createdTimestamp;
 
-	@UpdatedTimestamp
-	@Property(name = "updatedTS")
-	private Date modifiedTimestamp;
+  @UpdatedTimestamp
+  @Property(name = "updatedTS")
+  private Date modifiedTimestamp;
 
-	@Version
-	private long version;
+  @Version
+  private long version;
 
-	private ImmutableSuperClass() {
+  private ImmutableSuperClass() {
 
-	}
+  }
 
-	public ImmutableSuperClass(Builder builder) {
-		this.id = builder.id;
-		this.key = builder.key;
-		this.createdTimestamp = builder.createdTimestamp;
-		this.modifiedTimestamp = builder.modifiedTimestamp;
-		this.version = builder.version;
-	}
+  public ImmutableSuperClass(Builder builder) {
+    this.id = builder.id;
+    this.key = builder.key;
+    this.createdTimestamp = builder.createdTimestamp;
+    this.modifiedTimestamp = builder.modifiedTimestamp;
+    this.version = builder.version;
+  }
 
-	public String getId() {
-		return id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public DatastoreKey getKey() {
-		return key;
-	}
+  public DatastoreKey getKey() {
+    return key;
+  }
 
-	public Date getCreatedTimestamp() {
-		return createdTimestamp;
-	}
+  public Date getCreatedTimestamp() {
+    return createdTimestamp;
+  }
 
-	public Date getModifiedTimestamp() {
-		return modifiedTimestamp;
-	}
+  public Date getModifiedTimestamp() {
+    return modifiedTimestamp;
+  }
 
-	public long getVersion() {
-		return version;
-	}
+  public long getVersion() {
+    return version;
+  }
 
-	public static Builder builder() {
-		return new Builder<>();
-	}
+  public static Builder builder() {
+    return new Builder<>();
+  }
 
-	public static class Builder<T extends Builder<T>> {
-		private String id;
+  public static class Builder<T extends Builder<T>> {
+    private String id;
 
-		private DatastoreKey key;
+    private DatastoreKey key;
 
-		private Date createdTimestamp;
+    private Date createdTimestamp;
 
-		private Date modifiedTimestamp;
+    private Date modifiedTimestamp;
 
-		private long version;
+    private long version;
 
-		public T setId(String id) {
-			this.id = id;
-			return (T) this;
-		}
+    public T setId(String id) {
+      this.id = id;
+      return (T) this;
+    }
 
-		public T key(DatastoreKey key) {
-			this.key = key;
-			return (T) this;
-		}
+    public T key(DatastoreKey key) {
+      this.key = key;
+      return (T) this;
+    }
 
-		public T setCreatedTimestamp(Date createdTimestamp) {
-			this.createdTimestamp = createdTimestamp;
-			return (T) this;
-		}
+    public T setCreatedTimestamp(Date createdTimestamp) {
+      this.createdTimestamp = createdTimestamp;
+      return (T) this;
+    }
 
-		public T setModifiedTimestamp(Date modifiedTimestamp) {
-			this.modifiedTimestamp = modifiedTimestamp;
-			return (T) this;
-		}
+    public T setModifiedTimestamp(Date modifiedTimestamp) {
+      this.modifiedTimestamp = modifiedTimestamp;
+      return (T) this;
+    }
 
-		public T withVersion(long version) {
-			this.version = version;
-			return (T) this;
-		}
+    public T withVersion(long version) {
+      this.version = version;
+      return (T) this;
+    }
 
-		public ImmutableSuperClass build() {
-			return new ImmutableSuperClass(this);
-		}
+    public ImmutableSuperClass build() {
+      return new ImmutableSuperClass(this);
+    }
 
-	}
+  }
 
 }

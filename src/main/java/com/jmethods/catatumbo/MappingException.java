@@ -17,56 +17,55 @@
 package com.jmethods.catatumbo;
 
 /**
- * An exception thrown by {@link Mapper} to indicate any errors during data
- * mapping.
+ * An exception thrown by {@link Mapper} to indicate any errors during data mapping.
  * 
  * @author Sai Pullabhotla
  *
  */
 public class MappingException extends EntityManagerException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3940373782421116805L;
+  /**
+   * Serial version UID
+   */
+  private static final long serialVersionUID = -3940373782421116805L;
 
-	/**
-	 * Creates a new instance of <code>MappingException</code>.
-	 */
-	public MappingException() {
-		super();
-	}
+  /**
+   * Creates a new instance of <code>MappingException</code>.
+   */
+  public MappingException() {
+    super();
+  }
 
-	/**
-	 * Creates a new instance of <code>MappingException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 * @param cause
-	 *            the cause
-	 */
-	public MappingException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  /**
+   * Creates a new instance of <code>MappingException</code>.
+   * 
+   * @param message
+   *          the message
+   * @param cause
+   *          the cause
+   */
+  public MappingException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	/**
-	 * Creates a new instance of <code>MappingException</code>.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public MappingException(String message) {
-		super(message);
-	}
+  /**
+   * Creates a new instance of <code>MappingException</code>.
+   * 
+   * @param message
+   *          the message
+   */
+  public MappingException(String message) {
+    super(message);
+  }
 
-	/**
-	 * Creates a new instance of <code>MappingException</code>.
-	 * 
-	 * @param cause
-	 *            the cause
-	 */
-	public MappingException(Throwable cause) {
-		super(cause);
-	}
+  /**
+   * Creates a new instance of <code>MappingException</code>.
+   * 
+   * @param cause
+   *          the cause
+   */
+  public MappingException(Throwable cause) {
+    super(cause);
+  }
 
 }

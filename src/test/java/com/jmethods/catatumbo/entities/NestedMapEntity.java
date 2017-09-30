@@ -30,86 +30,87 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class NestedMapEntity {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private Map nestedMap;
+  private Map nestedMap;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the nestedMap
-	 */
-	public Map getNestedMap() {
-		return nestedMap;
-	}
+  /**
+   * @return the nestedMap
+   */
+  public Map getNestedMap() {
+    return nestedMap;
+  }
 
-	/**
-	 * @param nestedMap
-	 *            the nestedMap to set
-	 */
-	public void setNestedMap(Map nestedMap) {
-		this.nestedMap = nestedMap;
-	}
+  /**
+   * @param nestedMap
+   *          the nestedMap to set
+   */
+  public void setNestedMap(Map nestedMap) {
+    this.nestedMap = nestedMap;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!this.getClass().equals(obj.getClass())) {
-			return false;
-		}
-		NestedMapEntity that = (NestedMapEntity) obj;
-		return this.id == that.id && Objects.equals(this.nestedMap, that.nestedMap);
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!this.getClass().equals(obj.getClass())) {
+      return false;
+    }
+    NestedMapEntity that = (NestedMapEntity) obj;
+    return this.id == that.id && Objects.equals(this.nestedMap, that.nestedMap);
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("NestedMapEntity [id=").append(id).append(", nestedMap=").append(nestedMap).append("]");
-		return builder.toString();
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("NestedMapEntity [id=").append(id).append(", nestedMap=").append(nestedMap)
+        .append("]");
+    return builder.toString();
+  }
 
-	public static NestedMapEntity getSample1() {
-		NestedMapEntity entity = new NestedMapEntity();
-		Map<String, Object> m1 = new HashMap<>();
-		m1.put("string", "Hello World!");
-		m1.put("long", 1000L);
-		m1.put("null", null);
+  public static NestedMapEntity getSample1() {
+    NestedMapEntity entity = new NestedMapEntity();
+    Map<String, Object> m1 = new HashMap<>();
+    m1.put("string", "Hello World!");
+    m1.put("long", 1000L);
+    m1.put("null", null);
 
-		Map<String, Object> childMap = new HashMap<>();
-		childMap.put("childprop1", "child value 1");
-		childMap.put("childprop2", "child value 2");
-		childMap.put("childlong", -23L);
-		childMap.put("childbool", true);
-		childMap.put("childnull", null);
+    Map<String, Object> childMap = new HashMap<>();
+    childMap.put("childprop1", "child value 1");
+    childMap.put("childprop2", "child value 2");
+    childMap.put("childlong", -23L);
+    childMap.put("childbool", true);
+    childMap.put("childnull", null);
 
-		Map<String, Object> grandchildMap = new HashMap<>();
-		grandchildMap.put("grandchildprop1", "grnadchild value 1");
-		grandchildMap.put("grandchildprop2", "grandchild value 2");
-		grandchildMap.put("grandchildlong", 900L);
-		grandchildMap.put("grandchildMapdouble", 9.99);
-		grandchildMap.put("grandchildnull", null);
+    Map<String, Object> grandchildMap = new HashMap<>();
+    grandchildMap.put("grandchildprop1", "grnadchild value 1");
+    grandchildMap.put("grandchildprop2", "grandchild value 2");
+    grandchildMap.put("grandchildlong", 900L);
+    grandchildMap.put("grandchildMapdouble", 9.99);
+    grandchildMap.put("grandchildnull", null);
 
-		childMap.put("grandchildMap", grandchildMap);
-		m1.put("childMap", childMap);
+    childMap.put("grandchildMap", grandchildMap);
+    m1.put("childMap", childMap);
 
-		entity.setNestedMap(m1);
-		return entity;
-	}
+    entity.setNestedMap(m1);
+    return entity;
+  }
 
 }

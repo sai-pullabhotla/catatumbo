@@ -16,17 +16,16 @@
 
 package com.jmethods.catatumbo;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Used for annotating a method as an entity listener method. The annotated
- * method will be invoked after loading an entity. This annotation can be
- * applied to a method within an {@link Entity}, {@link MappedSuperClass} or an
- * {@link EntityListener}.
+ * Used for annotating a method as an entity listener method. The annotated method will be invoked
+ * after loading an entity. This annotation can be applied to a method within an {@link Entity},
+ * {@link MappedSuperClass} or an {@link EntityListener}.
  * 
  * <p>
  * Note that PostLoad callback is NOT invoked for projection queries.
@@ -41,5 +40,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface PostLoad {
-
+  // Marker
 }

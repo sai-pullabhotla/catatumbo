@@ -28,41 +28,41 @@ import com.jmethods.catatumbo.Version;
 @Entity
 public class OptionalVersion {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@Version
-	@Property(optional = true)
-	private long version;
+  @Version
+  @Property(optional = true)
+  private long version;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the version
-	 */
-	public long getVersion() {
-		return version;
-	}
+  /**
+   * @return the version
+   */
+  public long getVersion() {
+    return version;
+  }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(long version) {
-		this.version = version;
-	}
+  /**
+   * @param version
+   *          the version to set
+   */
+  public void setVersion(long version) {
+    this.version = version;
+  }
 
 }

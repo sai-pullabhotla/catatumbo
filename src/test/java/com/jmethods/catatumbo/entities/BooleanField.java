@@ -26,39 +26,39 @@ import com.jmethods.catatumbo.Identifier;
 @Entity
 public class BooleanField {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	private boolean awesome;
+  private boolean awesome;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the awesome
-	 */
-	public boolean isAwesome() {
-		return awesome;
-	}
+  /**
+   * @return the awesome
+   */
+  public boolean isAwesome() {
+    return awesome;
+  }
 
-	/**
-	 * @param awesome
-	 *            the awesome to set
-	 */
-	public void setAwesome(boolean awesome) {
-		this.awesome = awesome;
-	}
+  /**
+   * @param awesome
+   *          the awesome to set
+   */
+  public void setAwesome(boolean awesome) {
+    this.awesome = awesome;
+  }
 
 }

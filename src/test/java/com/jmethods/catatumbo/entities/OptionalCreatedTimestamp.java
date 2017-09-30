@@ -28,41 +28,41 @@ import com.jmethods.catatumbo.Property;
 @Entity
 public class OptionalCreatedTimestamp {
 
-	@Identifier
-	private long id;
+  @Identifier
+  private long id;
 
-	@CreatedTimestamp
-	@Property(optional = true)
-	private long creationTimestamp;
+  @CreatedTimestamp
+  @Property(optional = true)
+  private long creationTimestamp;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
+  /**
+   * @return the id
+   */
+  public long getId() {
+    return id;
+  }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @return the version
-	 */
-	public long getCreationTimestamp() {
-		return creationTimestamp;
-	}
+  /**
+   * @return the version
+   */
+  public long getCreationTimestamp() {
+    return creationTimestamp;
+  }
 
-	/**
-	 * @param creationTimestamp
-	 *            the version to set
-	 */
-	public void setCreationTimestamp(long creationTimestamp) {
-		this.creationTimestamp = creationTimestamp;
-	}
+  /**
+   * @param creationTimestamp
+   *          the version to set
+   */
+  public void setCreationTimestamp(long creationTimestamp) {
+    this.creationTimestamp = creationTimestamp;
+  }
 
 }

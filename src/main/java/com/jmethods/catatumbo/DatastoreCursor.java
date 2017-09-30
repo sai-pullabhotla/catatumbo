@@ -17,19 +17,19 @@
 package com.jmethods.catatumbo;
 
 /**
- * Defines a contract for Datastore Cursors. Cursors are used to indicate the
- * starting/ending point of a result set.
+ * Defines a contract for Datastore Cursors. Cursors are used to indicate the starting/ending point
+ * of a result set.
  * 
  * @author Sai Pullabhotla
  *
  */
 public interface DatastoreCursor {
 
-	/**
-	 * Returns the encoded value of this cursor as a String.
-	 * 
-	 * @return the encoded value of this cursor.
-	 */
-	String getEncoded();
+  /**
+   * Returns the encoded value of this cursor as a String.
+   * 
+   * @return the encoded value of this cursor.
+   */
+  String getEncoded();
 
 }

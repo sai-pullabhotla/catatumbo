@@ -26,8 +26,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ EntityIntrospectorTest.class, ExternalListenerIntrospectorTest.class,
-		InternalListenerIntrospectorTest.class, IntrospectionUtilsTest.class, LRUCacheTest.class, MarshallerTest.class,
-		UnmarshallerTest.class })
+    InternalListenerIntrospectorTest.class, IntrospectionUtilsTest.class, LRUCacheTest.class,
+    MarshallerTest.class, UnmarshallerTest.class })
 public class AllTests {
 
 }

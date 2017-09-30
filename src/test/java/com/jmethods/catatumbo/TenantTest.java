@@ -27,17 +27,17 @@ import org.junit.Test;
  */
 public class TenantTest {
 
-	@Test
-	public void test1() {
-		assertNull(Tenant.getNamespace());
-	}
+  @Test
+  public void test1() {
+    assertNull(Tenant.getNamespace());
+  }
 
-	@Test
-	public void test2() {
-		String oldNamespace = Tenant.getNamespace();
-		Tenant.setNamespace(Thread.currentThread().getName());
-		assertEquals(Thread.currentThread().getName(), Tenant.getNamespace());
-		Tenant.setNamespace(oldNamespace);
-	}
+  @Test
+  public void test2() {
+    String oldNamespace = Tenant.getNamespace();
+    Tenant.setNamespace(Thread.currentThread().getName());
+    assertEquals(Thread.currentThread().getName(), Tenant.getNamespace());
+    Tenant.setNamespace(oldNamespace);
+  }
 
 }
