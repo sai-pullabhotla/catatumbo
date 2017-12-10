@@ -74,7 +74,11 @@ public class EmbeddedObjectMapper implements Mapper {
         }
         ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper()
             .toDatastore(propertyValue);
-        valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
+        // ListValues cannot have indexing turned off. Indexing is turned on by
+        // default, so we don't touch excludeFromIndexes for ListValues.
+        if (valueBuilder.getValueType() != ValueType.LIST) {
+          valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
+        }
         Value<?> value = valueBuilder.build();
         entityBuilder.set(propertyMetadata.getMappedName(), value);
         Indexer indexer = propertyMetadata.getSecondaryIndexer();

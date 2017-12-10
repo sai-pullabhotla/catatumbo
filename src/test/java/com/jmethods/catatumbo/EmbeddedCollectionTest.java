@@ -16,6 +16,7 @@
 
 package com.jmethods.catatumbo;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import org.junit.Test;
 
 import com.jmethods.catatumbo.entities.Address;
 import com.jmethods.catatumbo.entities.AddressMap;
+import com.jmethods.catatumbo.entities.EmbeddedListEntity;
 import com.jmethods.catatumbo.entities.PhoneList;
 import com.jmethods.catatumbo.entities.PhoneNumber;
 
@@ -105,6 +107,14 @@ public class EmbeddedCollectionTest {
     entity = em.update(entity);
     AddressMap loadedEntity = em.load(AddressMap.class, entity.getId());
     assertTrue(entity.equals(loadedEntity));
+  }
+
+  @Test
+  public void testInsert_EmbeddedListEntity() {
+    EmbeddedListEntity entity = EmbeddedListEntity.getSample1();
+    entity = em.insert(entity);
+    EmbeddedListEntity entity2 = em.load(EmbeddedListEntity.class, entity.getId());
+    assertEquals(entity, entity2);
   }
 
 }
