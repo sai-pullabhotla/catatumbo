@@ -128,7 +128,6 @@ import com.jmethods.catatumbo.entities.Visitor;
 import com.jmethods.catatumbo.entities.WrappedLongIdEntity;
 import com.jmethods.catatumbo.entities.WrappedLongObjectIdEntity;
 import com.jmethods.catatumbo.entities.ZonedDateTimeField;
-import com.jmethods.catatumbo.impl.DefaultEntityManager;
 
 /**
  * @author Sai Pullabhotla
@@ -1562,17 +1561,7 @@ public class EntityManagerTest {
     em.delete(entity);
     LongId entity2 = em.load(LongId.class, entity.getId());
     if (entity2 == null) {
-      try {
-        em.update(entity);
-      } catch (EntityNotFoundException exp) {
-        throw exp;
-      } catch (EntityManagerException exp) {
-        String host = ((DefaultEntityManager) em).getDatastore().getOptions().getHost();
-        if (!ConnectionParameters.DEFAULT_SERVICE_URL.equals(host)) {
-          // Running on emulator that has a bug.
-          throw new EntityNotFoundException(exp);
-        }
-      }
+      em.update(entity);
     }
   }
 
@@ -3480,17 +3469,7 @@ public class EntityManagerTest {
     StringField entity = new StringField();
     entity.setName("Dup Test");
     entity = em.insert(entity);
-    try {
-      entity = em.insert(entity);
-    } catch (EntityAlreadyExistsException exp) {
-      throw exp;
-    } catch (EntityManagerException exp) {
-      String host = ((DefaultEntityManager) em).getDatastore().getOptions().getHost();
-      if (!ConnectionParameters.DEFAULT_SERVICE_URL.equals(host)) {
-        // Running on emulator that has a bug.
-        throw new EntityAlreadyExistsException(exp);
-      }
-    }
+    entity = em.insert(entity);
   }
 
   private static Calendar getToday() {
