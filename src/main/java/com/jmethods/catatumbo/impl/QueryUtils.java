@@ -96,7 +96,7 @@ public class QueryUtils {
    */
   static void addPositionalBinding(GqlQuery.Builder<?> queryBuilder, Object binding) {
     if (binding == null) {
-      throw new NullPointerException("Binding cannot be null. Use IS NULL in your query");
+      throw new IllegalArgumentException("binding cannot be null. Use IS NULL in your query");
     }
     if (binding instanceof Short) {
       queryBuilder.addBinding((short) binding);

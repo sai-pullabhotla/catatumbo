@@ -94,7 +94,7 @@ public abstract class BaseQueryRequest implements QueryRequest {
    */
   public void setNamedBindings(Map<String, Object> namedBindings) {
     if (namedBindings == null) {
-      throw new NullPointerException();
+      throw new IllegalArgumentException("namedBindings cannot be null");
     }
     this.namedBindings = namedBindings;
   }

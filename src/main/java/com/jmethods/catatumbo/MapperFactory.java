@@ -159,7 +159,7 @@ public class MapperFactory {
    */
   public void setDefaultMapper(Type type, Mapper mapper) {
     if (mapper == null) {
-      throw new NullPointerException("mapper cannot be null");
+      throw new IllegalArgumentException("mapper cannot be null");
     }
     lock.lock();
     try {
