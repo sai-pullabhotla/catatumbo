@@ -42,17 +42,17 @@ import com.jmethods.catatumbo.Property;
 public class IntrospectionUtils {
 
   /**
+   * Valid/Supported prefixes for mutator methods of a Builder class. Methods will be searched in
+   * the order.
+   */
+  private static final String[] WRITE_METHOD_PREFIXES = { "set", "with", null };
+
+  /**
    * Hide the default constructor.
    */
   private IntrospectionUtils() {
     // Do nothing
   }
-
-  /**
-   * Valid/Supported prefixes for mutator methods of a Builder class. Methods will be searched in
-   * the order.
-   */
-  private static final String[] WRITE_METHOD_PREFIXES = { "set", "with", null };
 
   /**
    * Creates and returns a new instance of a persistence class for the given metadata. The returned
