@@ -2438,7 +2438,7 @@ public class EntityManagerTest {
   }
 
   @Test
-  public void testRunInTransaction() {
+  public void testExecuteInTransaction() {
     final StringField entity = new StringField();
     entity.setName("Run in transaction test");
     final StringField insertedEntity = em.insert(entity);
@@ -2456,7 +2456,7 @@ public class EntityManagerTest {
   }
 
   @Test(expected = EntityManagerException.class)
-  public void testRunInTransaction_Failure() {
+  public void testExecuteInTransaction_Failure() {
     final StringField entity = new StringField();
     entity.setId(3001);
     entity.setName("Run in transaction test");
@@ -2472,6 +2472,38 @@ public class EntityManagerTest {
         return null;
       }
     });
+  }
+
+  @Test
+  public void testExecuteInTransactionReadOnly() {
+    final StringField entity = new StringField();
+    entity.setName("Run in read-only transaction test");
+    StringField entity2 = em.insert(entity);
+    TransactionalTask<StringField> task = (transaction) -> {
+      return transaction.load(StringField.class, entity2.getId());
+    };
+    StringField entity3 = em.executeInTransaction(task, TransactionMode.READ_ONLY);
+    assertEquals(entity2, entity3);
+  }
+
+  @Test(expected = EntityManagerException.class)
+  public void testExecuteInTransactionReadOnlyWithWrite() {
+    final StringField entity = new StringField();
+    TransactionalTask<StringField> task = (transaction) -> {
+      return transaction.insert(entity);
+    };
+    StringField entity2 = em.executeInTransaction(task, TransactionMode.READ_ONLY);
+  }
+
+  @Test
+  public void testExecuteInTransactionReadWriteMode() {
+    final StringField entity = new StringField();
+    TransactionalTask<StringField> task = (transaction) -> {
+      return transaction.insert(entity);
+    };
+    StringField entity2 = em.executeInTransaction(task, TransactionMode.READ_WRITE);
+    StringField entity3 = em.load(StringField.class, entity2.getId());
+    assertEquals(entity2, entity3);
   }
 
   @Test

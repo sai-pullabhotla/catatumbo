@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo.entities;
 
+import java.util.Objects;
+
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.Identifier;
 
@@ -59,6 +61,21 @@ public class StringField {
    */
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (!getClass().equals(obj.getClass())) {
+      return false;
+    }
+    StringField that = (StringField) obj;
+    return this.id == that.id && Objects.equals(this.name, that.name);
   }
 
 }

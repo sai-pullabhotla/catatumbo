@@ -295,4 +295,53 @@ public class DatastoreTransactionTest {
     }
   }
 
+  @Test
+  public void testReadOnlyModeWithRead() {
+    StringField entity = new StringField();
+    entity.setName("Read-only transaction test");
+    StringField entity2 = em.insert(entity);
+
+    DatastoreTransaction transaction = em.newTransaction(TransactionMode.READ_ONLY);
+    try {
+      StringField entity3 = transaction.load(StringField.class, entity2.getId());
+      assertEquals(entity2, entity3);
+      transaction.commit();
+    } finally {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+    }
+  }
+
+  @Test(expected = EntityManagerException.class)
+  public void testReadOnlyModeWithWrite() {
+    DatastoreTransaction transaction = em.newTransaction(TransactionMode.READ_ONLY);
+    StringField entity = new StringField();
+    entity.setName("Read-only transaction test");
+    try {
+      transaction.insert(entity);
+      transaction.commit();
+    } finally {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+    }
+  }
+
+  @Test
+  public void testReadWriteModeWithWrite() {
+    DatastoreTransaction transaction = em.newTransaction(TransactionMode.READ_WRITE);
+    StringField entity = new StringField();
+    entity.setName("Read-Write transaction test");
+    try {
+      StringField entity2 = transaction.insert(entity);
+      transaction.commit();
+      assertTrue(entity2.getId() > 0);
+    } finally {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+    }
+  }
+
 }

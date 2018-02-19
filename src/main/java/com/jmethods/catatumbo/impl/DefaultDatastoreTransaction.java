@@ -31,6 +31,7 @@ import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
+import com.jmethods.catatumbo.TransactionMode;
 import com.jmethods.catatumbo.impl.Marshaller.Intent;
 
 /**
@@ -71,11 +72,15 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
    * 
    * @param entityManager
    *          the entity manager that created this transaction.
+   * @param transactionMode
+   *          the transaction mode
    */
-  public DefaultDatastoreTransaction(DefaultEntityManager entityManager) {
+  public DefaultDatastoreTransaction(DefaultEntityManager entityManager,
+      TransactionMode transactionMode) {
     this.entityManager = entityManager;
     this.datastore = entityManager.getDatastore();
-    this.nativeTransaction = datastore.newTransaction();
+    this.nativeTransaction = datastore
+        .newTransaction(transactionMode.getNativeTransactionOptions());
     this.reader = new DefaultDatastoreReader(this);
     this.writer = new DefaultDatastoreWriter(this);
   }

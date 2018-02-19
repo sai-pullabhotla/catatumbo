@@ -43,6 +43,7 @@ import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 import com.jmethods.catatumbo.Tenant;
+import com.jmethods.catatumbo.TransactionMode;
 import com.jmethods.catatumbo.TransactionalTask;
 import com.jmethods.catatumbo.Utility;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
@@ -142,7 +143,12 @@ public class DefaultEntityManager implements EntityManager {
 
   @Override
   public DefaultDatastoreTransaction newTransaction() {
-    return new DefaultDatastoreTransaction(this);
+    return newTransaction(TransactionMode.READ_WRITE);
+  }
+
+  @Override
+  public DefaultDatastoreTransaction newTransaction(TransactionMode transactionMode) {
+    return new DefaultDatastoreTransaction(this, transactionMode);
   }
 
   @Override
@@ -152,9 +158,14 @@ public class DefaultEntityManager implements EntityManager {
 
   @Override
   public <T> T executeInTransaction(TransactionalTask<T> task) {
+    return executeInTransaction(task, TransactionMode.READ_WRITE);
+  }
+
+  @Override
+  public <T> T executeInTransaction(TransactionalTask<T> task, TransactionMode transactionMode) {
     DatastoreTransaction transaction = null;
     try {
-      transaction = newTransaction();
+      transaction = newTransaction(transactionMode);
       T returnValue = task.execute(transaction);
       transaction.commit();
       return returnValue;

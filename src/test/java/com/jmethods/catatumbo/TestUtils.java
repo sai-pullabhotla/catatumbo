@@ -56,27 +56,30 @@ public class TestUtils {
   }
 
   public static EntityManager getEntityManager() throws FileNotFoundException {
+    EntityManager em;
     if (isCI()) {
-      return getCIEntityManager();
+      em = getCIEntityManager();
+    } else {
+      ConnectionParameters parameters = new ConnectionParameters();
+      parameters.setServiceURL(System.getenv(ENV_SERVICE_URL));
+      parameters.setProjectId(System.getenv(ENV_PROJECT_ID));
+      parameters.setNamespace(System.getenv(ENV_NAMESPACE));
+      String jsonCredentialsPath = System.getenv(ENV_CREDENTIALS);
+      if (!Utility.isNullOrEmpty(jsonCredentialsPath)) {
+        parameters.setJsonCredentialsFile(jsonCredentialsPath);
+      }
+      String connectionTimeout = System.getenv(ENV_CONNECTION_TIMEOUT);
+      if (!Utility.isNullOrEmpty(connectionTimeout)) {
+        parameters.setConnectionTimeout(Integer.parseInt(connectionTimeout));
+      }
+      String readTimeout = System.getenv(ENV_READ_TIMEOUT);
+      if (!Utility.isNullOrEmpty(readTimeout)) {
+        parameters.setReadTimeout(Integer.parseInt(readTimeout));
+      }
+      System.out.println(parameters);
+      em = EntityManagerFactory.getInstance().createEntityManager(parameters);
+
     }
-    ConnectionParameters parameters = new ConnectionParameters();
-    parameters.setServiceURL(System.getenv(ENV_SERVICE_URL));
-    parameters.setProjectId(System.getenv(ENV_PROJECT_ID));
-    parameters.setNamespace(System.getenv(ENV_NAMESPACE));
-    String jsonCredentialsPath = System.getenv(ENV_CREDENTIALS);
-    if (!Utility.isNullOrEmpty(jsonCredentialsPath)) {
-      parameters.setJsonCredentialsFile(jsonCredentialsPath);
-    }
-    String connectionTimeout = System.getenv(ENV_CONNECTION_TIMEOUT);
-    if (!Utility.isNullOrEmpty(connectionTimeout)) {
-      parameters.setConnectionTimeout(Integer.parseInt(connectionTimeout));
-    }
-    String readTimeout = System.getenv(ENV_READ_TIMEOUT);
-    if (!Utility.isNullOrEmpty(readTimeout)) {
-      parameters.setReadTimeout(Integer.parseInt(readTimeout));
-    }
-    System.out.println(parameters);
-    EntityManager em = EntityManagerFactory.getInstance().createEntityManager(parameters);
     Datastore ds = ((DefaultEntityManager) em).getDatastore();
     DatastoreOptions options = ds.getOptions();
     HttpTransportOptions httpTransportOptions = (HttpTransportOptions) options
@@ -100,7 +103,7 @@ public class TestUtils {
   }
 
   public static boolean isCI() {
-    return Boolean.parseBoolean(System.getenv("CI"));
+    return Boolean.parseBoolean(System.getenv(ENV_CI));
   }
 
   public static String getRandomString(int length) {
