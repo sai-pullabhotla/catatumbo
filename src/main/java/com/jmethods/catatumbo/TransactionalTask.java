@@ -25,6 +25,7 @@ package com.jmethods.catatumbo;
  * @see EntityManager#executeInTransaction(TransactionalTask)
  *
  */
+@FunctionalInterface
 public interface TransactionalTask<T> {
 
   /**
