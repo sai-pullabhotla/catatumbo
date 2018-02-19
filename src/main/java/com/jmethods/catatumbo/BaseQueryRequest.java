@@ -114,7 +114,7 @@ public abstract class BaseQueryRequest implements QueryRequest {
    */
   public void setPositionalBindings(List<Object> positionalBindings) {
     if (positionalBindings == null) {
-      throw new NullPointerException();
+      throw new IllegalArgumentException("positionalBindings cannot be null");
     }
     this.positionalBindings = positionalBindings;
   }
