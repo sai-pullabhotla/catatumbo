@@ -3525,6 +3525,18 @@ public class EntityManagerTest {
     }
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testNewTransactionWithNullTransactionMode() {
+    em.newTransaction(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExecuteInTransactionWithNullTransactionMode() {
+    em.executeInTransaction((transaction) -> {
+      return null;
+    }, null);
+  }
+
   private static Calendar getToday() {
     Calendar today = Calendar.getInstance();
     today.set(Calendar.HOUR_OF_DAY, 0);

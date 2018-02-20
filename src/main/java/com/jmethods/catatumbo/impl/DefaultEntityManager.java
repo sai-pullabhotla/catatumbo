@@ -148,6 +148,9 @@ public class DefaultEntityManager implements EntityManager {
 
   @Override
   public DefaultDatastoreTransaction newTransaction(TransactionMode transactionMode) {
+    if (transactionMode == null) {
+      throw new IllegalArgumentException("transactionMode cannot be null");
+    }
     return new DefaultDatastoreTransaction(this, transactionMode);
   }
 
@@ -163,9 +166,12 @@ public class DefaultEntityManager implements EntityManager {
 
   @Override
   public <T> T executeInTransaction(TransactionalTask<T> task, TransactionMode transactionMode) {
+    if (transactionMode == null) {
+      throw new IllegalArgumentException("transactionMode cannot be null");
+    }
     DatastoreTransaction transaction = null;
     try {
-      transaction = newTransaction(transactionMode);
+      transaction = new DefaultDatastoreTransaction(this, transactionMode);
       T returnValue = task.execute(transaction);
       transaction.commit();
       return returnValue;
