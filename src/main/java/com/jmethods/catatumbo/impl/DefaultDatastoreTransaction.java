@@ -82,7 +82,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
     this.nativeTransaction = datastore
         .newTransaction(transactionMode.getNativeTransactionOptions());
     this.reader = new DefaultDatastoreReader(this);
-    this.writer = new DefaultDatastoreWriter(this);
+    this.writer = new TransactionalWriter(this);
   }
 
   /**

@@ -26,11 +26,25 @@ import java.lang.annotation.Target;
  * Used to implement optimistic locking to prevent updates on a stale entity. This annotation can be
  * applied to a single field in an entity hierarchy (Entity class and any MappedSuperClasses). The
  * field type must be primitive <code>long</code>. Each time the entity is updated, the version
- * property will be incremented by 1. When an entity containing a property with this annotation is
- * updated, the EntityManager first starts a new transaction, fetches the current entity from the
- * Datastore, makes sure the version is same as the one being updated. If they defer,
+ * property will be incremented by 1.
+ * 
+ * <h1>Non-transactional Updates</h1>
+ * <p>
+ * When an entity containing a property with this annotation is updated (without using a
+ * transaction), the EntityManager first starts a new transaction, fetches the current entity from
+ * the Datastore, makes sure the version is same as the one being updated. If they defer,
  * {@link OptimisticLockException} will be thrown. Otherwise, the the entity will be updated by
  * incrementing the version and the transaction is committed.
+ * </p>
+ * 
+ * <h1>Transactional updates</h1>
+ * <p>
+ * When an entity containing a property with this annotation is updated using a transaction, the
+ * existing transaction is used to fetch the current entity from the Datastore, make sure the
+ * version is same as the one being updated. If they defer, {@link OptimisticLockException} will be
+ * thrown. Otherwise, the the entity will be updated by incrementing the version. The framwork does
+ * not commit the transaction, but will leave it upto the caller who created the transaction.
+ * </p>
  * 
  * <p>
  * Entities that have a field with {@link Version} annotation must have a corresponding getter and

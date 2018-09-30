@@ -48,18 +48,18 @@ public class DefaultDatastoreWriter {
   /**
    * A reference to the entity manager
    */
-  private DefaultEntityManager entityManager;
+  protected DefaultEntityManager entityManager;
 
   /**
    * Reference to the native DatastoreWriter for updating the Cloud Datastore. This could be the
    * {@link Datastore}, {@link Transaction} or {@link Batch}.
    */
-  private DatastoreWriter nativeWriter;
+  protected DatastoreWriter nativeWriter;
 
   /**
    * A reference to the Datastore
    */
-  private Datastore datastore;
+  protected Datastore datastore;
 
   /**
    * Creates a new instance of <code>DefaultDatastoreWriter</code>.
@@ -255,7 +255,7 @@ public class DefaultDatastoreWriter {
    * @return the updated entity
    */
   @SuppressWarnings("unchecked")
-  private <E> E updateWithOptimisticLockingInternal(E entity, PropertyMetadata versionMetadata) {
+  protected <E> E updateWithOptimisticLockingInternal(E entity, PropertyMetadata versionMetadata) {
     Transaction transaction = null;
     try {
       entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entity);
@@ -295,7 +295,7 @@ public class DefaultDatastoreWriter {
    * @return the updated entities
    */
   @SuppressWarnings("unchecked")
-  private <E> List<E> updateWithOptimisticLockInternal(List<E> entities,
+  protected <E> List<E> updateWithOptimisticLockInternal(List<E> entities,
       PropertyMetadata versionMetadata) {
     Transaction transaction = null;
     try {
