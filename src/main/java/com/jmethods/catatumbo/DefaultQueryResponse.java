@@ -16,6 +16,8 @@
 
 package com.jmethods.catatumbo;
 
+import com.google.datastore.v1.QueryResultBatch;
+
 import java.util.List;
 
 /**
@@ -42,6 +44,11 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
    * End cursor
    */
   protected DatastoreCursor endCursor = null;
+
+  /**
+   * MoreResultsType enum value
+   */
+  protected QueryResultBatch.MoreResultsType moreResultsType = null;
 
   /**
    * Creates a new instance of <code>BaseQueryResponse</code>.
@@ -94,6 +101,21 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
    */
   public void setEndCursor(DatastoreCursor endCursor) {
     this.endCursor = endCursor;
+  }
+
+  @Override
+  public QueryResultBatch.MoreResultsType getMoreResultsType() {
+    return moreResultsType;
+  }
+
+  /**
+   * Sets the MoreResultsType enum value to the given value.
+   *
+   * @param moreResultsType
+   *          the MoreResultsType enum value
+   */
+  public void setMoreResultsType(QueryResultBatch.MoreResultsType moreResultsType) {
+    this.moreResultsType = moreResultsType;
   }
 
 }

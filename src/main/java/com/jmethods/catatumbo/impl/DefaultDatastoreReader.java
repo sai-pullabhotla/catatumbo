@@ -360,6 +360,7 @@ public class DefaultDatastoreReader {
       }
       response.setResults(entities);
       response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
+      response.setMoreResultsType(results.getMoreResults());
       entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
       return response;
     } catch (DatastoreException exp) {

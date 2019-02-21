@@ -2004,6 +2004,7 @@ public class EntityManagerTest {
     System.out.println("Start Cursor: " + response.getStartCursor());
     System.out.println("End Cursor: " + response.getEndCursor());
     assertTrue(tasks.size() == 50);
+    assertNotNull(response.getMoreResultsType());
   }
 
   @Test
