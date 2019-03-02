@@ -16,8 +16,6 @@
 
 package com.jmethods.catatumbo;
 
-import com.google.datastore.v1.QueryResultBatch;
-
 import java.util.List;
 
 /**
@@ -54,11 +52,10 @@ public interface QueryResponse<T> {
   DatastoreCursor getEndCursor();
 
   /**
-   * Returns the MoreResultsType enum value. This can be used to determine whether or not to fetch and
-   * check the next page for emptiness (and thus safely null the current end cursor when paginating).
+   * Returns metadata on the query execution.
    *
-   * @return the MoreResultsType enum value
+   * @return query execution metadata
    */
-  QueryResultBatch.MoreResultsType getMoreResultsType();
+  QueryResponseMetadata getQueryResponseMetadata();
 
 }

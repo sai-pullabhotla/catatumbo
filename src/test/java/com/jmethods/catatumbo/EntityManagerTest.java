@@ -2004,7 +2004,7 @@ public class EntityManagerTest {
     System.out.println("Start Cursor: " + response.getStartCursor());
     System.out.println("End Cursor: " + response.getEndCursor());
     assertTrue(tasks.size() == 50);
-    assertNotNull(response.getMoreResultsType());
+    assertNotNull(response.getQueryResponseMetadata().getQueryState());
   }
 
   @Test
@@ -2084,6 +2084,7 @@ public class EntityManagerTest {
           task.getCompletionDate());
     }
     assertTrue(tasks.size() == 50);
+    assertNotNull(response.getQueryResponseMetadata().getQueryState());
   }
 
   @Test
@@ -2108,6 +2109,7 @@ public class EntityManagerTest {
       System.out.printf("%-10s %20s %s\n", key.kind(), key.nameOrId(), key.getEncoded());
     }
     assertTrue(keys.size() == 50);
+    assertNotNull(response.getQueryResponseMetadata().getQueryState());
   }
 
   @Test(expected = EntityManagerException.class)
