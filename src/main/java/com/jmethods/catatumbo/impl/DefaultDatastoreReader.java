@@ -35,11 +35,13 @@ import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.DefaultDatastoreCursor;
 import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.DefaultQueryResponse;
+import com.jmethods.catatumbo.DefaultQueryResponseMetadata;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
+import com.jmethods.catatumbo.QueryResponseMetadata;
 
 /**
  * Worker class for performing read operations on the Cloud Datastore.
@@ -360,6 +362,9 @@ public class DefaultDatastoreReader {
       }
       response.setResults(entities);
       response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
+      response.setQueryResponseMetadata(
+          new DefaultQueryResponseMetadata(
+              QueryResponseMetadata.QueryState.forMoreResultsType(results.getMoreResults())));
       entityManager.executeEntityListeners(CallbackType.POST_LOAD, entities);
       return response;
     } catch (DatastoreException exp) {
@@ -397,6 +402,9 @@ public class DefaultDatastoreReader {
       }
       response.setResults(entities);
       response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
+      response.setQueryResponseMetadata(
+          new DefaultQueryResponseMetadata(
+              QueryResponseMetadata.QueryState.forMoreResultsType(results.getMoreResults())));
       // TODO should we invoke PostLoad callback for projected entities?
       return response;
     } catch (DatastoreException exp) {
@@ -431,6 +439,9 @@ public class DefaultDatastoreReader {
       }
       response.setResults(entities);
       response.setEndCursor(new DefaultDatastoreCursor(results.getCursorAfter().toUrlSafe()));
+      response.setQueryResponseMetadata(
+          new DefaultQueryResponseMetadata(
+              QueryResponseMetadata.QueryState.forMoreResultsType(results.getMoreResults())));
       return response;
     } catch (DatastoreException exp) {
       throw new EntityManagerException(exp);

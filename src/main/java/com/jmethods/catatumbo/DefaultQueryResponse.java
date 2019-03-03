@@ -44,6 +44,11 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
   protected DatastoreCursor endCursor = null;
 
   /**
+   * Query execution metadata
+   */
+  protected QueryResponseMetadata metadata = null;
+
+  /**
    * Creates a new instance of <code>BaseQueryResponse</code>.
    * 
    */
@@ -94,6 +99,21 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
    */
   public void setEndCursor(DatastoreCursor endCursor) {
     this.endCursor = endCursor;
+  }
+
+  @Override
+  public QueryResponseMetadata getQueryResponseMetadata() {
+    return metadata;
+  }
+
+  /**
+   * Sets the query metadata to the given value.
+   *
+   * @param metadata
+   *          the query execution metadata
+   */
+  public void setQueryResponseMetadata(QueryResponseMetadata metadata) {
+    this.metadata = metadata;
   }
 
 }
