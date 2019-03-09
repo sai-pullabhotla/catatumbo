@@ -1283,7 +1283,7 @@ public class EntityManagerTest {
     entity.setTimestamp(nextDay);
     entity = em.update(entity);
     entity = em.load(OffsetDateTimeField.class, entity.getId());
-    assertEquals(nextDay, entity.getTimestamp());
+    assertEquals(nextDay.toInstant(), entity.getTimestamp().toInstant());
   }
 
   @Test
