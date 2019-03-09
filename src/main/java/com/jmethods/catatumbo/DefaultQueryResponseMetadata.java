@@ -28,10 +28,17 @@ public class DefaultQueryResponseMetadata implements QueryResponseMetadata {
    */
   private QueryResponseMetadata.QueryState queryState;
 
+  /**
+   * Creates a new instance of @code{DefaultQueryResponseMetadata}.
+   * 
+   * @param queryState
+   *          the query execution state
+   */
   public DefaultQueryResponseMetadata(QueryResponseMetadata.QueryState queryState) {
     this.queryState = queryState;
   }
 
+  @Override
   public QueryResponseMetadata.QueryState getQueryState() {
     return queryState;
   }

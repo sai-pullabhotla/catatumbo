@@ -26,9 +26,9 @@ import com.google.datastore.v1.QueryResultBatch;
 public interface QueryResponseMetadata {
 
   /**
-   * Returns the query execution's query state.
+   * Returns the query execution state.
    *
-   * @return query state
+   * @return the query execution state
    */
   QueryState getQueryState();
 
@@ -71,7 +71,8 @@ public interface QueryResponseMetadata {
     /**
      * Initialize a QueryState from a Datastore QueryResultBatch.MoreResultsType enum value.
      *
-     * @param moreResultsType original enum value.
+     * @param moreResultsType
+     *          original enum value.
      * @return query state enum
      */
     public static QueryState forMoreResultsType(QueryResultBatch.MoreResultsType moreResultsType) {
@@ -92,7 +93,8 @@ public interface QueryResponseMetadata {
         case UNRECOGNIZED:
           return UNRECOGNIZED;
         default:
-          throw new IllegalStateException("null value should have been caught earlier.");
+          throw new IllegalArgumentException(
+              "Unknown or unimplemented QueryResultBatch.MoreResultsType: " + moreResultsType);
       }
     }
   }

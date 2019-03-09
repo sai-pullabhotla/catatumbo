@@ -52,9 +52,9 @@ public interface QueryResponse<T> {
   DatastoreCursor getEndCursor();
 
   /**
-   * Returns metadata on the query execution.
+   * Returns the metadata on the query execution.
    *
-   * @return query execution metadata
+   * @return the metadata on the query execution.
    */
   QueryResponseMetadata getQueryResponseMetadata();
 
